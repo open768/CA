@@ -29,8 +29,12 @@ var cCALifeImporter = function(){
 			aSurvive[iPos] = 1;
 		}
 		
-		//apply the rule 
+		//create  the rule 
 		var oRule = new cCArule();
+		oRule.neighbour_type = cCAConsts.Neighbour_8way;
+		oRule.has_state_transitions = false;
+		
+		//populate the rule 
 		for (var i=1; i <=cCAConsts.max_inputs; i++){
 			var iCentre = cIndexOps.get_centre_value(i);
 			var iCount = cIndexOps.get_bit_count(i);
@@ -45,10 +49,10 @@ var cCALifeImporter = function(){
 				if ( aBorn[iCount] == 1 ) iNewValue = 1;
 			}
 			
-			oRule.set_output(i,iNewValue);
+			oRule.set_output(1,i,iNewValue);
 		}
-		cDebug.write("created LIFE rule with " + i + " transitions");
-		cDebug.write(oRule.toBinaryString());
+		var sRule = oRule.toString(1); 
+		cDebug.write(sRule);
 		return oRule;
 	};
 	
