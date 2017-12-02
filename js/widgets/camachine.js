@@ -28,7 +28,7 @@ $.widget( "ck.camachine",{
 		
 		//test the  carule - create life
 		var oImporter = new cCALifeImporter();
-		var oRule = oImporter.makeRule("B3/S23");
+		var oRule = oImporter.makeRule(cCALifeRules.LIFE);
 		var oExporter = new cCABase64Importer();
 		var sBase64 = oExporter.toString(oRule,1);
 		

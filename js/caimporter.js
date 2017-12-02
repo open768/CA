@@ -1,37 +1,66 @@
 var cCASimpleBase64 = {
 	toBase64:function (psBin) {
-		cDebug.write("encoding base64");
 		var s64 = "";
 		for ( var istart = 0; istart<psBin.length; istart+=6 ){
 			var sFragment = psBin.substr(istart,6);
-			var sIndex = cConverter.binToInt(sFragment);
-			var sChar = cConverterEncodings.BASE64.charAt(sIndex);
+			var iIndex = cConverter.binToInt(sFragment);
+			var sChar = cConverterEncodings.BASE64.charAt(iIndex);
 			s64 = s64 + sChar;
 		}
 		return s64;
 	},
 	
 	//*********************************************************************
-	toBinary:function (ps64) {
-		cDebug.write("decoding base64");
+	toBinary:function (ps64, piLen) {
 		var sOutBin = "";
 		for (var i = 0; i< ps64.length; i++){
 			var ch = ps64.charAt(i);
-			var iVal = cConverterEncodings.BASE64.indexOf(ch);
+			var iVal = cConverter.base64ToDec(ch);
 			var sBin = cConverter.intToBin(iVal);
-			sBin = sBin.padLeft("0",6);
+			var iPadLen = (piLen >5?6:piLen);
+			sBin = sBin.padLeft("0",iPadLen);
 			sOutBin = sOutBin + sBin;
+			piLen -= 6;
 		}
 		return sOutBin;
 	},
-
+	
+	//*********************************************************************
+	test:function(){
+		var sBinIn = "";
+		var iLength = Math.floor(50 + Math.random() * 50);
+		
+		cDebug.write("Testing cCASimpleBase64");
+		for (var i = 0; i< iLength; i++){
+			iRand = Math.floor(Math.random() * 1.99);
+			sBinIn = sBinIn + iRand;
+		}
+		cDebug.write("- in Bin: " + sBinIn);
+		var s64 = this.toBase64(sBinIn);
+		cDebug.write("- base64: " + s64);
+		var sBinOut = this.toBinary(s64, iLength);
+		cDebug.write("-out Bin: " + sBinOut);
+		
+		if (sBinIn !== sBinOut) throw new Error("test Failed");
+		cDebug.write("test succeeded")
+	}
 }
 
 //###############################################################################
 var cCABinaryImporter = function(){
+	//*****************************************************************************
 	this.makeRule = function(psInput){
-		var sPadded = psInput.padLeft("0",cCAConsts.max_inputs);
-		cDebug.write("binary:"+sPadded + " length:"+sPadded.length);
+		if (psInput.length !== cCAConsts.max_inputs) throw new CAException("incorrect length input");
+
+		//create  the rule 
+		var oRule = new cCArule();
+		oRule.neighbour_type = cCAConsts.Neighbour_8way;
+		oRule.has_state_transitions = false;
+		for (var i=1; i<=cCAConsts.max_inputs; i++){
+			var ch = psInput.charAt(i-1);
+			oRule.set_output(1,i,parseInt(ch));
+		}
+		return oRule;
 	}
 	
 	//*****************************************************************************
@@ -41,8 +70,21 @@ var cCABinaryImporter = function(){
 		
 		for (var i=1; i <=cCAConsts.max_inputs; i++)
 			sOut = sOut + poRule.get_output(piState,i);
-		cDebug.write("binary:"+sOut + " length:"+sOut.length);
 		return sOut;		
+	}
+	
+	//***************************************************************
+	this.test = function(){
+		cDebug.write("Testing cCABinaryImporter");
+		var oLifeImporter = new cCALifeImporter();
+		var oRule1 = oLifeImporter.makeRule(cCALifeRules.LIFE); 
+		
+		var sBinaryIn = this.toString(oRule1,1);
+		var oRule2 = this.makeRule(sBinaryIn,1);
+		
+		var sBinaryOut = this.toString(oRule2,1);
+		if (sBinaryOut !== sBinaryIn) throw new Error("test failed");
+		cDebug.write("Test passed");
 	}
 }
 
@@ -50,8 +92,7 @@ var cCABinaryImporter = function(){
 var cCABase64Importer = function(){
 	this.makeRule = function(ps64){
 		if (! cConverterEncodings.isBase64(ps64) ) throw new CAException("not a valid base64 string");
-		cDebug.write("base64:" + ps64 + " length:" + ps64.length);
-		var sBin = cCASimpleBase64.toBinary(ps64);
+		var sBin = cCASimpleBase64.toBinary(ps64,cCAConsts.max_inputs);
 		var oImporter = new cCABinaryImporter();
 		return oImporter.makeRule(sBin);
 	};
@@ -63,7 +104,6 @@ var cCABase64Importer = function(){
 		var oExporter = new cCABinaryImporter()
 		var sBin = oExporter.toString(poRule,piState);
 		var sOut = cCASimpleBase64.toBase64(sBin);
-		cDebug.write("base64:" + sOut +" length:" + sOut.length);
 		return sOut;
 	};
 }
@@ -120,5 +160,7 @@ var cCALifeImporter = function(){
 		}
 		return oRule;
 	};
-	
 };
+
+//var oTester = new cCABinaryImporter();
+//oTester.test();

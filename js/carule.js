@@ -4,6 +4,9 @@ var cCAStateRule = function() {
 	this.nextStates = new Array(cCAConsts.max_inputs);	
 }
 
+var cCALifeRules = {
+	LIFE:"B3/S23"
+}
 
 //###############################################################################
 var cCArule = function(){
