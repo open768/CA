@@ -1,19 +1,14 @@
 var cCAStateRule = function() {
-	this.neighbour_type = cCAConsts.Neighbour_8way;
+	this.neighbour_type = cCAConsts.neighbours.eightway;
 	this.outputs = new Array(cCAConsts.max_inputs);
-	this.state_transitions = new Array(cCAConsts.max_inputs);	
+	this.nextStates = new Array(cCAConsts.max_inputs);	
 }
 
-//###############################################################################
-function CAException(psMessage) {
-   this.message = psMessage;
-   this.name = 'CAException';
-}
 
 //###############################################################################
 var cCArule = function(){
 	this.init = function(){
-		this.neighbour_type = cCAConsts.Neighbour_8way;
+		this.neighbour_type = cCAConsts.neighbours.eightway;
 		this.has_state_transitions = false;
 		this.stateRules = [];
 	};
@@ -24,8 +19,7 @@ var cCArule = function(){
 		try{
 			var oData = JSON.parse(psJson);
 		}catch (e){
-			alert ("not valid json rule");
-			$.error("not valid rule");
+			throw new CAException("not valid json rule");
 		}
 		//TODO
 	};
@@ -33,11 +27,16 @@ var cCArule = function(){
 	//*****************************************************************
 	this.toJson = function (){
 		//TODO
+		var oJson = {};
 	};
 			
 	//*****************************************************************
 	this.set_output = function (piState, piIndex, piBitValue){
-		if (piState > this.stateRules.length)	this.stateRules[piState-1] = new cCAStateRule();
+		if (piState > this.stateRules.length){
+			var oRule = new cCAStateRule();
+			oRule.neighbour_type = this.neighbour_type;
+			this.stateRules[piState-1] = oRule;
+		}	
 		this.stateRules[piState-1].outputs[piIndex] = piBitValue;
 	};
 	
@@ -48,28 +47,15 @@ var cCArule = function(){
 	};
 	
 	//*****************************************************************
-	this.toBinaryString = function (piState){
-		var sOut = "";
-		if (piState > this.stateRules.length)	throw new CAException("invalid state requested");
-		
-		for (var i=1; i <=cCAConsts.max_inputs; i++)
-			sOut = sOut + this.get_output(piState,i);
-		return sOut;
-	}
-	
-	this.toString = function (piState){
-		if (piState > this.stateRules.length)	throw new CAException("invalid state requested");
-		
-		var sBinary = this.toBinaryString(piState);
-		cDebug.write("binary:" + sBinary);
-		var oBigInt = new BigInteger();
-		oBigInt.fromString(sBinary,2);
-		var sHex = oBigInt.toString(16);
-		cDebug.write("hex:" + sHex);
-		var sOut = hex2b64(sHex);
-		
-		return sOut;
-			
-	}
-	
+	this.set_nextState = function (piInState, piIndex, piOutState){
+		if (!this.has_state_transitions)	throw new CAException("no state transitions possible");
+		if (piInState > this.stateRules.length)	throw new CAException("invalid state requested");
+		this.stateRules[piInState-1].nextStates[piIndex] = piOutState;
+	};
+	//*****************************************************************
+	this.get_nextState = function (piInState, piIndex){
+		if (!this.has_state_transitions)	throw new CAException("no state transitions possible");
+		if (piInState > this.stateRules.length)	throw new CAException("invalid state requested");
+		return this.stateRules[piInState-1].nextStates[piIndex];
+	};	
 }

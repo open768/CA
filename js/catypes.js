@@ -1,10 +1,25 @@
 
 //###############################################################################
 var cCAConsts = {
-	Neighbour_4way: 0,
-	Neighbour_8way: 1, 
-	max_inputs:Math.pow(2,10)-1
+	neighbours:{
+		fourway: 0,
+		eightway: 1
+	},
+	max_inputs:Math.pow(2,10)-1,
+	states:{
+		same: 0,
+		up: 1,
+		down:2,
+		reset:3
+	}
 };
+
+//###############################################################################
+function CAException(psMessage) {
+   this.message = psMessage;
+   this.name = 'CAException';
+}
+
 
 //###############################################################################
 var cIndexOps = {
@@ -25,16 +40,3 @@ var cIndexOps = {
 		return iCount;
 	}
 };
-
-//###############################################################################
-var cBaseOps = {
-	binary_to_base64: function(psBinary){
-		var sBase64 = "";
-		//TODO
-	},
-	
-	//***************************************************************
-	base64_to_binary: function(psBase64){
-		
-	}
-}

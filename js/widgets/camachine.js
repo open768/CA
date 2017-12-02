@@ -26,11 +26,16 @@ $.widget( "ck.camachine",{
 		oElement = oThis.element;
 		oElement.uniqueId();
 		
-		//test the  carule
+		//test the  carule - create life
 		var oImporter = new cCALifeImporter();
 		var oRule = oImporter.makeRule("B3/S23");
-		cDebug.write("Done");
+		var oExporter = new cCABase64Importer();
+		var sBase64 = oExporter.toString(oRule,1);
 		
+		//test the  carule - recreate life
+		var oImporter = new cCABase64Importer();
+		var oRule = oImporter.makeRule(sBase64);
+		cDebug.write("Done");
 	}
 	
 });
