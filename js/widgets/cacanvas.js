@@ -6,9 +6,8 @@ http://creativecommons.org/licenses/by-nc-nd/4.0/legalcode
 For licenses that allow for commercial use please contact cluck@chickenkatsu.co.uk
 // USE AT YOUR OWN RISK - NO GUARANTEES OR ANY FORM ARE EITHER EXPRESSED OR IMPLIED
 **************************************************************************/
-
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-$.widget( "ck.camachine",{
+$.widget( "ck.cacanvas",{
 	//#################################################################
 	//# Definition
 	//#################################################################
@@ -17,7 +16,7 @@ $.widget( "ck.camachine",{
 		height:200,
 		cell_size:5
 	},
-
+	
 	//#################################################################
 	//# Constructor
 	//#################################################################`
@@ -26,19 +25,16 @@ $.widget( "ck.camachine",{
 		var oOptions = oThis.options;
 		var oElement = oThis.element;
 		
-		//check for classes
-		if (typeof cCArule !== 'function') { $.error("missing cCARule class");}
-		
 		//set basic stuff
 		oElement.uniqueId();
 		
-		
-		//machine has 2 child widgets: a control panel and machine canvas
-		// all this widget does is to tell the widgets about each other
+		//put something in the widget
 		oElement.empty();
-		var oControlDiv = $("<DIV>").cacontrols();
-		oElement.append(oControlDiv);
-		var oCanvasDiv = $("<DIV>").cacanvas(oOptions);
-		oElement.append(oCanvasDiv);
+		oElement.append("canvas");
+
+		//test the  carule - create life
+		var oImporter = new cCALifeImporter();
+		var oRule = oImporter.makeRule(cCALifeRules.LIFE);
+		cDebug.write("Done");
 	}
 });

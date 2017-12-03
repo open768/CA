@@ -8,14 +8,11 @@ For licenses that allow for commercial use please contact cluck@chickenkatsu.co.
 **************************************************************************/
 
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-$.widget( "ck.camachine",{
+$.widget( "ck.cacontrols",{
 	//#################################################################
-	//# Definition
+	//# Options
 	//#################################################################
 	options:{
-		width:100,
-		height:200,
-		cell_size:5
 	},
 
 	//#################################################################
@@ -26,19 +23,11 @@ $.widget( "ck.camachine",{
 		var oOptions = oThis.options;
 		var oElement = oThis.element;
 		
-		//check for classes
-		if (typeof cCArule !== 'function') { $.error("missing cCARule class");}
-		
 		//set basic stuff
 		oElement.uniqueId();
 		
-		
-		//machine has 2 child widgets: a control panel and machine canvas
-		// all this widget does is to tell the widgets about each other
+		//put something in the widget
 		oElement.empty();
-		var oControlDiv = $("<DIV>").cacontrols();
-		oElement.append(oControlDiv);
-		var oCanvasDiv = $("<DIV>").cacanvas(oOptions);
-		oElement.append(oCanvasDiv);
+		oElement.append("controls");
 	}
 });
