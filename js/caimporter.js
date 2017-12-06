@@ -59,7 +59,7 @@ var cCASimpleBase64 = {
 var cCABinaryImporter = function(){
 	//*****************************************************************************
 	this.makeRule = function(psInput){
-		if (psInput.length !== cCAConsts.max_inputs) throw new CAException("incorrect length input");
+		if (psInput.length !== cCAConsts.max_inputs) throw new CAException("incorrect length binary input:" + psInput.length + " should be " + cCAConsts.max_inputs);
 
 		//create  the rule 
 		var oRule = new cCArule();
@@ -83,6 +83,19 @@ var cCABinaryImporter = function(){
 	}
 	
 	//***************************************************************
+	this.randomRule = function(){
+		var oRule = new cCArule();
+		oRule.neighbour_type = cCAConsts.Neighbour_8way;
+		oRule.has_state_transitions = false;
+		
+		for (var i=1; i<=cCAConsts.max_inputs; i++){
+			var iRnd = Math.floor(Math.random() * 1.99);
+			oRule.set_output(1,i,iRnd);
+		}
+		return oRule;
+	}
+	
+	//***************************************************************
 	this.test = function(){
 		cDebug.write("Testing cCABinaryImporter");
 		var oLifeImporter = new cCALifeImporter();
@@ -99,7 +112,9 @@ var cCABinaryImporter = function(){
 
 //###############################################################################
 var cCABase64Importer = function(){
+	
 	this.makeRule = function(ps64){
+		if (ps64.length < cCAConsts.base64_length) throw new CAException("base64 not long enough, must be " + this.base64Length);
 		if (! cConverterEncodings.isBase64(ps64) ) throw new CAException("not a valid base64 string");
 		var sBin = cCASimpleBase64.toBinary(ps64,cCAConsts.max_inputs);
 		var oImporter = new cCABinaryImporter();
@@ -124,6 +139,8 @@ var cCALifeImporter = function(){
 		var sBorn, sSurvive;
 		var aBorn = new Array(9);
 		var aSurvive = new Array(9);
+		
+		if (psInput == null)	throw new CAException(" no rule to import");
 		
 		//validate rule and extract rule components
 		var aMatches = psInput.match(/B(\d+)\/S(\d+)/);

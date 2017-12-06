@@ -14,11 +14,29 @@ var cCAConsts = {
 		eightway: 1
 	},
 	max_inputs:Math.pow(2,10)-1,
+	base64_length: Math.ceil((Math.pow(2,10)-1)/6),
+	
 	states:{
 		same: 0,
 		up: 1,
 		down:2,
 		reset:3
+	},
+	rule_types:{
+		life:1,
+		binary:2,
+		base64:3
+	},
+	init_values:{
+		block:1,
+		random:2,
+		horiz_line:3,
+		vert_line:4,
+		diagonal:5,
+		diamond:6,
+		cross:7,
+		circle:8,
+		sine:9
 	}
 };
 

@@ -1,0 +1,21 @@
+.CAControls{
+    outline: 1px solid #ddd;
+    padding: 5px;
+    background: #f0f0f0;
+	display: inline-block;
+	width:220px;
+}
+.CACanvas{
+    outline: 1px solid #ddd;
+    padding: 5px;
+    background: #f0f0f0;
+	display: inline-block;
+	vertical-align: top;
+	min-width: 800px;
+	min-height: 800px;
+}
+
+.rule{
+	font:9px courier;
+	width: 220px
+}
