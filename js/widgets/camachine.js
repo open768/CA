@@ -16,7 +16,7 @@ $.widget( "ck.camachine",{
 		width:100,
 		height:200,
 		cell_size:5,
-		oControls: null
+		oCanvas: null
 	},
 
 	//#################################################################
@@ -37,12 +37,22 @@ $.widget( "ck.camachine",{
 		//machine has 2 child widgets: a control panel and machine canvas
 		// all this widget does is to tell the widgets about each other
 		oElement.empty();
-		var oControlDiv = $("<SPAN>").cacontrols();
-		oOptions.oControls = oControlDiv;
-		
+		var oControlDiv = $("<SPAN>").cacontrols({onCAEvent:function(poEvent,poData){oThis.onCAEvent(poData);} });
 		var oCanvasDiv = $("<SPAN>").cacanvas(oOptions);
+		oOptions.oCanvas = oCanvasDiv;
 
 		oElement.append(oControlDiv);
 		oElement.append(oCanvasDiv);
+	},
+	
+	
+	//#################################################################
+	//# Constructor
+	//#################################################################`
+	onCAEvent:function(poEvent){
+		var oOptions = this.options;
+		oOptions.oCanvas.cacanvas("onCAEvent",poEvent);
 	}
+	
+	
 });

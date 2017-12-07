@@ -7,6 +7,11 @@ For licenses that allow for commercial use please contact cluck@chickenkatsu.co.
 // USE AT YOUR OWN RISK - NO GUARANTEES OR ANY FORM ARE EITHER EXPRESSED OR IMPLIED
 **************************************************************************/
 
+var cCAEvent = function(piType, poData){
+	this.type = piType;
+	this.data = poData;
+}
+
 //###############################################################################
 var cCAConsts = {
 	neighbours:{
@@ -37,6 +42,11 @@ var cCAConsts = {
 		cross:7,
 		circle:8,
 		sine:9
+	},
+	event_types:{
+		set_rule:1,
+		initialise:2,
+		resize:3
 	}
 };
 

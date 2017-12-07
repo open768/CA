@@ -13,6 +13,7 @@ $.widget( "ck.cacontrols",{
 	//# Options
 	//#################################################################
 	options:{
+		"onCAEvent": null
 	},
 
 	//#################################################################
@@ -139,10 +140,14 @@ $.widget( "ck.cacontrols",{
 				case cCAConsts.rule_types.life:
 					var oImporter = new cCALifeImporter();
 					oRule = oImporter.makeRule(oTextArea.val());
+					var oEvent = new cCAEvent( cCAConsts.event_types.set_rule, oRule);
+					this._trigger("onCAEvent", null, oEvent);
 					break;
 				case cCAConsts.rule_types.base64:
 					var oImporter = new cCABase64Importer();
 					oRule = oImporter.makeRule(oTextArea.val());
+					var oEvent = new cCAEvent( cCAConsts.event_types.set_rule, oRule);
+					this._trigger("onCAEvent", null, oEvent);
 					break;
 				default:
 					if (oSelect.val() === "random"){
