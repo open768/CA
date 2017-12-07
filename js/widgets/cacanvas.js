@@ -12,9 +12,10 @@ $.widget( "ck.cacanvas",{
 	//# Definition
 	//#################################################################
 	options:{
-		width:100,
-		height:200,
-		cell_size:5
+		cols:100,
+		rows:100,
+		cell_size:5,
+		oGrid: null
 	},
 	
 	//#################################################################
@@ -35,17 +36,31 @@ $.widget( "ck.cacanvas",{
 		
 		//put something in the widget
 		oElement.empty();
-		oElement.append("canvas");
+		oElement.append("canvas goes here");
+		
+		//associate a CA grid with the widget
+		var oGrid = new cCAGrid(oOptions.rows, oOptions.cols);
+		oOptions.oGrid = oGrid;
 		
 		//test the  carule - create life
-		var oImporter = new cCALifeImporter();
-		var oRule = oImporter.makeRule(cCALifeRules.LIFE);
-		cDebug.write("Done");
+		//var oImporter = new cCALifeImporter();
+		//var oRule = oImporter.makeRule(cCALifeRules.LIFE);
+		//cDebug.write("Done");
 	},
 	
 	//****************************************************************
-	onCAEvent: function( poData){
-		alert("got an event");
+	onCAEvent: function( poEvent){
+		var oThis = this;
+		var oOptions = oThis.options;
+		
+		switch (poEvent.type){
+			case cCAConsts.event_types.set_rule:
+				oOptions.oGrid.rule = poEvent.data;
+				break;
+			case cCAConsts.event_types.initialise:
+				alert ("not implemented");
+				break;
+		}
 	}
 	
 	
