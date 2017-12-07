@@ -1,32 +1,40 @@
-<h2>Cellular Automata JS</h2>
-<script type="text/javascript" src="../jsinc/ck-inc/common.js"></script>
-<script type="text/javascript" src="../jsinc/ck-inc/debug.js"></script>
-<script type="text/javascript" src="../jsinc/jquery/jquery-3.2.1.min.js"></script>
-<script type="text/javascript" src="../jsinc/jquery-ui/jquery-ui.min.js"></script>
-<script type="text/javascript" src="../jsinc/jquery-spinner/g-spinner.min.js"></script>
-<script type="text/javascript" src="../jsinc/jquery-cookie/jquery.cookie.js"></script>
-<link rel="stylesheet" href="../jsinc/jquery-spinner/css/gspinner.min.css">
-<link rel="stylesheet" href="css/CA.css">
-<link rel="stylesheet" href="css/jquery/jquery-ui.css">
+<html>
+<head>
+	<title>Cellular Automata explorer</title>
+	<script type="text/javascript" src="../jsinc/ck-inc/common.js"></script>
+	<script type="text/javascript" src="../jsinc/ck-inc/debug.js"></script>
+	<script type="text/javascript" src="../jsinc/jquery/jquery-3.2.1.min.js"></script>
+	<script type="text/javascript" src="../jsinc/jquery-ui/jquery-ui.min.js"></script>
+	<script type="text/javascript" src="../jsinc/jquery-spinner/g-spinner.min.js"></script>
+	<script type="text/javascript" src="../jsinc/jquery-cookie/jquery.cookie.js"></script>
+	<script type="text/javascript" src="../jsinc/jquery-canvas/jcanvas.min.js"></script>
+	<link rel="stylesheet" href="../jsinc/jquery-spinner/css/gspinner.min.css">
+	<link rel="stylesheet" href="css/CA.css">
+	<link rel="stylesheet" href="css/jquery/jquery-ui.css">
 
 
-<script language="javascript" src="../jsinc/ck-inc/converter.js"></script>
-<script language="javascript" src="js/CA/catypes.js"></script>
-<script language="javascript" src="js/CA/carule.js"></script>
-<script language="javascript" src="js/CA/cagrid.js"></script>
-<script language="javascript" src="js/CA/caimporter.js"></script>
-<script language="javascript" src="js/widgets/camachine.js"></script>
-<script language="javascript" src="js/widgets/cacontrols.js"></script>
-<script language="javascript" src="js/widgets/cacanvas.js"></script>
-<div id="machine"></div>
+	<script language="javascript" src="../jsinc/ck-inc/converter.js"></script>
+	<script language="javascript" src="js/CA/catypes.js"></script>
+	<script language="javascript" src="js/CA/carule.js"></script>
+	<script language="javascript" src="js/CA/cagrid.js"></script>
+	<script language="javascript" src="js/CA/caimporter.js"></script>
+	<script language="javascript" src="js/widgets/camachine.js"></script>
+	<script language="javascript" src="js/widgets/cacontrols.js"></script>
+	<script language="javascript" src="js/widgets/cacanvas.js"></script>
+</head>
+<body>
+	<h2>Cellular Automata JS</h2>
+	<div id="machine"></div>
 
-<script language="javascript">
-function onJqueryLoad(){
-	$("#machine").camachine();
-}
-$(onJqueryLoad);
-</script>
+	<script language="javascript">
+	function onJqueryLoad(){
+		$("#machine").camachine();
+	}
+	$(onJqueryLoad);
+	</script>
 
-<div>
-see <a href="https://drive.google.com/open?id=1VGfGFFW91kYUms18tDa2nSgQAkdL1iEt42uDivZReGE" target="_new">this document</a>
-</div>
+	<div>
+	see <a href="https://drive.google.com/open?id=1VGfGFFW91kYUms18tDa2nSgQAkdL1iEt42uDivZReGE" target="_new">this document</a>
+	</div>
+</body>
+</html>

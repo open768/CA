@@ -15,7 +15,8 @@ $.widget( "ck.cacanvas",{
 		cols:100,
 		rows:100,
 		cell_size:5,
-		oGrid: null
+		oGrid: null,
+		oCanvas:null	
 	},
 	
 	//#################################################################
@@ -36,7 +37,7 @@ $.widget( "ck.cacanvas",{
 		
 		//put something in the widget
 		oElement.empty();
-		oElement.append("canvas goes here");
+		this.pr__initCanvas();
 		
 		//associate a CA grid with the widget
 		var oGrid = new cCAGrid(oOptions.rows, oOptions.cols);
@@ -46,6 +47,30 @@ $.widget( "ck.cacanvas",{
 		//var oImporter = new cCALifeImporter();
 		//var oRule = oImporter.makeRule(cCALifeRules.LIFE);
 		//cDebug.write("Done");
+	},
+	
+	//****************************************************************
+	pr__initCanvas: function(){
+		var oThis = this;
+		var oOptions = oThis.options;
+		var oElement = oThis.element;
+		
+		var oCanvas = $("<canvas>");
+		oCanvas.attr("width",500);
+		oCanvas.attr("height",500);
+		oOptions.oCanvas = oCanvas;
+		oElement.append(oCanvas);
+		
+		oCanvas.drawText({
+		  fillStyle: '#9cf',
+		  strokeStyle: '#25a',
+		  strokeWidth: 2,
+		  x: 100, y: 100,
+		  fontSize: 48,
+		  fontFamily: 'Verdana, sans-serif',
+		  text: 'Ready'
+		});
+		
 	},
 	
 	//****************************************************************
