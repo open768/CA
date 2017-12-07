@@ -114,7 +114,7 @@ var cCABinaryImporter = function(){
 var cCABase64Importer = function(){
 	
 	this.makeRule = function(ps64){
-		if (ps64.length < cCAConsts.base64_length) throw new CAException("base64 not long enough, must be " + this.base64Length);
+		if (ps64.length < cCAConsts.base64_length) throw new CAException("base64 not long enough, must be " + cCAConsts.base64_length + "chars");
 		if (! cConverterEncodings.isBase64(ps64) ) throw new CAException("not a valid base64 string");
 		var sBin = cCASimpleBase64.toBinary(ps64,cCAConsts.max_inputs);
 		var oImporter = new cCABinaryImporter();

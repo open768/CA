@@ -13,7 +13,8 @@ $.widget( "ck.cacontrols",{
 	//# Options
 	//#################################################################
 	options:{
-		"onCAEvent": null
+		onCAEvent: null,
+		rule_set:false
 	},
 
 	//#################################################################
@@ -142,12 +143,14 @@ $.widget( "ck.cacontrols",{
 					oRule = oImporter.makeRule(oTextArea.val());
 					var oEvent = new cCAEvent( cCAConsts.event_types.set_rule, oRule);
 					this._trigger("onCAEvent", null, oEvent);
+					oOptions.rule_set = true;
 					break;
 				case cCAConsts.rule_types.base64:
 					var oImporter = new cCABase64Importer();
 					oRule = oImporter.makeRule(oTextArea.val());
 					var oEvent = new cCAEvent( cCAConsts.event_types.set_rule, oRule);
 					this._trigger("onCAEvent", null, oEvent);
+					oOptions.rule_set = true;
 					break;
 				default:
 					if (oSelect.val() === "random"){
@@ -167,7 +170,21 @@ $.widget( "ck.cacontrols",{
 	onInitClick: function(){
 		var oThis = this;
 		var oOptions = oThis.options;
+		var oElement = oThis.element;
+
+		if (! oOptions.rule_set){
+			alert("set a rule first");
+			return;
+		}
+		
 		var oSelect = $("#" +oElement.attr("id")+"INIT");
+		if (!oSelect.val()) {
+			alert("choose a init method");
+			return;
+		}
+		var iSelected = parseInt(oSelect.val());
+		var oEvent = new cCAEvent( cCAConsts.event_types.initialise, iSelected);
+		this._trigger("onCAEvent", null, oEvent);
 	},
 
 	//****************************************************************************
@@ -185,7 +202,7 @@ $.widget( "ck.cacontrols",{
 				var sText = oTextArea.val();
 				var iDiff = cCAConsts.base64_length - sText.length;
 				var oSpan = $("#" +	oElement.attr("id")+"EXTRA");
-				oSpan.html( iDiff);
+				oSpan.html( iDiff +" chars remaining");
 			}
 		}
 		
