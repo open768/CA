@@ -91,6 +91,8 @@ var cCABinaryImporter = function(){
 		for (var i=1; i<=cCAConsts.max_inputs; i++){
 			var iRnd = Math.floor(Math.random() * 1.99);
 			oRule.set_output(1,i,iRnd);
+			
+			
 		}
 		return oRule;
 	}

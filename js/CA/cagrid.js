@@ -18,6 +18,7 @@ var cCAGrid = function(piRows, piCols){
 	
 	//****************************************************************
 	this.init = function(piInitType){
+		cDebug.write("initialising " + piInitType);
 		switch(piInitType){
 			case cCAConsts.init_values.blank:
 				for (var ir=1; ir<= this.rows; ir++)
@@ -57,12 +58,43 @@ var cCAGrid = function(piRows, piCols){
 			default:
 				throw new CAException("unknown init_type: " + piInitType);
 		}
+		cDebug.write("completed initialising "+ piInitType);
 		bean.fire(this,"done");
 	};
 	
 	//****************************************************************
 	this.link_cells = function(piNeighbourType){
+		cDebug.write("linking cells");
+		for (var ir=1; ir<= this.rows; ir++)
+			for (var ic=1; ic<= this.cols; ic++){
+				var oCell = this.getCell(ir,ic,false);
+				this.pr__link_cell(oCell,cCAConsts.neighbours.north, ir-1, ic);
+				this.pr__link_cell(oCell,cCAConsts.neighbours.east, ir, ic+1);
+				this.pr__link_cell(oCell,cCAConsts.neighbours.south, ir+1, ic);
+				this.pr__link_cell(oCell,cCAConsts.neighbours.west, ir, ic-1);
+				if (piNeighbourType == cCAConsts.eightway){
+					this.pr__link_cell(oCell,cCAConsts.neighbours.northeast, ir-1, ic+1);
+					this.pr__link_cell(oCell,cCAConsts.neighbours.southeast, ir+1, ic+1);
+					this.pr__link_cell(oCell,cCAConsts.neighbours.southwest, ir+1, ic-1);
+					this.pr__link_cell(oCell,cCAConsts.neighbours.northwest, ir-1, ic-1);
+				}
+			}
+		cDebug.write("completed cell linking");
+	};
+	
+	this.pr__link_cell = function(poCell, piNeigh, piRow, piCol){
+		var ir, ic;
+		ir=piRow;
+		if (ir<1) ir= this.rows;
+		if (ir>this.rows) ir=1;
 		
+		ic=piCol;
+		if (ic<1) ic= this.cols;
+		if (ic>this.cols) ic=1;
+		
+		var oCell = this.getCell(ir,ic,false);
+		if (oCell == null)	throw new CAException("unable to link cell");
+		poCell.data.set(piNeigh,oCell);		
 	};
 	
 	//****************************************************************

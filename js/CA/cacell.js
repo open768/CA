@@ -10,7 +10,7 @@ var cCACell = function(){
 	this.state = 1;
 	this.value = 0;
 	
-	this.hash = new Map();	//the cell doesnt know what the hash means, only that there is some data in there. this leaves the implementation of the cell flexible.
+	this.data = new Map();	//the cell doesnt know what the data means, only that there is some data in there. this leaves the implementation of the cell flexible.
 	
 	this.evaluated = false;
 	this.evaluated_value = 0;
