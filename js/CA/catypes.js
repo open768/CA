@@ -16,7 +16,16 @@ var cCAEvent = function(piType, poData){
 var cCAConsts = {
 	neighbours:{
 		fourway: 0,
-		eightway: 1
+		eightway: 1,
+		
+		north:1,
+		northeast:2,
+		east:3,
+		southeast:4,
+		south:5,
+		southwest:6,
+		west:7,
+		northwest:8
 	},
 	max_inputs:Math.pow(2,10)-1,
 	base64_length: Math.ceil((Math.pow(2,10)-1)/6),

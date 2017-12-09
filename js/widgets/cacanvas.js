@@ -16,7 +16,9 @@ $.widget( "ck.cacanvas",{
 		rows:100,
 		cell_size:5,
 		oGrid: null,
-		oCanvas:null	
+		oCanvas:null,
+		white_image:"images/whitebox.png",
+		black_image:"images/blackbox.png"
 	},
 	
 	//#################################################################
@@ -35,44 +37,18 @@ $.widget( "ck.cacanvas",{
 		oElement.addClass("ui-widget");
 		oElement.addClass("CACanvas");
 		
-		//put something in the widget
-		oElement.empty();
-		this.pr__initCanvas();
-		
 		//associate a CA grid with the widget
 		var oGrid = new cCAGrid(oOptions.rows, oOptions.cols);
 		oOptions.oGrid = oGrid;
+		bean.on(oGrid, "done", function(){oThis.onGridDone()});
 		
-		//test the  carule - create life
-		//var oImporter = new cCALifeImporter();
-		//var oRule = oImporter.makeRule(cCALifeRules.LIFE);
-		//cDebug.write("Done");
+		//put something in the widget
+		this.pr__initCanvas();
 	},
 	
-	//****************************************************************
-	pr__initCanvas: function(){
-		var oThis = this;
-		var oOptions = oThis.options;
-		var oElement = oThis.element;
-		
-		var oCanvas = $("<canvas>");
-		oCanvas.attr("width",500);
-		oCanvas.attr("height",500);
-		oOptions.oCanvas = oCanvas;
-		oElement.append(oCanvas);
-		
-		oCanvas.drawText({
-		  fillStyle: '#9cf',
-		  strokeStyle: '#25a',
-		  strokeWidth: 2,
-		  x: 100, y: 100,
-		  fontSize: 48,
-		  fontFamily: 'Verdana, sans-serif',
-		  text: 'Ready'
-		});
-		
-	},
-	
+	//#################################################################
+	//# events
+	//#################################################################`
 	//****************************************************************
 	onCAEvent: function( poEvent){
 		var oThis = this;
@@ -86,7 +62,52 @@ $.widget( "ck.cacanvas",{
 				alert ("not implemented");
 				break;
 		}
-	}
+	},
 	
+	//****************************************************************
+	onGridDone:function(){
+		this.pr__drawGrid();
+	},
+	
+	//#################################################################
+	//# privates
+	//#################################################################`
+	pr__initCanvas: function(){
+		var oThis = this;
+		var oOptions = oThis.options;
+		var oElement = oThis.element;
+		
+		//create the html5 canvas to draw on
+		oElement.empty();
+		var oCanvas = $("<canvas>");
+		oCanvas.attr("width",oOptions.cols*oOptions.cell_size);
+		oCanvas.attr("height",oOptions.rows*oOptions.cell_size);
+		oOptions.oCanvas = oCanvas;
+		oElement.append(oCanvas);
+				
+		//fill the canvas with a pretty random pattern
+		oOptions.oGrid.randomise();
+	},
+	
+	//****************************************************************
+	pr__drawGrid: function(){
+		var oThis = this;
+		var oOptions = oThis.options;
+		var oCanvas = oOptions.oCanvas;
+		var oGrid = oOptions.oGrid;
+		
+		oCanvas.clearCanvas();
+		var y=0;
+		for (var ir=1; ir<= oGrid.rows; ir++){
+			var x=0;
+			for (var ic=1; ic<= oGrid.cols; ic++){
+				var oCell = oGrid.getCell(ir,ic);
+				var sImg = (oCell.value==0?oOptions.white_image:oOptions.black_image);
+				oCanvas.drawImage({  source: sImg, x: x, y: y,fromCenter:false});
+				x+= oOptions.cell_size;
+			}
+			y+= oOptions.cell_size;
+		}
+	}	
 	
 });
