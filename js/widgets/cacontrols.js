@@ -142,9 +142,11 @@ $.widget( "ck.cacontrols",{
 				case cCAConsts.rule_types.life:
 					var oImporter = new cCALifeImporter();
 					oRule = oImporter.makeRule(oTextArea.val());
-					var oEvent = new cCAEvent( cCAConsts.event_types.set_rule, oRule);
-					this._trigger("onCAEvent", null, oEvent);
-					oOptions.rule_set = true;
+					var oExporter = new cCABase64Importer();
+					var s64 = oExporter.toString(oRule,1);
+					oTextArea.val(s64);
+					oSelect.val(cCAConsts.rule_types.base64);
+					oSelect.selectmenu("refresh");
 					break;
 				case cCAConsts.rule_types.base64:
 					var oImporter = new cCABase64Importer();
@@ -221,5 +223,9 @@ $.widget( "ck.cacontrols",{
 		
 		var oTextArea = $("#" +	oElement.attr("id")+"ENTRY");
 		oTextArea.val(sBase64);		
+
+		var oSelect = $("#" + oElement.attr("id")+"RULELIST");
+		oSelect.val(cCAConsts.rule_types.base64);
+		oSelect.selectmenu("refresh");
 	}
 });
