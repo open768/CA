@@ -50,7 +50,8 @@ var cCAConsts = {
 		diamond:6,
 		cross:7,
 		circle:8,
-		sine:9
+		sine:9,
+		blank:10
 	},
 	event_types:{
 		set_rule:1,

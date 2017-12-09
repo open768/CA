@@ -59,7 +59,7 @@ $.widget( "ck.cacanvas",{
 				oOptions.oGrid.rule = poEvent.data;
 				break;
 			case cCAConsts.event_types.initialise:
-				alert ("not implemented");
+				oOptions.oGrid.init(poEvent.data);
 				break;
 		}
 	},
@@ -86,7 +86,10 @@ $.widget( "ck.cacanvas",{
 		oElement.append(oCanvas);
 				
 		//fill the canvas with a pretty random pattern
-		oOptions.oGrid.randomise();
+		oOptions.oGrid.init(cCAConsts.init_values.block);
+		
+		//link the cells in the grid
+		oOptions.oGrid.link_cells(cCAConsts.neighbours.eightway);
 	},
 	
 	//****************************************************************

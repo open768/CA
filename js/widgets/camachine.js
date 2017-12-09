@@ -51,7 +51,11 @@ $.widget( "ck.camachine",{
 	//#################################################################`
 	onCAEvent:function(poEvent){
 		var oOptions = this.options;
-		oOptions.oCanvas.cacanvas("onCAEvent",poEvent);
+		try{
+			oOptions.oCanvas.cacanvas("onCAEvent",poEvent);
+		}catch(e){
+			alert ("Whooops - something went wrong:" + e.message);
+		}
 	}
 	
 	

@@ -83,6 +83,7 @@ $.widget( "ck.cacontrols",{
 		sID = oElement.attr("id")+"INIT";
 		var oSelect = $("<SELECT>",{id:sID,width:200});
 		oSelect.append( $("<option>",{selected:1,disabled:1,value:-1}).append("Choose"));
+		oSelect.append ( $("<option>",{value:cCAConsts.init_values.blank}).append("blank"));
 		oSelect.append ( $("<option>",{value:cCAConsts.init_values.block}).append("block"));
 		oSelect.append ( $("<option>",{value:cCAConsts.init_values.random}).append("random"));
 		oSelect.append ( $("<option>",{value:cCAConsts.init_values.horiz_line}).append("horiz line"));
@@ -172,10 +173,6 @@ $.widget( "ck.cacontrols",{
 		var oOptions = oThis.options;
 		var oElement = oThis.element;
 
-		if (! oOptions.rule_set){
-			alert("set a rule first");
-			return;
-		}
 		
 		var oSelect = $("#" +oElement.attr("id")+"INIT");
 		if (!oSelect.val()) {
