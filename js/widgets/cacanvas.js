@@ -59,13 +59,15 @@ $.widget( "ck.cacanvas",{
 		var oOptions = oThis.options;
 		var oPrivOptions = oOptions._privates;
 		
-		
 		switch (poEvent.type){
 			case cCAConsts.event_types.set_rule:
 				oPrivOptions.oGrid.rule = poEvent.data;
 				break;
 			case cCAConsts.event_types.initialise:
 				oPrivOptions.oGrid.init(poEvent.data);
+				break;
+			case cCAConsts.event_types.action:
+				oPrivOptions.oGrid.action(poEvent.data);
 				break;
 		}
 	},

@@ -11,11 +11,12 @@
     background: #f0f0f0;
 	display: inline-block;
 	vertical-align: top;
-	min-width: 800px;
-	min-height: 800px;
+	min-width: 500px;
+	min-height: 500px;
 }
 
 .rule{
-	font:9px courier;
-	width: 220px
+	width: 220px;
+	font-family:courier;
+	font-size: 9px;
 }

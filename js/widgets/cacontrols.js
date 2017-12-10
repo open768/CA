@@ -39,11 +39,6 @@ $.widget( "ck.cacontrols",{
 		oElement.empty();
 
 		
-		//---------------------------------------------------
-		oDiv = $("<DIV>",{class:"ui-widget-header"});
-		oDiv.append("login to facebook");
-		oElement.append(oDiv);
-		
 		//--input-------------------------------------------------
 		oDiv = $("<DIV>",{class:"ui-widget-header"});
 		oDiv.append("Rule");
@@ -74,11 +69,7 @@ $.widget( "ck.cacontrols",{
 		
 		oElement.append(oDiv);
 		
-		//--initialise------------------------------------------------
-		oDiv = $("<DIV>",{class:"ui-widget-header"});
-		oDiv.append("Grid");
-		oElement.append(oDiv);
-		
+		//--initialise------------------------------------------------		
 		var oDiv = $("<DIV>",{class:"ui-widget-content"});
 		sID = oElement.attr("id")+"INIT";
 		var oSelect = $("<SELECT>",{id:sID,width:200});
@@ -101,19 +92,18 @@ $.widget( "ck.cacontrols",{
 
 		oElement.append(oDiv);
 		
-		//--controls------------------------------------------------
-		oDiv = $("<DIV>",{class:"ui-widget-header"});
-		oDiv.append("controls");
-		oElement.append(oDiv);
-		
+		//--controls------------------------------------------------		
 		var oDiv = $("<DIV>",{class:"ui-widget-content"});
-		var oButton = $("<button>",{width:"20px",height:"20px",class:"ui-icon-stop"}).button();
-		var oSpan = $("<SPAN>",{class:"ui-icon-stop"});
-		oButton.append(oSpan);
+		var oButton = $("<button>",{width:"20px",height:"20px"}).button({icon:"ui-icon-stop"});
+		oButton.click(	function(){ oThis.onClickButton(cCAConsts.action_types.stop);}	);
 		oDiv.append(oButton);
-		var oButton = $("<button>",{width:"20px",height:"20px",class:"ui-icon-play"}).button();
+
+		var oButton = $("<button>",{width:"20px",height:"20px"}).button({icon:"ui-icon-circle-triangle-e"});
+		oButton.click(	function(){ oThis.onClickButton(cCAConsts.action_types.play);}	);
 		oDiv.append(oButton);
-		var oButton = $("<button>",{width:"20px",height:"20px",class:"ui-icon-seek-next"}).button();
+
+		var oButton = $("<button>",{width:"20px",height:"20px"}).button({icon:"ui-icon-seek-end"});
+		oButton.click(	function(){ oThis.onClickButton(cCAConsts.action_types.stop);}	);
 		oDiv.append(oButton);
 		
 		oElement.append(oDiv);
@@ -122,6 +112,19 @@ $.widget( "ck.cacontrols",{
 	//#################################################################
 	//# EVENTS
 	//#################################################################`
+	//****************************************************************************
+	onClickButton: function(piAction){
+		var oThis = this;
+		var oOptions = oThis.options;
+		if (!oOptions.rule_set)
+			alert("set a rule first!!");
+		else{
+			var oEvent = new cCAEvent( cCAConsts.event_types.action, piAction);
+			this._trigger("onCAEvent", null, oEvent);			
+		}
+
+	},
+	
 	//****************************************************************************
 	onSetRuleClick: function(){
 		var oThis = this;
@@ -144,9 +147,7 @@ $.widget( "ck.cacontrols",{
 					oRule = oImporter.makeRule(oTextArea.val());
 					var oExporter = new cCABase64Importer();
 					var s64 = oExporter.toString(oRule,1);
-					oTextArea.val(s64);
-					oSelect.val(cCAConsts.rule_types.base64);
-					oSelect.selectmenu("refresh");
+					this.pr_setBase64Rule(s64);
 					break;
 				case cCAConsts.rule_types.base64:
 					var oImporter = new cCABase64Importer();
@@ -221,11 +222,22 @@ $.widget( "ck.cacontrols",{
 		var oImporter = new cCABase64Importer();
 		var sBase64 = oImporter.toString(oRule,1);
 		
+		this.pr_setBase64Rule(sBase64);
+	},
+	
+	//****************************************************************************
+	pr_setBase64Rule:function( psBase64){
+		var oThis = this;
+		var oOptions = oThis.options;
+		var oElement = oThis.element;
+		
 		var oTextArea = $("#" +	oElement.attr("id")+"ENTRY");
-		oTextArea.val(sBase64);		
+		oTextArea.val(psBase64);		
 
 		var oSelect = $("#" + oElement.attr("id")+"RULELIST");
 		oSelect.val(cCAConsts.rule_types.base64);
 		oSelect.selectmenu("refresh");
+		this.onSetRuleClick();
 	}
+	
 });

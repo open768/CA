@@ -17,6 +17,7 @@ var cCAConsts = {
 	neighbours:{
 		fourway: 0,
 		eightway: 1,
+		maximum:8,
 		
 		north:1,
 		northeast:2,
@@ -29,7 +30,6 @@ var cCAConsts = {
 	},
 	max_inputs:Math.pow(2,10)-1,
 	base64_length: Math.ceil((Math.pow(2,10)-1)/6),
-	
 	states:{
 		same: 0,
 		up: 1,
@@ -53,10 +53,17 @@ var cCAConsts = {
 		sine:9,
 		blank:10
 	},
+	action_types:{
+		play:1,
+		stop:2,
+		step:3
+	},
+	
 	event_types:{
 		set_rule:1,
 		initialise:2,
-		resize:3
+		resize:3,
+		action:4
 	}
 };
 

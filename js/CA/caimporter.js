@@ -145,7 +145,7 @@ var cCALifeImporter = function(){
 		if (psInput == null)	throw new CAException(" no rule to import");
 		
 		//validate rule and extract rule components
-		var aMatches = psInput.match(/B(\d+)\/S(\d+)/);
+		var aMatches = psInput.match(/B(\d+)\/S(\d+)/i);
 		if (aMatches == null ){
 			throw new CAException(psInput+" is not a valid life notation - must be Bnnn/Snnn");
 		}
@@ -157,9 +157,11 @@ var cCALifeImporter = function(){
 		//populate importer arrays 		
 		for ( var i = 0; i< sBorn.length; i++){
 			var iPos = parseInt(sBorn.charAt(i));
+			if (iPos<1 || iPos > cCAConsts.neighbours.maximum) throw new CAException(iPos+" is not a valid born count");
 			aBorn[iPos] = 1;
 		}
 		for ( var i = 0; i< sSurvive.length; i++){
+			if (iPos<0 || iPos > cCAConsts.neighbours.maximum) throw new CAException(iPos+" is not a valid survivor count");
 			var iPos = parseInt(sSurvive.charAt(i));
 			aSurvive[iPos] = 1;
 		}

@@ -17,6 +17,10 @@ var cCAGrid = function(piRows, piCols){
 	this.oLastRow = null;
 	
 	//****************************************************************
+	this.action = function(piAction){
+		cDebug.write("running action " + piAction);
+	},
+	//****************************************************************
 	this.init = function(piInitType){
 		cDebug.write("initialising " + piInitType);
 		switch(piInitType){
