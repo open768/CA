@@ -25,31 +25,15 @@ var cCArule = function(){
 		this.stateRules = [];
 	};
 	this.init();
-
-	//*****************************************************************
-	this.parseJson = function (psJson){
-		try{
-			var oData = JSON.parse(psJson);
-		}catch (e){
-			throw new CAException("not valid json rule");
-		}
-		//TODO
-	};
-
-	//*****************************************************************
-	this.toJson = function (){
-		//TODO
-		var oJson = {};
-	};
 			
 	//*****************************************************************
-	this.set_output = function (piState, piIndex, piBitValue){
+	this.set_output = function (piState, piIndex, piValue){
 		if (piState > this.stateRules.length){
-			var oRule = new cCAStateRule();
-			oRule.neighbour_type = this.neighbour_type;
-			this.stateRules[piState-1] = oRule;
+			var oStateRule = new cCAStateRule();
+			oStateRule.neighbour_type = this.neighbour_type;
+			this.stateRules[piState-1] = oStateRule;
 		}	
-		this.stateRules[piState-1].outputs[piIndex] = piBitValue;
+		this.stateRules[piState-1].outputs[piIndex] = piValue;
 	};
 	
 	//*****************************************************************
@@ -59,15 +43,24 @@ var cCArule = function(){
 	};
 	
 	//*****************************************************************
-	this.set_nextState = function (piInState, piIndex, piOutState){
+	this.set_nextState = function (piInState, piIndex, piNextState){
 		if (!this.has_state_transitions)	throw new CAException("no state transitions possible");
-		if (piInState > this.stateRules.length)	throw new CAException("invalid state requested");
-		this.stateRules[piInState-1].nextStates[piIndex] = piOutState;
+		if (piInState > this.stateRules.length)	throw new CAException("invalid input state ");
+		if (piNextState > this.stateRules.length)	throw new CAException("invalid next state ");
+		this.stateRules[piInState-1].nextStates[piIndex] = piNextState;
 	};
+
 	//*****************************************************************
 	this.get_nextState = function (piInState, piIndex){
 		if (!this.has_state_transitions)	throw new CAException("no state transitions possible");
 		if (piInState > this.stateRules.length)	throw new CAException("invalid state requested");
-		return this.stateRules[piInState-1].nextStates[piIndex];
+		var iOutState = this.stateRules[piInState-1].nextStates[piIndex];
+		return iOutState;
 	};	
+	
+	//*****************************************************************
+	this.applyToCell = function(poCell){
+		//not implemented
+		throw new CAException("rules not implemented");
+	};
 }

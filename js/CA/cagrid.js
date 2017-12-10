@@ -19,7 +19,8 @@ var cCAGrid = function(piRows, piCols){
 	this.privates = {
 		iLastRow : -1,
 		oLastRow :null,
-		cell_data:new Map()
+		cell_data:new Map(),
+		changed_cells: null
 	};
 	
 	//#######################################################################
@@ -41,11 +42,17 @@ var cCAGrid = function(piRows, piCols){
 	
 	//****************************************************************
 	this.step = function(){
-		alert("step not implemented");
+		var oPrivates = this.privates;
+		var oRule = this.rule;
+		oPrivates.changed_cells = [];
+		this.changed_count = 0;
+		this.non_zero_count = 0;
 		
 		for (var ir=1; ir<= this.rows; ir++)
 			for (var ic=1; ic<= this.cols; ic++){
 				var oCell = this.getCell(ir,ic,true);
+				if (oCell.rule == null) oCell.rule = this.rule;
+				oCell.apply_rule();
 			}
 	};
 	
@@ -142,6 +149,8 @@ var cCAGrid = function(piRows, piCols){
 		if (! oCell){
 			if (!pbCreateCell) return null;
 			oCell = new cCACell();
+			oCell.data.set("R", piRow);
+			oCell.data.set("C", piCol);
 			oRowMap.set(piCol, oCell);
 		}
 		

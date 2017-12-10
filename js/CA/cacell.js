@@ -7,12 +7,23 @@ For licenses that allow for commercial use please contact cluck@chickenkatsu.co.
 // USE AT YOUR OWN RISK - NO GUARANTEES OR ANY FORM ARE EITHER EXPRESSED OR IMPLIED
 **************************************************************************/
 var cCACell = function(){
+	this.rule = null;
 	this.state = 1;
 	this.value = 0;
 	
 	this.data = new Map();	//the cell doesnt know what the data means, only that there is some data in there. this leaves the implementation of the cell flexible.
 	
-	this.evaluated = false;
-	this.evaluated_value = 0;
-	this.evaluated_state = 1;
+	this.evaluated = {
+		done:false,
+		state:0,
+		value:1,
+		bitmap:-1
+	};
+
+	//****************************************************************
+	this.apply_rule = function(){
+		//just calls the rules apply method the benefit of doing it this way is 
+		//that each cell could have a different rule.
+		this.rule.applyToCell(this);
+	}
 }
