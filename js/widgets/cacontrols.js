@@ -103,7 +103,7 @@ $.widget( "ck.cacontrols",{
 		oDiv.append(oButton);
 
 		var oButton = $("<button>",{width:"20px",height:"20px"}).button({icon:"ui-icon-seek-end"});
-		oButton.click(	function(){ oThis.onClickButton(cCAConsts.action_types.stop);}	);
+		oButton.click(	function(){ oThis.onClickButton(cCAConsts.action_types.step);}	);
 		oDiv.append(oButton);
 		
 		oElement.append(oDiv);
@@ -119,7 +119,7 @@ $.widget( "ck.cacontrols",{
 		if (!oOptions.rule_set)
 			alert("set a rule first!!");
 		else{
-			var oEvent = new cCAEvent( cCAConsts.event_types.action, piAction);
+			var oEvent = new cCAEvent( cCAConsts.event_types.action, parseInt(piAction));
 			this._trigger("onCAEvent", null, oEvent);			
 		}
 
