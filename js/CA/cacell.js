@@ -22,8 +22,15 @@ var cCACell = function(){
 
 	//****************************************************************
 	this.apply_rule = function(){
-		//just calls the rules apply method the benefit of doing it this way is 
+		//just calls the rules apply method. the benefit of doing it this way is 
 		//that each cell could have a different rule.
-		this.rule.applyToCell(this);
+		return this.rule.evaluateCell(this);
+	};
+	
+	//****************************************************************
+	this.promote = function(){
+		this.state = this.evaluated.state;
+		this.value = this.evaluated.value;
+		this.evaluated.done = false;
 	}
 }

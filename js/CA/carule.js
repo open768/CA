@@ -59,8 +59,13 @@ var cCArule = function(){
 	};	
 	
 	//*****************************************************************
-	this.applyToCell = function(poCell){
+	this.evaluateCell = function(poCell){
 		//not implemented
 		throw new CAException("rules not implemented");
+		
+		//get the cell neighbour count
+		//get the output
+		//set the evaluated state
+		
 	};
 }

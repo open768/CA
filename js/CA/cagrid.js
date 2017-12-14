@@ -48,12 +48,24 @@ var cCAGrid = function(piRows, piCols){
 		this.changed_count = 0;
 		this.non_zero_count = 0;
 		
+		//apply rules
 		for (var ir=1; ir<= this.rows; ir++)
 			for (var ic=1; ic<= this.cols; ic++){
 				var oCell = this.getCell(ir,ic,true);
 				if (oCell.rule == null) oCell.rule = this.rule;
-				oCell.apply_rule();
+				if (oCell.apply_rule()){
+					this.changed_count++;
+					oPrivates.changed_cells.push(oCell);
+				}
 			}
+
+		//promote changed cells
+		var iLen = oPrivates.changed_cells.length;
+		for ( var ic = 0; ic < iLenl; ic++){
+			var oCell = oPrivates.changed_cells[ic];
+			oCell.promote();
+		}
+			
 	};
 	
 	//****************************************************************
@@ -62,23 +74,61 @@ var cCAGrid = function(piRows, piCols){
 		switch(piInitType){
 			case cCAConsts.init_values.blank:
 				for (var ir=1; ir<= this.rows; ir++)
-					for (var ic=1; ic<= this.cols; ic++){
-						var oCell = this.getCell(ir,ic,true);
-						oCell.value = 0;
-					}
+					for (var ic=1; ic<= this.cols; ic++)
+						this.setCellValue(ir,ic,true,0);
 				this.non_zero_count = 0;
 				break;
 				
-			//--------------------------------------------------------
+			//------------------------------------------------------
+			case cCAConsts.init_values.horiz_line:
+				this.init(cCAConsts.init_values.blank);
+				var ir = Math.floor(this.rows / 2);
+				for (var ic=1; ic<= this.cols; ic++)
+					this.setCellValue(ir,ic,true,1);
+				break;
+				
+			//------------------------------------------------------
+			case cCAConsts.init_values.diagonal:
+				this.init(cCAConsts.init_values.blank);
+				for (var ir=1; ir<= this.rows; ir++){
+					if (ir>this.cols) break;
+					this.setCellValue(ir,ir,true,1);
+				}
+				break;
+			//------------------------------------------------------
+			case cCAConsts.init_values.diamond:
+				this.init(cCAConsts.init_values.blank);
+				var icc = Math.floor(this.cols / 2);
+				var icr = Math.floor(this.rows / 2);
+				
+				for (var i=10; i>= 0; i--){
+					var dx = i;
+					var dy = 10 - dx;
+					
+					this.setCellValue(icr-dy,icc-dx,true,1);
+					this.setCellValue(icr-dy,icc+dx,true,1);
+					this.setCellValue(icr+dy,icc-dx,true,1);
+					this.setCellValue(icr+dy,icc+dx,true,1);
+				}
+				
+				break;
+				
+			//------------------------------------------------------
+			case cCAConsts.init_values.vert_line:
+				this.init(cCAConsts.init_values.blank);
+				var ic = Math.floor(this.cols / 2);
+				for (var ir=1; ir<= this.cols; ir++)
+					this.setCellValue(ir,ic,true,1);
+				break;
+				
+			//------------------------------------------------------
 			case cCAConsts.init_values.block:
 				this.init(cCAConsts.init_values.blank);
 				var iMidC = Math.floor( this.cols/2);
 				var iMidR = Math.floor( this.rows/2);
 				for (var ic=iMidC; ic<= iMidC+1; ic++)
-					for (var ir=iMidR; ir<= iMidR+1; ir++){
-						var oCell = this.getCell(ir,ic,true);
-						oCell.value = 1;
-					}
+					for (var ir=iMidR; ir<= iMidR+1; ir++)
+						this.setCellValue(ir,ic,true,1);
 				this.non_zero_count = 4;
 				this.changed_count = 4;
 				break;
@@ -87,9 +137,8 @@ var cCAGrid = function(piRows, piCols){
 			case cCAConsts.init_values.random:
 				for (var ir=1; ir<= this.rows; ir++)
 					for (var ic=1; ic<= this.cols; ic++){
-						var oCell = this.getCell(ir,ic,true);
 						var iRnd = Math.round(Math.random());
-						oCell.value = iRnd;
+						this.setCellValue(ir,ic,true,iRnd);
 						this.non_zero_count += iRnd;
 					}
 				this.changed_count = this.non_zero_count;
@@ -123,6 +172,12 @@ var cCAGrid = function(piRows, piCols){
 	};
 	
 	//****************************************************************
+	this.setCellValue = function(piRow,piCol,pbCreateCell,iValue){
+		var oCell = this.getCell(piRow, piCol, pbCreateCell);
+		oCell.value = iValue;
+	}
+	
+	//****************************************************************
 	// use a sparse array for the grid
 	// but this causes a problem with neighbours that might not be there
 	this.getCell = function(piRow,piCol,pbCreateCell){
@@ -149,8 +204,8 @@ var cCAGrid = function(piRows, piCols){
 		if (! oCell){
 			if (!pbCreateCell) return null;
 			oCell = new cCACell();
-			oCell.data.set("R", piRow);
-			oCell.data.set("C", piCol);
+			oCell.data.set(cCAConsts.hash_values.row, piRow);
+			oCell.data.set(cCAConsts.hash_values.col, piCol);
 			oRowMap.set(piCol, oCell);
 		}
 		
