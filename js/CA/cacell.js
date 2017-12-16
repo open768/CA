@@ -32,4 +32,49 @@ var cCACell = function(){
 		this.value = this.evaluated.value;
 		this.evaluated.done = false;
 	}
+	
+	//*****************************************************************
+	this.getIndex=function(piNeighbourType){
+		var oHash, iValue;
+
+		oHash = this.data;
+		switch (piNeighbourType){
+			case cCAConsts.neighbours.eightway:
+				//-------------------------------------------------------
+				iValue = oHash.get(cCAConsts.neighbours.northwest).value;
+				iValue <<= 1; iValue |= oHash.get(cCAConsts.neighbours.north).value;
+				iValue <<= 1; iValue |= oHash.get(cCAConsts.neighbours.northeast).value;
+				//-------------------------------------------------------
+				iValue <<= 1; iValue |= oHash.get(cCAConsts.neighbours.west).value;
+				iValue <<= 1;iValue |= this.value;
+				iValue <<= 1; iValue |= oHash.get(cCAConsts.neighbours.east).value;
+				//-------------------------------------------------------
+				iValue <<= 1; iValue |= oHash.get(cCAConsts.neighbours.southwest).value;
+				iValue <<= 1; iValue |= oHash.get(cCAConsts.neighbours.south).value;
+				iValue <<= 1; iValue |= oHash.get(cCAConsts.neighbours.southeast).value;
+				break;
+			case cCAConsts.neighbours.fourway:
+				//-------------------------------------------------------
+				iValue = oHash.get(cCAConsts.neighbours.northwest).value;
+				iValue <<= 1; iValue |= oHash.get(cCAConsts.neighbours.north).value;
+				//-------------------------------------------------------
+				iValue <<= 1; iValue |= oHash.get(cCAConsts.neighbours.west).value;
+				iValue <<= 1;iValue |= this.value;
+				iValue <<= 1; iValue |= oHash.get(cCAConsts.neighbours.east).value;
+				//-------------------------------------------------------
+				iValue <<= 1; iValue |= oHash.get(cCAConsts.neighbours.south).value;
+				break;
+			default:
+				throw new CAException("unknown neighbour type: " + piNeighbourType);
+		}
+		
+		return iValue;
+	}
+	
+	//*****************************************************************
+	this.setNeighbour = function(piDirection, poCell){
+		if (poCell == null) throw new CAException("no neighbour cell provided");
+		this.data.set(piDirection, poCell);
+	}
+
 }

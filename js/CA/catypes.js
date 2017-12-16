@@ -87,17 +87,24 @@ function CAException(psMessage) {
 
 
 //###############################################################################
-var cIndexOps = {
+var cCAIndexOps = {
+	//bits are created 	nw,n,ne,w,c,e,sw,s,se
+
 	//***************************************************************
 	get_centre_value:function(piIndex){
-		return piIndex & 1;
+		//000010000 = 16
+		var iAnd = piIndex & 16;
+		if (iAnd == 16)
+			return 1;
+		else	
+			return 0;
 	},
 	
 	//***************************************************************
 	get_bit_count:function(piIndex){
 		var iTmp = piIndex;
 		var iCount = 0;
-		iTmp = iTmp >>> 1 ;	//skip the centre bit
+	
 		while (iTmp > 0){
 			if ((iTmp & 1) == 1) iCount ++;
 			iTmp = iTmp >>> 1;				

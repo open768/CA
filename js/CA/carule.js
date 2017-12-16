@@ -63,17 +63,7 @@ var cCArule = function(){
 		if (poCell == null) throw new CAException("no cell provided");
 
 		//get the cell neighbour value
-		var iIndex;
-		switch (this.neighbour_type){
-			case cCAConsts.neighbours.eightway:
-				iIndex = this.get8NeighbourIndex(poCell);
-				break;
-			case cCAConsts.neighbours.fourway:
-				iIndex = this.get4NeighbourIndex(poCell);
-				break;
-			default:
-				throw new CAException("unknown neighbour type " + this.neighbour_type);
-		}
+		var iIndex = iIndex = poCell.getIndex(this.neighbour_type);
 		
 		//get the output
 		poCell.evaluated.value = this.get_output(poCell.state, iIndex);
@@ -86,31 +76,4 @@ var cCArule = function(){
 		return (poCell.evaluated.value !== poCell.value);
 		
 	};
-	
-	//*****************************************************************
-	this.get8NeighbourIndex=function(poCell){
-		var iNei, oNei,iValue, oData;
-
-		oHash = poCell.data;
-		//-------------------------------------------------------
-		iValue = oHash.get(cCAConsts.neighbours.northwest).value;
-		iValue <<= 1; iValue |= oHash.get(cCAConsts.neighbours.north).value;
-		iValue <<= 1; iValue |= oHash.get(cCAConsts.neighbours.northeast).value;
-		//-------------------------------------------------------
-		iValue <<= 1; iValue |= oHash.get(cCAConsts.neighbours.west).value;
-		iValue <<= 1;iValue |= poCell.value;
-		iValue <<= 1; iValue |= oHash.get(cCAConsts.neighbours.east).value;
-		//-------------------------------------------------------
-		iValue <<= 1; iValue |= oHash.get(cCAConsts.neighbours.southwest).value;
-		iValue <<= 1; iValue |= oHash.get(cCAConsts.neighbours.south).value;
-		iValue <<= 1; iValue |= oHash.get(cCAConsts.neighbours.southeast).value;
-		
-		return iValue;
-	}
-
-	//*****************************************************************
-	this.get4NeighbourIndex=function(poCell){
-		var iValue = 0;
-	}
-
 }

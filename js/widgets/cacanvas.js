@@ -61,7 +61,7 @@ $.widget( "ck.cacanvas",{
 		
 		switch (poEvent.type){
 			case cCAConsts.event_types.set_rule:
-				oPrivOptions.oGrid.rule = poEvent.data;
+				oPrivOptions.oGrid.set_rule(poEvent.data);
 				break;
 			case cCAConsts.event_types.initialise:
 				oPrivOptions.oGrid.init(poEvent.data);

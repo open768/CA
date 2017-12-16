@@ -128,6 +128,18 @@ var cCAGrid = function(piRows, piCols){
 	},
 	
 	//****************************************************************
+	this.set_rule = function(poRule){
+		this.rule = poRule;
+		
+		//clear rules from all cells
+		for (var ir=1; ir<= this.rows; ir++)
+			for (var ic=1; ic<= this.cols; ic++){
+				var oCell = this.getCell(ir,ic,false);
+				if (oCell) oCell.rule = null;
+			}
+	}
+	
+	//****************************************************************
 	this.step = function(){
 		var oPrivates = this.privates;
 		var oRule = this.rule;
@@ -239,9 +251,8 @@ var cCAGrid = function(piRows, piCols){
 		if (ic<1) ic= this.cols;
 		if (ic>this.cols) ic=1;
 		
-		var oCell = this.getCell(ir,ic,false);
-		if (oCell == null)	throw new CAException("unable to link cell");
-		poCell.data.set(piNeigh,oCell);		
+		var oNeigh = this.getCell(ir,ic,false);
+		poCell.setNeighbour(piNeigh,oNeigh);		
 	};
 	
 }

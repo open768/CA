@@ -171,8 +171,8 @@ var cCALifeImporter = function(){
 		
 		//populate the rule 
 		for (var i=1; i <=cCAConsts.max_inputs; i++){
-			var iCentre = cIndexOps.get_centre_value(i);
-			var iCount = cIndexOps.get_bit_count(i);
+			var iCentre = cCAIndexOps.get_centre_value(i);
+			var iCount = cCAIndexOps.get_bit_count(i) - iCentre;
 			var iNewValue;
 			
 			iNewValue = iCentre;
