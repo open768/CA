@@ -63,7 +63,7 @@ var cCABinaryImporter = function(){
 
 		//create  the rule 
 		var oRule = new cCArule();
-		oRule.neighbour_type = cCAConsts.Neighbour_8way;
+		oRule.neighbour_type = cCAConsts.neighbours.eightway;
 		oRule.has_state_transitions = false;
 		for (var i=1; i<=cCAConsts.max_inputs; i++){
 			var ch = psInput.charAt(i-1);
@@ -85,14 +85,12 @@ var cCABinaryImporter = function(){
 	//***************************************************************
 	this.randomRule = function(){
 		var oRule = new cCArule();
-		oRule.neighbour_type = cCAConsts.Neighbour_8way;
+		oRule.neighbour_type = cCAConsts.neighbours.eightway;
 		oRule.has_state_transitions = false;
 		
 		for (var i=1; i<=cCAConsts.max_inputs; i++){
 			var iRnd = Math.floor(Math.random() * 1.99);
 			oRule.set_output(1,i,iRnd);
-			
-			
 		}
 		return oRule;
 	}

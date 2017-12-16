@@ -54,7 +54,8 @@ $.widget( "ck.camachine",{
 		try{
 			oOptions.oCanvas.cacanvas("onCAEvent",poEvent);
 		}catch(e){
-			alert ("Whooops - something went wrong:" + e.message);
+			cDebug.write_exception(e);
+			alert ("Whooops - something went wrong:" + e.message );
 		}
 	}
 	

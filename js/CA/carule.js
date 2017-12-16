@@ -13,18 +13,11 @@ var cCAStateRule = function() {
 	this.nextStates = new Array(cCAConsts.max_inputs);	
 }
 
-var cCALifeRules = {
-	LIFE:"B3/S23"
-}
-
 //###############################################################################
 var cCArule = function(){
-	this.init = function(){
-		this.neighbour_type = cCAConsts.neighbours.eightway;
-		this.has_state_transitions = false;
-		this.stateRules = [];
-	};
-	this.init();
+	this.neighbour_type = cCAConsts.neighbours.eightway;
+	this.has_state_transitions = false;
+	this.stateRules = [];
 			
 	//*****************************************************************
 	this.set_output = function (piState, piIndex, piValue){
@@ -38,8 +31,14 @@ var cCArule = function(){
 	
 	//*****************************************************************
 	this.get_output = function (piState, piIndex){
+		if (piIndex == 0) return 0;
 		if (piState > this.stateRules.length)	throw new CAException("invalid state requested");
-		return this.stateRules[piState-1].outputs[piIndex];
+		try{
+			return this.stateRules[piState-1].outputs[piIndex];
+		} catch (e){
+			cDebug.write_err("unable to get output for state " + piState);
+			throw e;
+		}
 	};
 	
 	//*****************************************************************
@@ -52,6 +51,7 @@ var cCArule = function(){
 
 	//*****************************************************************
 	this.get_nextState = function (piInState, piIndex){
+		if (piIndex == 0) return piInState;
 		if (!this.has_state_transitions)	throw new CAException("no state transitions possible");
 		if (piInState > this.stateRules.length)	throw new CAException("invalid state requested");
 		var iOutState = this.stateRules[piInState-1].nextStates[piIndex];
@@ -60,12 +60,57 @@ var cCArule = function(){
 	
 	//*****************************************************************
 	this.evaluateCell = function(poCell){
-		//not implemented
-		throw new CAException("rules not implemented");
+		if (poCell == null) throw new CAException("no cell provided");
+
+		//get the cell neighbour value
+		var iIndex;
+		switch (this.neighbour_type){
+			case cCAConsts.neighbours.eightway:
+				iIndex = this.get8NeighbourIndex(poCell);
+				break;
+			case cCAConsts.neighbours.fourway:
+				iIndex = this.get4NeighbourIndex(poCell);
+				break;
+			default:
+				throw new CAException("unknown neighbour type " + this.neighbour_type);
+		}
 		
-		//get the cell neighbour count
 		//get the output
+		poCell.evaluated.value = this.get_output(poCell.state, iIndex);
+		if (this.has_state_transitions) 
+			poCell.evaluated.state = this.get_nextState(poCell.state, iIndex);
+		else
+			poCell.evaluated.state = poCell.state;
+		
 		//set the evaluated state
+		return (poCell.evaluated.value !== poCell.value);
 		
 	};
+	
+	//*****************************************************************
+	this.get8NeighbourIndex=function(poCell){
+		var iNei, oNei,iValue, oData;
+
+		oHash = poCell.data;
+		//-------------------------------------------------------
+		iValue = oHash.get(cCAConsts.neighbours.northwest).value;
+		iValue <<= 1; iValue |= oHash.get(cCAConsts.neighbours.north).value;
+		iValue <<= 1; iValue |= oHash.get(cCAConsts.neighbours.northeast).value;
+		//-------------------------------------------------------
+		iValue <<= 1; iValue |= oHash.get(cCAConsts.neighbours.west).value;
+		iValue <<= 1;iValue |= poCell.value;
+		iValue <<= 1; iValue |= oHash.get(cCAConsts.neighbours.east).value;
+		//-------------------------------------------------------
+		iValue <<= 1; iValue |= oHash.get(cCAConsts.neighbours.southwest).value;
+		iValue <<= 1; iValue |= oHash.get(cCAConsts.neighbours.south).value;
+		iValue <<= 1; iValue |= oHash.get(cCAConsts.neighbours.southeast).value;
+		
+		return iValue;
+	}
+
+	//*****************************************************************
+	this.get4NeighbourIndex=function(poCell){
+		var iValue = 0;
+	}
+
 }

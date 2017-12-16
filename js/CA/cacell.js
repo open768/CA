@@ -14,16 +14,15 @@ var cCACell = function(){
 	this.data = new Map();	//the cell doesnt know what the data means, only that there is some data in there. this leaves the implementation of the cell flexible.
 	
 	this.evaluated = {
-		done:false,
 		state:0,
-		value:1,
-		bitmap:-1
+		value:1
 	};
 
 	//****************************************************************
 	this.apply_rule = function(){
 		//just calls the rules apply method. the benefit of doing it this way is 
 		//that each cell could have a different rule.
+		if (this.rule == null) throw new CAException("no rule defined");
 		return this.rule.evaluateCell(this);
 	};
 	

@@ -6,6 +6,93 @@ http://creativecommons.org/licenses/by-nc-nd/4.0/legalcode
 For licenses that allow for commercial use please contact cluck@chickenkatsu.co.uk
 // USE AT YOUR OWN RISK - NO GUARANTEES OR ANY FORM ARE EITHER EXPRESSED OR IMPLIED
 **************************************************************************/
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+//%
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+var cCAGridInitialiser = function(){
+	this.init = function(poGrid, piInitType){
+		switch(piInitType){
+			case cCAConsts.init_values.blank:
+				for (var ir=1; ir<= poGrid.rows; ir++)
+					for (var ic=1; ic<= poGrid.cols; ic++)
+						poGrid.setCellValue(ir,ic,true,0);
+				poGrid.non_zero_count = 0;
+				break;
+				
+			//------------------------------------------------------
+			case cCAConsts.init_values.horiz_line:
+				poGrid.init(cCAConsts.init_values.blank);
+				var ir = Math.floor(poGrid.rows / 2);
+				for (var ic=1; ic<= poGrid.cols; ic++)
+					poGrid.setCellValue(ir,ic,true,1);
+				break;
+				
+			//------------------------------------------------------
+			case cCAConsts.init_values.diagonal:
+				poGrid.init(cCAConsts.init_values.blank);
+				for (var ir=1; ir<= poGrid.rows; ir++){
+					if (ir>poGrid.cols) break;
+					poGrid.setCellValue(ir,ir,true,1);
+				}
+				break;
+			//------------------------------------------------------
+			case cCAConsts.init_values.diamond:
+				poGrid.init(cCAConsts.init_values.blank);
+				var icc = Math.floor(poGrid.cols / 2);
+				var icr = Math.floor(poGrid.rows / 2);
+				
+				for (var i=10; i>= 0; i--){
+					var dx = i;
+					var dy = 10 - dx;
+					
+					poGrid.setCellValue(icr-dy,icc-dx,true,1);
+					poGrid.setCellValue(icr-dy,icc+dx,true,1);
+					poGrid.setCellValue(icr+dy,icc-dx,true,1);
+					poGrid.setCellValue(icr+dy,icc+dx,true,1);
+				}
+				
+				break;
+				
+			//------------------------------------------------------
+			case cCAConsts.init_values.vert_line:
+				poGrid.init(cCAConsts.init_values.blank);
+				var ic = Math.floor(poGrid.cols / 2);
+				for (var ir=1; ir<= poGrid.cols; ir++)
+					poGrid.setCellValue(ir,ic,true,1);
+				break;
+				
+			//------------------------------------------------------
+			case cCAConsts.init_values.block:
+				poGrid.init(cCAConsts.init_values.blank);
+				var iMidC = Math.floor( poGrid.cols/2);
+				var iMidR = Math.floor( poGrid.rows/2);
+				for (var ic=iMidC; ic<= iMidC+1; ic++)
+					for (var ir=iMidR; ir<= iMidR+1; ir++)
+						poGrid.setCellValue(ir,ic,true,1);
+				poGrid.non_zero_count = 4;
+				poGrid.changed_count = 4;
+				break;
+				
+			//--------------------------------------------------------
+			case cCAConsts.init_values.random:
+				for (var ir=1; ir<= poGrid.rows; ir++)
+					for (var ic=1; ic<= poGrid.cols; ic++){
+						var iRnd = Math.round(Math.random());
+						poGrid.setCellValue(ir,ic,true,iRnd);
+						poGrid.non_zero_count += iRnd;
+					}
+				poGrid.changed_count = poGrid.non_zero_count;
+				break;
+			//--------------------------------------------------------
+			default:
+				throw new CAException("unknown init_type: " + piInitType);
+		}
+	}
+}
+
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+//%
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 var cCAGrid = function(piRows, piCols){
 	//#######################################################################
 	//# instance variables
@@ -61,92 +148,19 @@ var cCAGrid = function(piRows, piCols){
 
 		//promote changed cells
 		var iLen = oPrivates.changed_cells.length;
-		for ( var ic = 0; ic < iLenl; ic++){
+		for ( var ic = 0; ic < iLen; ic++){
 			var oCell = oPrivates.changed_cells[ic];
 			oCell.promote();
 		}
+		bean.fire(this,"done");
 			
 	};
 	
 	//****************************************************************
 	this.init = function(piInitType){
 		cDebug.write("initialising grid:" + piInitType);
-		switch(piInitType){
-			case cCAConsts.init_values.blank:
-				for (var ir=1; ir<= this.rows; ir++)
-					for (var ic=1; ic<= this.cols; ic++)
-						this.setCellValue(ir,ic,true,0);
-				this.non_zero_count = 0;
-				break;
-				
-			//------------------------------------------------------
-			case cCAConsts.init_values.horiz_line:
-				this.init(cCAConsts.init_values.blank);
-				var ir = Math.floor(this.rows / 2);
-				for (var ic=1; ic<= this.cols; ic++)
-					this.setCellValue(ir,ic,true,1);
-				break;
-				
-			//------------------------------------------------------
-			case cCAConsts.init_values.diagonal:
-				this.init(cCAConsts.init_values.blank);
-				for (var ir=1; ir<= this.rows; ir++){
-					if (ir>this.cols) break;
-					this.setCellValue(ir,ir,true,1);
-				}
-				break;
-			//------------------------------------------------------
-			case cCAConsts.init_values.diamond:
-				this.init(cCAConsts.init_values.blank);
-				var icc = Math.floor(this.cols / 2);
-				var icr = Math.floor(this.rows / 2);
-				
-				for (var i=10; i>= 0; i--){
-					var dx = i;
-					var dy = 10 - dx;
-					
-					this.setCellValue(icr-dy,icc-dx,true,1);
-					this.setCellValue(icr-dy,icc+dx,true,1);
-					this.setCellValue(icr+dy,icc-dx,true,1);
-					this.setCellValue(icr+dy,icc+dx,true,1);
-				}
-				
-				break;
-				
-			//------------------------------------------------------
-			case cCAConsts.init_values.vert_line:
-				this.init(cCAConsts.init_values.blank);
-				var ic = Math.floor(this.cols / 2);
-				for (var ir=1; ir<= this.cols; ir++)
-					this.setCellValue(ir,ic,true,1);
-				break;
-				
-			//------------------------------------------------------
-			case cCAConsts.init_values.block:
-				this.init(cCAConsts.init_values.blank);
-				var iMidC = Math.floor( this.cols/2);
-				var iMidR = Math.floor( this.rows/2);
-				for (var ic=iMidC; ic<= iMidC+1; ic++)
-					for (var ir=iMidR; ir<= iMidR+1; ir++)
-						this.setCellValue(ir,ic,true,1);
-				this.non_zero_count = 4;
-				this.changed_count = 4;
-				break;
-				
-			//--------------------------------------------------------
-			case cCAConsts.init_values.random:
-				for (var ir=1; ir<= this.rows; ir++)
-					for (var ic=1; ic<= this.cols; ic++){
-						var iRnd = Math.round(Math.random());
-						this.setCellValue(ir,ic,true,iRnd);
-						this.non_zero_count += iRnd;
-					}
-				this.changed_count = this.non_zero_count;
-				break;
-			//--------------------------------------------------------
-			default:
-				throw new CAException("unknown init_type: " + piInitType);
-		}
+		var oInitialiser = new cCAGridInitialiser();
+		oInitialiser.init(this,piInitType);
 		cDebug.write("done init grid: "+ piInitType);
 		bean.fire(this,"done");
 	};
@@ -161,7 +175,7 @@ var cCAGrid = function(piRows, piCols){
 				this.pr__link_cell(oCell,cCAConsts.neighbours.east, ir, ic+1);
 				this.pr__link_cell(oCell,cCAConsts.neighbours.south, ir+1, ic);
 				this.pr__link_cell(oCell,cCAConsts.neighbours.west, ir, ic-1);
-				if (piNeighbourType == cCAConsts.eightway){
+				if (piNeighbourType == cCAConsts.neighbours.eightway){
 					this.pr__link_cell(oCell,cCAConsts.neighbours.northeast, ir-1, ic+1);
 					this.pr__link_cell(oCell,cCAConsts.neighbours.southeast, ir+1, ic+1);
 					this.pr__link_cell(oCell,cCAConsts.neighbours.southwest, ir+1, ic-1);

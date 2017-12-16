@@ -7,9 +7,15 @@ For licenses that allow for commercial use please contact cluck@chickenkatsu.co.
 // USE AT YOUR OWN RISK - NO GUARANTEES OR ANY FORM ARE EITHER EXPRESSED OR IMPLIED
 **************************************************************************/
 
+//###############################################################################
 var cCAEvent = function(piType, poData){
 	this.type = piType;
 	this.data = poData;
+}
+
+//###############################################################################
+var cCALifeRules = {
+	LIFE:"B3/S23"
 }
 
 //###############################################################################
@@ -19,14 +25,14 @@ var cCAConsts = {
 		eightway: 1,
 		maximum:8,
 		
-		north:1,
-		northeast:2,
-		east:3,
-		southeast:4,
-		south:5,
+		northwest:1,
+		north:2,
+		northeast:3,
+		west:4,
+		east:5,
 		southwest:6,
-		west:7,
-		northwest:8
+		south:7,
+		southeast:8
 	},
 	max_inputs:Math.pow(2,10)-1,
 	base64_length: Math.ceil((Math.pow(2,10)-1)/6),
