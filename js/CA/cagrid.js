@@ -10,6 +10,7 @@ For licenses that allow for commercial use please contact cluck@chickenkatsu.co.
 //%
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 var cCAGridInitialiser = function(){
+	
 	this.init = function(poGrid, piInitType){
 		switch(piInitType){
 			case cCAConsts.init_values.blank:
@@ -17,6 +18,8 @@ var cCAGridInitialiser = function(){
 					for (var ic=1; ic<= poGrid.cols; ic++)
 						poGrid.setCellValue(ir,ic,true,0);
 				poGrid.non_zero_count = 0;
+				
+				bean.fire(poGrid,cCAConsts.events.clear);
 				break;
 				
 			//------------------------------------------------------
@@ -102,12 +105,12 @@ var cCAGrid = function(piRows, piCols){
 	this.rule = null;
 	this.changed_count = 0;
 	this.non_zero_count = 0;
+	this.changed_cells = null;
 	
 	this.privates = {
 		iLastRow : -1,
 		oLastRow :null,
 		cell_data:new Map(),
-		changed_cells: null
 	};
 	
 	//#######################################################################
@@ -141,9 +144,8 @@ var cCAGrid = function(piRows, piCols){
 	
 	//****************************************************************
 	this.step = function(){
-		var oPrivates = this.privates;
 		var oRule = this.rule;
-		oPrivates.changed_cells = [];
+		this.changed_cells = [];
 		this.changed_count = 0;
 		this.non_zero_count = 0;
 		
@@ -154,27 +156,35 @@ var cCAGrid = function(piRows, piCols){
 				if (oCell.rule == null) oCell.rule = this.rule;
 				if (oCell.apply_rule()){
 					this.changed_count++;
-					oPrivates.changed_cells.push(oCell);
+					this.changed_cells.push(oCell);
 				}
 			}
 
 		//promote changed cells
-		var iLen = oPrivates.changed_cells.length;
+		var iLen = this.changed_cells.length;
+		if (iLen == 0){
+			bean.fire(this,cCAConsts.events.nochange);
+			return;
+		}
+		
 		for ( var ic = 0; ic < iLen; ic++){
-			var oCell = oPrivates.changed_cells[ic];
+			var oCell = this.changed_cells[ic];
 			oCell.promote();
 		}
-		bean.fire(this,"done");
+		bean.fire(this,cCAConsts.events.done);
 			
 	};
 	
 	//****************************************************************
 	this.init = function(piInitType){
+		this.changed_cells = [];
+
+		var oRule = this.rule;
 		cDebug.write("initialising grid:" + piInitType);
 		var oInitialiser = new cCAGridInitialiser();
 		oInitialiser.init(this,piInitType);
 		cDebug.write("done init grid: "+ piInitType);
-		bean.fire(this,"done");
+		bean.fire(this,cCAConsts.events.done);
 	};
 	
 	//****************************************************************
@@ -200,6 +210,8 @@ var cCAGrid = function(piRows, piCols){
 	//****************************************************************
 	this.setCellValue = function(piRow,piCol,pbCreateCell,iValue){
 		var oCell = this.getCell(piRow, piCol, pbCreateCell);
+
+		if (iValue !== oCell.value)this.changed_cells.push(oCell);
 		oCell.value = iValue;
 	}
 	

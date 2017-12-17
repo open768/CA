@@ -44,7 +44,9 @@ $.widget( "ck.cacanvas",{
 		//associate a CA grid with the widget
 		var oGrid = new cCAGrid(oOptions.rows, oOptions.cols);
 		oOptions._privates.oGrid = oGrid;
-		bean.on(oGrid, "done", function(){oThis.onGridDone()});
+		bean.on(oGrid, cCAConsts.events.done, function(){oThis.onGridDone()});
+		bean.on(oGrid, cCAConsts.events.clear, function(){oThis.onGridClear()});
+		bean.on(oGrid, cCAConsts.events.nochange, function(){oThis.onNoChange()});
 		
 		//put something in the widget
 		this.pr__initCanvas();
@@ -73,8 +75,20 @@ $.widget( "ck.cacanvas",{
 	},
 	
 	//****************************************************************
+	onGridNoChange:function(){
+		alert ("not implemented");
+	},
+	
+	//****************************************************************
 	onGridDone:function(){
 		this.pr__drawGrid();
+	},
+
+	//****************************************************************
+	onGridClear:function(){
+		var oCanvas = this.options._privates.oCanvas;
+		cDebug.write("Clearing canvas");
+		oCanvas.clearCanvas();
 	},
 	
 	//****************************************************************
@@ -114,8 +128,7 @@ $.widget( "ck.cacanvas",{
 		//link the cells in the grid
 		oPrivOptions.oGrid.link_cells(cCAConsts.neighbours.eightway);
 	},
-	
-	
+		
 	//****************************************************************
 	pr__drawGrid: function(){
 		var oThis = this;
@@ -126,7 +139,32 @@ $.widget( "ck.cacanvas",{
 		oPrivOptions.iImageCount = 0;
 		oPrivOptions.bDrawing = true;
 		
-		oCanvas.clearCanvas();
+		var x,y,oCell;
+		for ( var i=0; i< oGrid.changed_cells.length; i++){
+			oCell = oGrid.changed_cells[i];
+			var sImg = (oCell.value==0?oOptions.white_image:oOptions.black_image);
+			y = oCell.data.get(cCAConsts.hash_values.row) * oOptions.cell_size;
+			x = oCell.data.get(cCAConsts.hash_values.col) * oOptions.cell_size;
+			oPrivOptions.iImageCount++;
+			oCanvas.drawImage({  
+				source: sImg, 
+				x: x, y: y,fromCenter:false, 
+				load:function(){	oThis.onImageLoad();	}
+			});
+		}
+		oPrivOptions.bDrawing = false;
+	},
+	
+	//****************************************************************
+	pr__drawFullGrid: function(){
+		var oThis = this;
+		var oOptions = oThis.options;
+		var oPrivOptions = oOptions._privates;
+		var oCanvas = oPrivOptions.oCanvas;
+		var oGrid = oPrivOptions.oGrid;
+		oPrivOptions.iImageCount = 0;
+		oPrivOptions.bDrawing = true;
+		
 		var y=0;
 		for (var ir=1; ir<= oGrid.rows; ir++){
 			var x=0;
