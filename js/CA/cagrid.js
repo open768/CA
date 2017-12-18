@@ -18,7 +18,7 @@ var cCAGridInitialiser = function(){
 					for (var ic=1; ic<= poGrid.cols; ic++)
 						poGrid.setCellValue(ir,ic,true,0);
 				poGrid.non_zero_count = 0;
-				
+				poGrid.changed_cells = [];
 				bean.fire(poGrid,cCAConsts.events.clear);
 				break;
 				

@@ -56,24 +56,34 @@ $.widget( "ck.cacontrols",{
 		
 		sID = oElement.attr("id")+"RULELIST";
 		var oSelect = $("<SELECT>",{id:sID,width:200});
-		oSelect.append( $("<option>",{selected:1,disabled:1,value:-1}).append("Choose"));
+		oSelect.append( $("<option>",{selected:1,disabled:1,value:-1}).append("Rule Type"));
 		oSelect.append( $("<option>",{value:cCAConsts.rule_types.base64}).append("base64"));
 		oSelect.append( $("<option>",{value:cCAConsts.rule_types.life}).append("life"));
 		oSelect.append( $("<option>").append("random"));
 		oDiv.append(oSelect);
 		oSelect.selectmenu();
 		
-		var oButton = $("<button>").append("set rule");
+		var oButton = $("<button>").button({icon:"ui-icon-circle-arrow-e"});
 		oButton.click(	function(){oThis.onSetRuleClick()}	);		
 		oDiv.append(oButton);
 		
 		oElement.append(oDiv);
 		
+		//--yourname------------------------------------------------		
+		var oDiv = $("<DIV>",{class:"ui-widget-content"});
+		sID = oElement.attr("id")+"NAME";
+		var oInput = $("<INPUT>",{type:"text",id:sID,size:12,icon:"ui-icon-circle-arrow-e",label:"fill the rule with this word"});
+		oDiv.append(oInput);
+		var oButton = $("<button>").button({icon:"ui-icon-circle-arrow-e"});
+		oButton.click(	function(){oThis.onSetNameClick()}	);		
+		oDiv.append(oButton);
+		oElement.append(oDiv);
+
 		//--initialise------------------------------------------------		
 		var oDiv = $("<DIV>",{class:"ui-widget-content"});
 		sID = oElement.attr("id")+"INIT";
 		var oSelect = $("<SELECT>",{id:sID,width:200});
-		oSelect.append( $("<option>",{selected:1,disabled:1,value:-1}).append("Choose"));
+		oSelect.append( $("<option>",{selected:1,disabled:1,value:-1}).append("Initialise"));
 		oSelect.append ( $("<option>",{value:cCAConsts.init_values.blank}).append("blank"));
 		oSelect.append ( $("<option>",{value:cCAConsts.init_values.block}).append("block"));
 		oSelect.append ( $("<option>",{value:cCAConsts.init_values.random}).append("random"));
@@ -86,7 +96,7 @@ $.widget( "ck.cacontrols",{
 		oSelect.append ( $("<option>",{value:cCAConsts.init_values.sine}).append("sine"));
 		oDiv.append(oSelect);
 		oSelect.selectmenu();
-		var oButton = $("<button>").append("initialise");
+		var oButton = $("<button>").button({icon:"ui-icon-circle-arrow-e"});
 		oButton.click(	function(){oThis.onInitClick()}	);		
 		oDiv.append(oButton);
 
@@ -94,15 +104,15 @@ $.widget( "ck.cacontrols",{
 		
 		//--controls------------------------------------------------		
 		var oDiv = $("<DIV>",{class:"ui-widget-content"});
-		var oButton = $("<button>",{width:"20px",height:"20px"}).button({icon:"ui-icon-stop"});
+		var oButton = $("<button>",{width:"30px",height:"30px"}).button({icon:"ui-icon-stop"});
 		oButton.click(	function(){ oThis.onClickButton(cCAConsts.action_types.stop);}	);
 		oDiv.append(oButton);
 
-		var oButton = $("<button>",{width:"20px",height:"20px"}).button({icon:"ui-icon-circle-triangle-e"});
+		var oButton = $("<button>",{width:"30px",height:"30px"}).button({icon:"ui-icon-circle-triangle-e"});
 		oButton.click(	function(){ oThis.onClickButton(cCAConsts.action_types.play);}	);
 		oDiv.append(oButton);
 
-		var oButton = $("<button>",{width:"20px",height:"20px"}).button({icon:"ui-icon-seek-end"});
+		var oButton = $("<button>",{width:"30px",height:"30px"}).button({icon:"ui-icon-seek-end"});
 		oButton.click(	function(){ oThis.onClickButton(cCAConsts.action_types.step);}	);
 		oDiv.append(oButton);
 		
@@ -123,6 +133,30 @@ $.widget( "ck.cacontrols",{
 			this._trigger("onCAEvent", null, oEvent);			
 		}
 
+	},
+	
+	//****************************************************************************
+	onSetNameClick: function(){
+		var oThis = this;
+		var oOptions = oThis.options;
+		var oElement = oThis.element;
+
+		var oInput = $("#" +	oElement.attr("id")+"NAME");
+		var sInput = oInput.val().trim();
+		if (sInput === ""){
+			alert ("empty input string :-(");
+			return;
+		}
+		try{
+			var oImporter = new cCARepeatBase64Importer();
+			var oRule = oImporter.makeRule(sInput);
+			var oExporter = new cCABase64Importer();
+			var s64 = oExporter.toString(oRule,1);
+			this.pr_setBase64Rule(s64);
+		}
+		catch(e){
+			alert("something went wrong:\n" + e.message);
+		}
 	},
 	
 	//****************************************************************************

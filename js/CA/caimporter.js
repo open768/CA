@@ -59,7 +59,8 @@ var cCASimpleBase64 = {
 var cCABinaryImporter = function(){
 	//*****************************************************************************
 	this.makeRule = function(psInput){
-		if (psInput.length !== cCAConsts.max_inputs) throw new CAException("incorrect length binary input:" + psInput.length + " should be " + cCAConsts.max_inputs);
+		if (psInput.length < cCAConsts.max_inputs) throw new CAException("incorrect length binary input:" + psInput.length + " should be " + cCAConsts.max_inputs);
+		if (psInput.length > cCAConsts.max_inputs) psInput = psInput.slice(0,cCAConsts.max_inputs-1);
 
 		//create  the rule 
 		var oRule = new cCArule();
@@ -111,11 +112,30 @@ var cCABinaryImporter = function(){
 }
 
 //###############################################################################
+var cCARepeatBase64Importer = function(){
+	this.makeRule = function(psShort){
+		var sInput = psShort.trim();
+		if (sInput.length == 0 ) throw new CAException("no input provided.");
+		if (! cConverterEncodings.isBase64(sInput) ) throw new CAException("input must be base64 string");
+		
+		var iRepeat = Math.floor(cCAConsts.base64_length/ sInput.length);
+		var s64 = sInput.repeat(iRepeat);
+		var iRemain = cCAConsts.base64_length - s64.length;
+		s64 = s64 + sInput.slice(0,iRemain);
+		if (s64.length < cCAConsts.base64_length) throw new CAException("base64 not long enough, must be " + cCAConsts.base64_length + "chars");
+		
+		var sBin = cCASimpleBase64.toBinary(s64,cCAConsts.max_inputs);
+		var oImporter = new cCABinaryImporter();
+		return oImporter.makeRule(sBin);
+	};
+}
+
+//###############################################################################
 var cCABase64Importer = function(){
 	
 	this.makeRule = function(ps64){
 		if (ps64.length < cCAConsts.base64_length) throw new CAException("base64 not long enough, must be " + cCAConsts.base64_length + "chars");
-		if (! cConverterEncodings.isBase64(ps64) ) throw new CAException("not a valid base64 string");
+		if (! cConverterEncodings.isBase64(ps64) ) throw new CAException("input must be base64  string");
 		var sBin = cCASimpleBase64.toBinary(ps64,cCAConsts.max_inputs);
 		var oImporter = new cCABinaryImporter();
 		return oImporter.makeRule(sBin);
