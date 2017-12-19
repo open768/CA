@@ -38,7 +38,7 @@ $.widget( "ck.camachine",{
 		// all this widget does is to tell the widgets about each other
 		oElement.empty();
 		var oControlDiv = $("<SPAN>").cacontrols({onCAEvent:function(poEvent,poData){oThis.onCAEvent(poData);} });
-		var oCanvasDiv = $("<SPAN>").cacanvas(oOptions);
+		var oCanvasDiv = $("<SPAN>",{title:"this is where the magic happens"}).cacanvas(oOptions);
 		oOptions.oCanvas = oCanvasDiv;
 
 		oElement.append(oControlDiv);

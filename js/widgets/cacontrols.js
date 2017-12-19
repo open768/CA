@@ -50,12 +50,12 @@ $.widget( "ck.cacontrols",{
 		
 		var oDiv = $("<DIV>",{class:"ui-widget-content"});
 		sID = oElement.attr("id")+"ENTRY";
-		var oBox = $("<TEXTAREA>",{ID:sID,rows:5,columns:20 ,class:"rule"});				
+		var oBox = $("<TEXTAREA>",{ID:sID,rows:5,columns:20 ,class:"rule", title:"enter the rule here"});				
 		oBox.keyup( function(){oThis.onRuleChange()}	);
 		oDiv.append(oBox);
 		
 		sID = oElement.attr("id")+"RULELIST";
-		var oSelect = $("<SELECT>",{id:sID,width:200});
+		var oSelect = $("<SELECT>",{id:sID,width:200,title:"choose the rule type to enter in the box above"});
 		oSelect.append( $("<option>",{selected:1,disabled:1,value:-1}).append("Rule Type"));
 		oSelect.append( $("<option>",{value:cCAConsts.rule_types.base64}).append("base64"));
 		oSelect.append( $("<option>",{value:cCAConsts.rule_types.life}).append("life"));
@@ -63,7 +63,7 @@ $.widget( "ck.cacontrols",{
 		oDiv.append(oSelect);
 		oSelect.selectmenu();
 		
-		var oButton = $("<button>").button({icon:"ui-icon-circle-arrow-e"});
+		var oButton = $("<button>",{title:"use the rule entered in the box above"}).button({icon:"ui-icon-circle-arrow-e" });
 		oButton.click(	function(){oThis.onSetRuleClick()}	);		
 		oDiv.append(oButton);
 		
@@ -72,9 +72,9 @@ $.widget( "ck.cacontrols",{
 		//--yourname------------------------------------------------		
 		var oDiv = $("<DIV>",{class:"ui-widget-content"});
 		sID = oElement.attr("id")+"NAME";
-		var oInput = $("<INPUT>",{type:"text",id:sID,size:12,icon:"ui-icon-circle-arrow-e",label:"fill the rule with this word"});
+		var oInput = $("<INPUT>",{type:"text",id:sID,size:12,icon:"ui-icon-circle-arrow-e",title:"put anything in this box - eg your name"});
 		oDiv.append(oInput);
-		var oButton = $("<button>").button({icon:"ui-icon-circle-arrow-e"});
+		var oButton = $("<button>",{title:"creates a rule from the word in the box"}).button({icon:"ui-icon-circle-arrow-e"});
 		oButton.click(	function(){oThis.onSetNameClick()}	);		
 		oDiv.append(oButton);
 		oElement.append(oDiv);
@@ -82,7 +82,7 @@ $.widget( "ck.cacontrols",{
 		//--initialise------------------------------------------------		
 		var oDiv = $("<DIV>",{class:"ui-widget-content"});
 		sID = oElement.attr("id")+"INIT";
-		var oSelect = $("<SELECT>",{id:sID,width:200});
+		var oSelect = $("<SELECT>",{id:sID,width:200,title:"choose a pattern to initialise the grid with"});
 		oSelect.append( $("<option>",{selected:1,disabled:1,value:-1}).append("Initialise"));
 		oSelect.append ( $("<option>",{value:cCAConsts.init_values.blank}).append("blank"));
 		oSelect.append ( $("<option>",{value:cCAConsts.init_values.block}).append("block"));
@@ -96,7 +96,7 @@ $.widget( "ck.cacontrols",{
 		oSelect.append ( $("<option>",{value:cCAConsts.init_values.sine}).append("sine"));
 		oDiv.append(oSelect);
 		oSelect.selectmenu();
-		var oButton = $("<button>").button({icon:"ui-icon-circle-arrow-e"});
+		var oButton = $("<button>",{title:"initialise the grid"}).button({icon:"ui-icon-circle-arrow-e"});
 		oButton.click(	function(){oThis.onInitClick()}	);		
 		oDiv.append(oButton);
 
@@ -112,7 +112,7 @@ $.widget( "ck.cacontrols",{
 		oButton.click(	function(){ oThis.onClickButton(cCAConsts.action_types.play);}	);
 		oDiv.append(oButton);
 
-		var oButton = $("<button>",{width:"30px",height:"30px"}).button({icon:"ui-icon-seek-end"});
+		var oButton = $("<button>",{width:"30px",height:"30px",title:"step"}).button({icon:"ui-icon-seek-end"});
 		oButton.click(	function(){ oThis.onClickButton(cCAConsts.action_types.step);}	);
 		oDiv.append(oButton);
 		
