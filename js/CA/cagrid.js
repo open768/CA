@@ -87,6 +87,21 @@ var cCAGridInitialiser = function(){
 				poGrid.changed_count = poGrid.non_zero_count;
 				break;
 			//--------------------------------------------------------
+			case cCAConsts.init_values.sine:
+				var dRadian= 2*Math.PI/poGrid.cols;
+				var iMidR = Math.floor( poGrid.rows/2);
+				var iRad = 0;
+				var iMidrow = Math.round(poGrid.rows/2);
+				poGrid.init(cCAConsts.init_values.blank);
+				
+				for (var ic=1; ic<= poGrid.cols; ic++){
+					var fSin = Math.sin(iRad);					
+					var ir = iMidrow + Math.round(fSin * iMidrow);
+					poGrid.setCellValue(ir,ic,true,1);
+					iRad += dRadian;
+				}
+				break;
+			//--------------------------------------------------------
 			default:
 				throw new CAException("unknown init_type: " + piInitType);
 		}
