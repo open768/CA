@@ -165,10 +165,14 @@ var cCALifeImporter = function(){
 		//validate rule and extract rule components
 		var aMatches = psInput.match(/B(\d+)\/S(\d+)/i);
 		if (aMatches == null ){
-			throw new CAException(psInput+" is not a valid life notation - must be Bnnn/Snnn");
+			var aMatches = psInput.match(/S(\d+)\/B(\d+)/i);
+			if (aMatches == null )  throw new CAException(psInput+" is not a valid life notation - must be Bnnn/Snnn");
+			sBorn = aMatches[2];
+			sSurvive = aMatches[1];			
+		}else{
+			sBorn = aMatches[1];
+			sSurvive = aMatches[2];			
 		}
-		sBorn = aMatches[1];
-		sSurvive = aMatches[2];
 		
 		cDebug.write(psInput + " is a valid life notation BORN:" + sBorn + " Survive:"+sSurvive);
 		

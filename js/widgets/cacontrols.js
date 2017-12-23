@@ -29,6 +29,7 @@ $.widget( "ck.cacontrols",{
 		oElement.uniqueId();
 		oElement.addClass("ui-widget");
 		oElement.addClass("CAControls");
+		$(oElement).tooltip();
 
 		//check dependencies
 		if (!oElement.selectmenu ) 	$.error("selectmenu class is missing! check includes");	
@@ -100,6 +101,20 @@ $.widget( "ck.cacontrols",{
 		oButton.click(	function(){oThis.onInitClick()}	);		
 		oDiv.append(oButton);
 
+		oElement.append(oDiv);
+		
+		//--rules------------------------------------------------		
+		var oDiv = $("<DIV>",{class:"ui-widget-content"});
+		sID = oElement.attr("id")+"LEXICON";
+		var oSelect = $("<SELECT>",{id:sID,width:200,title:"pick a rule"});
+		this.pr__populate_lexicon(oSelect);
+		oDiv.append(oSelect);
+		oSelect.selectmenu();
+		
+		var oButton = $("<button>",{width:"30px",height:"30px",title:"use the picked rule"}).button({icon:"ui-icon-seek-end"});
+		oButton.click(	function(){ oThis.onLexicon();}	);
+		oDiv.append(oButton);
+		
 		oElement.append(oDiv);
 		
 		//--controls------------------------------------------------		
@@ -272,6 +287,20 @@ $.widget( "ck.cacontrols",{
 		oSelect.val(cCAConsts.rule_types.base64);
 		oSelect.selectmenu("refresh");
 		this.onSetRuleClick();
+	},
+	
+	//****************************************************************************
+	pr__populate_lexicon:function(poSelect){
+		var aRules = cCALexicon.get_rules();
+		
+		poSelect.append( $("<option>",{selected:1,disabled:1,value:-1}).append("pick one"));
+		
+		for (var i = 0; i < aRules.length; i++){
+			var oRule = aRules[i];
+			var oOption = $("<option>",{value:oRule}).append(oRule.label);
+			poSelect.append(oOption);
+		}
 	}
+
 	
 });

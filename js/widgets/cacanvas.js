@@ -75,7 +75,7 @@ $.widget( "ck.cacanvas",{
 	},
 	
 	//****************************************************************
-	onGridNoChange:function(){
+	onNoChange:function(){
 		alert ("not implemented");
 	},
 	
