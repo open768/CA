@@ -121,6 +121,7 @@ var cCAGrid = function(piRows, piCols){
 	this.changed_count = 0;
 	this.non_zero_count = 0;
 	this.changed_cells = null;
+	this.running = false;
 	
 	this.privates = {
 		iLastRow : -1,
@@ -136,6 +137,16 @@ var cCAGrid = function(piRows, piCols){
 		
 		cDebug.write("running action: " + piAction);
 		switch (piAction){
+			case cCAConsts.action_types.play:
+				if (this.running) throw new CAException("CA is allready running");
+				this.running = true;
+				this.run();
+				break;
+			case cCAConsts.action_types.stop:
+				if (! this.running)
+					throw new CAException("CA is not running");
+				this.running = false;
+				break;
 			case cCAConsts.action_types.step:
 				this.step();
 				break;
@@ -158,6 +169,15 @@ var cCAGrid = function(piRows, piCols){
 	}
 	
 	//****************************************************************
+	this.run = function(){
+		if (this.running){
+			this.step();
+			var oThis = this;
+			setTimeout( function(){ oThis.run() }, 300);
+		}
+	}
+
+	//****************************************************************
 	this.step = function(){
 		var oRule = this.rule;
 		this.changed_cells = [];
@@ -178,6 +198,7 @@ var cCAGrid = function(piRows, piCols){
 		//promote changed cells
 		var iLen = this.changed_cells.length;
 		if (iLen == 0){
+			this.running = false;
 			bean.fire(this,cCAConsts.events.nochange);
 			return;
 		}
@@ -187,7 +208,6 @@ var cCAGrid = function(piRows, piCols){
 			oCell.promote();
 		}
 		bean.fire(this,cCAConsts.events.done);
-			
 	};
 	
 	//****************************************************************
