@@ -140,7 +140,7 @@ var cCAGrid = function(piRows, piCols){
 			case cCAConsts.action_types.play:
 				if (this.running) throw new CAException("CA is allready running");
 				this.running = true;
-				this.run();
+				this.step();
 				break;
 			case cCAConsts.action_types.stop:
 				if (! this.running)
@@ -169,12 +169,13 @@ var cCAGrid = function(piRows, piCols){
 	}
 	
 	//****************************************************************
-	this.run = function(){
+	this.notify_drawn = function(){
+		var oThis = this;
 		if (this.running){
-			this.step();
-			var oThis = this;
-			setTimeout( function(){ oThis.run() }, 300);
-		}
+			cDebug.write("running again");
+			setTimeout(function(){ oThis.step();}, 50);
+		}else
+			cDebug.write("not running again");
 	}
 
 	//****************************************************************
@@ -184,6 +185,7 @@ var cCAGrid = function(piRows, piCols){
 		this.changed_count = 0;
 		this.non_zero_count = 0;
 		
+		cDebug.write("stepping");
 		//apply rules
 		for (var ir=1; ir<= this.rows; ir++)
 			for (var ic=1; ic<= this.cols; ic++){

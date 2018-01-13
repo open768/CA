@@ -21,7 +21,8 @@ $.widget( "ck.cacanvas",{
 			oGrid: null,
 			oCanvas:null,
 			bDrawing:false,
-			iImageCount:0
+			iImageCount:0,
+			iImagesDone:0
 		}
 	},
 	
@@ -35,6 +36,7 @@ $.widget( "ck.cacanvas",{
 		
 		//check dependencies
 		if (!oElement.selectmenu ) 	$.error("selectmenu class is missing! check includes");	
+		if (!bean ) 	$.error("bean class is missing! check includes");	
 		
 		//set basic stuff
 		oElement.uniqueId();
@@ -47,6 +49,9 @@ $.widget( "ck.cacanvas",{
 		bean.on(oGrid, cCAConsts.events.done, function(){oThis.onGridDone()});
 		bean.on(oGrid, cCAConsts.events.clear, function(){oThis.onGridClear()});
 		bean.on(oGrid, cCAConsts.events.nochange, function(){oThis.onNoChange()});
+		
+		//add a notification
+		bean.on( this, cCAConsts.events.notify_finished, function(){oGrid.notify_drawn()});
 		
 		//put something in the widget
 		this.pr__initCanvas();
@@ -95,13 +100,16 @@ $.widget( "ck.cacanvas",{
 	onImageLoad:function(){
 		var oThis = this;
 		var oOptions = oThis.options;
+		var oElement = oThis.element;
 		var oPrivOptions = oOptions._privates;
 		
-		oPrivOptions.iImageCount --;
-		if (! oPrivOptions.bDrawing && (oPrivOptions.iImageCount ==0)){
-			cDebug.write("finished drawing");
-		}
+		oPrivOptions.iImagesDone ++;
 		
+		if (oPrivOptions.iImagesDone >= oPrivOptions.iImageCount){
+			cDebug.write("finished drawing");
+			oPrivOptions.bDrawing = false;
+			bean.fire(this, cCAConsts.events.notify_finished);
+		}
 	},
 	
 	//#################################################################
@@ -136,7 +144,9 @@ $.widget( "ck.cacanvas",{
 		var oPrivOptions = oOptions._privates;
 		var oCanvas = oPrivOptions.oCanvas;
 		var oGrid = oPrivOptions.oGrid;
-		oPrivOptions.iImageCount = 0;
+
+		oPrivOptions.iImageCount = oGrid.changed_cells.length;
+		oPrivOptions.iImagesDone = 0;		
 		oPrivOptions.bDrawing = true;
 		
 		var x,y,oCell;
@@ -145,14 +155,12 @@ $.widget( "ck.cacanvas",{
 			var sImg = (oCell.value==0?oOptions.white_image:oOptions.black_image);
 			y = oCell.data.get(cCAConsts.hash_values.row) * oOptions.cell_size;
 			x = oCell.data.get(cCAConsts.hash_values.col) * oOptions.cell_size;
-			oPrivOptions.iImageCount++;
 			oCanvas.drawImage({  
 				source: sImg, 
 				x: x, y: y,fromCenter:false, 
 				load:function(){	oThis.onImageLoad();	}
 			});
 		}
-		oPrivOptions.bDrawing = false;
 	},
 	
 	//****************************************************************
@@ -162,7 +170,9 @@ $.widget( "ck.cacanvas",{
 		var oPrivOptions = oOptions._privates;
 		var oCanvas = oPrivOptions.oCanvas;
 		var oGrid = oPrivOptions.oGrid;
-		oPrivOptions.iImageCount = 0;
+		
+		oPrivOptions.iImageCount = oGrid.rows * oGrid.cols;
+		oPrivOptions.iImagesDone = 0;		
 		oPrivOptions.bDrawing = true;
 		
 		var y=0;
@@ -176,12 +186,10 @@ $.widget( "ck.cacanvas",{
 					x: x, y: y,fromCenter:false, 
 					load:function(){	oThis.onImageLoad();	}
 				});
-				oPrivOptions.iImageCount++;
 				x+= oOptions.cell_size;
 			}
 			y+= oOptions.cell_size;
 		}
-		oPrivOptions.bDrawing = false;
 	}	
 	
 	

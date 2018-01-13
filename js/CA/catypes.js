@@ -21,9 +21,10 @@ var cCALifeRules = {
 //###############################################################################
 var cCAConsts = {
 	events:{
-		done:"cadone",
-		clear:"caclear",
-		nochange:"caDead"
+		done:"DO",
+		clear:"CL",
+		nochange:"NC",
+		notify_finished:"NF"
 	},
 	neighbours:{
 		fourway: 0,
