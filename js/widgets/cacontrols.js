@@ -7,11 +7,13 @@ For licenses that allow for commercial use please contact cluck@chickenkatsu.co.
 // USE AT YOUR OWN RISK - NO GUARANTEES OR ANY FORM ARE EITHER EXPRESSED OR IMPLIED
 **************************************************************************/
 var cCAControlTypes = {
-	entry_ID:"eid",
-	rules_ID:"rid",
-	rules_extra_ID:"rxid",
-	name_ID:"nid",
-	init_ID:"iid",
+	entry_ID:"ent",
+	rules_ID:"rul",
+	rules_extra_ID:"rulex",
+	name_ID:"nam",
+	init_ID:"ini",
+	lexicon_ID:"lex",
+	
 	random_value: "Random"	
 }
 
@@ -113,7 +115,7 @@ $.widget( "ck.cacontrols",{
 		
 		//--rules------------------------------------------------		
 		var oDiv = $("<DIV>",{class:"ui-widget-content"});
-		sID = oElement.attr("id")+"LEXICON";
+		sID = oElement.attr("id")+cCAControlTypes.lexicon_ID;
 		var oSelect = $("<SELECT>",{id:sID,width:200,title:"pick a rule"});
 		this.pr__populate_lexicon(oSelect);
 		oDiv.append(oSelect);
@@ -247,7 +249,6 @@ $.widget( "ck.cacontrols",{
 	//****************************************************************************
 	onRuleChange:function(){
 		var oThis = this;
-		var oOptions = oThis.options;
 		var oElement = oThis.element;
 		
 		var oTextArea = $("#" +	oElement.attr("id")+cCAControlTypes.entry_ID);
@@ -264,7 +265,30 @@ $.widget( "ck.cacontrols",{
 		}
 	},
 	
-	
+	//****************************************************************************
+	onLexicon: function(){
+		var oThis = this;
+		var oElement = oThis.element;
+		
+		var oTextArea = $("#" +	oElement.attr("id")+cCAControlTypes.entry_ID);
+		var oRulesSelect = $("#" + oElement.attr("id")+cCAControlTypes.rules_ID);
+		
+		var oSelect = $("#" + oElement.attr("id")+cCAControlTypes.lexicon_ID);
+		var sStringified = oSelect.val();
+		var oLexRule = JSON.parse(sStringified);
+		
+		switch (oLexRule.type){
+			case cCAConsts.rule_types.life:
+				oTextArea.val(oLexRule.rule);		
+				oRulesSelect.val(cCAConsts.rule_types.life);
+				oRulesSelect.selectmenu("refresh");
+				this.onSetRuleClick();
+				break;
+			default:
+				alert("unknown rule type: ", oLexRule.type);
+				throw new CAException("not implemented");
+		}
+	},
 	
 	//#################################################################
 	//# privates
@@ -300,7 +324,7 @@ $.widget( "ck.cacontrols",{
 		
 		for (var i = 0; i < aRules.length; i++){
 			var oRule = aRules[i];
-			var oOption = $("<option>",{value:oRule}).append(oRule.label);
+			var oOption = $("<option>",{value:JSON.stringify(oRule)}).append(oRule.label);
 			poSelect.append(oOption);
 		}
 	}

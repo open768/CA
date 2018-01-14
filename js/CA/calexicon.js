@@ -17,7 +17,7 @@ var cCaLexiconRule = function(piType, psLabel, psRule){
 var cCALexicon = {
 	get_rules:function(){
 		var aRules = [];
-		aRules.push( new cCaLexiconRule(cCAConsts.rule_types.life,"Conways","S45678/B3"));
+		aRules.push( new cCaLexiconRule(cCAConsts.rule_types.life,"Conways","B3/S23"));
 		
 		return aRules;
 	}
