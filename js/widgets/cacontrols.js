@@ -6,6 +6,14 @@ http://creativecommons.org/licenses/by-nc-nd/4.0/legalcode
 For licenses that allow for commercial use please contact cluck@chickenkatsu.co.uk
 // USE AT YOUR OWN RISK - NO GUARANTEES OR ANY FORM ARE EITHER EXPRESSED OR IMPLIED
 **************************************************************************/
+var cCAControlTypes = {
+	entry_ID:"eid",
+	rules_ID:"rid",
+	rules_extra_ID:"rxid",
+	name_ID:"nid",
+	init_ID:"iid",
+	random_value: "Random"	
+}
 
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 $.widget( "ck.cacontrols",{
@@ -43,24 +51,24 @@ $.widget( "ck.cacontrols",{
 		//--input-------------------------------------------------
 		oDiv = $("<DIV>",{class:"ui-widget-header"});
 		oDiv.append("Rule");
-		sID = oElement.attr("id")+"EXTRA";
+		sID = oElement.attr("id")+cCAControlTypes.rules_extra_ID;
 		var oSpan = $("<SPAN>",{id:sID}).html("??");
 		oDiv.append("&nbsp;");		
 		oDiv.append(oSpan);		
 		oElement.append(oDiv);
 		
 		var oDiv = $("<DIV>",{class:"ui-widget-content"});
-		sID = oElement.attr("id")+"ENTRY";
+		sID = oElement.attr("id")+cCAControlTypes.entry_ID;
 		var oBox = $("<TEXTAREA>",{ID:sID,rows:5,columns:20 ,class:"rule", title:"enter the rule here"});				
 		oBox.keyup( function(){oThis.onRuleChange()}	);
 		oDiv.append(oBox);
 		
-		sID = oElement.attr("id")+"RULELIST";
+		sID = oElement.attr("id")+cCAControlTypes.rules_ID;
 		var oSelect = $("<SELECT>",{id:sID,width:200,title:"choose the rule type to enter in the box above"});
 		oSelect.append( $("<option>",{selected:1,disabled:1,value:-1}).append("Rule Type"));
 		oSelect.append( $("<option>",{value:cCAConsts.rule_types.base64}).append("base64"));
 		oSelect.append( $("<option>",{value:cCAConsts.rule_types.life}).append("life"));
-		oSelect.append( $("<option>").append("random"));
+		oSelect.append( $("<option>").append(cCAControlTypes.random_value));
 		oDiv.append(oSelect);
 		oSelect.selectmenu();
 		
@@ -72,7 +80,7 @@ $.widget( "ck.cacontrols",{
 		
 		//--yourname------------------------------------------------		
 		var oDiv = $("<DIV>",{class:"ui-widget-content"});
-		sID = oElement.attr("id")+"NAME";
+		sID = oElement.attr("id")+cCAControlTypes.name_ID;
 		var oInput = $("<INPUT>",{type:"text",id:sID,size:12,icon:"ui-icon-circle-arrow-e",title:"put anything in this box - eg your name"});
 		oDiv.append(oInput);
 		var oButton = $("<button>",{title:"creates a rule from the word in the box"}).button({icon:"ui-icon-circle-arrow-e"});
@@ -82,7 +90,7 @@ $.widget( "ck.cacontrols",{
 
 		//--initialise------------------------------------------------		
 		var oDiv = $("<DIV>",{class:"ui-widget-content"});
-		sID = oElement.attr("id")+"INIT";
+		sID = oElement.attr("id")+cCAControlTypes.init_ID;
 		var oSelect = $("<SELECT>",{id:sID,width:200,title:"choose a pattern to initialise the grid with"});
 		oSelect.append( $("<option>",{selected:1,disabled:1,value:-1}).append("Initialise"));
 		oSelect.append ( $("<option>",{value:cCAConsts.init_values.blank}).append("blank"));
@@ -111,7 +119,7 @@ $.widget( "ck.cacontrols",{
 		oDiv.append(oSelect);
 		oSelect.selectmenu();
 		
-		var oButton = $("<button>",{width:"30px",height:"30px",title:"use the picked rule"}).button({icon:"ui-icon-seek-end"});
+		var oButton = $("<button>",{title:"use the picked rule"}).button({icon:"ui-icon-circle-arrow-e"});
 		oButton.click(	function(){ oThis.onLexicon();}	);
 		oDiv.append(oButton);
 		
@@ -156,7 +164,7 @@ $.widget( "ck.cacontrols",{
 		var oOptions = oThis.options;
 		var oElement = oThis.element;
 
-		var oInput = $("#" +	oElement.attr("id")+"NAME");
+		var oInput = $("#" +	oElement.attr("id")+cCAControlTypes.name_ID);
 		var sInput = oInput.val().trim();
 		if (sInput === ""){
 			alert ("empty input string :-(");
@@ -180,8 +188,8 @@ $.widget( "ck.cacontrols",{
 		var oOptions = oThis.options;
 		var oElement = oThis.element;
 
-		var oTextArea = $("#" +	oElement.attr("id")+"ENTRY");
-		var oSelect = $("#" + oElement.attr("id")+"RULELIST");
+		var oTextArea = $("#" +	oElement.attr("id")+cCAControlTypes.entry_ID);
+		var oSelect = $("#" + oElement.attr("id")+cCAControlTypes.rules_ID);
 		
 		if (!oSelect.val()) {
 			alert("choose a rule type to import");
@@ -206,7 +214,7 @@ $.widget( "ck.cacontrols",{
 					oOptions.rule_set = true;
 					break;
 				default:
-					if (oSelect.val() === "random"){
+					if (oSelect.val() === cCAControlTypes.random_value){
 						this.pr_makeRandomBase64();
 					}else{
 						alert("unknown rule type");
@@ -226,7 +234,7 @@ $.widget( "ck.cacontrols",{
 		var oElement = oThis.element;
 
 		
-		var oSelect = $("#" +oElement.attr("id")+"INIT");
+		var oSelect = $("#" +oElement.attr("id")+cCAControlTypes.init_ID);
 		if (!oSelect.val()) {
 			alert("choose a init method");
 			return;
@@ -242,35 +250,30 @@ $.widget( "ck.cacontrols",{
 		var oOptions = oThis.options;
 		var oElement = oThis.element;
 		
-		var oTextArea = $("#" +	oElement.attr("id")+"ENTRY");
-		var oSelect = $("#" + oElement.attr("id")+"RULELIST");
+		var oTextArea = $("#" +	oElement.attr("id")+cCAControlTypes.entry_ID);
+		var oSelect = $("#" + oElement.attr("id")+cCAControlTypes.rules_ID);
 		var sSelected = oSelect.val();
 		if (sSelected){
 			var iSelected = parseInt(sSelected);
 			if ( iSelected == cCAConsts.rule_types.base64){
 				var sText = oTextArea.val();
 				var iDiff = cCAConsts.base64_length - sText.length;
-				var oSpan = $("#" +	oElement.attr("id")+"EXTRA");
+				var oSpan = $("#" +	oElement.attr("id")+cCAControlTypes.rules_extra_ID);
 				oSpan.html( iDiff +" chars remaining");
 			}
 		}
-		
 	},
+	
+	
 	
 	//#################################################################
 	//# privates
 	//#################################################################`
 	pr_makeRandomBase64: function(){
-		var oThis = this;
-		var oOptions = oThis.options;
-		var oElement = oThis.element;
-
 		var oImporter = new cCABinaryImporter();
 		oRule= oImporter.randomRule();
-		
 		var oImporter = new cCABase64Importer();
 		var sBase64 = oImporter.toString(oRule,1);
-		
 		this.pr_setBase64Rule(sBase64);
 	},
 	
@@ -280,10 +283,10 @@ $.widget( "ck.cacontrols",{
 		var oOptions = oThis.options;
 		var oElement = oThis.element;
 		
-		var oTextArea = $("#" +	oElement.attr("id")+"ENTRY");
+		var oTextArea = $("#" +	oElement.attr("id")+cCAControlTypes.entry_ID);
 		oTextArea.val(psBase64);		
 
-		var oSelect = $("#" + oElement.attr("id")+"RULELIST");
+		var oSelect = $("#" + oElement.attr("id")+cCAControlTypes.rules_ID);
 		oSelect.val(cCAConsts.rule_types.base64);
 		oSelect.selectmenu("refresh");
 		this.onSetRuleClick();
