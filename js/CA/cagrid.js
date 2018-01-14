@@ -76,6 +76,40 @@ var cCAGridInitialiser = function(){
 				poGrid.changed_count = 4;
 				break;
 				
+			//------------------------------------------------------
+			case cCAConsts.init_values.circle:
+				poGrid.init(cCAConsts.init_values.blank);
+				var iMidC = Math.floor( poGrid.cols/2);
+				var iMidR = Math.floor( poGrid.rows/2);
+				
+				for (x=7; x>=0; x--){
+					y = Math.sqrt( 49 - Math.pow(x,2));
+					y = Math.round(Math.abs(y));
+					poGrid.setCellValue(iMidR+y,iMidC-x,true,1);
+					poGrid.setCellValue(iMidR-y,iMidC-x,true,1);
+					poGrid.setCellValue(iMidR+y,iMidC+x,true,1);
+					poGrid.setCellValue(iMidR-y,iMidC+x,true,1);
+				}
+			break;
+			
+			//------------------------------------------------------
+			case cCAConsts.init_values.cross:
+				poGrid.init(cCAConsts.init_values.blank);
+				var iMidC = Math.floor( poGrid.cols/2);
+				var iMidR = Math.floor( poGrid.rows/2);
+				
+				poGrid.setCellValue(iMidR,iMidC,true,1);
+				for (var i=1; i<= 4; i++){
+					poGrid.setCellValue(iMidR+i,iMidC,true,1);
+					poGrid.setCellValue(iMidR-i,iMidC,true,1);
+					poGrid.setCellValue(iMidR,iMidC+i,true,1);
+					poGrid.setCellValue(iMidR,iMidC-i,true,1);
+				}
+
+				poGrid.non_zero_count = 17;
+				poGrid.changed_count = 17;
+				break;
+				
 			//--------------------------------------------------------
 			case cCAConsts.init_values.random:
 				for (var ir=1; ir<= poGrid.rows; ir++)

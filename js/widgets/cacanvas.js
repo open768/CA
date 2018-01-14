@@ -51,7 +51,7 @@ $.widget( "ck.cacanvas",{
 		bean.on(oGrid, cCAConsts.events.nochange, function(){oThis.onNoChange()});
 		
 		//add a notification
-		bean.on( this, cCAConsts.events.notify_finished, function(){oGrid.notify_drawn()});
+		bean.on( this, cCAConsts.events.notify_finished, function(){ oGrid.notify_drawn() });
 		
 		//put something in the widget
 		this.pr__initCanvas();
