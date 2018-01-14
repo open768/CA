@@ -106,10 +106,9 @@ $.widget( "ck.cacontrols",{
 		oSelect.append ( $("<option>",{value:cCAConsts.init_values.circle}).append("circle"));
 		oSelect.append ( $("<option>",{value:cCAConsts.init_values.sine}).append("sine"));
 		oDiv.append(oSelect);
-		oSelect.selectmenu();
-		var oButton = $("<button>",{title:"initialise the grid"}).button({icon:"ui-icon-circle-arrow-e"});
-		oButton.click(	function(){oThis.onInitClick()}	);		
-		oDiv.append(oButton);
+		oSelect.selectmenu({
+				select:function(){oThis.onInitClick()}
+		});
 
 		oElement.append(oDiv);
 		
@@ -119,11 +118,9 @@ $.widget( "ck.cacontrols",{
 		var oSelect = $("<SELECT>",{id:sID,width:200,title:"pick a rule"});
 		this.pr__populate_lexicon(oSelect);
 		oDiv.append(oSelect);
-		oSelect.selectmenu();
-		
-		var oButton = $("<button>",{title:"use the picked rule"}).button({icon:"ui-icon-circle-arrow-e"});
-		oButton.click(	function(){ oThis.onLexicon();}	);
-		oDiv.append(oButton);
+		oSelect.selectmenu({
+			select:function(){oThis.onLexicon();}
+		});
 		
 		oElement.append(oDiv);
 		
