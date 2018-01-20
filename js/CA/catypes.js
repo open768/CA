@@ -13,6 +13,12 @@ var cCAEvent = function(piType, poData){
 	this.data = poData;
 }
 
+var cCARunData = function(){
+	this.active = 0;
+	this.runs = 0;
+	this.changed = 0;
+}
+
 //###############################################################################
 var cCALifeRules = {
 	LIFE:"B3/S23"
@@ -21,10 +27,18 @@ var cCALifeRules = {
 //###############################################################################
 var cCAConsts = {
 	events:{
-		done:"DO",
-		clear:"CL",
-		nochange:"NC",
-		notify_finished:"NF"
+		done:"D",
+		clear:"C",
+		nochange:"N",
+		notify_finished:"F"
+	},
+	event_types:{
+		set_rule:1,
+		initialise:2,
+		resize:3,
+		action:4,
+		nochange:5,
+		status:6
 	},
 	neighbours:{
 		fourway: 0,
@@ -71,12 +85,6 @@ var cCAConsts = {
 		step:3
 	},
 	
-	event_types:{
-		set_rule:1,
-		initialise:2,
-		resize:3,
-		action:4
-	},
 	
 	hash_values:{
 		row:"R",

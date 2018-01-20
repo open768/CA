@@ -61,7 +61,7 @@ $.widget( "ck.cacontrols",{
 		
 		var oDiv = $("<DIV>",{class:"ui-widget-content"});
 		sID = oElement.attr("id")+cCAControlTypes.entry_ID;
-		var oBox = $("<TEXTAREA>",{ID:sID,rows:5,columns:20 ,class:"rule", title:"enter the rule here"});				
+		var oBox = $("<TEXTAREA>",{ID:sID,rows:5,columns:30 ,class:"rule", title:"enter the rule here"});				
 		oBox.keyup( function(){oThis.onRuleChange()}	);
 		oDiv.append(oBox);
 		

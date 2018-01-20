@@ -23,7 +23,9 @@ $.widget( "ck.cacanvas",{
 			bDrawing:false,
 			iImageCount:0,
 			iImagesDone:0
-		}
+		},
+		onCanvasEvent:null,
+		
 	},
 	
 	//#################################################################
@@ -46,13 +48,10 @@ $.widget( "ck.cacanvas",{
 		//associate a CA grid with the widget
 		var oGrid = new cCAGrid(oOptions.rows, oOptions.cols);
 		oOptions._privates.oGrid = oGrid;
-		bean.on(oGrid, cCAConsts.events.done, function(){oThis.onGridDone()});
+		bean.on(oGrid, cCAConsts.events.done, function(poData){oThis.onGridDone(poData)});
 		bean.on(oGrid, cCAConsts.events.clear, function(){oThis.onGridClear()});
 		bean.on(oGrid, cCAConsts.events.nochange, function(){oThis.onNoChange()});
-		
-		//add a notification
-		bean.on( this, cCAConsts.events.notify_finished, function(){ oGrid.notify_drawn() });
-		
+				
 		//put something in the widget
 		this.pr__initCanvas();
 	},
@@ -81,12 +80,16 @@ $.widget( "ck.cacanvas",{
 	
 	//****************************************************************
 	onNoChange:function(){
-		alert ("not implemented");
+		var oEvent = new cCAEvent( cCAConsts.event_types.nochange, null);
+		cDebug.write("no change");
+		this._trigger("onCanvasEvent", null, oEvent);		
 	},
 	
 	//****************************************************************
-	onGridDone:function(){
+	onGridDone:function(poData){
 		this.pr__drawGrid();
+		var oEvent = new cCAEvent( cCAConsts.event_types.status, poData);
+		this._trigger("onCanvasEvent", null, oEvent);		
 	},
 
 	//****************************************************************
@@ -108,7 +111,8 @@ $.widget( "ck.cacanvas",{
 		if (oPrivOptions.iImagesDone >= oPrivOptions.iImageCount){
 			cDebug.write("finished drawing");
 			oPrivOptions.bDrawing = false;
-			bean.fire(this, cCAConsts.events.notify_finished);
+			var oGrid = oOptions._privates.oGrid;
+			setTimeout(function(){ oGrid.notify_drawn();}, 0);
 		}
 	},
 	

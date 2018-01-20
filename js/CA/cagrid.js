@@ -152,10 +152,9 @@ var cCAGrid = function(piRows, piCols){
 	this.rows = piRows;
 	this.cols = piCols;
 	this.rule = null;
-	this.changed_count = 0;
-	this.non_zero_count = 0;
 	this.changed_cells = null;
 	this.running = false;
+	this.status = new cCARunData();
 	
 	this.privates = {
 		iLastRow : -1,
@@ -175,6 +174,7 @@ var cCAGrid = function(piRows, piCols){
 				if (this.running) throw new CAException("CA is allready running");
 				this.running = true;
 				this.step();
+				this.status.runs = 1;
 				break;
 			case cCAConsts.action_types.stop:
 				if (! this.running)
@@ -207,6 +207,7 @@ var cCAGrid = function(piRows, piCols){
 		var oThis = this;
 		if (this.running){
 			cDebug.write("running again");
+			this.status.runs ++;
 			setTimeout(function(){ oThis.step();}, 50);
 		}else
 			cDebug.write("not running again");
@@ -215,9 +216,11 @@ var cCAGrid = function(piRows, piCols){
 	//****************************************************************
 	this.step = function(){
 		var oRule = this.rule;
+		var oStatus = this.status;
+		
 		this.changed_cells = [];
-		this.changed_count = 0;
-		this.non_zero_count = 0;
+		this.status.changed = 0;
+		this.status.active = 0;
 		
 		cDebug.write("stepping");
 		//apply rules
@@ -229,10 +232,12 @@ var cCAGrid = function(piRows, piCols){
 					this.changed_count++;
 					this.changed_cells.push(oCell);
 				}
+				if (oCell.value > 0) oStatus.active ++;
 			}
 
 		//promote changed cells
 		var iLen = this.changed_cells.length;
+		this.status.changed = iLen;
 		if (iLen == 0){
 			this.running = false;
 			bean.fire(this,cCAConsts.events.nochange);
@@ -242,8 +247,12 @@ var cCAGrid = function(piRows, piCols){
 		for ( var ic = 0; ic < iLen; ic++){
 			var oCell = this.changed_cells[ic];
 			oCell.promote();
+			if (oCell.value == 0) 
+				oStatus.active --;
+			else
+				oStatus.active ++;
 		}
-		bean.fire(this,cCAConsts.events.done);
+		bean.fire(this,cCAConsts.events.done, oStatus);
 	};
 	
 	//****************************************************************
