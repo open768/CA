@@ -16,7 +16,8 @@ $.widget( "ck.camachine",{
 		width:100,
 		height:200,
 		cell_size:5,
-		oCanvas: null
+		oCanvas: null,
+		oStatus: null
 	},
 
 	//#################################################################
@@ -33,26 +34,56 @@ $.widget( "ck.camachine",{
 		//set basic stuff
 		oElement.uniqueId();
 		
-		
 		//machine has 2 child widgets: a control panel and machine canvas
 		// all this widget does is to tell the widgets about each other
 		oElement.empty();
-		var oControlDiv = $("<SPAN>").cacontrols({onCAEvent:function(poEvent,poData){oThis.onCAEvent(poData);} });
-		var oCanvasDiv = $("<SPAN>",{title:"this is where the magic happens"}).cacanvas(oOptions);
-		oOptions.oCanvas = oCanvasDiv;
-
-		oElement.append(oControlDiv);
-		oElement.append(oCanvasDiv);
+		var oTable = $("<table>");
+			var oRow = $("<TR>");
+			var oCell = $("<TD>", {width:240,valign:"top"});
+				var oControlDiv = $("<DIV>",{width:240});
+				oControlDiv.cacontrols({
+					onCAEvent:function(poEvent,poData){oThis.onControlEvent(poData);} 
+				});
+				oCell.append(oControlDiv);
+				var oStatusDiv = $("<DIV>", {width:240}).castatus({});
+				oOptions.oStatus = oStatusDiv;
+				oCell.append(oStatusDiv);
+			oRow.append(oCell);
+			var oCell = $("<TD>");
+				var oCanvasDiv = $("<SPAN>",{title:"this is where the magic happens"});
+				oCanvasDiv.cacanvas({
+					width:oOptions.width,
+					height:oOptions.height,
+					cell_size:oOptions.cell_size,
+					onCanvasEvent: function(poEvent,poData){oThis.onCanvasEvent(poData);}
+				});
+				oOptions.oCanvas = oCanvasDiv;
+				oCell.append(oCanvasDiv);
+			oRow.append(oCell);
+		oTable.append(oRow);
+		oElement.append(oTable);
 	},
 	
 	
 	//#################################################################
-	//# Constructor
+	//# Events
 	//#################################################################`
-	onCAEvent:function(poEvent){
+	onControlEvent:function(poData){
 		var oOptions = this.options;
 		try{
-			oOptions.oCanvas.cacanvas("onCAEvent",poEvent);
+			oOptions.oCanvas.cacanvas("onCAEvent",poData);
+		}catch(e){
+			cDebug.write_exception(e);
+			alert ("Whooops - something went wrong:" + e.message );
+		}
+	},
+	
+	onCanvasEvent:function(poData){
+		if (poData == null) return;
+		
+		var oOptions = this.options;
+		try{
+			oOptions.oStatus.castatus("onCAEvent",poData);
 		}catch(e){
 			cDebug.write_exception(e);
 			alert ("Whooops - something went wrong:" + e.message );
