@@ -63,7 +63,7 @@ var cCArule = function(){
 		if (poCell == null) throw new CAException("no cell provided");
 
 		//get the cell neighbour value
-		var iIndex = iIndex = poCell.getIndex(this.neighbour_type);
+		var iIndex = poCell.getIndex(this.neighbour_type);
 		
 		//get the output
 		poCell.evaluated.value = this.get_output(poCell.state, iIndex);

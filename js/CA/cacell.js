@@ -34,6 +34,7 @@ var cCACell = function(){
 	}
 	
 	//*****************************************************************
+	//TBD - can be optimised by looking at the N cell, reduces the number of ops by 2/3
 	this.getIndex=function(piNeighbourType){
 		var oHash, iValue;
 

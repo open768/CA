@@ -20,3 +20,13 @@
 	font-family:courier;
 	font-size: 9px;
 }
+
+.caindex{
+    outline: 1px solid #ddd;
+	display: inline-block;
+    margin: 4px;
+}
+
+.caindexon{
+    outline: 3px solid blue;
+}

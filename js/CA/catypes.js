@@ -49,10 +49,11 @@ var cCAConsts = {
 		north:2,
 		northeast:3,
 		west:4,
-		east:5,
-		southwest:6,
-		south:7,
-		southeast:8
+		centre:5,
+		east:6,
+		southwest:7,
+		south:8,
+		southeast:9
 	},
 	max_inputs:Math.pow(2,10)-1,
 	base64_length: Math.ceil((Math.pow(2,10)-1)/6),
@@ -104,16 +105,48 @@ function CAException(psMessage) {
 var cCAIndexOps = {
 	//bits are created 	nw,n,ne,w,c,e,sw,s,se
 
-	//***************************************************************
-	get_centre_value:function(piIndex){
-		//000010000 = 16
+	get_value: function(piIndex, piDirection){
+		var iVal;
+		
+		switch (piDirection){
+			case cCAConsts.neighbours.northwest:
+				iVal = 256;
+				break;
+			case cCAConsts.neighbours.north:
+				iVal = 128;
+				break;
+			case cCAConsts.neighbours.northeast:
+				iVal = 64;
+				break;
+			case cCAConsts.neighbours.west:
+				iVal = 32;
+				break;
+			case cCAConsts.neighbours.centre:
+				iVal = 16;
+				break;
+			case cCAConsts.neighbours.east:
+				iVal = 8;
+				break;
+			case cCAConsts.neighbours.southwest:
+				iVal = 4;
+				break;
+			case cCAConsts.neighbours.south:
+				iVal = 2;
+				break;
+			case cCAConsts.neighbours.southeast:
+				iVal = 1;
+				break;
+			default:
+				throw new CAException("unknown direction " + piDirection);
+		}
+		
 		var iAnd = piIndex & 16;
 		if (iAnd == 16)
 			return 1;
 		else	
 			return 0;
 	},
-	
+		
 	//***************************************************************
 	get_bit_count:function(piIndex){
 		var iTmp = piIndex;
