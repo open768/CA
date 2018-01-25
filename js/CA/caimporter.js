@@ -148,6 +148,7 @@ var cCABase64Importer = function(){
 		var oExporter = new cCABinaryImporter()
 		var sBin = oExporter.toString(poRule,piState);
 		var sOut = cCASimpleBase64.toBase64(sBin);
+		if (sOut.length !== cCAConsts.base64_length) throw new CAException("generated base64 is the wrong length");	
 		return sOut;
 	};
 }

@@ -187,6 +187,11 @@ $.widget( "ck.caeditor",{
 			oDiv.append(oButton);
 		oElement.append(oDiv);
 
+		//Add a panel for description
+		oDiv = $("<DIV>", {class:"ui-widget-content"});
+		oDiv.append("input configurations below show the output for a particular configuration of a cell and its neighbours. Those highlighted in blue will output 1 (alive) otherwise 0 (dead). Click to change");
+		oElement.append(oDiv);
+		
 		//Add the individual widgets that can be clicked
 		var sID = oElement.attr("id") + "W";
 		oDiv = $("<DIV>", {class:"ui-widget-content",id:sID});
@@ -223,29 +228,40 @@ $.widget( "ck.caeditor",{
 	onSetRuleClick: function(){
 		var oThis = this;
 		var oElement = oThis.element;
+		var oOptions = oThis.options;
 		var sID = oElement.attr("id") + "T";
 		var oTextArea = $("#"+sID);
 		var oImporter = new cCABase64Importer();
-		oOptions.rule = oImporter.makeRule(oTextArea.val());
-		this._addToggleWidgets();
+		
+		try{
+			oOptions.rule = oImporter.makeRule(oTextArea.val());
+			this._addToggleWidgets();
+		}catch (e){
+			alert ("Whoops - something went wrong!\n\n" + e.message);
+		}
+		
 	},
 	
+	//*************************************************************
 	onToggleClick: function(poData){
 		var oThis = this;
 		var oElement = oThis.element;
 		var oOptions = oThis.options;
 		var oRule = oOptions.rule;
 
-		oRule.set_output(cCAConsts.default_state, poData.index, poData.value);
-		var oExporter = new cCABase64Importer();
-		var s64 = oExporter.toString(oRule,cCAConsts.default_state);
-		cDebug.write(s64);
-		
-		var sID = oElement.attr("id") + "T";
-		var oTextArea = $("#"+sID);
-		oTextArea.val(s64);
+		try{
+			oRule.set_output(cCAConsts.default_state, poData.index, poData.value);
+			var oExporter = new cCABase64Importer();
+			var s64 = oExporter.toString(oRule,cCAConsts.default_state);
+			var sID = oElement.attr("id") + "T";
+			var oTextArea = $("#"+sID);
+			oTextArea.val(s64);
+		}catch (e){
+			alert ("Whoops - something went wrong!\n\n" + e.message);
+		}
 	},
 	
+	//*************************************************************
 	onRuleChange: function(){
 		var oThis = this;
 		var oElement = oThis.element;
