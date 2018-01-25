@@ -34,7 +34,9 @@ var cCArule = function(){
 		if (piIndex == 0) return 0;
 		if (piState > this.stateRules.length)	throw new CAException("invalid state requested");
 		try{
-			return this.stateRules[piState-1].outputs[piIndex];
+			var iOutput = this.stateRules[piState-1].outputs[piIndex];
+			if (iOutput == null) iOutput = 0;
+			return iOutput;
 		} catch (e){
 			cDebug.write_err("unable to get output for state " + piState);
 			throw e;

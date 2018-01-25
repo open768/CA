@@ -231,9 +231,9 @@ $.widget( "ck.caeditor",{
 		var oOptions = oThis.options;
 		var sID = oElement.attr("id") + "T";
 		var oTextArea = $("#"+sID);
-		var oImporter = new cCABase64Importer();
 		
 		try{
+			var oImporter = new cCABase64Importer();
 			oOptions.rule = oImporter.makeRule(oTextArea.val());
 			this._addToggleWidgets();
 		}catch (e){
