@@ -12,6 +12,7 @@ var cCACell = function(){
 	this.value = 0;
 	
 	this.data = new Map();	//the cell doesnt know what the data means, only that there is some data in there. this leaves the implementation of the cell flexible.
+	this.neighbours = new Map(); //using a different hash to neighbours 
 	
 	this.evaluated = {
 		state:0,
@@ -38,32 +39,32 @@ var cCACell = function(){
 	this.getIndex=function(piNeighbourType){
 		var oHash, iValue;
 
-		oHash = this.data;
+		oHash = this.neighbours;
 		switch (piNeighbourType){
 			case cCAConsts.neighbours.eightway:
 				//-------------------------------------------------------
-				iValue = oHash.get(cCAConsts.neighbours.northwest).value;
-				iValue <<= 1; iValue |= oHash.get(cCAConsts.neighbours.north).value;
-				iValue <<= 1; iValue |= oHash.get(cCAConsts.neighbours.northeast).value;
+				iValue = oHash.get(cCAConsts.directions.northwest).value;
+				iValue <<= 1; iValue |= oHash.get(cCAConsts.directions.north).value;
+				iValue <<= 1; iValue |= oHash.get(cCAConsts.directions.northeast).value;
 				//-------------------------------------------------------
-				iValue <<= 1; iValue |= oHash.get(cCAConsts.neighbours.west).value;
+				iValue <<= 1; iValue |= oHash.get(cCAConsts.directions.west).value;
 				iValue <<= 1;iValue |= this.value;
-				iValue <<= 1; iValue |= oHash.get(cCAConsts.neighbours.east).value;
+				iValue <<= 1; iValue |= oHash.get(cCAConsts.directions.east).value;
 				//-------------------------------------------------------
-				iValue <<= 1; iValue |= oHash.get(cCAConsts.neighbours.southwest).value;
-				iValue <<= 1; iValue |= oHash.get(cCAConsts.neighbours.south).value;
-				iValue <<= 1; iValue |= oHash.get(cCAConsts.neighbours.southeast).value;
+				iValue <<= 1; iValue |= oHash.get(cCAConsts.directions.southwest).value;
+				iValue <<= 1; iValue |= oHash.get(cCAConsts.directions.south).value;
+				iValue <<= 1; iValue |= oHash.get(cCAConsts.directions.southeast).value;
 				break;
 			case cCAConsts.neighbours.fourway:
 				//-------------------------------------------------------
-				iValue = oHash.get(cCAConsts.neighbours.northwest).value;
-				iValue <<= 1; iValue |= oHash.get(cCAConsts.neighbours.north).value;
+				iValue = oHash.get(cCAConsts.directions.northwest).value;
+				iValue <<= 1; iValue |= oHash.get(cCAConsts.directions.north).value;
 				//-------------------------------------------------------
-				iValue <<= 1; iValue |= oHash.get(cCAConsts.neighbours.west).value;
+				iValue <<= 1; iValue |= oHash.get(cCAConsts.directions.west).value;
 				iValue <<= 1;iValue |= this.value;
-				iValue <<= 1; iValue |= oHash.get(cCAConsts.neighbours.east).value;
+				iValue <<= 1; iValue |= oHash.get(cCAConsts.directions.east).value;
 				//-------------------------------------------------------
-				iValue <<= 1; iValue |= oHash.get(cCAConsts.neighbours.south).value;
+				iValue <<= 1; iValue |= oHash.get(cCAConsts.directions.south).value;
 				break;
 			default:
 				throw new CAException("unknown neighbour type: " + piNeighbourType);
@@ -75,7 +76,7 @@ var cCACell = function(){
 	//*****************************************************************
 	this.setNeighbour = function(piDirection, poCell){
 		if (poCell == null) throw new CAException("no neighbour cell provided");
-		this.data.set(piDirection, poCell);
+		this.neighbours.set(piDirection, poCell);
 	}
 
 }

@@ -43,8 +43,9 @@ var cCAConsts = {
 	neighbours:{
 		fourway: 0,
 		eightway: 1,
-		maximum:8,
-		
+		maximum:8
+	},
+	directions:{	
 		northwest:1,
 		north:2,
 		northeast:3,
@@ -55,8 +56,8 @@ var cCAConsts = {
 		south:8,
 		southeast:9
 	},
-	max_inputs:Math.pow(2,10)-1,
-	base64_length: Math.ceil((Math.pow(2,10)-1)/6),
+	max_inputs:Math.pow(2,9)-1,
+	base64_length: Math.ceil((Math.pow(2,9)-1)/6),
 	states:{
 		same: 0,
 		up: 1,
@@ -109,39 +110,39 @@ var cCAIndexOps = {
 		var iVal;
 		
 		switch (piDirection){
-			case cCAConsts.neighbours.northwest:
+			case cCAConsts.directions.northwest:
 				iVal = 256;
 				break;
-			case cCAConsts.neighbours.north:
+			case cCAConsts.directions.north:
 				iVal = 128;
 				break;
-			case cCAConsts.neighbours.northeast:
+			case cCAConsts.directions.northeast:
 				iVal = 64;
 				break;
-			case cCAConsts.neighbours.west:
+			case cCAConsts.directions.west:
 				iVal = 32;
 				break;
-			case cCAConsts.neighbours.centre:
+			case cCAConsts.directions.centre:
 				iVal = 16;
 				break;
-			case cCAConsts.neighbours.east:
+			case cCAConsts.directions.east:
 				iVal = 8;
 				break;
-			case cCAConsts.neighbours.southwest:
+			case cCAConsts.directions.southwest:
 				iVal = 4;
 				break;
-			case cCAConsts.neighbours.south:
+			case cCAConsts.directions.south:
 				iVal = 2;
 				break;
-			case cCAConsts.neighbours.southeast:
+			case cCAConsts.directions.southeast:
 				iVal = 1;
 				break;
 			default:
 				throw new CAException("unknown direction " + piDirection);
 		}
 		
-		var iAnd = piIndex & 16;
-		if (iAnd == 16)
+		var iAnd = piIndex & iVal;
+		if (iAnd == iVal)
 			return 1;
 		else	
 			return 0;

@@ -273,15 +273,15 @@ var cCAGrid = function(piRows, piCols){
 		for (var ir=1; ir<= this.rows; ir++)
 			for (var ic=1; ic<= this.cols; ic++){
 				var oCell = this.getCell(ir,ic,false);
-				this.pr__link_cell(oCell,cCAConsts.neighbours.north, ir-1, ic);
-				this.pr__link_cell(oCell,cCAConsts.neighbours.east, ir, ic+1);
-				this.pr__link_cell(oCell,cCAConsts.neighbours.south, ir+1, ic);
-				this.pr__link_cell(oCell,cCAConsts.neighbours.west, ir, ic-1);
+				this.pr__link_cell(oCell,cCAConsts.directions.north, ir-1, ic);
+				this.pr__link_cell(oCell,cCAConsts.directions.east, ir, ic+1);
+				this.pr__link_cell(oCell,cCAConsts.directions.south, ir+1, ic);
+				this.pr__link_cell(oCell,cCAConsts.directions.west, ir, ic-1);
 				if (piNeighbourType == cCAConsts.neighbours.eightway){
-					this.pr__link_cell(oCell,cCAConsts.neighbours.northeast, ir-1, ic+1);
-					this.pr__link_cell(oCell,cCAConsts.neighbours.southeast, ir+1, ic+1);
-					this.pr__link_cell(oCell,cCAConsts.neighbours.southwest, ir+1, ic-1);
-					this.pr__link_cell(oCell,cCAConsts.neighbours.northwest, ir-1, ic-1);
+					this.pr__link_cell(oCell,cCAConsts.directions.northeast, ir-1, ic+1);
+					this.pr__link_cell(oCell,cCAConsts.directions.southeast, ir+1, ic+1);
+					this.pr__link_cell(oCell,cCAConsts.directions.southwest, ir+1, ic-1);
+					this.pr__link_cell(oCell,cCAConsts.directions.northwest, ir-1, ic-1);
 				}
 			}
 		cDebug.write("completed cell linking");

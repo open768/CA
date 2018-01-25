@@ -14,7 +14,7 @@ $.widget( "ck.indexeditor",{
 	options:{
 		index:-1,
 		value: 0, 
-		cell_size:15
+		cell_size:-1
 	},
 	
 	//#################################################################
@@ -37,6 +37,11 @@ $.widget( "ck.indexeditor",{
 		oCanvas.attr("width",iSize);
 		oCanvas.attr("height",iSize);
 		oElement.append(oCanvas);
+		
+		//add the label
+		var oDiv = $("<div>");
+		oDiv.append(oOptions.index);
+		oElement.append(oDiv);
 		
 		//draw the canvas
 		this._drawCanvas(oCanvas);
@@ -67,7 +72,33 @@ $.widget( "ck.indexeditor",{
 			});
 		}		
 		
-		//----------- draw the configuration
+		//----------- draw the cells
+		var iDir, iCount, iBit;
+		var x,y;
+		
+		iCount = 1
+		x = y= oOptions.cell_size /2;
+		
+		
+		for (iDir = cCAConsts.directions.northwest; iDir <= cCAConsts.directions.southeast; iDir++){
+			iBit = cCAIndexOps.get_value(oOptions.index, iDir);
+			if (iBit >0)
+				oCanvas.drawRect({
+					fillStyle: 'black',
+					x:x, y:y,
+					width:oOptions.cell_size * 0.8, 
+					height:oOptions.cell_size * 0.8,
+					fromCenter: true
+				});
+
+			x += (oOptions.cell_size + 1);
+			iCount++;
+			if (iCount >3){
+				iCount = 1;
+				x = oOptions.cell_size /2;;
+				y += (oOptions.cell_size + 1);
+			}
+		}
 	},
 	
 	//#################################################################
@@ -95,7 +126,8 @@ $.widget( "ck.caeditor",{
 	//#################################################################
 	options:{
 		rule:null,
-		onCAEvent: null
+		onCAEvent: null,
+		cell_size:15
 	},
 
 	//#################################################################
@@ -118,7 +150,7 @@ $.widget( "ck.caeditor",{
 		
 		//there are 511 editor widgets - each is contained in a span
 		for (i=1; i<=cCAConsts.max_inputs; i++){
-			var oSpan = $("<SPAN>").indexeditor({index:i})
+			var oSpan = $("<SPAN>").indexeditor({index:i, cell_size:oOptions.cell_size})
 			oElement.append(oSpan);
 		}
 	}
