@@ -20,6 +20,9 @@
 	font-family:courier;
 	font-size: 9px;
 }
+.rule_wide{
+	width: 800px;
+}
 
 .caindex{
     outline: 1px solid #ddd;

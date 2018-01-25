@@ -7,14 +7,16 @@ For licenses that allow for commercial use please contact cluck@chickenkatsu.co.
 // USE AT YOUR OWN RISK - NO GUARANTEES OR ANY FORM ARE EITHER EXPRESSED OR IMPLIED
 **************************************************************************/
 
-$.widget( "ck.indexeditor",{
+$.widget( "ck.caeditortoggle",{
 	//#################################################################
 	//# Options
 	//#################################################################
 	options:{
 		index:-1,
 		value: 0, 
-		cell_size:-1
+		cell_size:-1,
+		debug:false,
+		onClick:null
 	},
 	
 	//#################################################################
@@ -39,18 +41,21 @@ $.widget( "ck.indexeditor",{
 		oElement.append(oCanvas);
 		
 		//add the label
-		var oDiv = $("<div>");
-		oDiv.append(oOptions.index);
-		oElement.append(oDiv);
+		if (oOptions.debug){
+			var oDiv = $("<div>");
+			oDiv.append(oOptions.index);
+			oElement.append(oDiv);
+		}
 		
 		//draw the canvas
-		this._drawCanvas(oCanvas);
+		this._drawGrid(oCanvas);
+		this._drawNeighbourhood(oCanvas);
 	},
 	
 	//#################################################################
 	//# privates
 	//#################################################################`
-	_drawCanvas: function(oCanvas){
+	_drawGrid: function(oCanvas){
 		var oThis = this;
 		var oOptions = oThis.options;
 
@@ -71,6 +76,12 @@ $.widget( "ck.indexeditor",{
 			  x2: iSize , y2: p
 			});
 		}		
+	},
+	
+	//******************************************************************
+	_drawNeighbourhood: function(oCanvas){
+		var oThis = this;
+		var oOptions = oThis.options;
 		
 		//----------- draw the cells
 		var iDir, iCount, iBit;
@@ -78,7 +89,6 @@ $.widget( "ck.indexeditor",{
 		
 		iCount = 1
 		x = y= oOptions.cell_size /2;
-		
 		
 		for (iDir = cCAConsts.directions.northwest; iDir <= cCAConsts.directions.southeast; iDir++){
 			iBit = cCAIndexOps.get_value(oOptions.index, iDir);
@@ -101,6 +111,19 @@ $.widget( "ck.indexeditor",{
 		}
 	},
 	
+	//******************************************************************
+	_set_value: function(piValue){
+		var oThis = this;
+		var oElement = oThis.element;
+		var oOptions = oThis.options;
+
+		oOptions.value = piValue;
+		if (piValue == 0)
+			oElement.removeClass("caindexon");
+		else
+			oElement.addClass("caindexon");
+	},
+	
 	//#################################################################
 	//# Events
 	//#################################################################`
@@ -109,13 +132,12 @@ $.widget( "ck.indexeditor",{
 		var oElement = oThis.element;
 		
 		var oOptions = oThis.options;
-		if (oOptions.value == 0){
-			oOptions.value = 1;
-			oElement.addClass("caindexon");
-		}else{
-			oOptions.value = 0;			
-			oElement.removeClass("caindexon");
-		}
+		if (oOptions.value == 0)
+			this._set_value(1);
+		else
+			this._set_value(0);
+		
+		this._trigger("onClick",null,oOptions);
 	}
 });
 
@@ -127,7 +149,7 @@ $.widget( "ck.caeditor",{
 	options:{
 		rule:null,
 		onCAEvent: null,
-		cell_size:15
+		cell_size:10
 	},
 
 	//#################################################################
@@ -140,18 +162,97 @@ $.widget( "ck.caeditor",{
 		
 		//set basic stuff
 		oElement.uniqueId();
-		var sID = oElement.attr("id");
 		oElement.addClass("ui-widget");
 		$(oElement).tooltip();
-
-		//put something in the widget
-		var oDiv;
 		oElement.empty();
+
+		//if no Rule - create an empty one
+		if (oOptions.rule == null) oOptions.rule = new  cCArule();
+
+		//Add a status window
+		var sID = oElement.attr("id") + "S";
+		var oDiv = $("<DIV>", {class:"ui-widget-header",id:sID});
+			oDiv.append("??");
+		oElement.append(oDiv);
+		
+		//Add a rule box
+		oDiv = $("<DIV>", {class:"ui-widget-content"});
+			var sID = oElement.attr("id") + "T";
+			var oBox = $("<TEXTAREA>",{ID:sID,rows:5,cols:80 ,class:"rule rule_wide", title:"enter the base64 rule here"});				
+			oBox.keyup( function(){oThis.onRuleChange()}	);
+			oDiv.append(oBox);
+			
+			var oButton = $("<button>",{title:"use the rule entered in the box above"}).button({icon:"ui-icon-circle-arrow-e" });
+			oButton.click(	function(){oThis.onSetRuleClick()}	);		
+			oDiv.append(oButton);
+		oElement.append(oDiv);
+
+		//Add the individual widgets that can be clicked
+		var sID = oElement.attr("id") + "W";
+		oDiv = $("<DIV>", {class:"ui-widget-content",id:sID});
+		oElement.append(oDiv);
+		this._addToggleWidgets();
+	},
+	
+	//#################################################################
+	//# privates
+	//#################################################################`
+	_addToggleWidgets: function(){
+		var oThis = this;
+		var oOptions = oThis.options;
+		var oElement = oThis.element;
+		
+		var sID = oElement.attr("id") + "W";
+		var oDiv = $("#"+sID);
+		oDiv.empty();
 		
 		//there are 511 editor widgets - each is contained in a span
-		for (i=1; i<=cCAConsts.max_inputs; i++){
-			var oSpan = $("<SPAN>").indexeditor({index:i, cell_size:oOptions.cell_size})
-			oElement.append(oSpan);
+		for (iIndex=1; iIndex<=cCAConsts.max_inputs; iIndex++){
+			var oSpan = $("<SPAN>").caeditortoggle({
+				index:iIndex, 
+				cell_size:oOptions.cell_size, 
+				onClick:function(poEvent,poData){oThis.onToggleClick(poData);}
+			})
+			oDiv.append(oSpan);
 		}
+	},
+	
+	//#################################################################
+	//# Events
+	//#################################################################`
+	onSetRuleClick: function(){
+		var oThis = this;
+		var oElement = oThis.element;
+		var sID = oElement.attr("id") + "T";
+		var oTextArea = $("#"+sID);
+		var oImporter = new cCABase64Importer();
+		oOptions.rule = oImporter.makeRule(oTextArea.val());
+		this._addToggleWidgets();
+	},
+	
+	onToggleClick: function(poData){
+		var oThis = this;
+		var oElement = oThis.element;
+		var oOptions = oThis.options;
+		var oRule = oOptions.rule;
+
+		oRule.set_output(cCAConsts.default_state, poData.index, poData.value);
+		var oExporter = new cCABase64Importer();
+		var s64 = oExporter.toString(oRule,cCAConsts.default_state);
+		cDebug.write(s64);
+		
+		var sID = oElement.attr("id") + "T";
+		var oTextArea = $("#"+sID);
+		oTextArea.val(s64);
+	},
+	
+	onRuleChange: function(){
+		var oThis = this;
+		var oElement = oThis.element;
+		var oTextArea = $("#" +	oElement.attr("id")+"T");
+		var sText = oTextArea.val();
+		var iDiff = cCAConsts.base64_length - sText.length;
+		var oStatus = $("#" +	oElement.attr("id")+"S");
+		oStatus.html( iDiff +" chars remaining");
 	}
 });

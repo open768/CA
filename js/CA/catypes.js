@@ -58,6 +58,7 @@ var cCAConsts = {
 	},
 	max_inputs:Math.pow(2,9)-1,
 	base64_length: Math.ceil((Math.pow(2,9)-1)/6),
+	default_state :1,
 	states:{
 		same: 0,
 		up: 1,
@@ -86,7 +87,6 @@ var cCAConsts = {
 		stop:2,
 		step:3
 	},
-	
 	
 	hash_values:{
 		row:"R",

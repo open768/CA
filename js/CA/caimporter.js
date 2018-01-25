@@ -68,7 +68,7 @@ var cCABinaryImporter = function(){
 		oRule.has_state_transitions = false;
 		for (var i=1; i<=cCAConsts.max_inputs; i++){
 			var ch = psInput.charAt(i-1);
-			oRule.set_output(1,i,parseInt(ch));
+			oRule.set_output(cCAConsts.default_state,i,parseInt(ch));
 		}
 		return oRule;
 	}
@@ -91,7 +91,7 @@ var cCABinaryImporter = function(){
 		
 		for (var i=1; i<=cCAConsts.max_inputs; i++){
 			var iRnd = Math.floor(Math.random() * 1.99);
-			oRule.set_output(1,i,iRnd);
+			oRule.set_output(cCAConsts.default_state,i,iRnd);
 		}
 		return oRule;
 	}
@@ -208,7 +208,7 @@ var cCALifeImporter = function(){
 				if ( aBorn[iCount] == 1 ) iNewValue = 1;
 			}
 			
-			oRule.set_output(1,i,iNewValue);
+			oRule.set_output(cCAConsts.default_state,i,iNewValue);
 		}
 		return oRule;
 	};

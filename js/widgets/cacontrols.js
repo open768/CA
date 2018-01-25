@@ -61,7 +61,7 @@ $.widget( "ck.cacontrols",{
 		
 		var oDiv = $("<DIV>",{class:"ui-widget-content"});
 		sID = oElement.attr("id")+cCAControlTypes.entry_ID;
-		var oBox = $("<TEXTAREA>",{ID:sID,rows:5,columns:30 ,class:"rule", title:"enter the rule here"});				
+		var oBox = $("<TEXTAREA>",{ID:sID,rows:5,cols:30 ,class:"rule", title:"enter the rule here"});				
 		oBox.keyup( function(){oThis.onRuleChange()}	);
 		oDiv.append(oBox);
 		
@@ -173,7 +173,7 @@ $.widget( "ck.cacontrols",{
 			var oImporter = new cCARepeatBase64Importer();
 			var oRule = oImporter.makeRule(sInput);
 			var oExporter = new cCABase64Importer();
-			var s64 = oExporter.toString(oRule,1);
+			var s64 = oExporter.toString(oRule,cCAConsts.default_state);
 			this.pr_setBase64Rule(s64);
 		}
 		catch(e){
@@ -202,7 +202,7 @@ $.widget( "ck.cacontrols",{
 					var oImporter = new cCALifeImporter();
 					oRule = oImporter.makeRule(oTextArea.val());
 					var oExporter = new cCABase64Importer();
-					var s64 = oExporter.toString(oRule,1);
+					var s64 = oExporter.toString(oRule,cCAConsts.default_state);
 					this.pr_setBase64Rule(s64);
 					break;
 				case cCAConsts.rule_types.base64:
@@ -294,7 +294,7 @@ $.widget( "ck.cacontrols",{
 		var oImporter = new cCABinaryImporter();
 		oRule= oImporter.randomRule();
 		var oImporter = new cCABase64Importer();
-		var sBase64 = oImporter.toString(oRule,1);
+		var sBase64 = oImporter.toString(oRule,cCAConsts.default_state);
 		this.pr_setBase64Rule(sBase64);
 	},
 	
