@@ -50,6 +50,7 @@ $.widget( "ck.caeditortoggle",{
 		//draw the canvas
 		this._drawGrid(oCanvas);
 		this._drawNeighbourhood(oCanvas);
+		this._set_value(oOptions.value);
 	},
 	
 	//#################################################################
@@ -206,15 +207,23 @@ $.widget( "ck.caeditor",{
 		var oThis = this;
 		var oOptions = oThis.options;
 		var oElement = oThis.element;
+		var oRule = oOptions.rule;
 		
 		var sID = oElement.attr("id") + "W";
 		var oDiv = $("#"+sID);
 		oDiv.empty();
 		
 		//there are 511 editor widgets - each is contained in a span
+		var iVal;
 		for (iIndex=1; iIndex<=cCAConsts.max_inputs; iIndex++){
+			try{
+				iVal = oRule.get_output(cCAConsts.default_state, iIndex);
+			}
+			catch (e){
+				iVal = 0;
+			}
 			var oSpan = $("<SPAN>").caeditortoggle({
-				index:iIndex, 
+				index:iIndex, value:iVal,
 				cell_size:oOptions.cell_size, 
 				onClick:function(poEvent,poData){oThis.onToggleClick(poData);}
 			})
