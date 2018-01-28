@@ -73,6 +73,8 @@ var cCArule = function(){
 			poCell.evaluated.state = this.get_nextState(poCell.state, iIndex);
 		else
 			poCell.evaluated.state = poCell.state;
+		poCell.evaluated.done = true;
+		poCell.evaluated.index = iIndex;
 		
 		//set the evaluated state
 		return (poCell.evaluated.value !== poCell.value);
