@@ -317,7 +317,7 @@ $.widget( "ck.cacontrols",{
 	pr__populate_lexicon:function(poSelect){
 		var aRules = cCALexicon.get_rules();
 		
-		poSelect.append( $("<option>",{selected:1,disabled:1,value:-1}).append("pick one"));
+		poSelect.append( $("<option>",{selected:1,disabled:1,value:-1}).append("preset rules"));
 		
 		for (var i = 0; i < aRules.length; i++){
 			var oRule = aRules[i];

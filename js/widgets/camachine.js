@@ -72,6 +72,7 @@ $.widget( "ck.camachine",{
 		var oOptions = this.options;
 		try{
 			oOptions.oCanvas.cacanvas("onCAEvent",poData);
+			oOptions.oStatus.castatus("onCAEvent",poData);
 		}catch(e){
 			cDebug.write_exception(e);
 			alert ("Whooops - something went wrong:" + e.message );

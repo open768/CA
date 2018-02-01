@@ -7,16 +7,17 @@ For licenses that allow for commercial use please contact cluck@chickenkatsu.co.
 // USE AT YOUR OWN RISK - NO GUARANTEES OR ANY FORM ARE EITHER EXPRESSED OR IMPLIED
 **************************************************************************/
 
+caStatusConsts = {
+	ACTIVE_ID :"A",
+	CHANGED_ID :"C",
+	RUNS_ID :"R",
+	CHART_ID:"CHI"
+}
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 $.widget( "ck.castatus",{
 	//#################################################################
 	//# Options
 	//#################################################################
-	options:{
-		ACTIVE_ID :"A",
-		CHANGED_ID :"C",
-		RUNS_ID :"R"
-	},
 
 	//#################################################################
 	//# Constructor
@@ -32,6 +33,9 @@ $.widget( "ck.castatus",{
 		oElement.addClass("ui-widget");
 		$(oElement).tooltip();
 
+		//check dependencies
+		if (!oElement.cachart) $.error("caChart is missing , chack includes");
+		
 		//put something in the widget
 		var oDiv;
 		oElement.empty();
@@ -45,23 +49,31 @@ $.widget( "ck.castatus",{
 				var oRow = $("<tr>");
 					oCell = $("<td>", {align:"right"}).append("Active");
 					oRow.append(oCell);
-					oCell = $("<td>",{id:sID+oOptions.ACTIVE_ID}).append("??");
+					oCell = $("<td>",{id:sID+caStatusConsts.ACTIVE_ID}).append("??");
 					oRow.append(oCell);
 				oTable.append(oRow);
 				var oRow = $("<tr>");
 					oCell = $("<td>", {align:"right"}).append("Changed");
 					oRow.append(oCell);
-					oCell = $("<td>",{id:sID+oOptions.CHANGED_ID}).append("??");
+					oCell = $("<td>",{id:sID+caStatusConsts.CHANGED_ID}).append("??");
 					oRow.append(oCell);
 				oTable.append(oRow);
 				var oRow = $("<tr>");
 					oCell = $("<td>", {align:"right"}).append("Runs");
 					oRow.append(oCell);
-					oCell = $("<td>",{id:sID+oOptions.RUNS_ID}).append("??");
+					oCell = $("<td>",{id:sID+caStatusConsts.RUNS_ID}).append("??");
 					oRow.append(oCell);
 				oTable.append(oRow);
 			oDiv.append(oTable);
 		oElement.append(oDiv);
+		
+		//-------------------------------------------------------------
+		oElement.append("<p>")
+		oDiv = $("<DIV>",{class:"ui-widget-header"}).append("Chart");
+		oElement.append(oDiv);
+		oDiv = $("<DIV>",{class:"ui-widget-content",id:sID+caStatusConsts.CHART_ID}).cachart();
+		oElement.append(oDiv);
+				
 	},
 	
 	//#################################################################
@@ -72,15 +84,27 @@ $.widget( "ck.castatus",{
 		var oOptions = oThis.options;
 		var sID = oElement.attr("id");
 
-		if (poEvent.type !== cCAConsts.event_types.status) return;
-		if (!poEvent.data) return;
-		
-		var oTarget = $("#"+sID+oOptions.ACTIVE_ID);
-		oTarget.html(poEvent.data.active);
-		var oTarget = $("#"+sID+oOptions.CHANGED_ID);
-		oTarget.html(poEvent.data.changed);
-		var oTarget = $("#"+sID+oOptions.RUNS_ID);
-		oTarget.html(poEvent.data.runs);
+		switch (poEvent.type){
+			case  cCAConsts.event_types.status:
+				if (!poEvent.data) return;
+				
+				var oTarget = $("#"+sID+caStatusConsts.ACTIVE_ID);
+				oTarget.html(poEvent.data.active);
+				var oTarget = $("#"+sID+caStatusConsts.CHANGED_ID);
+				oTarget.html(poEvent.data.changed);
+				var oTarget = $("#"+sID+caStatusConsts.RUNS_ID);
+				oTarget.html(poEvent.data.runs);
+				
+				var oTarget = $("#"+sID+caStatusConsts.CHART_ID);
+				oTarget.cachart("onCAEvent",poEvent);
+				break;
+				
+			case cCAConsts.event_types.set_rule:
+			case cCAConsts.event_types.initialise:
+				var oTarget = $("#"+sID+caStatusConsts.CHART_ID);
+				oTarget.cachart("onCAEvent",poEvent);
+				break;
+		}
 	}
 	
 });
