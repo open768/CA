@@ -22,8 +22,9 @@ $.widget( "ck.cachart",{
 	//# Options
 	//#################################################################
 	options:{
-		width: 400,
+		width: 240,
 		height:100,
+		runs:0,
 		_data: null,
 		_chart: null
 	},
@@ -40,6 +41,8 @@ $.widget( "ck.cachart",{
 		oElement.uniqueId();
 		oElement.addClass("ui-widget");
 		$(oElement).tooltip();
+		oElement.width(oOptions.width);
+		oElement.height(oOptions.height);
 
 		//check dependencies
 		if (!google.charts)  $.error("google.charts class is missing! check includes");	
@@ -47,6 +50,7 @@ $.widget( "ck.cachart",{
 		//put something in the widget
 		var oDiv;
 		oElement.empty();
+		oElement.append("Waiting for Data ...");
 	},
 	
 	//#################################################################
@@ -84,12 +88,17 @@ $.widget( "ck.cachart",{
 				//add the data to the data structure and draw
 				this._createData();
 				var oData = poEvent.data;
-				oOptions._data.addRow([oData.runs, oData.changed, oData.active, "Run: " + oData.runs]);
+				oOptions._data.addRow([oOptions.runs, oData.changed, oData.active, "Run: " + oOptions.runs]);
 				oOptions._chart.draw(oOptions._data);
+				oOptions.runs ++;
 				break;
 			case cCAConsts.event_types.set_rule:
 			case cCAConsts.event_types.initialise:
 				oOptions._data = null;
+				oOptions._chart = null;
+				oOptions.runs = 0;
+				oElement.empty();
+				oElement.append("Waiting for Data ...");
 		}
 	}
 });
