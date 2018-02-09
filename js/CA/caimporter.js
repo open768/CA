@@ -1,3 +1,4 @@
+
 /**************************************************************************
 Copyright (C) Chicken Katsu 2013-2018
 This code is protected by copyright under the terms of the 
@@ -109,6 +110,60 @@ var cCABinaryImporter = function(){
 		if (sBinaryOut !== sBinaryIn) throw new Error("test failed");
 		cDebug.write("Test passed");
 	}
+}
+
+//###############################################################################
+var cCaIdentityRule = function(){
+	this.makeRule = function(){
+		var oRule = new cCArule();
+		oRule.neighbour_type = cCAConsts.neighbours.eightway;
+		oRule.has_state_transitions = false;
+		
+		for (var i=1; i<=cCAConsts.max_inputs; i++){
+			var iCentre = cCAIndexOps.get_value(i, cCAConsts.directions.centre);
+			oRule.set_output(cCAConsts.default_state,i,iCentre);
+		}
+		
+		return oRule;
+	};
+}
+
+//###############################################################################
+var cCAWolfram1DImporter = function(){
+	this.makeRule = function(piRule){
+		if ( isNaN(piRule) ) throw new CAException("rule must be a number.");
+		if (piRule < 1 || piRule > 256) throw new CAException("rule must be between 1 and 256");
+		
+		//create an identity rule
+		var oMaker = new cCaIdentityRule();
+		var oRule = oMaker.makeRule();
+		
+		//create a wolfram lookup table
+		var aWolfram = new Array(8);
+		var i = 0;
+		while (piRule > 0){
+			aWolfram[i] = piRule && 1;
+			i++;
+			piRule >>>= 1;
+		}
+		
+		//make wolfram changes to the rule
+		//when the middle row is empty apply the wolfram rule to the row above
+		for (var i=1; i<=cCAConsts.max_inputs; i++){
+			var iCentreBits = cCAIndexOps.get_centre_bits(i);
+			if (iCentreBits == 0){
+				var iNorthBits = cCAIndexOps.get_north_bits(i);
+				var iCentre;
+				if (iNorthBits == 0)
+					iCentre = cCAIndexOps.get_value(i, cCAConsts.directions.centre);
+				else
+					iCentre = aWolfram[iNorthBits];
+				oRule.set_output(cCAConsts.default_state,i,iCentre);
+			}
+		}
+				
+		return oRule;
+	};
 }
 
 //###############################################################################

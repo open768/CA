@@ -155,8 +155,35 @@ var cCAIndexOps = {
 	
 		while (iTmp > 0){
 			if ((iTmp & 1) == 1) iCount ++;
-			iTmp = iTmp >>> 1;				
+			iTmp = iTmp >>> 1;		//keep right shifting the value until nothing is left		
 		}
 		return iCount;
+	},
+	
+	//***************************************************************
+	get_north_bits:function(piIndex){
+		var iVal = 0;
+		iVal |= this.get_value(piIndex, cCAConsts.directions.northwest );
+		iVal <<=1; iVal |= this.get_value(piIndex, cCAConsts.directions.north );
+		iVal <<=1; iVal |= this.get_value(piIndex, cCAConsts.directions.northeast );
+		return iVal;
+	},
+	
+	//***************************************************************
+	get_centre_bits:function(piIndex){
+		var iVal = 0;
+		iVal |= this.get_value(piIndex, cCAConsts.directions.west );
+		iVal <<=1; iVal |= this.get_value(piIndex, cCAConsts.directions.centre );
+		iVal <<=1; iVal |= this.get_value(piIndex, cCAConsts.directions.east );
+		return iVal;
+	},
+	
+	//***************************************************************
+	get_south_bits:function(piIndex){
+		var iVal = 0;
+		iVal |= this.get_value(piIndex, cCAConsts.directions.southwest );
+		iVal <<=1; iVal |= this.get_value(piIndex, cCAConsts.directions.south );
+		iVal <<=1; iVal |= this.get_value(piIndex, cCAConsts.directions.southeast );
+		return iVal;
 	}
 };

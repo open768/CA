@@ -12,6 +12,7 @@ var cCAControlTypes = {
 	rules_extra_ID:"rulex",
 	name_ID:"nam",
 	init_ID:"ini",
+	wolf_ID:"wolf",
 	lexicon_ID:"lex",
 	
 	random_value: "Random"	
@@ -90,6 +91,17 @@ $.widget( "ck.cacontrols",{
 		oDiv.append(oButton);
 		oElement.append(oDiv);
 
+		//--yourname------------------------------------------------		
+		var oDiv = $("<DIV>",{class:"ui-widget-content"});
+		sID = oElement.attr("id")+cCAControlTypes.wolf_ID;
+		oDiv.append ("Wolfram ");
+		var oInput = $("<INPUT>",{type:"text",id:sID,size:3,icon:"ui-icon-circle-arrow-e",title:"put a wolfram rule number in this box"});
+		oDiv.append(oInput);
+		var oButton = $("<button>",{title:"creates a rule from wolfram rule number"}).button({icon:"ui-icon-circle-arrow-e"});
+		oButton.click(	function(){oThis.onSetWolframClick()}	);		
+		oDiv.append(oButton);
+		oElement.append(oDiv);
+
 		//--initialise------------------------------------------------		
 		var oDiv = $("<DIV>",{class:"ui-widget-content"});
 		sID = oElement.attr("id")+cCAControlTypes.init_ID;
@@ -155,6 +167,26 @@ $.widget( "ck.cacontrols",{
 			this._trigger("onCAEvent", null, oEvent);			
 		}
 
+	},
+	
+	//****************************************************************************
+	onSetWolframClick:function(){
+		var oThis = this;
+		var oOptions = oThis.options;
+		var oElement = oThis.element;
+
+		var oInput = $("#" +	oElement.attr("id")+cCAControlTypes.wolf_ID);
+		try{
+			var sInput = parseInt(oInput.val().trim());			
+			var oImporter = new cCAWolfram1DImporter();
+			var oRule = oImporter.makeRule(sInput);
+			var oExporter = new cCABase64Importer();
+			var s64 = oExporter.toString(oRule,cCAConsts.default_state);
+			this.pr_setBase64Rule(s64);
+		}
+		catch(e){
+			alert("something went wrong:\n" + e.message);
+		}
 	},
 	
 	//****************************************************************************
