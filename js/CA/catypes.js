@@ -68,7 +68,8 @@ var cCAConsts = {
 	rule_types:{
 		life:1,
 		binary:2,
-		base64:3
+		base64:3,
+		wolfram1d:4
 	},
 	init_values:{
 		block:1,

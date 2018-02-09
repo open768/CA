@@ -71,6 +71,7 @@ $.widget( "ck.cacontrols",{
 		oSelect.append( $("<option>",{selected:1,disabled:1,value:-1}).append("Rule Type"));
 		oSelect.append( $("<option>",{value:cCAConsts.rule_types.base64}).append("base64"));
 		oSelect.append( $("<option>",{value:cCAConsts.rule_types.life}).append("life"));
+		oSelect.append( $("<option>",{value:cCAConsts.rule_types.wolfram1d}).append("wolfram"));
 		oSelect.append( $("<option>").append(cCAControlTypes.random_value));
 		oDiv.append(oSelect);
 		oSelect.selectmenu();
@@ -91,16 +92,6 @@ $.widget( "ck.cacontrols",{
 		oDiv.append(oButton);
 		oElement.append(oDiv);
 
-		//--yourname------------------------------------------------		
-		var oDiv = $("<DIV>",{class:"ui-widget-content"});
-		sID = oElement.attr("id")+cCAControlTypes.wolf_ID;
-		oDiv.append ("Wolfram ");
-		var oInput = $("<INPUT>",{type:"text",id:sID,size:3,icon:"ui-icon-circle-arrow-e",title:"put a wolfram rule number in this box"});
-		oDiv.append(oInput);
-		var oButton = $("<button>",{title:"creates a rule from wolfram rule number"}).button({icon:"ui-icon-circle-arrow-e"});
-		oButton.click(	function(){oThis.onSetWolframClick()}	);		
-		oDiv.append(oButton);
-		oElement.append(oDiv);
 
 		//--initialise------------------------------------------------		
 		var oDiv = $("<DIV>",{class:"ui-widget-content"});
@@ -169,25 +160,6 @@ $.widget( "ck.cacontrols",{
 
 	},
 	
-	//****************************************************************************
-	onSetWolframClick:function(){
-		var oThis = this;
-		var oOptions = oThis.options;
-		var oElement = oThis.element;
-
-		var oInput = $("#" +	oElement.attr("id")+cCAControlTypes.wolf_ID);
-		try{
-			var sInput = parseInt(oInput.val().trim());			
-			var oImporter = new cCAWolfram1DImporter();
-			var oRule = oImporter.makeRule(sInput);
-			var oExporter = new cCABase64Importer();
-			var s64 = oExporter.toString(oRule,cCAConsts.default_state);
-			this.pr_setBase64Rule(s64);
-		}
-		catch(e){
-			alert("something went wrong:\n" + e.message);
-		}
-	},
 	
 	//****************************************************************************
 	onSetNameClick: function(){
@@ -233,6 +205,13 @@ $.widget( "ck.cacontrols",{
 				case cCAConsts.rule_types.life:
 					var oImporter = new cCALifeImporter();
 					oRule = oImporter.makeRule(oTextArea.val());
+					var oExporter = new cCABase64Importer();
+					var s64 = oExporter.toString(oRule,cCAConsts.default_state);
+					this.pr_setBase64Rule(s64);
+					break;
+				case cCAConsts.rule_types.wolfram1d:
+					var oImporter = new cCAWolfram1DImporter();
+					var oRule = oImporter.makeRule(oTextArea.val());
 					var oExporter = new cCABase64Importer();
 					var s64 = oExporter.toString(oRule,cCAConsts.default_state);
 					this.pr_setBase64Rule(s64);
