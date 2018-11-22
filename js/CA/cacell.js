@@ -23,6 +23,12 @@ var cCACell = function(){
 	
 	this.evaluated = new cCAEvaluatedCell();
 
+	this.clear = function(){
+		this.state = 1;
+		this.value = 0;
+		this.evaluated.done = false;
+	};
+	
 	//****************************************************************
 	this.apply_rule = function(){
 		//just calls the rules apply method. the benefit of doing it this way is 

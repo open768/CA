@@ -12,11 +12,18 @@ For licenses that allow for commercial use please contact cluck@chickenkatsu.co.
 var cCAGridInitialiser = function(){
 	
 	this.init = function(poGrid, piInitType){
+		
+		//always blank first
+		if (piInitType !== cCAConsts.init_values.blank)
+			this.init(poGrid,cCAConsts.init_values.blank);
+		
 		switch(piInitType){
 			case cCAConsts.init_values.blank:
 				for (var ir=1; ir<= poGrid.rows; ir++)
-					for (var ic=1; ic<= poGrid.cols; ic++)
-						poGrid.setCellValue(ir,ic,true,0);
+					for (var ic=1; ic<= poGrid.cols; ic++){
+						var oCell = poGrid.getCell(ir,ic,true);
+						if (oCell) oCell.clear();
+					}
 				poGrid.non_zero_count = 0;
 				poGrid.changed_cells = [];
 				bean.fire(poGrid,cCAConsts.events.clear);
@@ -24,7 +31,6 @@ var cCAGridInitialiser = function(){
 				
 			//------------------------------------------------------
 			case cCAConsts.init_values.horiz_line:
-				poGrid.init(cCAConsts.init_values.blank);
 				var ir = Math.floor(poGrid.rows / 2);
 				for (var ic=1; ic<= poGrid.cols; ic++)
 					poGrid.setCellValue(ir,ic,true,1);
@@ -32,7 +38,6 @@ var cCAGridInitialiser = function(){
 				
 			//------------------------------------------------------
 			case cCAConsts.init_values.diagonal:
-				poGrid.init(cCAConsts.init_values.blank);
 				for (var ir=1; ir<= poGrid.rows; ir++){
 					if (ir>poGrid.cols) break;
 					poGrid.setCellValue(ir,ir,true,1);
@@ -40,7 +45,6 @@ var cCAGridInitialiser = function(){
 				break;
 			//------------------------------------------------------
 			case cCAConsts.init_values.diamond:
-				poGrid.init(cCAConsts.init_values.blank);
 				var icc = Math.floor(poGrid.cols / 2);
 				var icr = Math.floor(poGrid.rows / 2);
 				
@@ -58,7 +62,6 @@ var cCAGridInitialiser = function(){
 				
 			//------------------------------------------------------
 			case cCAConsts.init_values.vert_line:
-				poGrid.init(cCAConsts.init_values.blank);
 				var ic = Math.floor(poGrid.cols / 2);
 				for (var ir=1; ir<= poGrid.cols; ir++)
 					poGrid.setCellValue(ir,ic,true,1);
@@ -66,7 +69,6 @@ var cCAGridInitialiser = function(){
 				
 			//------------------------------------------------------
 			case cCAConsts.init_values.block:
-				poGrid.init(cCAConsts.init_values.blank);
 				var iMidC = Math.floor( poGrid.cols/2);
 				var iMidR = Math.floor( poGrid.rows/2);
 				for (var ic=iMidC; ic<= iMidC+1; ic++)
@@ -78,7 +80,6 @@ var cCAGridInitialiser = function(){
 				
 			//------------------------------------------------------
 			case cCAConsts.init_values.circle:
-				poGrid.init(cCAConsts.init_values.blank);
 				var iMidC = Math.floor( poGrid.cols/2);
 				var iMidR = Math.floor( poGrid.rows/2);
 				
@@ -94,7 +95,6 @@ var cCAGridInitialiser = function(){
 			
 			//------------------------------------------------------
 			case cCAConsts.init_values.cross:
-				poGrid.init(cCAConsts.init_values.blank);
 				var iMidC = Math.floor( poGrid.cols/2);
 				var iMidR = Math.floor( poGrid.rows/2);
 				
@@ -126,7 +126,6 @@ var cCAGridInitialiser = function(){
 				var iMidR = Math.floor( poGrid.rows/2);
 				var iRad = 0;
 				var iMidrow = Math.round(poGrid.rows/2);
-				poGrid.init(cCAConsts.init_values.blank);
 				
 				for (var ic=1; ic<= poGrid.cols; ic++){
 					var fSin = Math.sin(iRad);					
@@ -236,15 +235,15 @@ var cCAGrid = function(piRows, piCols){
 			}
 
 		//promote changed cells
-		var iLen = this.changed_cells.length;
-		this.status.changed = iLen;
-		if (iLen == 0){
+		var iChangedLen = this.changed_cells.length;
+		this.status.changed = iChangedLen;
+		if (iChangedLen == 0){
 			this.running = false;
 			bean.fire(this,cCAConsts.events.nochange);
 			return;
 		}
 		
-		for ( var ic = 0; ic < iLen; ic++){
+		for ( var ic = 0; ic < iChangedLen; ic++){
 			var oCell = this.changed_cells[ic];
 			oCell.promote();
 			if (oCell.value == 0) 

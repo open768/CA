@@ -69,7 +69,8 @@ var cCAConsts = {
 		life:1,
 		binary:2,
 		base64:3,
-		wolfram1d:4
+		wolfram1d:4,
+		random:5
 	},
 	init_values:{
 		block:1,

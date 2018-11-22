@@ -72,7 +72,7 @@ $.widget( "ck.cacontrols",{
 		oSelect.append( $("<option>",{value:cCAConsts.rule_types.base64}).append("base64"));
 		oSelect.append( $("<option>",{value:cCAConsts.rule_types.life}).append("life"));
 		oSelect.append( $("<option>",{value:cCAConsts.rule_types.wolfram1d}).append("wolfram"));
-		oSelect.append( $("<option>").append(cCAControlTypes.random_value));
+		oSelect.append( $("<option>",{value:cCAConsts.rule_types.random}).append("random"));
 		oDiv.append(oSelect);
 		oSelect.selectmenu();
 		
@@ -129,15 +129,18 @@ $.widget( "ck.cacontrols",{
 		
 		//--controls------------------------------------------------		
 		var oDiv = $("<DIV>",{class:"ui-widget-content"});
-		var oButton = $("<button>",{width:"30px",height:"30px"}).button({icon:"ui-icon-stop"});
+		var oButton = $("<button>",{width:"30px",height:"30px",id:"btnStop"}).button({icon:"ui-icon-stop"});
+		oButton.prop("disabled", true);
 		oButton.click(	function(){ oThis.onClickButton(cCAConsts.action_types.stop);}	);
 		oDiv.append(oButton);
 
-		var oButton = $("<button>",{width:"30px",height:"30px"}).button({icon:"ui-icon-circle-triangle-e"});
+		var oButton = $("<button>",{width:"30px",height:"30px",id:"btnPlay"}).button({icon:"ui-icon-circle-triangle-e"});
+		oButton.prop("disabled", true);
 		oButton.click(	function(){ oThis.onClickButton(cCAConsts.action_types.play);}	);
 		oDiv.append(oButton);
 
-		var oButton = $("<button>",{width:"30px",height:"30px",title:"step"}).button({icon:"ui-icon-seek-end"});
+		var oButton = $("<button>",{width:"30px",height:"30px",title:"step",id:"btnStep"}).button({icon:"ui-icon-seek-end"});
+		oButton.prop("disabled", true);
 		oButton.click(	function(){ oThis.onClickButton(cCAConsts.action_types.step);}	);
 		oDiv.append(oButton);
 		
@@ -151,13 +154,25 @@ $.widget( "ck.cacontrols",{
 	onClickButton: function(piAction){
 		var oThis = this;
 		var oOptions = oThis.options;
-		if (!oOptions.rule_set)
+		if (!oOptions.rule_set){
 			alert("set a rule first!!");
-		else{
-			var oEvent = new cCAEvent( cCAConsts.event_types.action, parseInt(piAction));
-			this._trigger("onCAEvent", null, oEvent);			
+			return;
 		}
-
+	
+		switch (piAction){
+			case cCAConsts.action_types.stop:
+				$("#btnStep").prop("disabled",false);
+				$("#btnPlay").prop("disabled",false);
+				$("#btnStop").prop("disabled",true);
+				break;
+			case cCAConsts.action_types.play:
+				$("#btnStep").prop("disabled",true);
+				$("#btnPlay").prop("disabled",true);
+				$("#btnStop").prop("disabled",false);
+				break;
+		}
+		var oEvent = new cCAEvent( cCAConsts.event_types.action, parseInt(piAction));
+		this._trigger("onCAEvent", null, oEvent);			
 	},
 	
 	
@@ -223,13 +238,15 @@ $.widget( "ck.cacontrols",{
 					this._trigger("onCAEvent", null, oEvent);
 					oOptions.rule_set = true;
 					break;
+				case cCAConsts.rule_types.random:
+					this.pr_makeRandomBase64();
+					break;
 				default:
-					if (oSelect.val() === cCAControlTypes.random_value){
-						this.pr_makeRandomBase64();
-					}else{
-						alert("unknown rule type");
-					}
+					throw new Exception("unknown rule type");
+					
 			}
+			$("#btnPlay").prop("disabled",false);
+
 		}
 		catch(e){
 			alert("something went wrong:\n" + e.message);

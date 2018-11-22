@@ -80,7 +80,7 @@ var cCABinaryImporter = function(){
 		if (piState > poRule.stateRules.length)	throw new CAException("invalid state requested");
 		
 		for (var i=1; i <=cCAConsts.max_inputs; i++)
-			sOut = sOut + poRule.get_output(piState,i);
+			sOut = sOut + poRule.get_rule_output(piState,i);
 		return sOut;		
 	}
 	

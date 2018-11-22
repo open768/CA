@@ -21,6 +21,7 @@ var cCArule = function(){
 			
 	//*****************************************************************
 	this.set_output = function (piState, piIndex, piValue){
+		if (piState <1 ) throw new CAException("invalid state");
 		if (piState > this.stateRules.length){
 			var oStateRule = new cCAStateRule();
 			oStateRule.neighbour_type = this.neighbour_type;
@@ -30,11 +31,11 @@ var cCArule = function(){
 	};
 	
 	//*****************************************************************
-	this.get_output = function (piState, piIndex){
+	this.get_rule_output = function (piState, piIndex){
 		if (piIndex == 0) return 0;
 		if (piState > this.stateRules.length)	throw new CAException("invalid state requested");
 		try{
-			var iOutput = this.stateRules[piState-1].outputs[piIndex];
+			var iOutput = this.stateRules[piState-1].outputs[piIndex]; //TBD should be using a method
 			if (iOutput == null) iOutput = 0;
 			return iOutput;
 		} catch (e){
@@ -48,7 +49,7 @@ var cCArule = function(){
 		if (!this.has_state_transitions)	throw new CAException("no state transitions possible");
 		if (piInState > this.stateRules.length)	throw new CAException("invalid input state ");
 		if (piNextState > this.stateRules.length)	throw new CAException("invalid next state ");
-		this.stateRules[piInState-1].nextStates[piIndex] = piNextState;
+		this.stateRules[piInState-1].nextStates[piIndex] = piNextState; //TBD should be using a method
 	};
 
 	//*****************************************************************
@@ -56,7 +57,7 @@ var cCArule = function(){
 		if (piIndex == 0) return piInState;
 		if (!this.has_state_transitions)	throw new CAException("no state transitions possible");
 		if (piInState > this.stateRules.length)	throw new CAException("invalid state requested");
-		var iOutState = this.stateRules[piInState-1].nextStates[piIndex];
+		var iOutState = this.stateRules[piInState-1].nextStates[piIndex]; //TBD should be using a method
 		return iOutState;
 	};	
 	
@@ -65,16 +66,16 @@ var cCArule = function(){
 		if (poCell == null) throw new CAException("no cell provided");
 
 		//get the cell neighbour value
-		var iIndex = poCell.getIndex(this.neighbour_type);
+		var iBitmap = poCell.getIndex(this.neighbour_type);
 		
 		//get the output
-		poCell.evaluated.value = this.get_output(poCell.state, iIndex);
+		poCell.evaluated.value = this.get_rule_output(poCell.state, iBitmap);
 		if (this.has_state_transitions) 
-			poCell.evaluated.state = this.get_nextState(poCell.state, iIndex);
+			poCell.evaluated.state = this.get_nextState(poCell.state, iBitmap);
 		else
 			poCell.evaluated.state = poCell.state;
 		poCell.evaluated.done = true;
-		poCell.evaluated.index = iIndex;
+		poCell.evaluated.index = iBitmap;
 		
 		//set the evaluated state
 		return (poCell.evaluated.value !== poCell.value);
