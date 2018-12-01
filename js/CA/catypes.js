@@ -65,6 +65,7 @@ var cCAConsts = {
 		down:2,
 		reset:3
 	},
+	no_boredom: -1,
 	rule_types:{
 		life:1,
 		binary:2,

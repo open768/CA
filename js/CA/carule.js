@@ -18,24 +18,25 @@ var cCArule = function(){
 	this.neighbour_type = cCAConsts.neighbours.eightway;
 	this.has_state_transitions = false;
 	this.stateRules = [];
+	this.boredom = cCAConsts.no_boredom;
 			
 	//*****************************************************************
-	this.set_output = function (piState, piIndex, piValue){
+	this.set_output = function (piState, piPattern, piValue){
 		if (piState <1 ) throw new CAException("invalid state");
 		if (piState > this.stateRules.length){
 			var oStateRule = new cCAStateRule();
 			oStateRule.neighbour_type = this.neighbour_type;
 			this.stateRules[piState-1] = oStateRule;
 		}	
-		this.stateRules[piState-1].outputs[piIndex] = piValue;
+		this.stateRules[piState-1].outputs[piPattern] = piValue;
 	};
 	
 	//*****************************************************************
-	this.get_rule_output = function (piState, piIndex){
-		if (piIndex == 0) return 0;
+	this.get_rule_output = function (piState, piPattern){
+		if (piPattern == 0) return 0;
 		if (piState > this.stateRules.length)	throw new CAException("invalid state requested");
 		try{
-			var iOutput = this.stateRules[piState-1].outputs[piIndex]; //TBD should be using a method
+			var iOutput = this.stateRules[piState-1].outputs[piPattern]; //TBD should be using a method
 			if (iOutput == null) iOutput = 0;
 			return iOutput;
 		} catch (e){
@@ -45,19 +46,19 @@ var cCArule = function(){
 	};
 	
 	//*****************************************************************
-	this.set_nextState = function (piInState, piIndex, piNextState){
+	this.set_nextState = function (piInState, piPattern, piNextState){
 		if (!this.has_state_transitions)	throw new CAException("no state transitions possible");
 		if (piInState > this.stateRules.length)	throw new CAException("invalid input state ");
 		if (piNextState > this.stateRules.length)	throw new CAException("invalid next state ");
-		this.stateRules[piInState-1].nextStates[piIndex] = piNextState; //TBD should be using a method
+		this.stateRules[piInState-1].nextStates[piPattern] = piNextState; //TBD should be using a method
 	};
 
 	//*****************************************************************
-	this.get_nextState = function (piInState, piIndex){
-		if (piIndex == 0) return piInState;
+	this.get_nextState = function (piInState, piPattern){
+		if (piPattern == 0) return piInState;
 		if (!this.has_state_transitions)	throw new CAException("no state transitions possible");
 		if (piInState > this.stateRules.length)	throw new CAException("invalid state requested");
-		var iOutState = this.stateRules[piInState-1].nextStates[piIndex]; //TBD should be using a method
+		var iOutState = this.stateRules[piInState-1].nextStates[piPattern]; //TBD should be using a method
 		return iOutState;
 	};	
 	
@@ -66,16 +67,18 @@ var cCArule = function(){
 		if (poCell == null) throw new CAException("no cell provided");
 
 		//get the cell neighbour value
-		var iBitmap = poCell.getIndex(this.neighbour_type);
+		var iBitmap = poCell.getPattern(this.neighbour_type);
 		
 		//get the output
 		poCell.evaluated.value = this.get_rule_output(poCell.state, iBitmap);
+		
+		//check for boredom
 		if (this.has_state_transitions) 
 			poCell.evaluated.state = this.get_nextState(poCell.state, iBitmap);
 		else
 			poCell.evaluated.state = poCell.state;
 		poCell.evaluated.done = true;
-		poCell.evaluated.index = iBitmap;
+		poCell.evaluated.pattern = iBitmap;
 		
 		//set the evaluated state
 		return (poCell.evaluated.value !== poCell.value);

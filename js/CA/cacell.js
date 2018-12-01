@@ -10,16 +10,18 @@ var cCAEvaluatedCell = function(){
 	this.done=false;
 	this.state=0;
 	this.value=1;
-	this.index=-1;	
+	this.pattern=-1;	
 }
 
 var cCACell = function(){
 	this.rule = null;
 	this.state = 1;
 	this.value = 0;
+	this.lastPattern = -1;
+	this.samePatternCount = 0;
 	
 	this.data = new Map();	//the cell doesnt know what the data means, only that there is some data in there. this leaves the implementation of the cell flexible.
-	this.neighbours = new Map(); //using a different hash to neighbours 
+	this.neighbours = new Map(); //hash map of neighbours
 	
 	this.evaluated = new cCAEvaluatedCell();
 
@@ -45,22 +47,35 @@ var cCACell = function(){
 	}
 	
 	//*****************************************************************
-	this.get8WayIndex=function(piNeighbourType){
-		var oNeigh, iValue, oNorth;
+	this.get8WayPattern=function(piNeighbourType){
+		var oNeigh, iValue, oNorth, oWest, iWPattern;
 		oNeigh = this.neighbours;
 		
 		oNorth = oNeigh.get(cCAConsts.directions.north);
 		if (oNorth.evaluated.done){
-			//optimisated by looking at the N cell, reduces the number of ops by 2/3
-			iValue = oNorth.evaluated.index;
-			iValue <<= 3;		//get rid of the first 3 entries - not needed for this cells
-			iValue &= cCAConsts.max_inputs;
-			iValue >>>= 3;		//get ready for adding southerly cells
+			//optimisated by looking at the North cell, reduces the number of ops from 8 to 4
+			iValue = oNorth.evaluated.pattern;
+			iValue <<= 3;		//remove cells not in neighbourhood of this cell (makes number 12 bit, and bits are not in the right place)
+			iValue &= cCAConsts.max_inputs; //truncate number to 9 bit number (but bits are not in the right place)
+			iValue >>>= 3;		//get ready for adding southerly cells (bits in correct place)
 			
-			iValue <<= 1; iValue |= oNeigh.get(cCAConsts.directions.southwest).value;
-			iValue <<= 1; iValue |= oNeigh.get(cCAConsts.directions.south).value;
-			iValue <<= 1; iValue |= oNeigh.get(cCAConsts.directions.southeast).value;
+			//further optimise by 1 op by looking at the evaluated West cell			
+			oWest = oNeigh.get(cCAConsts.directions.west);
+			if (oWest.evaluated.done){
+				iWPattern = oWest.evaluated.pattern ;
+				iWPattern &= 0b11; //only interested in last 2 bits from west cell
+				iValue <<=2;		//make space to copy pattern from west
+				iValue |= iWPattern; //copy pattern
+				
+				iValue <<= 1; iValue |= oNeigh.get(cCAConsts.directions.southeast).value; 
+				iValue &= cCAConsts.max_inputs;
+			}else{		
+				iValue <<= 1; iValue |= oNeigh.get(cCAConsts.directions.southwest).value;
+				iValue <<= 1; iValue |= oNeigh.get(cCAConsts.directions.south).value;
+				iValue <<= 1; iValue |= oNeigh.get(cCAConsts.directions.southeast).value;
+			}
 		}else{
+			//create a 9 bit number consisting of the values of the neighbours
 			//-------------------------------------------------------
 			iValue = oNeigh.get(cCAConsts.directions.northwest).value;
 			iValue <<= 1; iValue |= oNeigh.get(cCAConsts.directions.north).value;
@@ -79,13 +94,13 @@ var cCACell = function(){
 	}
 	
 	//*****************************************************************
-	this.getIndex=function(piNeighbourType){
+	this.getPattern=function(piNeighbourType){
 		var oHash, iValue;
 
 		oHash = this.neighbours;
 		switch (piNeighbourType){
 			case cCAConsts.neighbours.eightway:
-				iValue = this.get8WayIndex();
+				iValue = this.get8WayPattern();
 				break;
 			case cCAConsts.neighbours.fourway:
 				//-------------------------------------------------------

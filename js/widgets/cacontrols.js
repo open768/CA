@@ -14,6 +14,7 @@ var cCAControlTypes = {
 	init_ID:"ini",
 	wolf_ID:"wolf",
 	lexicon_ID:"lex",
+	boredom_ID:"bor",
 	
 	random_value: "Random"	
 }
@@ -25,7 +26,8 @@ $.widget( "ck.cacontrols",{
 	//#################################################################
 	options:{
 		onCAEvent: null,
-		rule_set:false
+		rule_set:false,
+		rule: null
 	},
 
 	//#################################################################
@@ -122,7 +124,23 @@ $.widget( "ck.cacontrols",{
 		this.pr__populate_lexicon(oSelect);
 		oDiv.append(oSelect);
 		oSelect.selectmenu({
-			select:function(){oThis.onLexicon();}
+			select:function(){oThis.onLexiconClick();}
+		});
+		
+		oElement.append(oDiv);
+		
+		//--Boredom------------------------------------------------		
+		var oDiv = $("<DIV>",{class:"ui-widget-content"});
+		sID = oElement.attr("id")+cCAControlTypes.boredom_ID;
+		var oSelect = $("<SELECT>",{id:sID,width:50,title:"how many times will a cell see a pattern before it gets bored"});
+		oSelect.append( $("<option>",{selected:1,disabled:1}).append("Boredom"));
+		oSelect.append( $("<option>",{value:cCAConsts.no_boredom}).append("Never"));
+		for ( var i=3; i<=10; i++){
+			oSelect.append( $("<option>",{value:i}).append(i + " times"));
+		}
+		oDiv.append(oSelect);
+		oSelect.selectmenu({
+			select:function(){oThis.onBoredomClick();}
 		});
 		
 		oElement.append(oDiv);
@@ -234,6 +252,13 @@ $.widget( "ck.cacontrols",{
 				case cCAConsts.rule_types.base64:
 					var oImporter = new cCABase64Importer();
 					oRule = oImporter.makeRule(oTextArea.val());
+					oOptions.rule = oRule;
+					
+					//set the boredom if chosen
+					var oBoredomList = $("#" + oElement.attr("id")+cCAControlTypes.boredom_ID);
+					if (!isNaN(oBoredomList.val())) oRule.boredom = oBoredomList.val();
+					
+					//inform subscribers
 					var oEvent = new cCAEvent( cCAConsts.event_types.set_rule, oRule);
 					this._trigger("onCAEvent", null, oEvent);
 					oOptions.rule_set = true;
@@ -291,7 +316,7 @@ $.widget( "ck.cacontrols",{
 	},
 	
 	//****************************************************************************
-	onLexicon: function(){
+	onLexiconClick: function(){
 		var oThis = this;
 		var oElement = oThis.element;
 		
@@ -313,6 +338,18 @@ $.widget( "ck.cacontrols",{
 				alert("unknown rule type: ", oLexRule.type);
 				throw new CAException("not implemented");
 		}
+	},
+	
+	//****************************************************************************
+	onBoredomClick: function(){
+		var oOptions = this.options;
+		
+		if (!oOptions.rule_set){
+			alert("set a rule first");
+			return;
+		}
+		
+		this.onSetRuleClick();
 	},
 	
 	//#################################################################
