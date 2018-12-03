@@ -6,48 +6,58 @@ http://creativecommons.org/licenses/by-nc-nd/4.0/legalcode
 For licenses that allow for commercial use please contact cluck@chickenkatsu.co.uk
 // USE AT YOUR OWN RISK - NO GUARANTEES OR ANY FORM ARE EITHER EXPRESSED OR IMPLIED
 **************************************************************************/
-var cCAEvaluatedCell = function(){
-	this.done=false;
-	this.state=0;
-	this.value=1;
-	this.pattern=-1;	
+class cCAEvaluatedCell {
+	constructor(){
+		this.done=false;
+		this.state=0;
+		this.value=1;
+		this.pattern=-1;	
+	}
 }
 
-var cCACell = function(){
-	this.rule = null;
-	this.state = 1;
-	this.value = 0;
-	this.lastPattern = -1;
-	this.samePatternCount = 0;
-	
-	this.data = new Map();	//the cell doesnt know what the data means, only that there is some data in there. this leaves the implementation of the cell flexible.
-	this.neighbours = new Map(); //hash map of neighbours
-	
-	this.evaluated = new cCAEvaluatedCell();
-
-	this.clear = function(){
+//###################################################################################
+//#
+//###################################################################################
+class cCACell{
+	constructor(){
+		this.rule = null;
 		this.state = 1;
 		this.value = 0;
-		this.evaluated.done = false;
-	};
+		this.lastPattern = -1;
+		this.samePatternCount = 0;
+		
+		this.data = new Map();	//the cell doesnt know what the data means, only that there is some data in there. this leaves the implementation of the cell flexible.
+		this.neighbours = new Map(); //hash map of neighbours
+		
+		this.evaluated = new cCAEvaluatedCell();
+	}
+
+	//****************************************************************
+	clear(){
+		this.lastPattern = -1;
+		this.samePatternCount = 0;
+		this.state = 1;
+		this.value = 0;
+		this.evaluated = new cCAEvaluatedCell();
+	}
 	
 	//****************************************************************
-	this.apply_rule = function(){
+	apply_rule(){
 		//just calls the rules apply method. the benefit of doing it this way is 
 		//that each cell could have a different rule.
 		if (this.rule == null) throw new CAException("no rule defined");
 		return this.rule.evaluateCell(this);
-	};
+	}
 	
 	//****************************************************************
-	this.promote = function(){
+	promote(){
 		this.state = this.evaluated.state;
 		this.value = this.evaluated.value;
 		this.evaluated.done = false;
 	}
 	
 	//*****************************************************************
-	this.get8WayPattern=function(piNeighbourType){
+	get8WayPattern(piNeighbourType){
 		var oNeigh, iValue, oNorth, oWest, iWPattern;
 		oNeigh = this.neighbours;
 		
@@ -94,7 +104,7 @@ var cCACell = function(){
 	}
 	
 	//*****************************************************************
-	this.getPattern=function(piNeighbourType){
+	getPattern(piNeighbourType){
 		var oHash, iValue;
 
 		oHash = this.neighbours;
@@ -121,7 +131,7 @@ var cCACell = function(){
 	}
 	
 	//*****************************************************************
-	this.setNeighbour = function(piDirection, poCell){
+	setNeighbour(piDirection, poCell){
 		if (poCell == null) throw new CAException("no neighbour cell provided");
 		this.neighbours.set(piDirection, poCell);
 	}

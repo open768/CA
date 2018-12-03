@@ -144,27 +144,29 @@ var cCAGridInitialiser = function(){
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 //%
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-var cCAGrid = function(piRows, piCols){
+class cCAGrid {
 	//#######################################################################
 	//# instance variables
 	//#######################################################################
-	this.rows = piRows;
-	this.cols = piCols;
-	this.rule = null;
-	this.changed_cells = null;
-	this.running = false;
-	this.status = new cCARunData();
-	
-	this.privates = {
-		iLastRow : -1,
-		oLastRow :null,
-		cell_data:new Map(),
-	};
+	constructor (piRows, piCols){
+		this.rows = piRows;
+		this.cols = piCols;
+		this.rule = null;
+		this.changed_cells = null;
+		this.running = false;
+		this.status = new cCARunData();
+		
+		this.privates = {
+			iLastRow : -1,
+			oLastRow :null,
+			cell_data:new Map(),
+		};
+	}
 	
 	//#######################################################################
 	//# methods
 	//#######################################################################
-	this.action = function(piAction){
+	action(piAction){
 		if (this.rule == null) throw new CAException("no rule set");
 		
 		cDebug.write("running action: " + piAction);
@@ -187,22 +189,24 @@ var cCAGrid = function(piRows, piCols){
 				throw new CAException("action not recognised: " + piAction);
 		}
 		cDebug.write("done action: " + piAction);
-	},
+	}
 	
 	//****************************************************************
-	this.set_rule = function(poRule){
-		this.rule = poRule;
-		
+	set_rule(poRule){
 		//clear rules from all cells
 		for (var ir=1; ir<= this.rows; ir++)
 			for (var ic=1; ic<= this.cols; ic++){
 				var oCell = this.getCell(ir,ic,false);
 				if (oCell) oCell.rule = null;
 			}
+			
+		//set the rule for the grid
+		this.rule = poRule;
+		this.link_cells(poRule.neighbour_type);
 	}
 	
 	//****************************************************************
-	this.notify_drawn = function(){
+	notify_drawn(){
 		var oThis = this;
 		if (this.running){
 			cDebug.write("running again");
@@ -213,7 +217,7 @@ var cCAGrid = function(piRows, piCols){
 	}
 
 	//****************************************************************
-	this.step = function(){
+	step(){
 		var oRule = this.rule;
 		var oStatus = this.status;
 		
@@ -252,10 +256,10 @@ var cCAGrid = function(piRows, piCols){
 				oStatus.active ++;
 		}
 		bean.fire(this,cCAConsts.events.done, oStatus);
-	};
+	}
 	
 	//****************************************************************
-	this.init = function(piInitType){
+	init(piInitType){
 		this.changed_cells = [];
 
 		var oRule = this.rule;
@@ -264,10 +268,10 @@ var cCAGrid = function(piRows, piCols){
 		oInitialiser.init(this,piInitType);
 		cDebug.write("done init grid: "+ piInitType);
 		bean.fire(this,cCAConsts.events.done);
-	};
+	}
 	
 	//****************************************************************
-	this.link_cells = function(piNeighbourType){
+	link_cells(piNeighbourType){
 		cDebug.write("linking cells");
 		for (var ir=1; ir<= this.rows; ir++)
 			for (var ic=1; ic<= this.cols; ic++){
@@ -284,10 +288,10 @@ var cCAGrid = function(piRows, piCols){
 				}
 			}
 		cDebug.write("completed cell linking");
-	};
+	}
 	
 	//****************************************************************
-	this.setCellValue = function(piRow,piCol,pbCreateCell,iValue){
+	setCellValue(piRow,piCol,pbCreateCell,iValue){
 		var oCell = this.getCell(piRow, piCol, pbCreateCell);
 
 		if (iValue !== oCell.value)this.changed_cells.push(oCell);
@@ -297,7 +301,7 @@ var cCAGrid = function(piRows, piCols){
 	//****************************************************************
 	// use a sparse array for the grid
 	// but this causes a problem with neighbours that might not be there
-	this.getCell = function(piRow,piCol,pbCreateCell){
+	getCell(piRow,piCol,pbCreateCell){
 		var oPrivates = this.privates;
 		var oHash = oPrivates.cell_data;
 		
@@ -327,12 +331,12 @@ var cCAGrid = function(piRows, piCols){
 		}
 		
 		return oCell;
-	};
+	}
 
 	//#######################################################################
 	//# privates
 	//#######################################################################
-	this.pr__link_cell = function(poCell, piNeigh, piRow, piCol){
+	pr__link_cell (poCell, piNeigh, piRow, piCol){
 		var ir, ic;
 		ir=piRow;
 		if (ir<1) ir= this.rows;
@@ -344,6 +348,6 @@ var cCAGrid = function(piRows, piCols){
 		
 		var oNeigh = this.getCell(ir,ic,false);
 		poCell.setNeighbour(piNeigh,oNeigh);		
-	};
+	}
 	
 }
