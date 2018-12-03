@@ -202,7 +202,7 @@ class cCAGrid {
 			
 		//set the rule for the grid
 		this.rule = poRule;
-		this.link_cells(poRule.neighbour_type);
+		this.pr__link_cells(poRule.neighbour_type);
 	}
 	
 	//****************************************************************
@@ -271,7 +271,7 @@ class cCAGrid {
 	}
 	
 	//****************************************************************
-	link_cells(piNeighbourType){
+	pr__link_cells(piNeighbourType){
 		cDebug.write("linking cells");
 		for (var ir=1; ir<= this.rows; ir++)
 			for (var ic=1; ic<= this.cols; ic++){

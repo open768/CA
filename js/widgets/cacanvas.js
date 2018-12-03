@@ -136,9 +136,6 @@ $.widget( "ck.cacanvas",{
 				
 		//fill the canvas with a pretty random pattern
 		oPrivOptions.oGrid.init(cCAConsts.init_values.block);
-		
-		//link the cells in the grid
-		oPrivOptions.oGrid.link_cells(cCAConsts.neighbours.eightway);
 	},
 		
 	//****************************************************************
