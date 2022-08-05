@@ -23,11 +23,8 @@ var cCArule = function(){
 	//*****************************************************************
 	this.set_output = function (piState, piPattern, piValue){
 		if (piState <1 ) throw new CAException("invalid state");
-		if (piState > this.stateRules.length){
-			var oStateRule = new cCAStateRule();
-			oStateRule.neighbour_type = this.neighbour_type;
-			this.stateRules[piState-1] = oStateRule;
-		}	
+		if (piState > this.stateRules.length)			//create a new state if the state is unknown 
+			this.create_state(piState);
 		this.stateRules[piState-1].outputs[piPattern] = piValue;
 	};
 	
@@ -43,6 +40,17 @@ var cCArule = function(){
 			cDebug.write_err("unable to get output for state " + piState);
 			throw e;
 		}
+	};
+	
+	//*****************************************************************
+	this.create_state = function(piState){
+		if (piState <= this.stateRules.length)	return; 
+		if ( (!this.has_state_transitions) && (piState !== cCAConsts.default_state))
+			throw new CAException("state not possible");
+		
+		var oStateRule = new cCAStateRule(); 
+		oStateRule.neighbour_type = this.neighbour_type;
+		this.stateRules[piState-1] = oStateRule;
 	};
 	
 	//*****************************************************************

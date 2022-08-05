@@ -7,6 +7,8 @@ For licenses that allow for commercial use please contact cluck@chickenkatsu.co.
 // USE AT YOUR OWN RISK - NO GUARANTEES OR ANY FORM ARE EITHER EXPRESSED OR IMPLIED
 **************************************************************************/
 
+//contains widgets: ck.caeditortoggle and ck.caeditor
+
 $.widget( "ck.caeditortoggle",{
 	//#################################################################
 	//# Options
@@ -166,6 +168,7 @@ $.widget( "ck.caeditor",{
 		oElement.addClass("ui-widget");
 		$(oElement).tooltip();
 		oElement.empty();
+		
 
 		//if no Rule - create an empty one
 		if (oOptions.rule == null) oOptions.rule = new  cCArule();
@@ -188,6 +191,9 @@ $.widget( "ck.caeditor",{
 			oDiv.append(oButton);
 		oElement.append(oDiv);
 
+		//get the contents of the clipboard
+		navigator.clipboard.readText().then(text => {  oThis.onGotClipText(text)} );	//async fetch from clipboard, will display a warning to user
+		
 		//Add a panel for description
 		oDiv = $("<DIV>", {class:"ui-widget-content"});
 		oDiv.append("input configurations below show the output for a particular configuration of a cell and its neighbours. Those highlighted in blue will output 1 (alive) otherwise 0 (dead). Click to change");
@@ -234,6 +240,27 @@ $.widget( "ck.caeditor",{
 	//#################################################################
 	//# Events
 	//#################################################################`
+	onGotClipText: function(psText){
+		var oThis = this;
+		var oOptions = oThis.options;
+		var oElement = oThis.element;
+		var sID = oElement.attr("id") + "T";
+		
+		if (psText === "") return;
+			
+		try{
+			var oImporter = new cCABase64Importer();
+			oOptions.rule = oImporter.makeRule(psText);
+			$("#"+sID).val(psText);
+			this.onSetRuleClick();
+		}catch (e){
+			alert ("not a valid rule in clipboard!" );
+			return;
+		}
+			
+	},
+		
+	//*************************************************************
 	onSetRuleClick: function(){
 		var oThis = this;
 		var oElement = oThis.element;
