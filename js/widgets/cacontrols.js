@@ -82,14 +82,13 @@ $.widget( "ck.cacontrols",{
 		oButton.click(	function(){oThis.onSetRuleClick()}	);		
 		oDiv.append(oButton);
 		
-		oElement.append(oDiv);
-		
-		//--random rule------------------------------------------------		
-		var oDiv = $("<DIV>",{class:"ui-widget-content"});
+		oDiv.append("<BR>");
 		var oButton = $("<button>",{title:"Random Rule"}).append("Set Random Rule");
 		oButton.click(	function(){oThis.pr_makeRandomBase64()}	);		
 		oDiv.append(oButton);
+		
 		oElement.append(oDiv);
+		
 		
 		//--yourname------------------------------------------------		
 		var oDiv = $("<DIV>",{class:"ui-widget-content"});
