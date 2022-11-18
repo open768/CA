@@ -10,10 +10,11 @@ var cCAControlTypes = {
 	entry_ID:"ent",
 	rules_ID:"rul",
 	rules_extra_ID:"rulex",
+	rule_random_ID: "rulernd",
 	name_ID:"nam",
 	init_ID:"ini",
 	wolf_ID:"wolf",
-	lexicon_ID:"lex",
+	preset_ID:"lex",
 	boredom_ID:"bor",
 	
 	random_value: "Random"	
@@ -74,7 +75,6 @@ $.widget( "ck.cacontrols",{
 		oSelect.append( $("<option>",{value:cCAConsts.rule_types.base64}).append("base64"));
 		oSelect.append( $("<option>",{value:cCAConsts.rule_types.life}).append("life"));
 		oSelect.append( $("<option>",{value:cCAConsts.rule_types.wolfram1d}).append("wolfram"));
-		oSelect.append( $("<option>",{value:cCAConsts.rule_types.random}).append("random"));
 		oDiv.append(oSelect);
 		oSelect.selectmenu();
 		
@@ -82,6 +82,13 @@ $.widget( "ck.cacontrols",{
 		oButton.click(	function(){oThis.onSetRuleClick()}	);		
 		oDiv.append(oButton);
 		
+		oElement.append(oDiv);
+		
+		//--random rule------------------------------------------------		
+		var oDiv = $("<DIV>",{class:"ui-widget-content"});
+		var oButton = $("<button>",{title:"Random Rule"}).append("Set Random Rule");
+		oButton.click(	function(){oThis.pr_makeRandomBase64()}	);		
+		oDiv.append(oButton);
 		oElement.append(oDiv);
 		
 		//--yourname------------------------------------------------		
@@ -119,12 +126,12 @@ $.widget( "ck.cacontrols",{
 		
 		//--rules------------------------------------------------		
 		var oDiv = $("<DIV>",{class:"ui-widget-content"});
-		sID = oElement.attr("id")+cCAControlTypes.lexicon_ID;
-		var oSelect = $("<SELECT>",{id:sID,width:200,title:"pick a rule"});
-		this.pr__populate_lexicon(oSelect);
+		sID = oElement.attr("id")+cCAControlTypes.preset_ID;
+		var oSelect = $("<SELECT>",{id:sID,width:200,title:"pick a preset rule"});
+		this.pr__populate_presets(oSelect);
 		oDiv.append(oSelect);
 		oSelect.selectmenu({
-			select:function(){oThis.onLexiconClick();}
+			select:function(){oThis.onPresetsClick();}
 		});
 		
 		oElement.append(oDiv);
@@ -316,14 +323,14 @@ $.widget( "ck.cacontrols",{
 	},
 	
 	//****************************************************************************
-	onLexiconClick: function(){
+	onPresetsClick: function(){
 		var oThis = this;
 		var oElement = oThis.element;
 		
 		var oTextArea = $("#" +	oElement.attr("id")+cCAControlTypes.entry_ID);
 		var oRulesSelect = $("#" + oElement.attr("id")+cCAControlTypes.rules_ID);
 		
-		var oSelect = $("#" + oElement.attr("id")+cCAControlTypes.lexicon_ID);
+		var oSelect = $("#" + oElement.attr("id")+cCAControlTypes.preset_ID);
 		var sStringified = oSelect.val();
 		var oLexRule = JSON.parse(sStringified);
 		
@@ -355,6 +362,8 @@ $.widget( "ck.cacontrols",{
 	//#################################################################
 	//# privates
 	//#################################################################`
+	
+	//****************************************************************************
 	pr_makeRandomBase64: function(){
 		var oImporter = new cCABinaryImporter();
 		oRule= oImporter.randomRule();
@@ -379,7 +388,7 @@ $.widget( "ck.cacontrols",{
 	},
 	
 	//****************************************************************************
-	pr__populate_lexicon:function(poSelect){
+	pr__populate_presets:function(poSelect){
 		var aRules = cCALexicon.get_rules();
 		
 		poSelect.append( $("<option>",{selected:1,disabled:1,value:-1}).append("preset rules"));
