@@ -143,7 +143,7 @@ $.widget( "ck.caeditorcell",{
 			this._set_value(0);
 		
 		var oEvent = new cCAEvent( cCAConsts.event_types.click, oOptions);
-		bean.fire(oElement[0], cCAConsts.event_hook, oEvent );
+		bean.fire(document, cCAConsts.event_hook, oEvent );
 	}
 });
 
@@ -213,6 +213,9 @@ $.widget( "ck.caeditor",{
 		
 		//get the contents of the clipboard
 		cBrowser.paste_from_clipboard( function(psText){ oThis.onGotClipText(psText)} );	//async fetch from clipboard, will display a warning to user
+		
+		//add event listener
+		bean.on(document, cCAConsts.event_hook, function(poEvent){oThis.onCaEvent(poEvent)});
 	},
 	
 	//#################################################################
@@ -243,7 +246,6 @@ $.widget( "ck.caeditor",{
 				cell_size:oOptions.cell_size
 			})
 			oDiv.append(oSpan);
-			bean.on(oSpan[0], cCAConsts.event_hook, function(poEvent){oThis.onCaEvent(poEvent)});
 		}
 	},
 		
