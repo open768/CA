@@ -1,3 +1,4 @@
+"use strict";
 /**************************************************************************
 Copyright (C) Chicken Katsu 2013-2018
 This code is protected by copyright under the terms of the 

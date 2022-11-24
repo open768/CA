@@ -1,3 +1,4 @@
+"use strict";
 /**************************************************************************
 Copyright (C) Chicken Katsu 2013-2018
 This code is protected by copyright under the terms of the 
@@ -26,7 +27,6 @@ $.widget( "ck.cacontrols",{
 	//# Options
 	//#################################################################
 	options:{
-		onCAEvent: null,
 		rule_set:false,
 		rule: null
 	},
@@ -35,142 +35,159 @@ $.widget( "ck.cacontrols",{
 	//# Constructor
 	//#################################################################`
 	_create: function(){
-		var oThis = this;
-		var oOptions = oThis.options;
-		var oElement = oThis.element;
+		var oElement;
+		
+		oElement = this.element;
+		
+		//check dependencies
+		if (!bean ) 	$.error("bean class is missing! check includes");	
+		if (!oElement.selectmenu ) 	$.error("selectmenu class is missing! check includes");	
+		if (!cCABase64Importer ) 	$.error("cCABase64Importer class is missing! check includes");	
 		
 		//set basic stuff
-		oElement.uniqueId();
 		oElement.addClass("ui-widget");
 		oElement.addClass("CAControls");
 		$(oElement).tooltip();
 
-		//check dependencies
-		if (!oElement.selectmenu ) 	$.error("selectmenu class is missing! check includes");	
-		if (!cCABase64Importer ) 	$.error("cCABase64Importer class is missing! check includes");	
-
 		//put something in the widget
-		var oDiv;
 		oElement.empty();
-
-		
-		//--input-------------------------------------------------
-		oDiv = $("<DIV>",{class:"ui-widget-header"});
-		oDiv.append("Rule");
-		sID = oElement.attr("id")+cCAControlTypes.rules_extra_ID;
-		var oSpan = $("<SPAN>",{id:sID}).html("??");
-		oDiv.append("&nbsp;");		
-		oDiv.append(oSpan);		
-		oElement.append(oDiv);
-		
-		var oDiv = $("<DIV>",{class:"ui-widget-content"});
-		sID = oElement.attr("id")+cCAControlTypes.entry_ID;
-		var oBox = $("<TEXTAREA>",{ID:sID,rows:5,cols:30 ,class:"rule", title:"enter the rule here"});				
-		oBox.keyup( function(){oThis.onRuleChange()}	);
-		oDiv.append(oBox);
-		
-		sID = oElement.attr("id")+cCAControlTypes.rules_ID;
-		var oSelect = $("<SELECT>",{id:sID,width:200,title:"choose the rule type to enter in the box above"});
-		oSelect.append( $("<option>",{selected:1,disabled:1,value:-1}).append("Rule Type"));
-		oSelect.append( $("<option>",{value:cCAConsts.rule_types.base64}).append("base64"));
-		oSelect.append( $("<option>",{value:cCAConsts.rule_types.life}).append("life"));
-		oSelect.append( $("<option>",{value:cCAConsts.rule_types.wolfram1d}).append("wolfram"));
-		oDiv.append(oSelect);
-		oSelect.selectmenu();
-		
-		var oButton = $("<button>",{title:"use the rule entered in the box above"}).button({icon:"ui-icon-circle-arrow-e" });
-		oButton.click(	function(){oThis.onSetRuleClick()}	);		
-		oDiv.append(oButton);
-		
-		oDiv.append("<BR>");
-		var oButton = $("<button>",{title:"Random Rule"}).append("Set Random Rule");
-		oButton.click(	function(){oThis.pr_makeRandomBase64()}	);		
-		oDiv.append(oButton);
-		
-		oElement.append(oDiv);
-		
-		
-		//--yourname------------------------------------------------		
-		var oDiv = $("<DIV>",{class:"ui-widget-content"});
-		sID = oElement.attr("id")+cCAControlTypes.name_ID;
-		var oInput = $("<INPUT>",{type:"text",id:sID,size:12,icon:"ui-icon-circle-arrow-e",title:"put anything in this box - eg your name"});
-		oDiv.append(oInput);
-		var oButton = $("<button>",{title:"creates a rule from the word in the box"}).button({icon:"ui-icon-circle-arrow-e"});
-		oButton.click(	function(){oThis.onSetNameClick()}	);		
-		oDiv.append(oButton);
-		oElement.append(oDiv);
-
-
-		//--initialise------------------------------------------------		
-		var oDiv = $("<DIV>",{class:"ui-widget-content"});
-		sID = oElement.attr("id")+cCAControlTypes.init_ID;
-		var oSelect = $("<SELECT>",{id:sID,width:200,title:"choose a pattern to initialise the grid with"});
-		oSelect.append( $("<option>",{selected:1,disabled:1,value:-1}).append("Initialise"));
-		oSelect.append ( $("<option>",{value:cCAConsts.init_values.blank}).append("blank"));
-		oSelect.append ( $("<option>",{value:cCAConsts.init_values.block}).append("block"));
-		oSelect.append ( $("<option>",{value:cCAConsts.init_values.random}).append("random"));
-		oSelect.append ( $("<option>",{value:cCAConsts.init_values.horiz_line}).append("horiz line"));
-		oSelect.append ( $("<option>",{value:cCAConsts.init_values.vert_line}).append("vert line"));
-		oSelect.append ( $("<option>",{value:cCAConsts.init_values.diagonal}).append("diagonal"));
-		oSelect.append ( $("<option>",{value:cCAConsts.init_values.diamond}).append("diamond"));
-		oSelect.append ( $("<option>",{value:cCAConsts.init_values.cross}).append("cross"));
-		oSelect.append ( $("<option>",{value:cCAConsts.init_values.circle}).append("circle"));
-		oSelect.append ( $("<option>",{value:cCAConsts.init_values.sine}).append("sine"));
-		oDiv.append(oSelect);
-		oSelect.selectmenu({
-				select:function(){oThis.onInitClick()}
-		});
-
-		oElement.append(oDiv);
-		
-		//--rules------------------------------------------------		
-		var oDiv = $("<DIV>",{class:"ui-widget-content"});
-		sID = oElement.attr("id")+cCAControlTypes.preset_ID;
-		var oSelect = $("<SELECT>",{id:sID,width:200,title:"pick a preset rule"});
-		this.pr__populate_presets(oSelect);
-		oDiv.append(oSelect);
-		oSelect.selectmenu({
-			select:function(){oThis.onPresetsClick();}
-		});
-		
-		oElement.append(oDiv);
-		
-		//--Boredom------------------------------------------------		
-		var oDiv = $("<DIV>",{class:"ui-widget-content"});
-		sID = oElement.attr("id")+cCAControlTypes.boredom_ID;
-		var oSelect = $("<SELECT>",{id:sID,width:50,title:"how many times will a cell see a pattern before it gets bored"});
-		oSelect.append( $("<option>",{selected:1,disabled:1}).append("Boredom"));
-		oSelect.append( $("<option>",{value:cCAConsts.no_boredom}).append("Never"));
-		for ( var i=3; i<=10; i++){
-			oSelect.append( $("<option>",{value:i}).append(i + " times"));
-		}
-		oDiv.append(oSelect);
-		oSelect.selectmenu({
-			select:function(){oThis.onBoredomClick();}
-		});
-		
-		oElement.append(oDiv);
-		
-		//--controls------------------------------------------------		
-		var oDiv = $("<DIV>",{class:"ui-widget-content"});
-		var oButton = $("<button>",{width:"30px",height:"30px",id:"btnStop"}).button({icon:"ui-icon-stop"});
-		oButton.prop("disabled", true);
-		oButton.click(	function(){ oThis.onClickButton(cCAConsts.action_types.stop);}	);
-		oDiv.append(oButton);
-
-		var oButton = $("<button>",{width:"30px",height:"30px",id:"btnPlay"}).button({icon:"ui-icon-circle-triangle-e"});
-		oButton.prop("disabled", true);
-		oButton.click(	function(){ oThis.onClickButton(cCAConsts.action_types.play);}	);
-		oDiv.append(oButton);
-
-		var oButton = $("<button>",{width:"30px",height:"30px",title:"step",id:"btnStep"}).button({icon:"ui-icon-seek-end"});
-		oButton.prop("disabled", true);
-		oButton.click(	function(){ oThis.onClickButton(cCAConsts.action_types.step);}	);
-		oDiv.append(oButton);
-		
-		oElement.append(oDiv);
+		this.pr__init();
 	},
 	
+	//#################################################################
+	//# Initialise
+	//#################################################################`
+	pr__init:function(){
+		var oThis, oOptions, oElement;
+		var oDiv, sID;
+		
+		oElement = this.element;
+		oThis = this;
+
+		
+		//--rules widgets-------------------------------------------------
+		oDiv = $("<DIV>",{class:"ui-widget-header"});
+			oDiv.append("Rule");
+			sID = oElement.attr("id")+cCAControlTypes.rules_extra_ID;
+			var oSpan = $("<SPAN>",{id:sID}).html("??");
+			oDiv.append(oSpan);		
+		oElement.append(oDiv);
+			
+		oDiv = $("<DIV>",{class:"ui-widget-content"});
+			//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+			sID = oElement.attr("id")+cCAControlTypes.entry_ID;
+			var oBox = $("<TEXTAREA>",{ID:sID,rows:5,cols:30 ,class:"rule", title:"enter the rule here"});				
+				oBox.keyup( function(){oThis.onRuleChange()}	);
+			oDiv.append(oBox);
+			
+			//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+			sID = oElement.attr("id")+cCAControlTypes.rules_ID;
+			var oSelect = $("<SELECT>",{id:sID,width:200,title:"choose the rule type to enter in the box above"});
+				oSelect.append( $("<option>",{selected:1,disabled:1,value:-1}).append("Rule Type"));
+				oSelect.append( $("<option>",{value:cCAConsts.rule_types.base64}).append("base64"));
+				oSelect.append( $("<option>",{value:cCAConsts.rule_types.life}).append("life"));
+				oSelect.append( $("<option>",{value:cCAConsts.rule_types.wolfram1d}).append("wolfram"));
+			oDiv.append(oSelect);
+			oSelect.selectmenu();
+			
+			var oButton = $("<button>",{title:"use the rule entered in the box above"}).button({icon:"ui-icon-circle-arrow-e" });
+				oButton.click(	function(){oThis.onSetRuleClick()}	);		
+			oDiv.append(oButton);
+			
+			//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+			oDiv.append("<HR>");
+			var oButton = $("<button>",{title:"Random Rule"}).append("Set Random Rule");
+				oButton.click(	function(){oThis.pr_makeRandomBase64()}	);		
+			oDiv.append(oButton);
+			
+			//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+			oDiv.append("<HR>");
+			sID = oElement.attr("id")+cCAControlTypes.name_ID;
+			var oInput = $("<INPUT>",{type:"text",id:sID,size:12,icon:"ui-icon-circle-arrow-e",title:"put anything in this box - eg your name"});
+			oDiv.append(oInput);
+			oButton = $("<button>",{title:"creates a rule from the word in the box"}).button({icon:"ui-icon-circle-arrow-e"});
+			oButton.click(	function(){oThis.onSetNameClick()}	);		
+			oDiv.append(oButton);
+			
+			//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+			oDiv.append("<HR>");
+			sID = oElement.attr("id")+cCAControlTypes.preset_ID;
+			var oSelect = $("<SELECT>",{id:sID,width:200,title:"pick a preset rule"});
+				this.pr__populate_presets(oSelect);
+			oDiv.append(oSelect);
+			oSelect.selectmenu({
+				select:function(){oThis.onPresetsClick();}
+			});
+			
+			//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+			/*
+			oDiv.append("<HR>");
+			sID = oElement.attr("id")+cCAControlTypes.boredom_ID;
+			oSelect = $("<SELECT>",{id:sID,width:50,title:"how many times will a cell see a pattern before it gets bored"});
+			oSelect.append( $("<option>",{selected:1,disabled:1}).append("Boredom"));
+			oSelect.append( $("<option>",{value:cCAConsts.no_boredom}).append("Never"));
+			for ( var i=3; i<=10; i++){
+				oSelect.append( $("<option>",{value:i}).append(i + " times"));
+			}
+			oDiv.append(oSelect);
+			oSelect.selectmenu({
+				select:function(){oThis.onBoredomClick();}
+			});
+			*/
+		oElement.append(oDiv);
+		oElement.append("<P>");
+		
+
+		//--initialise------------------------------------------------		
+		oDiv = $("<DIV>",{class:"ui-widget-header"});
+			oDiv.append("Initialise");
+		oElement.append(oDiv);
+		
+		oDiv = $("<DIV>",{class:"ui-widget-content"});
+			sID = oElement.attr("id")+cCAControlTypes.init_ID;
+			var oSelect = $("<SELECT>",{id:sID,width:200,title:"choose a pattern to initialise the grid with"});
+			oSelect.append( $("<option>",{selected:1,disabled:1,value:-1}).append("Initialise"));
+			oSelect.append ( $("<option>",{value:cCAConsts.init_values.blank}).append("blank"));
+			oSelect.append ( $("<option>",{value:cCAConsts.init_values.block}).append("block"));
+			oSelect.append ( $("<option>",{value:cCAConsts.init_values.random}).append("random"));
+			oSelect.append ( $("<option>",{value:cCAConsts.init_values.horiz_line}).append("horiz line"));
+			oSelect.append ( $("<option>",{value:cCAConsts.init_values.vert_line}).append("vert line"));
+			oSelect.append ( $("<option>",{value:cCAConsts.init_values.diagonal}).append("diagonal"));
+			oSelect.append ( $("<option>",{value:cCAConsts.init_values.diamond}).append("diamond"));
+			oSelect.append ( $("<option>",{value:cCAConsts.init_values.cross}).append("cross"));
+			oSelect.append ( $("<option>",{value:cCAConsts.init_values.circle}).append("circle"));
+			oSelect.append ( $("<option>",{value:cCAConsts.init_values.sine}).append("sine"));
+			oDiv.append(oSelect);
+			oSelect.selectmenu({
+					select:function(){oThis.onInitClick()}
+			});
+		oElement.append(oDiv);
+		oElement.append("<P>");
+		
+		
+		//--controls------------------------------------------------		
+		oDiv = $("<DIV>",{class:"ui-widget-header"});
+			oDiv.append("controls");
+		oElement.append(oDiv);
+		
+		oDiv = $("<DIV>",{class:"ui-widget-content"});
+			var oButton = $("<button>",{width:"30px",height:"30px",id:"btnStop"}).button({icon:"ui-icon-stop"});
+			oButton.prop("disabled", true);
+			oButton.click(	function(){ oThis.onClickButton(cCAConsts.action_types.stop);}	);
+			oDiv.append(oButton);
+
+			var oButton = $("<button>",{width:"30px",height:"30px",id:"btnPlay"}).button({icon:"ui-icon-circle-triangle-e"});
+			oButton.prop("disabled", true);
+			oButton.click(	function(){ oThis.onClickButton(cCAConsts.action_types.play);}	);
+			oDiv.append(oButton);
+
+			var oButton = $("<button>",{width:"30px",height:"30px",title:"step",id:"btnStep"}).button({icon:"ui-icon-seek-end"});
+			oButton.prop("disabled", true);
+			oButton.click(	function(){ oThis.onClickButton(cCAConsts.action_types.step);}	);
+			oDiv.append(oButton);
+		oElement.append(oDiv);
+	},
+		
 	//#################################################################
 	//# EVENTS
 	//#################################################################`
@@ -196,7 +213,7 @@ $.widget( "ck.cacontrols",{
 				break;
 		}
 		var oEvent = new cCAEvent( cCAConsts.event_types.action, parseInt(piAction));
-		this._trigger("onCAEvent", null, oEvent);			
+		bean.fire(document, cCAConsts.event_hook, oEvent);
 	},
 	
 	
@@ -266,7 +283,7 @@ $.widget( "ck.cacontrols",{
 					
 					//inform subscribers
 					var oEvent = new cCAEvent( cCAConsts.event_types.set_rule, oRule);
-					this._trigger("onCAEvent", null, oEvent);
+					bean.fire(document, cCAConsts.event_hook, oEvent);
 					oOptions.rule_set = true;
 					break;
 				case cCAConsts.rule_types.random:
@@ -299,7 +316,7 @@ $.widget( "ck.cacontrols",{
 		}
 		var iSelected = parseInt(oSelect.val());
 		var oEvent = new cCAEvent( cCAConsts.event_types.initialise, iSelected);
-		this._trigger("onCAEvent", null, oEvent);
+		bean.fire(document, cCAConsts.event_hook, oEvent);
 	},
 
 	//****************************************************************************
@@ -329,24 +346,25 @@ $.widget( "ck.cacontrols",{
 		var oTextArea = $("#" +	oElement.attr("id")+cCAControlTypes.entry_ID);
 		var oRulesSelect = $("#" + oElement.attr("id")+cCAControlTypes.rules_ID);
 		
-		var oSelect = $("#" + oElement.attr("id")+cCAControlTypes.preset_ID);
-		var sStringified = oSelect.val();
-		var oLexRule = JSON.parse(sStringified);
+		var oPresetSelect = $("#" + oElement.attr("id")+cCAControlTypes.preset_ID);
+		var sPreset = oPresetSelect.val();
+		var oJson = JSON.parse(sPreset);
 		
-		switch (oLexRule.type){
+		switch (oJson.type){
 			case cCAConsts.rule_types.life:
-				oTextArea.val(oLexRule.rule);		
+				oTextArea.val(oJson.rule);		
 				oRulesSelect.val(cCAConsts.rule_types.life);
 				oRulesSelect.selectmenu("refresh");
 				this.onSetRuleClick();
 				break;
 			default:
-				alert("unknown rule type: ", oLexRule.type);
+				alert("unknown rule type: ", oJson.type);
 				throw new CAException("not implemented");
 		}
 	},
 	
 	//****************************************************************************
+	/*
 	onBoredomClick: function(){
 		var oOptions = this.options;
 		
@@ -357,6 +375,7 @@ $.widget( "ck.cacontrols",{
 		
 		this.onSetRuleClick();
 	},
+	*/
 	
 	//#################################################################
 	//# privates
@@ -364,10 +383,10 @@ $.widget( "ck.cacontrols",{
 	
 	//****************************************************************************
 	pr_makeRandomBase64: function(){
-		var oImporter = new cCABinaryImporter();
-		oRule= oImporter.randomRule();
-		var oImporter = new cCABase64Importer();
-		var sBase64 = oImporter.toString(oRule,cCAConsts.default_state);
+		var oBinImporter = new cCABinaryImporter();
+		var oRule= oBinImporter.randomRule();
+		var o64Importer = new cCABase64Importer();
+		var sBase64 = o64Importer.toString(oRule,cCAConsts.default_state);
 		this.pr_setBase64Rule(sBase64);
 	},
 	
@@ -378,11 +397,11 @@ $.widget( "ck.cacontrols",{
 		var oElement = oThis.element;
 		
 		var oTextArea = $("#" +	oElement.attr("id")+cCAControlTypes.entry_ID);
-		oTextArea.val(psBase64);		
+			oTextArea.val(psBase64);		
 
 		var oSelect = $("#" + oElement.attr("id")+cCAControlTypes.rules_ID);
-		oSelect.val(cCAConsts.rule_types.base64);
-		oSelect.selectmenu("refresh");
+			oSelect.val(cCAConsts.rule_types.base64);
+			oSelect.selectmenu("refresh");
 		this.onSetRuleClick();
 	},
 	

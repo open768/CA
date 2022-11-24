@@ -1,3 +1,4 @@
+"use strict";
 /**************************************************************************
 Copyright (C) Chicken Katsu 2013-2018
 This code is protected by copyright under the terms of the 
@@ -20,32 +21,33 @@ var cCARunData = function(){
 }
 
 //###############################################################################
-var cCALifeRules = {
-	LIFE:"B3/S23"
+class cCALifeRules {
+	static LIFE ="B3/S23"
 }
 
 //###############################################################################
-var cCAConsts = {
-	events:{
+class cCAConsts {
+	static event_hook = "CAEV";
+	static events = {
 		done:"D",
 		clear:"C",
 		nochange:"N",
-		notify_finished:"F"
-	},
-	event_types:{
+		notify_finished:"F",
+	};
+	static event_types={
 		set_rule:1,
 		initialise:2,
 		resize:3,
 		action:4,
 		nochange:5,
 		status:6
-	},
-	neighbours:{
+	};
+	static neighbours={
 		fourway: 0,
 		eightway: 1,
 		maximum:8
-	},
-	directions:{	
+	};
+	static directions={	
 		northwest:1,
 		north:2,
 		northeast:3,
@@ -55,25 +57,25 @@ var cCAConsts = {
 		southwest:7,
 		south:8,
 		southeast:9
-	},
-	max_inputs:Math.pow(2,9)-1,
-	base64_length: Math.ceil((Math.pow(2,9)-1)/6),
-	default_state :1,
-	states:{
+	};
+	static max_inputs =Math.pow(2,9)-1;
+	static base64_length =  Math.ceil((Math.pow(2,9)-1)/6);
+	static default_state = 1;
+	static states={
 		same: 0,
 		up: 1,
 		down:2,
 		reset:3
-	},
-	no_boredom: -1,
-	rule_types:{
+	};
+	static no_boredom= -1;
+	static rule_types={
 		life:1,
 		binary:2,
 		base64:3,
 		wolfram1d:4,
 		random:5
-	},
-	init_values:{
+	};
+	static init_values={
 		block:1,
 		random:2,
 		horiz_line:3,
@@ -84,17 +86,17 @@ var cCAConsts = {
 		circle:8,
 		sine:9,
 		blank:10
-	},
-	action_types:{
+	};
+	static action_types={
 		play:1,
 		stop:2,
 		step:3
-	},
+	};
 	
-	hash_values:{
+	static hash_values={
 		row:"R",
 		col:"C"
-	}
+	};
 	
 };
 
@@ -106,10 +108,10 @@ function CAException(psMessage) {
 
 
 //###############################################################################
-var cCAIndexOps = {
+class cCAIndexOps {
 	//bits are created 	nw,n,ne,w,c,e,sw,s,se
 
-	get_value: function(piIndex, piDirection){
+	static get_value(piIndex, piDirection){
 		var iVal;
 		
 		switch (piDirection){
@@ -149,10 +151,10 @@ var cCAIndexOps = {
 			return 1;
 		else	
 			return 0;
-	},
+	}
 		
 	//***************************************************************
-	get_bit_count:function(piIndex){
+	static get_bit_count(piIndex){
 		var iTmp = piIndex;
 		var iCount = 0;
 	
@@ -161,28 +163,28 @@ var cCAIndexOps = {
 			iTmp = iTmp >>> 1;		//keep right shifting the value until nothing is left		
 		}
 		return iCount;
-	},
+	}
 	
 	//***************************************************************
-	get_north_bits:function(piIndex){
+	static get_north_bits(piIndex){
 		var iVal = 0;
 		iVal |= this.get_value(piIndex, cCAConsts.directions.northwest );
 		iVal <<=1; iVal |= this.get_value(piIndex, cCAConsts.directions.north );
 		iVal <<=1; iVal |= this.get_value(piIndex, cCAConsts.directions.northeast );
 		return iVal;
-	},
+	}
 	
 	//***************************************************************
-	get_centre_bits:function(piIndex){
+	static get_centre_bits(piIndex){
 		var iVal = 0;
 		iVal |= this.get_value(piIndex, cCAConsts.directions.west );
 		iVal <<=1; iVal |= this.get_value(piIndex, cCAConsts.directions.centre );
 		iVal <<=1; iVal |= this.get_value(piIndex, cCAConsts.directions.east );
 		return iVal;
-	},
+	}
 	
 	//***************************************************************
-	get_south_bits:function(piIndex){
+	static get_south_bits(piIndex){
 		var iVal = 0;
 		iVal |= this.get_value(piIndex, cCAConsts.directions.southwest );
 		iVal <<=1; iVal |= this.get_value(piIndex, cCAConsts.directions.south );

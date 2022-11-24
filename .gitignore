@@ -1,9 +1,12 @@
 # Windows image file caches
 Thumbs.db
 ehthumbs.db
+zipit.sh
 
 # Folder config file
 Desktop.ini
 
 css/jquery/
 images/vector/
+build.sh
+release.zip

@@ -1,3 +1,4 @@
+"use strict";
 /**************************************************************************
 Copyright (C) Chicken Katsu 2013-2018
 This code is protected by copyright under the terms of the 
@@ -52,6 +53,9 @@ $.widget( "ck.cacanvas",{
 		bean.on(oGrid, cCAConsts.events.clear, function(){oThis.onGridClear()});
 		bean.on(oGrid, cCAConsts.events.nochange, function(){oThis.onNoChange()});
 				
+		//subscribe to CAEvents
+		bean.on (document, cCAConsts.event_hook, function(poEvent){ oThis.onCAEvent(poEvent)} );
+		
 		//put something in the widget
 		this.pr__initCanvas();
 	},
@@ -82,14 +86,14 @@ $.widget( "ck.cacanvas",{
 	onNoChange:function(){
 		var oEvent = new cCAEvent( cCAConsts.event_types.nochange, null);
 		cDebug.write("no change");
-		this._trigger("onCanvasEvent", null, oEvent);		
+		bean.fire(document, cCAConsts.event_hook, oEvent);
 	},
 	
 	//****************************************************************
 	onGridDone:function(poData){
 		this.pr__drawGrid();
 		var oEvent = new cCAEvent( cCAConsts.event_types.status, poData);
-		this._trigger("onCanvasEvent", null, oEvent);		
+		bean.fire(document, cCAConsts.event_hook, oEvent);
 	},
 
 	//****************************************************************
