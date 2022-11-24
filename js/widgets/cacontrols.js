@@ -398,6 +398,7 @@ $.widget( "ck.cacontrols",{
 		
 		var oTextArea = $("#" +	oElement.attr("id")+cCAControlTypes.entry_ID);
 			oTextArea.val(psBase64);		
+			cBrowser.copy_to_clipboard(psBase64);
 
 		var oSelect = $("#" + oElement.attr("id")+cCAControlTypes.rules_ID);
 			oSelect.val(cCAConsts.rule_types.base64);

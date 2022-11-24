@@ -40,7 +40,8 @@ class cCAConsts {
 		resize:3,
 		action:4,
 		nochange:5,
-		status:6
+		status:6,
+		click:7
 	};
 	static neighbours={
 		fourway: 0,

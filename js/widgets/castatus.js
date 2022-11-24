@@ -94,12 +94,11 @@ $.widget( "ck.castatus",{
 	//#################################################################
 	//#################################################################
 	onCAEvent: function(poEvent){
-		var oThis, oElement, oOptions, sID;
+		var oElement, oOptions, sID;
 		var oTarget;
 		
-		oThis = this;
-		oElement = oThis.element;
-		oOptions = oThis.options;
+		oElement = this.element;
+		oOptions = this.options;
 		sID = oElement.attr("id");
 
 		switch (poEvent.type){

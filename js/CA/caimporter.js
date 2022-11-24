@@ -9,35 +9,36 @@ For licenses that allow for commercial use please contact cluck@chickenkatsu.co.
 // USE AT YOUR OWN RISK - NO GUARANTEES OR ANY FORM ARE EITHER EXPRESSED OR IMPLIED
 **************************************************************************/
 
-var cCASimpleBase64 = {
-	toBase64:function (psBin) {
+class cCASimpleBase64 {
+	static toBase64(psBin) {
 		var s64 = "";
 		for ( var istart = 0; istart<psBin.length; istart+=6 ){
-			var sFragment = psBin.substr(istart,6);
+			var sFragment = psBin.substr(istart,6);//grab 6 characters
 			var iIndex = cConverter.binToInt(sFragment);
 			var sChar = cConverterEncodings.BASE64.charAt(iIndex);
 			s64 = s64 + sChar;
 		}
 		return s64;
-	},
+	}
 	
 	//*********************************************************************
-	toBinary:function (ps64, piLen) {
+	static toBinary(ps64, piOutLen) {
 		var sOutBin = "";
+		var piRemaining = piOutLen;
 		for (var i = 0; i< ps64.length; i++){
 			var ch = ps64.charAt(i);
 			var iVal = cConverter.base64ToDec(ch);
 			var sBin = cConverter.intToBin(iVal);
-			var iPadLen = (piLen >5?6:piLen);
+			var iPadLen = (piRemaining >5 ? 6 : piRemaining); //padded
 			sBin = sBin.padLeft("0",iPadLen);
 			sOutBin = sOutBin + sBin;
-			piLen -= 6;
+			piRemaining -= 6;
 		}
 		return sOutBin;
-	},
+	}
 	
 	//*********************************************************************
-	test:function(){
+	static test(){
 		var sBinIn = "";
 		var iLength = Math.floor(50 + Math.random() * 50);
 		
@@ -58,9 +59,9 @@ var cCASimpleBase64 = {
 }
 
 //###############################################################################
-var cCABinaryImporter = function(){
+class cCABinaryImporter{
 	//*****************************************************************************
-	this.makeRule = function(psInput){
+	makeRule(psInput){
 		if (psInput.length < cCAConsts.max_inputs) throw new CAException("incorrect length binary input:" + psInput.length + " should be " + cCAConsts.max_inputs);
 		if (psInput.length > cCAConsts.max_inputs) psInput = psInput.slice(0,cCAConsts.max_inputs-1);
 
@@ -76,7 +77,7 @@ var cCABinaryImporter = function(){
 	}
 	
 	//*****************************************************************************
-	this.toString = function(poRule,piState){
+	toString (poRule,piState){
 		var sOut = "";
 		if (piState > poRule.stateRules.length)	throw new CAException("invalid state requested");
 		
@@ -86,7 +87,7 @@ var cCABinaryImporter = function(){
 	}
 	
 	//***************************************************************
-	this.randomRule = function(){
+	randomRule(){
 		var oRule = new cCArule();
 		oRule.neighbour_type = cCAConsts.neighbours.eightway;
 		oRule.has_state_transitions = false;
@@ -99,7 +100,7 @@ var cCABinaryImporter = function(){
 	}
 	
 	//***************************************************************
-	this.test = function(){
+	test = function(){
 		cDebug.write("Testing cCABinaryImporter");
 		var oLifeImporter = new cCALifeImporter();
 		var oRule1 = oLifeImporter.makeRule(cCALifeRules.LIFE); 
@@ -114,8 +115,8 @@ var cCABinaryImporter = function(){
 }
 
 //###############################################################################
-var cCaIdentityRule = function(){
-	this.makeRule = function(){
+class cCaIdentityRule{
+	makeRule(){
 		var oRule = new cCArule();
 		oRule.neighbour_type = cCAConsts.neighbours.eightway;
 		oRule.has_state_transitions = false;
@@ -126,12 +127,12 @@ var cCaIdentityRule = function(){
 		}
 		
 		return oRule;
-	};
+	}
 }
 
 //###############################################################################
-var cCAWolfram1DImporter = function(){
-	this.makeRule = function(piRule){
+class cCAWolfram1DImporter {
+	makeRule(piRule){
 		if ( isNaN(piRule) ) throw new CAException("rule must be a number.");
 		if (piRule < 1 || piRule > 256) throw new CAException("rule must be between 1 and 256");
 		
@@ -164,12 +165,12 @@ var cCAWolfram1DImporter = function(){
 		}
 				
 		return oRule;
-	};
+	}
 }
 
 //###############################################################################
-var cCARepeatBase64Importer = function(){
-	this.makeRule = function(psShort){
+class cCARepeatBase64Importer{
+	makeRule(psShort){
 		var sInput = psShort.trim();
 		if (sInput.length == 0 ) throw new CAException("no input provided.");
 		if (! cConverterEncodings.isBase64(sInput) ) throw new CAException("input must be base64 string");
@@ -183,36 +184,37 @@ var cCARepeatBase64Importer = function(){
 		var sBin = cCASimpleBase64.toBinary(s64,cCAConsts.max_inputs);
 		var oImporter = new cCABinaryImporter();
 		return oImporter.makeRule(sBin);
-	};
+	}
 }
 
 //###############################################################################
-var cCABase64Importer = function(){
+class cCABase64Importer{
 	
-	this.makeRule = function(ps64){
+	makeRule(ps64){
 		if (ps64.length < cCAConsts.base64_length) throw new CAException("base64 not long enough, must be " + cCAConsts.base64_length + "chars");
 		if (! cConverterEncodings.isBase64(ps64) ) throw new CAException("input must be base64  string");
 		var sBin = cCASimpleBase64.toBinary(ps64,cCAConsts.max_inputs);
 		var oImporter = new cCABinaryImporter();
 		return oImporter.makeRule(sBin);
-	};
+	}
 
 	//*****************************************************************************
-	this.toString = function(poRule,piState){
+	toString (poRule,piState){
 		if (piState > poRule.stateRules.length)	throw new CAException("invalid state requested");
 		
-		var oExporter = new cCABinaryImporter()
-		var sBin = oExporter.toString(poRule,piState);
-		var sOut = cCASimpleBase64.toBase64(sBin);
+		//a bit of a long way to go about it
+		var oBinImporter = new cCABinaryImporter()
+		var sBin = oBinImporter.toString(poRule,piState);	//convert rule to binary
+		var sOut = cCASimpleBase64.toBase64(sBin);			//convert binary to base64string
 		if (sOut.length !== cCAConsts.base64_length) throw new CAException("generated base64 is the wrong length");	
 		return sOut;
-	};
+	}
 }
 
 //###############################################################################
-var cCALifeImporter = function(){
+class cCALifeImporter{
 	//***************************************************************
-	this.makeRule = function(psInput){
+	makeRule(psInput){
 		var sBorn, sSurvive;
 		var aBorn = new Array(9);
 		var aSurvive = new Array(9);
@@ -268,7 +270,7 @@ var cCALifeImporter = function(){
 			oRule.set_output(cCAConsts.default_state,i,iNewValue);
 		}
 		return oRule;
-	};
+	}
 };
 
 //var oTester = new cCABinaryImporter();

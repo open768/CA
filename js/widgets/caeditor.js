@@ -8,9 +8,9 @@ For licenses that allow for commercial use please contact cluck@chickenkatsu.co.
 // USE AT YOUR OWN RISK - NO GUARANTEES OR ANY FORM ARE EITHER EXPRESSED OR IMPLIED
 **************************************************************************/
 
-//contains widgets: ck.caeditortoggle and ck.caeditor
+//contains widgets: ck.caeditorcell and ck.caeditor
 
-$.widget( "ck.caeditortoggle",{
+$.widget( "ck.caeditorcell",{
 	//#################################################################
 	//# Options
 	//#################################################################
@@ -18,8 +18,7 @@ $.widget( "ck.caeditortoggle",{
 		index:-1,
 		value: 0, 
 		cell_size:-1,
-		debug:false,
-		onClick:null
+		debug:false
 	},
 	
 	//#################################################################
@@ -37,7 +36,7 @@ $.widget( "ck.caeditortoggle",{
 		oElement.click( function(){ oThis.onClick()} );
 
 		//add a canvas
-		var oCanvas = $("<canvas>", {id: oElement.attr("id") + "c"});
+		var oCanvas = $("<canvas>");
 		var iSize = oOptions.cell_size*3 + 2;
 		oCanvas.attr("width",iSize);
 		oCanvas.attr("height",iSize);
@@ -63,21 +62,21 @@ $.widget( "ck.caeditortoggle",{
 		var oThis = this;
 		var oOptions = oThis.options;
 
-		//-------------draw the grid
-		var iSize = oOptions.cell_size*3 + 2;
-		for ( l=1 ; l<=2; l++){
-			var p = oOptions.cell_size*l +l;
+		//-------------draw the 2 vertical and 2 horizontal lines for the grid
+		var iMax = oOptions.cell_size*3 + 2; 
+		for ( var iLine=1 ; iLine<=2; iLine++){
+			var iLineX = oOptions.cell_size*iLine +iLine;
 			oCanvas.drawLine({
 			  strokeStyle: 'black',
 			  strokeWidth: 1,
-			  x1: p , y1: 0,
-			  x2: p , y2: iSize
+			  x1: iLineX , y1: 0,
+			  x2: iLineX , y2: iMax
 			});
 			oCanvas.drawLine({
 			  strokeStyle: 'black',
 			  strokeWidth: 1,
-			  x1: 0 , y1: p,
-			  x2: iSize , y2: p
+			  x1: 0 , y1: iLineX,
+			  x2: iMax , y2: iLineX
 			});
 		}		
 	},
@@ -122,8 +121,10 @@ $.widget( "ck.caeditortoggle",{
 		var oOptions = oThis.options;
 
 		oOptions.value = piValue;
+		
+		//change cell style if its value 
 		if (piValue == 0)
-			oElement.removeClass("caindexon");
+			oElement.removeClass("caindexon"); 
 		else
 			oElement.addClass("caindexon");
 	},
@@ -141,7 +142,8 @@ $.widget( "ck.caeditortoggle",{
 		else
 			this._set_value(0);
 		
-		this._trigger("onClick",null,oOptions);
+		var oEvent = new cCAEvent( cCAConsts.event_types.click, oOptions);
+		bean.fire(oElement[0], cCAConsts.event_hook, oEvent );
 	}
 });
 
@@ -150,8 +152,14 @@ $.widget( "ck.caeditor",{
 	//#################################################################
 	//# Options
 	//#################################################################
+	rule:null,
+	IDs:{
+		RULE : "RU",
+		STATUS : "ST",
+		CELL_CONTAINER : "CC"
+	},
+	
 	options:{
-		rule:null,
 		onCAEvent: null,
 		cell_size:10
 	},
@@ -170,21 +178,20 @@ $.widget( "ck.caeditor",{
 		$(oElement).tooltip();
 		oElement.empty();
 		
-
 		//if no Rule - create an empty one
-		if (oOptions.rule == null) oOptions.rule = new  cCArule();
+		if (this.rule == null) this.rule = new  cCArule();
 
 		//Add a status window
-		var sID = oElement.attr("id") + "S";
+		var sID = cJquery.child_ID(oElement, this.IDs.STATUS);
 		var oDiv = $("<DIV>", {class:"ui-widget-header",id:sID});
 			oDiv.append("??");
 		oElement.append(oDiv);
 		
 		//Add a rule box
 		oDiv = $("<DIV>", {class:"ui-widget-content"});
-			var sID = oElement.attr("id") + "T";
+			var sID = cJquery.child_ID(oElement, this.IDs.RULE);
 			var oBox = $("<TEXTAREA>",{ID:sID,rows:5,cols:80 ,class:"rule rule_wide", title:"enter the base64 rule here"});				
-			oBox.keyup( function(){oThis.onRuleChange()}	);
+			oBox.keyup( function(){oThis.onRuleKeyUp()}	);
 			oDiv.append(oBox);
 			
 			var oButton = $("<button>",{title:"use the rule entered in the box above"}).button({icon:"ui-icon-circle-arrow-e" });
@@ -192,8 +199,6 @@ $.widget( "ck.caeditor",{
 			oDiv.append(oButton);
 		oElement.append(oDiv);
 
-		//get the contents of the clipboard
-		navigator.clipboard.readText().then(text => {  oThis.onGotClipText(text)} );	//async fetch from clipboard, will display a warning to user
 		
 		//Add a panel for description
 		oDiv = $("<DIV>", {class:"ui-widget-content"});
@@ -201,43 +206,47 @@ $.widget( "ck.caeditor",{
 		oElement.append(oDiv);
 		
 		//Add the individual widgets that can be clicked
-		var sID = oElement.attr("id") + "W";
+		var sID = cJquery.child_ID(oElement, this.IDs.CELL_CONTAINER);
 		oDiv = $("<DIV>", {class:"ui-widget-content",id:sID});
 		oElement.append(oDiv);
-		this._addToggleWidgets();
+		this._add_cells();
+		
+		//get the contents of the clipboard
+		cBrowser.paste_from_clipboard( function(psText){ oThis.onGotClipText(psText)} );	//async fetch from clipboard, will display a warning to user
 	},
 	
 	//#################################################################
 	//# privates
 	//#################################################################`
-	_addToggleWidgets: function(){
+	_add_cells: function(){
 		var oThis = this;
 		var oOptions = oThis.options;
 		var oElement = oThis.element;
-		var oRule = oOptions.rule;
+		var oRule = this.rule;
 		
-		var sID = oElement.attr("id") + "W";
+		//clear out any cells present
+		var sID = cJquery.child_ID(oElement, this.IDs.CELL_CONTAINER);
 		var oDiv = $("#"+sID);
 		oDiv.empty();
 		
-		//there are 511 editor widgets - each is contained in a span
+		//add the cells
 		var iVal;
-		for (iIndex=1; iIndex<=cCAConsts.max_inputs; iIndex++){
+		for (var iIndex=1; iIndex<=cCAConsts.max_inputs; iIndex++){
 			try{
 				iVal = oRule.get_output(cCAConsts.default_state, iIndex);
 			}
 			catch (e){
 				iVal = 0;
 			}
-			var oSpan = $("<SPAN>").caeditortoggle({
+			var oSpan = $("<SPAN>").caeditorcell({
 				index:iIndex, value:iVal,
-				cell_size:oOptions.cell_size, 
-				onClick:function(poEvent,poData){oThis.onToggleClick(poData);}
+				cell_size:oOptions.cell_size
 			})
 			oDiv.append(oSpan);
+			bean.on(oSpan[0], cCAConsts.event_hook, function(poEvent){oThis.onCaEvent(poEvent)});
 		}
 	},
-	
+		
 	//#################################################################
 	//# Events
 	//#################################################################`
@@ -245,13 +254,13 @@ $.widget( "ck.caeditor",{
 		var oThis = this;
 		var oOptions = oThis.options;
 		var oElement = oThis.element;
-		var sID = oElement.attr("id") + "T";
+		var sID = cJquery.child_ID(oElement, this.IDs.RULE)
 		
 		if (psText === "") return;
 			
 		try{
 			var oImporter = new cCABase64Importer();
-			oOptions.rule = oImporter.makeRule(psText);
+			this.rule = oImporter.makeRule(psText);
 			$("#"+sID).val(psText);
 			this.onSetRuleClick();
 		}catch (e){
@@ -266,13 +275,13 @@ $.widget( "ck.caeditor",{
 		var oThis = this;
 		var oElement = oThis.element;
 		var oOptions = oThis.options;
-		var sID = oElement.attr("id") + "T";
+		var sID = cJquery.child_ID(oElement, this.IDs.RULE)
 		var oTextArea = $("#"+sID);
 		
 		try{
 			var oImporter = new cCABase64Importer();
-			oOptions.rule = oImporter.makeRule(oTextArea.val());
-			this._addToggleWidgets();
+			this.rule = oImporter.makeRule(oTextArea.val());
+			this._add_cells();
 		}catch (e){
 			alert ("Whoops - something went wrong!\n\n" + e.message);
 		}
@@ -280,17 +289,23 @@ $.widget( "ck.caeditor",{
 	},
 	
 	//*************************************************************
-	onToggleClick: function(poData){
+	onCaEvent: function(poEvent){
+		if (poEvent.type == cCAConsts.event_types.click)
+			this.onCellClick(poEvent.data);
+	},
+	
+	//*************************************************************
+	onCellClick: function(poData){
 		var oThis = this;
 		var oElement = oThis.element;
 		var oOptions = oThis.options;
-		var oRule = oOptions.rule;
+		var oRule = this.rule;
 
 		try{
 			oRule.set_output(cCAConsts.default_state, poData.index, poData.value);
 			var oExporter = new cCABase64Importer();
 			var s64 = oExporter.toString(oRule,cCAConsts.default_state);
-			var sID = oElement.attr("id") + "T";
+			var sID = cJquery.child_ID(oElement, this.IDs.RULE)
 			var oTextArea = $("#"+sID);
 			oTextArea.val(s64);
 		}catch (e){
@@ -299,13 +314,16 @@ $.widget( "ck.caeditor",{
 	},
 	
 	//*************************************************************
-	onRuleChange: function(){
+	onRuleKeyUp: function(){
 		var oThis = this;
 		var oElement = oThis.element;
-		var oTextArea = $("#" +	oElement.attr("id")+"T");
+		var sID = cJquery.child_ID(oElement, this.IDs.RULE)
+		var oTextArea = $("#" + sID);
 		var sText = oTextArea.val();
 		var iDiff = cCAConsts.base64_length - sText.length;
-		var oStatus = $("#" +	oElement.attr("id")+"S");
+		
+		sID = cJquery.child_ID(oElement, this.IDs.STATUS)
+		var oStatus = $("#" + sID);
 		oStatus.html( iDiff +" chars remaining");
 	}
 });
