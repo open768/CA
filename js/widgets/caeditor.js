@@ -209,9 +209,10 @@ $.widget( "ck.caeditor",{
 		var sID = cJquery.child_ID(oElement, this.IDs.CELL_CONTAINER);
 		oDiv = $("<DIV>", {class:"ui-widget-content",id:sID});
 		oElement.append(oDiv);
-		this._add_cells();
+		this.pr_add_cells();
 		
 		//get the contents of the clipboard
+		this.pr_set_status("waiting for clipboard");
 		cBrowser.paste_from_clipboard( function(psText){ oThis.onGotClipText(psText)} );	//async fetch from clipboard, will display a warning to user
 		
 		//add event listener
@@ -221,7 +222,13 @@ $.widget( "ck.caeditor",{
 	//#################################################################
 	//# privates
 	//#################################################################`
-	_add_cells: function(){
+	pr_set_status: function(psText){
+		var oElement = this.element;
+		var sID = cJquery.child_ID(oElement, this.IDs.STATUS);
+		$("#"+sID).html(psText);
+	},
+	
+	pr_add_cells: function(){
 		var oThis = this;
 		var oOptions = oThis.options;
 		var oElement = oThis.element;
@@ -236,10 +243,11 @@ $.widget( "ck.caeditor",{
 		var iVal;
 		for (var iIndex=1; iIndex<=cCAConsts.max_inputs; iIndex++){
 			try{
-				iVal = oRule.get_output(cCAConsts.default_state, iIndex);
+				iVal = oRule.get_rule_output(cCAConsts.default_state, iIndex);
 			}
 			catch (e){
 				iVal = 0;
+				console.log(e.message)
 			}
 			var oSpan = $("<SPAN>").caeditorcell({
 				index:iIndex, value:iVal,
@@ -258,18 +266,20 @@ $.widget( "ck.caeditor",{
 		var oElement = oThis.element;
 		var sID = cJquery.child_ID(oElement, this.IDs.RULE)
 		
-		if (psText === "") return;
+		if (psText === "") {
+			this.pr_set_status( "nothing in clipboard");
+			return;
+		}
 			
 		try{
 			var oImporter = new cCABase64Importer();
 			this.rule = oImporter.makeRule(psText);
 			$("#"+sID).val(psText);
 			this.onSetRuleClick();
+			this.pr_set_status( "rule loaded from clipboard");
 		}catch (e){
-			alert ("not a valid rule in clipboard!" );
-			return;
+			this.pr_set_status( "not a valid rule in clipboard!");
 		}
-			
 	},
 		
 	//*************************************************************
@@ -283,7 +293,7 @@ $.widget( "ck.caeditor",{
 		try{
 			var oImporter = new cCABase64Importer();
 			this.rule = oImporter.makeRule(oTextArea.val());
-			this._add_cells();
+			this.pr_add_cells();
 		}catch (e){
 			alert ("Whoops - something went wrong!\n\n" + e.message);
 		}
@@ -324,8 +334,6 @@ $.widget( "ck.caeditor",{
 		var sText = oTextArea.val();
 		var iDiff = cCAConsts.base64_length - sText.length;
 		
-		sID = cJquery.child_ID(oElement, this.IDs.STATUS)
-		var oStatus = $("#" + sID);
-		oStatus.html( iDiff +" chars remaining");
+		this.pr_set_status( iDiff +" chars remaining");
 	}
 });
