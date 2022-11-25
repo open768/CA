@@ -100,7 +100,7 @@ class cCABinaryImporter{
 	}
 	
 	//***************************************************************
-	test = function(){
+	test(){
 		cDebug.write("Testing cCABinaryImporter");
 		var oLifeImporter = new cCALifeImporter();
 		var oRule1 = oLifeImporter.makeRule(cCALifeRules.LIFE); 

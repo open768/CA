@@ -10,10 +10,9 @@ For licenses that allow for commercial use please contact cluck@chickenkatsu.co.
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 //%
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-var cCAGridInitialiser = function(){
+class cCAGridInitialiser{
 	
-	this.init = function(poGrid, piInitType){
-		
+	init(poGrid, piInitType){
 		//always blank first
 		if (piInitType !== cCAConsts.init_values.blank)
 			this.init(poGrid,cCAConsts.init_values.blank);

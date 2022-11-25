@@ -18,8 +18,8 @@ var cCaLexiconRule = function(piType, psLabel, psRule){
 	this.rule = psRule;
 }
 
-var cCALexicon = {
-	get_rules:function(){
+class cCALexicon {
+	static get_rules(){
 		var aRules = [];
 		aRules.push( this.pr__make_life_rule("2x2", "B36/S125"));
 		aRules.push( this.pr__make_life_rule("34 life", "B34/S34"));
@@ -35,9 +35,9 @@ var cCALexicon = {
 		aRules.push( this.pr__make_life_rule("Walled Cities", "B45678/S2345"));
 		
 		return aRules;
-	},
+	}
 	
-	pr__make_life_rule: function(psName, psRule){
+	static pr__make_life_rule(psName, psRule){
 		return new cCaLexiconRule(cCAConsts.rule_types.life,psName,psRule);
 	}
 	
