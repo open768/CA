@@ -212,6 +212,7 @@ $.widget( "ck.caeditor",{
 		this.pr_add_cells();
 		
 		//get the contents of the clipboard
+		cBrowser.get_clipboard_permissions();
 		this.pr_set_status("waiting for clipboard");
 		cBrowser.paste_from_clipboard( function(psText){ oThis.onGotClipText(psText)} );	//async fetch from clipboard, will display a warning to user
 		
