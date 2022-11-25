@@ -67,38 +67,121 @@ $.widget( "ck.castatus",{
 					oRow.append(oCell);
 					oCell = $("<td>",{id:sID+caStatusConsts.ACTIVE_ID}).append("??");
 					oRow.append(oCell);
-				oTable.append(oRow);
+					oTable.append(oRow);
 				oRow = $("<tr>");
 					oCell = $("<td>", {align:"right"}).append("Changed");
 					oRow.append(oCell);
 					oCell = $("<td>",{id:sID+caStatusConsts.CHANGED_ID}).append("??");
 					oRow.append(oCell);
-				oTable.append(oRow);
+					oTable.append(oRow);
 				oRow = $("<tr>");
 					oCell = $("<td>", {align:"right"}).append("Runs");
 					oRow.append(oCell);
 					oCell = $("<td>",{id:sID+caStatusConsts.RUNS_ID}).append("??");
 					oRow.append(oCell);
-				oTable.append(oRow);
-			oDiv.append(oTable);
-		oElement.append(oDiv);
+					oTable.append(oRow);
+				oDiv.append(oTable);
+			oElement.append(oDiv);
+		oElement.append("<P>");
 		
 		//-------------------------------------------------------------
-		oElement.append("<p>")
+		oElement.append("<HR>")
 		oDiv = $("<DIV>",{class:"ui-widget-header"}).append("Chart");
-		oElement.append(oDiv);
+			oElement.append(oDiv);
 		oDiv = $("<DIV>",{class:"ui-widget-content",id:sID+caStatusConsts.CHART_ID}).cachart();
+			oElement.append(oDiv);
+		oElement.append("<P>");
+		
+		//--initialise------------------------------------------------		
+		oDiv = $("<DIV>",{class:"ui-widget-header"});
+			oDiv.append("Initialise");
+			oElement.append(oDiv);
+		
+		var oThis = this;
+		oDiv = $("<DIV>",{class:"ui-widget-content"});
+			var oSelect = $("<SELECT>",{width:200,title:"choose a pattern to initialise the grid with"});
+			oSelect.append( $("<option>",{selected:1,disabled:1,value:-1}).append("Initialise"));
+			oSelect.append ( $("<option>",{value:cCAConsts.init_values.blank}).append("blank"));
+			oSelect.append ( $("<option>",{value:cCAConsts.init_values.block}).append("block"));
+			oSelect.append ( $("<option>",{value:cCAConsts.init_values.random}).append("random"));
+			oSelect.append ( $("<option>",{value:cCAConsts.init_values.horiz_line}).append("horiz line"));
+			oSelect.append ( $("<option>",{value:cCAConsts.init_values.vert_line}).append("vert line"));
+			oSelect.append ( $("<option>",{value:cCAConsts.init_values.diagonal}).append("diagonal"));
+			oSelect.append ( $("<option>",{value:cCAConsts.init_values.diamond}).append("diamond"));
+			oSelect.append ( $("<option>",{value:cCAConsts.init_values.cross}).append("cross"));
+			oSelect.append ( $("<option>",{value:cCAConsts.init_values.circle}).append("circle"));
+			oSelect.append ( $("<option>",{value:cCAConsts.init_values.sine}).append("sine"));
+			oDiv.append(oSelect);
+			oSelect.selectmenu({
+					select:function(poEvent){oThis.onInitClick(poEvent)}
+			});
+			oElement.append(oDiv);
+		oElement.append("<P>");
+		
+		//--controls------------------------------------------------		
+		oDiv = $("<DIV>",{class:"ui-widget-header"});
+			oDiv.append("controls");
+		oElement.append(oDiv);
+		
+		oDiv = $("<DIV>",{class:"ui-widget-content"});
+			var oButton = $("<button>",{width:"30px",height:"30px",id:"btnStop"}).button({icon:"ui-icon-stop"});
+				oButton.prop("disabled", true);
+				oButton.click(	function(){ oThis.onClickControl(cCAConsts.action_types.stop);}	);
+				oDiv.append(oButton);
+
+			var oButton = $("<button>",{width:"30px",height:"30px",id:"btnPlay"}).button({icon:"ui-icon-circle-triangle-e"});
+				oButton.prop("disabled", true);
+				oButton.click(	function(){ oThis.onClickControl(cCAConsts.action_types.play);}	);
+				oDiv.append(oButton);
+
+			var oButton = $("<button>",{width:"30px",height:"30px",title:"step",id:"btnStep"}).button({icon:"ui-icon-seek-end"});
+				oButton.prop("disabled", true);
+				oButton.click(	function(){ oThis.onClickControl(cCAConsts.action_types.step);}	);
+				oDiv.append(oButton);
 		oElement.append(oDiv);
 	},
 	
 	//#################################################################
 	//#################################################################
+	onInitClick: function(poEvent){
+		var oElement = this.element;
+
+		
+		var iSelected = parseInt($(poEvent.target).val());
+		var oEvent = new cCAEvent( cCAConsts.event_types.initialise, iSelected);
+		bean.fire(document, cCAConsts.event_hook, oEvent);
+	},
+	
+	//****************************************************************************
+	onClickControl: function(piAction){
+		var oThis = this;
+		if (!caMachineOptions.rule_set){
+			alert("set a rule first!!");
+			return;
+		}
+	
+		switch (piAction){
+			case cCAConsts.action_types.stop:
+				$("#btnStep").prop("disabled",false);
+				$("#btnPlay").prop("disabled",false);
+				$("#btnStop").prop("disabled",true);
+				break;
+			case cCAConsts.action_types.play:
+				$("#btnStep").prop("disabled",true);
+				$("#btnPlay").prop("disabled",true);
+				$("#btnStop").prop("disabled",false);
+				break;
+		}
+		var oEvent = new cCAEvent( cCAConsts.event_types.action, parseInt(piAction));
+		bean.fire(document, cCAConsts.event_hook, oEvent);
+	},
+	
+	//****************************************************************************
 	onCAEvent: function(poEvent){
-		var oElement, oOptions, sID;
+		var oElement,  sID;
 		var oTarget;
 		
 		oElement = this.element;
-		oOptions = this.options;
 		sID = oElement.attr("id");
 
 		switch (poEvent.type){

@@ -7,29 +7,26 @@ http://creativecommons.org/licenses/by-nc-nd/4.0/legalcode
 For licenses that allow for commercial use please contact cluck@chickenkatsu.co.uk
 // USE AT YOUR OWN RISK - NO GUARANTEES OR ANY FORM ARE EITHER EXPRESSED OR IMPLIED
 **************************************************************************/
-var cCAControlTypes = {
-	entry_ID:"ent",
-	rules_ID:"rul",
-	rules_extra_ID:"rulex",
-	rule_random_ID: "rulernd",
-	name_ID:"nam",
-	init_ID:"ini",
-	wolf_ID:"wolf",
-	preset_ID:"lex",
-	boredom_ID:"bor",
+class cCAControlTypes {
+	static entry_ID="ent";
+	static rules_ID="rul";
+	static rules_extra_ID="rulex";
+	static rule_random_ID= "rulernd";
+	static name_ID="nam";
+	static init_ID="ini";
+	static wolf_ID="wolf";
+	static preset_ID="lex";
+	static boredom_ID="bor";
 	
-	random_value: "Random"	
+	static random_value= "Random";
 }
+
 
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 $.widget( "ck.cacontrols",{
 	//#################################################################
 	//# Options
 	//#################################################################
-	options:{
-		rule_set:false,
-		rule: null
-	},
 
 	//#################################################################
 	//# Constructor
@@ -68,20 +65,34 @@ $.widget( "ck.cacontrols",{
 		//--rules widgets-------------------------------------------------
 		oDiv = $("<DIV>",{class:"ui-widget-header"});
 			oDiv.append("Rule");
-			sID = oElement.attr("id")+cCAControlTypes.rules_extra_ID;
+			sID = cJquery.child_ID(oElement, cCAControlTypes.rules_extra_ID);
 			var oSpan = $("<SPAN>",{id:sID}).html("??");
 			oDiv.append(oSpan);		
 		oElement.append(oDiv);
 			
 		oDiv = $("<DIV>",{class:"ui-widget-content"});
 			//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-			sID = oElement.attr("id")+cCAControlTypes.entry_ID;
-			var oBox = $("<TEXTAREA>",{ID:sID,rows:5,cols:30 ,class:"rule", title:"enter the rule here"});				
-				oBox.keyup( function(){oThis.onRuleChange()}	);
-			oDiv.append(oBox);
+			var oParentDiv = $("<DIV>", {id:"tcontainer"});
+			oParentDiv.append(
+				"<ul>" +
+					"<li><a href='#tbase64'>base64</a></li>" +
+					"<li><a href='#tjson'>JSON</a></li>" +
+				"</ul>");
+			
+				var oChildDiv = $("<div>",{id:"tbase64"});
+					sID = cJquery.child_ID(oElement, cCAControlTypes.entry_ID);
+					var oBox = $("<TEXTAREA>",{ID:sID,rows:5,cols:30 ,class:"rule", title:"enter the rule here"});				
+						oBox.keyup( function(){oThis.onRuleChange()}	);
+					oChildDiv.append(oBox);
+				oParentDiv.append(oChildDiv);
+				
+				var oChildDiv = $("<div>",{id:"tjson"});
+				oParentDiv.append(oChildDiv);
+			oDiv.append(oParentDiv)
+			oParentDiv.tabs();
 			
 			//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-			sID = oElement.attr("id")+cCAControlTypes.rules_ID;
+			sID = cJquery.child_ID(oElement, cCAControlTypes.rules_ID);
 			var oSelect = $("<SELECT>",{id:sID,width:200,title:"choose the rule type to enter in the box above"});
 				oSelect.append( $("<option>",{selected:1,disabled:1,value:-1}).append("Rule Type"));
 				oSelect.append( $("<option>",{value:cCAConsts.rule_types.base64}).append("base64"));
@@ -96,134 +107,55 @@ $.widget( "ck.cacontrols",{
 			
 			//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 			oDiv.append("<HR>");
-			var oButton = $("<button>",{title:"Random Rule"}).append("Set Random Rule");
+			oDiv.append("Random ");
+				var oButton = $("<button>",{title:"Random Rule"}).button({icon:"ui-icon-circle-arrow-e"});
+				oDiv.append(oButton);
 				oButton.click(	function(){oThis.pr_makeRandomBase64()}	);		
-			oDiv.append(oButton);
 			
 			//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 			oDiv.append("<HR>");
-			sID = oElement.attr("id")+cCAControlTypes.name_ID;
+			sID = cJquery.child_ID(oElement, cCAControlTypes.name_ID);
+			oDiv.append("word repeater");
 			var oInput = $("<INPUT>",{type:"text",id:sID,size:12,icon:"ui-icon-circle-arrow-e",title:"put anything in this box - eg your name"});
-			oDiv.append(oInput);
+				oDiv.append(oInput);
 			oButton = $("<button>",{title:"creates a rule from the word in the box"}).button({icon:"ui-icon-circle-arrow-e"});
 			oButton.click(	function(){oThis.onSetNameClick()}	);		
 			oDiv.append(oButton);
 			
 			//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 			oDiv.append("<HR>");
-			sID = oElement.attr("id")+cCAControlTypes.preset_ID;
+			sID = cJquery.child_ID(oElement, cCAControlTypes.preset_ID);
 			var oSelect = $("<SELECT>",{id:sID,width:200,title:"pick a preset rule"});
 				this.pr__populate_presets(oSelect);
-			oDiv.append(oSelect);
-			oSelect.selectmenu({
-				select:function(){oThis.onPresetsClick();}
-			});
+				oDiv.append(oSelect);
+				oSelect.selectmenu({
+					select:function(poEvent){oThis.onPresetsClick(poEvent);}
+				});
 			
 			//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-			/*
 			oDiv.append("<HR>");
-			sID = oElement.attr("id")+cCAControlTypes.boredom_ID;
+			sID = cJquery.child_ID(oElement, cCAControlTypes.boredom_ID);
 			oSelect = $("<SELECT>",{id:sID,width:50,title:"how many times will a cell see a pattern before it gets bored"});
-			oSelect.append( $("<option>",{selected:1,disabled:1}).append("Boredom"));
-			oSelect.append( $("<option>",{value:cCAConsts.no_boredom}).append("Never"));
-			for ( var i=3; i<=10; i++){
-				oSelect.append( $("<option>",{value:i}).append(i + " times"));
-			}
-			oDiv.append(oSelect);
-			oSelect.selectmenu({
-				select:function(){oThis.onBoredomClick();}
-			});
-			*/
-		oElement.append(oDiv);
-		oElement.append("<P>");
-		
-
-		//--initialise------------------------------------------------		
-		oDiv = $("<DIV>",{class:"ui-widget-header"});
-			oDiv.append("Initialise");
-		oElement.append(oDiv);
-		
-		oDiv = $("<DIV>",{class:"ui-widget-content"});
-			sID = oElement.attr("id")+cCAControlTypes.init_ID;
-			var oSelect = $("<SELECT>",{id:sID,width:200,title:"choose a pattern to initialise the grid with"});
-			oSelect.append( $("<option>",{selected:1,disabled:1,value:-1}).append("Initialise"));
-			oSelect.append ( $("<option>",{value:cCAConsts.init_values.blank}).append("blank"));
-			oSelect.append ( $("<option>",{value:cCAConsts.init_values.block}).append("block"));
-			oSelect.append ( $("<option>",{value:cCAConsts.init_values.random}).append("random"));
-			oSelect.append ( $("<option>",{value:cCAConsts.init_values.horiz_line}).append("horiz line"));
-			oSelect.append ( $("<option>",{value:cCAConsts.init_values.vert_line}).append("vert line"));
-			oSelect.append ( $("<option>",{value:cCAConsts.init_values.diagonal}).append("diagonal"));
-			oSelect.append ( $("<option>",{value:cCAConsts.init_values.diamond}).append("diamond"));
-			oSelect.append ( $("<option>",{value:cCAConsts.init_values.cross}).append("cross"));
-			oSelect.append ( $("<option>",{value:cCAConsts.init_values.circle}).append("circle"));
-			oSelect.append ( $("<option>",{value:cCAConsts.init_values.sine}).append("sine"));
-			oDiv.append(oSelect);
-			oSelect.selectmenu({
-					select:function(){oThis.onInitClick()}
-			});
-		oElement.append(oDiv);
-		oElement.append("<P>");
-		
-		
-		//--controls------------------------------------------------		
-		oDiv = $("<DIV>",{class:"ui-widget-header"});
-			oDiv.append("controls");
-		oElement.append(oDiv);
-		
-		oDiv = $("<DIV>",{class:"ui-widget-content"});
-			var oButton = $("<button>",{width:"30px",height:"30px",id:"btnStop"}).button({icon:"ui-icon-stop"});
-			oButton.prop("disabled", true);
-			oButton.click(	function(){ oThis.onClickButton(cCAConsts.action_types.stop);}	);
-			oDiv.append(oButton);
-
-			var oButton = $("<button>",{width:"30px",height:"30px",id:"btnPlay"}).button({icon:"ui-icon-circle-triangle-e"});
-			oButton.prop("disabled", true);
-			oButton.click(	function(){ oThis.onClickButton(cCAConsts.action_types.play);}	);
-			oDiv.append(oButton);
-
-			var oButton = $("<button>",{width:"30px",height:"30px",title:"step",id:"btnStep"}).button({icon:"ui-icon-seek-end"});
-			oButton.prop("disabled", true);
-			oButton.click(	function(){ oThis.onClickButton(cCAConsts.action_types.step);}	);
-			oDiv.append(oButton);
-		oElement.append(oDiv);
+				oSelect.append( $("<option>",{selected:1,disabled:1}).append("Boredom"));
+				oSelect.append( $("<option>",{value:cCAConsts.no_boredom}).append("Never"));
+				for ( var i=3; i<=10; i++){
+					oSelect.append( $("<option>",{value:i}).append(i + " times"));
+				}
+				oDiv.append(oSelect);
+				oSelect.selectmenu({
+					select:function(poEvent){oThis.onBoredomClick(poEvent);}
+				});
+			oElement.append(oDiv);
 	},
 		
 	//#################################################################
 	//# EVENTS
 	//#################################################################`
-	//****************************************************************************
-	onClickButton: function(piAction){
-		var oThis = this;
-		var oOptions = oThis.options;
-		if (!oOptions.rule_set){
-			alert("set a rule first!!");
-			return;
-		}
-	
-		switch (piAction){
-			case cCAConsts.action_types.stop:
-				$("#btnStep").prop("disabled",false);
-				$("#btnPlay").prop("disabled",false);
-				$("#btnStop").prop("disabled",true);
-				break;
-			case cCAConsts.action_types.play:
-				$("#btnStep").prop("disabled",true);
-				$("#btnPlay").prop("disabled",true);
-				$("#btnStop").prop("disabled",false);
-				break;
-		}
-		var oEvent = new cCAEvent( cCAConsts.event_types.action, parseInt(piAction));
-		bean.fire(document, cCAConsts.event_hook, oEvent);
-	},
-	
-	
-	//****************************************************************************
 	onSetNameClick: function(){
-		var oThis = this;
-		var oOptions = oThis.options;
-		var oElement = oThis.element;
+		var oElement = this.element;
 
-		var oInput = $("#" +	oElement.attr("id")+cCAControlTypes.name_ID);
+		var sID = cJquery.child_ID(oElement, cCAControlTypes.name_ID);
+		var oInput = $("#" + sID);
 		var sInput = oInput.val().trim();
 		if (sInput === ""){
 			alert ("empty input string :-(");
@@ -243,12 +175,10 @@ $.widget( "ck.cacontrols",{
 	
 	//****************************************************************************
 	onSetRuleClick: function(){
-		var oThis = this;
-		var oOptions = oThis.options;
-		var oElement = oThis.element;
+		var oElement = this.element;
 
-		var oTextArea = $("#" +	oElement.attr("id")+cCAControlTypes.entry_ID);
-		var oSelect = $("#" + oElement.attr("id")+cCAControlTypes.rules_ID);
+		var oTextArea = $("#" +	cJquery.child_ID(oElement, cCAControlTypes.entry_ID));
+		var oSelect = $("#" + cJquery.child_ID(oElement, cCAControlTypes.rules_ID));
 		
 		if (!oSelect.val()) {
 			alert("choose a rule type to import");
@@ -275,16 +205,16 @@ $.widget( "ck.cacontrols",{
 				case cCAConsts.rule_types.base64:
 					var oImporter = new cCABase64Importer();
 					oRule = oImporter.makeRule(oTextArea.val());
-					oOptions.rule = oRule;
+					caMachineOptions.rule = oRule;
 					
 					//set the boredom if chosen
-					var oBoredomList = $("#" + oElement.attr("id")+cCAControlTypes.boredom_ID);
+					var oBoredomList = $("#" + cJquery.child_ID(oElement, cCAControlTypes.boredom_ID));
 					if (!isNaN(oBoredomList.val())) oRule.boredom = oBoredomList.val();
 					
 					//inform subscribers
 					var oEvent = new cCAEvent( cCAConsts.event_types.set_rule, oRule);
 					bean.fire(document, cCAConsts.event_hook, oEvent);
-					oOptions.rule_set = true;
+					caMachineOptions.rule_set = true;
 					break;
 				case cCAConsts.rule_types.random:
 					this.pr_makeRandomBase64();
@@ -302,52 +232,33 @@ $.widget( "ck.cacontrols",{
 		
 	},
 	
-	//****************************************************************************
-	onInitClick: function(){
-		var oThis = this;
-		var oOptions = oThis.options;
-		var oElement = oThis.element;
-
-		
-		var oSelect = $("#" +oElement.attr("id")+cCAControlTypes.init_ID);
-		if (!oSelect.val()) {
-			alert("choose a init method");
-			return;
-		}
-		var iSelected = parseInt(oSelect.val());
-		var oEvent = new cCAEvent( cCAConsts.event_types.initialise, iSelected);
-		bean.fire(document, cCAConsts.event_hook, oEvent);
-	},
 
 	//****************************************************************************
 	onRuleChange:function(){
-		var oThis = this;
-		var oElement = oThis.element;
+		var oElement = this.element;
 		
-		var oTextArea = $("#" +	oElement.attr("id")+cCAControlTypes.entry_ID);
-		var oSelect = $("#" + oElement.attr("id")+cCAControlTypes.rules_ID);
+		var oTextArea = $("#" +	cJquery.child_ID(oElement, cCAControlTypes.entry_ID));
+		var oSelect = $("#" + cJquery.child_ID(oElement, cCAControlTypes.rules_ID));
 		var sSelected = oSelect.val();
 		if (sSelected){
 			var iSelected = parseInt(sSelected);
 			if ( iSelected == cCAConsts.rule_types.base64){
 				var sText = oTextArea.val();
 				var iDiff = cCAConsts.base64_length - sText.length;
-				var oSpan = $("#" +	oElement.attr("id")+cCAControlTypes.rules_extra_ID);
+				var oSpan = $("#" +	cJquery.child_ID(oElement, cCAControlTypes.rules_extra_ID));
 				oSpan.html( iDiff +" chars remaining");
 			}
 		}
 	},
 	
 	//****************************************************************************
-	onPresetsClick: function(){
-		var oThis = this;
-		var oElement = oThis.element;
+	onPresetsClick: function(poEvent){
+		var oElement = this.element;
 		
-		var oTextArea = $("#" +	oElement.attr("id")+cCAControlTypes.entry_ID);
-		var oRulesSelect = $("#" + oElement.attr("id")+cCAControlTypes.rules_ID);
+		var oTextArea = $("#" +	cJquery.child_ID(oElement, cCAControlTypes.entry_ID));
+		var oRulesSelect = $("#" + cJquery.child_ID(oElement, cCAControlTypes.rules_ID));
 		
-		var oPresetSelect = $("#" + oElement.attr("id")+cCAControlTypes.preset_ID);
-		var sPreset = oPresetSelect.val();
+		var sPreset = $(poEvent.target).val();
 		var oJson = JSON.parse(sPreset);
 		
 		switch (oJson.type){
@@ -364,18 +275,15 @@ $.widget( "ck.cacontrols",{
 	},
 	
 	//****************************************************************************
-	/*
-	onBoredomClick: function(){
-		var oOptions = this.options;
+	onBoredomClick: function(poEvent){
 		
-		if (!oOptions.rule_set){
+		if (!caMachineOptions.rule_set){
 			alert("set a rule first");
 			return;
 		}
-		
-		this.onSetRuleClick();
+		var iBoredem = parseInt($(poEvent.target).val());
+		caMachineOptions.rule.boredom = iBoredem;
 	},
-	*/
 	
 	//#################################################################
 	//# privates
@@ -392,15 +300,13 @@ $.widget( "ck.cacontrols",{
 	
 	//****************************************************************************
 	pr_setBase64Rule:function( psBase64){
-		var oThis = this;
-		var oOptions = oThis.options;
-		var oElement = oThis.element;
+		var oElement = this.element;
 		
-		var oTextArea = $("#" +	oElement.attr("id")+cCAControlTypes.entry_ID);
+		var oTextArea = $("#" +	cJquery.child_ID(oElement, cCAControlTypes.entry_ID));
 			oTextArea.val(psBase64);		
 			cBrowser.copy_to_clipboard(psBase64);
 
-		var oSelect = $("#" + oElement.attr("id")+cCAControlTypes.rules_ID);
+		var oSelect = $("#" + cJquery.child_ID(oElement, cCAControlTypes.rules_ID));
 			oSelect.val(cCAConsts.rule_types.base64);
 			oSelect.selectmenu("refresh");
 		this.onSetRuleClick();
@@ -410,7 +316,7 @@ $.widget( "ck.cacontrols",{
 	pr__populate_presets:function(poSelect){
 		var aRules = cCALexicon.get_rules();
 		
-		poSelect.append( $("<option>",{selected:1,disabled:1,value:-1}).append("preset rules"));
+		poSelect.append( $("<option>",{selected:1,disabled:1,value:-1}).append("presets"));
 		
 		for (var i = 0; i < aRules.length; i++){
 			var oRule = aRules[i];
