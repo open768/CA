@@ -69,6 +69,6 @@ $.widget( "ck.camachine",{
 		oElement.append(oTable);
 		
 		//check clipboard
-		cBrowser.get_clipboard_permissions();
+		cBrowser.get_clipboard_permissions(true);
 	},
 });
