@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Cellular Automata explorer - editor</title>
+	<!-- 3rd party libraries (bean) -->
+	<script  src="../jsinc/extra/bean/bean.js"></script>
+	
+	<!-- 3rd party libraries (jquery) -->
+	<script  src="../jsinc/extra/jquery/jquery-3.2.1.min.js"></script>
+	<script  src="../jsinc/extra/jquery-ui/jquery-ui.min.js"></script>
+	<script  src="../jsinc/extra/jquery-cookie/jquery.cookie.js"></script>
+	<script  src="../jsinc/extra/jquery-canvas/jcanvas.min.js"></script>
+	<script  src="https://www.gstatic.com/charts/loader.js"></script>
+	
+	<!-- stylesheets -->
+	<link rel="stylesheet" href="css/CA.css">
+	<link rel="stylesheet" href="css/jquery/jquery-ui.css">
+
+	<!-- my useful functions -->
+	<script src="../jsinc/ck-inc/common.js"></script>
+	<script src="../jsinc/ck-inc/debug.js"></script>
+	<script src="../jsinc/ck-inc/converter.js"></script>
+
+	<!-- cellular automata classes -->
+	<script language="javascript" src="jsinc/CA/catypes.js"></script>
+	<script language="javascript" src="jsinc/CA/cacell.js"></script>
+	<script language="javascript" src="jsinc/CA/carule.js"></script>
+	<script language="javascript" src="jsinc/CA/caimporter.js"></script>
+	
+	<!-- widgets for page -->
+	<script language="javascript" src="js/widgets/cacrypt.js"></script>
+</head>
+
+<body>
+	<h2>Cellular Automata Encryption</h2>
+	<div id="crypt"></div>
+
+	<script language="javascript">
+	function onJqueryLoad(){
+		$("#crypt").cacrypt();
+	}
+	$(onJqueryLoad);
+	</script>
+
+</body>
+</html>
