@@ -24,6 +24,13 @@ class cCArule{
 		this.stateRules = [];
 		this.boredom = cCAConsts.no_boredom;
 	}
+	
+	copy_to(poRule){
+		poRule.neighbour_type = this.neighbour_type ;
+		poRule.has_state_transitions = this.has_state_transitions;
+		poRule.boredom = this.boredom ;
+		poRule.stateRules = cCommon.deep_copy(this.stateRules);
+	}
 			
 	//*****************************************************************
 	set_output(piState, piPattern, piValue){

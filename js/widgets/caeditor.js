@@ -178,9 +178,6 @@ $.widget( "ck.caeditor",{
 		$(oElement).tooltip();
 		oElement.empty();
 		
-		//if no Rule - create an empty one
-		if (this.rule == null) this.rule = new  cCArule();
-
 		//Add a status window
 		var sID = cJquery.child_ID(oElement, this.IDs.STATUS);
 		var oDiv = $("<DIV>", {class:"ui-widget-header",id:sID});
@@ -209,12 +206,17 @@ $.widget( "ck.caeditor",{
 		var sID = cJquery.child_ID(oElement, this.IDs.CELL_CONTAINER);
 		oDiv = $("<DIV>", {class:"ui-widget-content",id:sID});
 		oElement.append(oDiv);
-		this.pr_add_cells();
 		
 		//get the contents of the clipboard
 		cBrowser.get_clipboard_permissions();
 		this.pr_set_status("waiting for clipboard");
-		cBrowser.paste_from_clipboard( function(psText){ oThis.onGotClipText(psText)} );	//async fetch from clipboard, will display a warning to user
+		try{
+			cBrowser.paste_from_clipboard( function(psText){ oThis.onGotClipText(psText)} );
+		}catch(e){
+			cBrowser.writeConsoleWarning(e.message);
+			this.pr_set_identity_rule();
+		}
+		//async fetch from clipboard, will display a warning to user
 		
 		//add event listener
 		bean.on(document, cCAConsts.event_hook, function(poEvent){oThis.onCaEvent(poEvent)});
@@ -257,18 +259,29 @@ $.widget( "ck.caeditor",{
 			oDiv.append(oSpan);
 		}
 	},
+	
+	//#################################################################
+	pr_set_identity_rule: function(){
+		var oElement = this.element;
+		var oRule = cCaIdentityRule.makeRule();
+		var oExporter = new cCABase64Importer();
+		var s64 = oExporter.toString(oRule,cCAConsts.default_state);
+		var sID = cJquery.child_ID(oElement, this.IDs.RULE)
+		$("#"+sID).val(s64);
+		this.pr_set_status( "Identity Rule");
+		this.onSetRuleClick();
+	},
 		
 	//#################################################################
 	//# Events
 	//#################################################################`
 	onGotClipText: function(psText){
-		var oThis = this;
-		var oOptions = oThis.options;
-		var oElement = oThis.element;
+		var oElement = this.element;
 		var sID = cJquery.child_ID(oElement, this.IDs.RULE)
 		
 		if (psText === "") {
 			this.pr_set_status( "nothing in clipboard");
+			this.pr_set_identity_rule();
 			return;
 		}
 			
@@ -280,14 +293,13 @@ $.widget( "ck.caeditor",{
 			this.pr_set_status( "rule loaded from clipboard");
 		}catch (e){
 			this.pr_set_status( "not a valid rule in clipboard!");
+			this.pr_set_identity_rule();
 		}
 	},
 		
 	//*************************************************************
 	onSetRuleClick: function(){
-		var oThis = this;
-		var oElement = oThis.element;
-		var oOptions = oThis.options;
+		var oElement = this.element;
 		var sID = cJquery.child_ID(oElement, this.IDs.RULE)
 		var oTextArea = $("#"+sID);
 		

@@ -116,7 +116,7 @@ class cCABinaryImporter{
 
 //###############################################################################
 class cCaIdentityRule{
-	makeRule(){
+	static makeRule(){
 		var oRule = new cCArule();
 		oRule.neighbour_type = cCAConsts.neighbours.eightway;
 		oRule.has_state_transitions = false;
