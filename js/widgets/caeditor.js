@@ -263,9 +263,7 @@ $.widget( "ck.caeditor",{
 	//#################################################################
 	pr_set_identity_rule: function(){
 		var oElement = this.element;
-		var oRule = cCaIdentityRule.makeRule();
-		var oExporter = new cCABase64Importer();
-		var s64 = oExporter.toString(oRule,cCAConsts.default_state);
+		var s64 = cCABase64Exporter.export(oRule,cCAConsts.default_state);
 		var sID = cJquery.child_ID(oElement, this.IDs.RULE)
 		$("#"+sID).val(s64);
 		this.pr_set_status( "Identity Rule");
@@ -286,8 +284,7 @@ $.widget( "ck.caeditor",{
 		}
 			
 		try{
-			var oImporter = new cCABase64Importer();
-			this.rule = oImporter.makeRule(psText);
+			this.rule = cCABase64Importer.makeRule(psText);
 			$("#"+sID).val(psText);
 			this.onSetRuleClick();
 			this.pr_set_status( "rule loaded from clipboard");
@@ -304,8 +301,7 @@ $.widget( "ck.caeditor",{
 		var oTextArea = $("#"+sID);
 		
 		try{
-			var oImporter = new cCABase64Importer();
-			this.rule = oImporter.makeRule(oTextArea.val());
+			this.rule = cCABase64Importer.makeRule(oTextArea.val());
 			this.pr_add_cells();
 		}catch (e){
 			alert ("Whoops - something went wrong!\n\n" + e.message);
@@ -328,8 +324,7 @@ $.widget( "ck.caeditor",{
 
 		try{
 			oRule.set_output(cCAConsts.default_state, poData.index, poData.value);
-			var oExporter = new cCABase64Importer();
-			var s64 = oExporter.toString(oRule,cCAConsts.default_state);
+			var s64 = cCABase64Exporter.export(oRule,cCAConsts.default_state);
 			var sID = cJquery.child_ID(oElement, this.IDs.RULE)
 			var oTextArea = $("#"+sID);
 			oTextArea.val(s64);

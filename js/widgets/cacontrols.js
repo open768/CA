@@ -8,15 +8,15 @@ For licenses that allow for commercial use please contact cluck@chickenkatsu.co.
 // USE AT YOUR OWN RISK - NO GUARANTEES OR ANY FORM ARE EITHER EXPRESSED OR IMPLIED
 **************************************************************************/
 class cCAControlTypes {
-	static entry_ID="ent";
-	static rules_ID="rul";
-	static rules_extra_ID="rulex";
-	static rule_random_ID= "rulernd";
-	static name_ID="nam";
-	static init_ID="ini";
-	static wolf_ID="wolf";
-	static preset_ID="lex";
-	static boredom_ID="bor";
+	static entry_ID="e";
+	static rules_ID="r";
+	static rules_status_ID="rs";
+	static rule_random_ID= "rr";
+	static name_ID="n";
+	static init_ID="i";
+	static wolf_ID="w";
+	static preset_ID="l";
+	static boredom_ID="b";
 	
 	static random_value= "Random";
 }
@@ -65,7 +65,7 @@ $.widget( "ck.cacontrols",{
 		//--rules widgets-------------------------------------------------
 		oDiv = $("<DIV>",{class:"ui-widget-header"});
 			oDiv.append("Rule");
-			sID = cJquery.child_ID(oElement, cCAControlTypes.rules_extra_ID);
+			sID = cJquery.child_ID(oElement, cCAControlTypes.rules_status_ID);
 			var oSpan = $("<SPAN>",{id:sID}).html("??");
 			oDiv.append(oSpan);		
 		oElement.append(oDiv);
@@ -162,10 +162,8 @@ $.widget( "ck.cacontrols",{
 			return;
 		}
 		try{
-			var oImporter = new cCARepeatBase64Importer();
-			var oRule = oImporter.makeRule(sInput);
-			var oExporter = new cCABase64Importer();
-			var s64 = oExporter.toString(oRule,cCAConsts.default_state);
+			var oRule = cCARepeatBase64Importer.makeRule(sInput);
+			var s64 = cCABase64Exporter.export(oRule,cCAConsts.default_state);
 			this.pr_setBase64Rule(s64);
 		}
 		catch(e){
@@ -186,25 +184,21 @@ $.widget( "ck.cacontrols",{
 		}
 		
 		var iSelected = parseInt(oSelect.val());
+		var oRule;
 		try{
 			switch(iSelected){
 				case cCAConsts.rule_types.life:
-					var oImporter = new cCALifeImporter();
-					oRule = oImporter.makeRule(oTextArea.val());
-					var oExporter = new cCABase64Importer();
-					var s64 = oExporter.toString(oRule,cCAConsts.default_state);
+					oRule = cCALifeImporter.makeRule(oTextArea.val());
+					var s64 = cCABase64Exporter.export(oRule,cCAConsts.default_state);
 					this.pr_setBase64Rule(s64);
 					break;
 				case cCAConsts.rule_types.wolfram1d:
-					var oImporter = new cCAWolfram1DImporter();
-					var oRule = oImporter.makeRule(oTextArea.val());
-					var oExporter = new cCABase64Importer();
-					var s64 = oExporter.toString(oRule,cCAConsts.default_state);
+					var oRule = cCAWolfram1DImporter.makeRule(oTextArea.val());
+					var s64 = cCABase64Exporter.export(oRule,cCAConsts.default_state);
 					this.pr_setBase64Rule(s64);
 					break;
 				case cCAConsts.rule_types.base64:
-					var oImporter = new cCABase64Importer();
-					oRule = oImporter.makeRule(oTextArea.val());
+					oRule = cCABase64Importer.makeRule(oTextArea.val());
 					caMachineOptions.rule = oRule;
 					
 					//set the boredom if chosen
@@ -215,9 +209,6 @@ $.widget( "ck.cacontrols",{
 					var oEvent = new cCAEvent( cCAConsts.event_types.set_rule, oRule);
 					bean.fire(document, cCAConsts.event_hook, oEvent);
 					caMachineOptions.rule_set = true;
-					break;
-				case cCAConsts.rule_types.random:
-					this.pr_makeRandomBase64();
 					break;
 				default:
 					throw new Exception("unknown rule type");
@@ -245,7 +236,7 @@ $.widget( "ck.cacontrols",{
 			if ( iSelected == cCAConsts.rule_types.base64){
 				var sText = oTextArea.val();
 				var iDiff = cCAConsts.base64_length - sText.length;
-				var oSpan = $("#" +	cJquery.child_ID(oElement, cCAControlTypes.rules_extra_ID));
+				var oSpan = $("#" +	cJquery.child_ID(oElement, cCAControlTypes.rules_status_ID));
 				oSpan.html( iDiff +" chars remaining");
 			}
 		}
@@ -291,10 +282,8 @@ $.widget( "ck.cacontrols",{
 	
 	//****************************************************************************
 	pr_makeRandomBase64: function(){
-		var oBinImporter = new cCABinaryImporter();
-		var oRule= oBinImporter.randomRule();
-		var o64Importer = new cCABase64Importer();
-		var sBase64 = o64Importer.toString(oRule,cCAConsts.default_state);
+		var oRule= cCaRandomRule.makeRule();
+		var sBase64 = cCABase64Exporter.export(oRule,cCAConsts.default_state);
 		this.pr_setBase64Rule(sBase64);
 	},
 	
