@@ -17,7 +17,7 @@ class cCAStateRule {
 }
 
 //###############################################################################
-class cCArule{
+class cCARule{
 	constructor(){
 		this.neighbour_type = cCAConsts.neighbours.eightway;
 		this.has_state_transitions = false;
@@ -27,7 +27,7 @@ class cCArule{
 	
 	//***************************************************************
 	static randomRule(){
-		var oRule = new cCArule();
+		var oRule = new cCARule();
 		oRule.neighbour_type = cCAConsts.neighbours.eightway;
 		oRule.has_state_transitions = false;
 		
