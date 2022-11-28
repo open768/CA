@@ -16,7 +16,8 @@ class cCAWidgetTypes{
 		CELL_CONTAINER : "CC",
 		RULE_NEIGHBOUR_COUNT : "RNC",
 		RULE_VERB : "RVE",
-		RULE_OUT_STATE : "ROS"
+		RULE_OUT_STATE : "ROS", 
+		RULE_IN_STATE : "RIS"
 	};
 }
 
@@ -258,8 +259,18 @@ $.widget( "ck.caeditor",{
 		
 		var oDiv = $("<DIV>", {class:"ui-widget-content"});
 			//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-			oDiv.append ("Set widgets with");
+			oDiv.append ("Set widgets with state: ");
+			var sID = cJquery.child_ID(oElement, cCAWidgetTypes.IDs.RULE_IN_STATE);
+			var oStateSelect= $("<Select>", {id:sID});
+			for (var sProp in cCAModifierTypes.states)	{
+				var oState = cCAModifierTypes.states[sProp];
+				var oOption = $("<option>",{value:oState.id}).append(oState.label);
+				oStateSelect.append(oOption);
+			}
+			oDiv.append(oStateSelect);
 			
+			//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+			oDiv.append (" and ");
 			var sID = cJquery.child_ID(oElement, cCAWidgetTypes.IDs.RULE_VERB);
 			var oVerbSelect = $("<Select>", {id:sID});
 			for (var sProp in cCAModifierTypes.verbs)	{
@@ -416,6 +427,8 @@ $.widget( "ck.caeditor",{
 		var oElement = this.element;
 		var oRule = this.rule;
 
+		var sInID = cJquery.child_ID(oElement, cCAWidgetTypes.IDs.RULE_IN_STATE);
+		var iInEnum = parseInt( $("#"+sInID).val());
 		var sCountID = cJquery.child_ID(oElement, cCAWidgetTypes.IDs.NEIGHBOUR_COUNT);
 		var iCount = parseInt( $("#"+sCountID).val());
 		var sVerbID = cJquery.child_ID(oElement, cCAWidgetTypes.IDs.RULE_VERB);
@@ -423,7 +436,7 @@ $.widget( "ck.caeditor",{
 		var sOutID = cJquery.child_ID(oElement, cCAWidgetTypes.IDs.RULE_OUT_STATE);
 		var iValue = parseInt( $("#"+sOutID).val());
 		
-		cCARuleModifier.modify_neighbours(oRule, iCount, iVerb, iValue);
+		cCARuleModifier.modify_neighbours(oRule, iInEnum, iVerb, iCount, iValue);
 		var s64 = cCABase64Exporter.export(oRule,cCAConsts.default_state);
 		this.pr_set_base64Rule(s64);
 		this.onSetRuleClick();
