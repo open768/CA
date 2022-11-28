@@ -181,8 +181,6 @@ class cCAWolfram1DImporter {
 	}
 }
 
-
-
 //###############################################################################
 class cCALifeImporter{
 	//***************************************************************
@@ -244,6 +242,22 @@ class cCALifeImporter{
 		return oRule;
 	}
 };
+
+class cCaModifierTypes{
+	static verbs = {
+		at_least: {id:1, label:"At least"},
+		exactly: {id:2, label:"Exactly"},
+		at_most: {id:3, label:"At Most"}
+	};
+}
+
+//###############################################################################
+class cCARuleModifier{
+	static modify_neighbours(poRule, piVerb, piCount, piValue){
+		if ( !cCommon.obj_is(poRule , "cCARule") ) throw new CAException("function requires cCARule");
+		throw "work in progress";
+	}
+}
 
 //var oTester = new cCABinaryImporter();
 //oTester.test();
