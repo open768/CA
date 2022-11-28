@@ -262,8 +262,8 @@ $.widget( "ck.caeditor",{
 			
 			var sID = cJquery.child_ID(oElement, cCAWidgetTypes.IDs.RULE_VERB);
 			var oVerbSelect = $("<Select>", {id:sID});
-			for (var sProp in cCaModifierTypes.verbs)	{
-				var oVerb = cCaModifierTypes.verbs[sProp];
+			for (var sProp in cCAModifierTypes.verbs)	{
+				var oVerb = cCAModifierTypes.verbs[sProp];
 				var oOption = $("<option>",{value:oVerb.id}).append(oVerb.label);
 				oVerbSelect.append(oOption);
 			}
@@ -279,7 +279,7 @@ $.widget( "ck.caeditor",{
 			
 			//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 			oDiv.append (" Neighbours to output ");
-			var sID = cJquery.child_ID(oElement, cCAWidgetTypes.IDs.OUT_STATE);
+			var sID = cJquery.child_ID(oElement, cCAWidgetTypes.IDs.RULE_OUT_STATE);
 			//any cell with X neighbours will output 1 0r zero
 			var oOutSelect = $("<Select>", {id:sID});
 				oOutSelect.append( $("<option>").append(0) );
@@ -416,15 +416,16 @@ $.widget( "ck.caeditor",{
 		var oElement = this.element;
 		var oRule = this.rule;
 
-		var sID = cJquery.child_ID(oElement, cCAWidgetTypes.IDs.NEIGHBOUR_COUNT);
-		var iCount = parseInt( $("#"+sID).val());
-		sID = cJquery.child_ID(oElement, cCAWidgetTypes.IDs.RULE_VERB);
-		var iVerb = parseInt( $("#"+sID).val());
-		sID = cJquery.child_ID(oElement, cCAWidgetTypes.IDs.OUT_STATE);
-		var iValue = parseInt( $("#"+sID).val());
+		var sCountID = cJquery.child_ID(oElement, cCAWidgetTypes.IDs.NEIGHBOUR_COUNT);
+		var iCount = parseInt( $("#"+sCountID).val());
+		var sVerbID = cJquery.child_ID(oElement, cCAWidgetTypes.IDs.RULE_VERB);
+		var iVerb = parseInt( $("#"+sVerbID).val());
+		var sOutID = cJquery.child_ID(oElement, cCAWidgetTypes.IDs.RULE_OUT_STATE);
+		var iValue = parseInt( $("#"+sOutID).val());
 		
 		cCARuleModifier.modify_neighbours(oRule, iCount, iVerb, iValue);
 		var s64 = cCABase64Exporter.export(oRule,cCAConsts.default_state);
 		this.pr_set_base64Rule(s64);
+		this.onSetRuleClick();
 	}
 });
