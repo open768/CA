@@ -76,18 +76,6 @@ class cCAConsts {
 		wolfram1d:4,
 		random:5
 	};
-	static init_values={
-		block:1,
-		random:2,
-		horiz_line:3,
-		vert_line:4,
-		diagonal:5,
-		diamond:6,
-		cross:7,
-		circle:8,
-		sine:9,
-		blank:10
-	};
 	static action_types={
 		play:1,
 		stop:2,
@@ -97,9 +85,8 @@ class cCAConsts {
 	static hash_values={
 		row:"R",
 		col:"C"
-	};
-	
-};
+	};	
+}
 
 //###############################################################################
 function CAException(psMessage) {
