@@ -107,6 +107,16 @@ $.widget( "ck.cacontrols",{
 			
 			//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 			oDiv.append("<HR>");
+			sID = cJquery.child_ID(oElement, cCAControlTypes.preset_ID);
+			var oSelect = $("<SELECT>",{id:sID,width:200,title:"pick a preset rule"});
+				this.pr__populate_presets(oSelect);
+				oDiv.append(oSelect);
+				oSelect.selectmenu({
+					select:function(poEvent){oThis.onPresetsClick(poEvent);}
+				});
+				
+			//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+			oDiv.append("<HR>");
 			oDiv.append("Random ");
 				var oButton = $("<button>",{title:"Random Rule"}).button({icon:"ui-icon-circle-arrow-e"});
 				oDiv.append(oButton);
@@ -122,15 +132,6 @@ $.widget( "ck.cacontrols",{
 			oButton.click(	function(){oThis.onSetNameClick()}	);		
 			oDiv.append(oButton);
 			
-			//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-			oDiv.append("<HR>");
-			sID = cJquery.child_ID(oElement, cCAControlTypes.preset_ID);
-			var oSelect = $("<SELECT>",{id:sID,width:200,title:"pick a preset rule"});
-				this.pr__populate_presets(oSelect);
-				oDiv.append(oSelect);
-				oSelect.selectmenu({
-					select:function(poEvent){oThis.onPresetsClick(poEvent);}
-				});
 			
 			//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 			oDiv.append("<HR>");
@@ -163,8 +164,7 @@ $.widget( "ck.cacontrols",{
 		}
 		try{
 			var oRule = cCARepeatBase64Importer.makeRule(sInput);
-			var s64 = cCABase64Exporter.export(oRule,cCAConsts.default_state);
-			this.pr_setBase64Rule(s64);
+			this.pr_setBase64Rule(oRule);
 		}
 		catch(e){
 			alert("something went wrong:\n" + e.message);
@@ -189,13 +189,11 @@ $.widget( "ck.cacontrols",{
 			switch(iSelected){
 				case cCAConsts.rule_types.life:
 					oRule = cCALifeImporter.makeRule(oTextArea.val());
-					var s64 = cCABase64Exporter.export(oRule,cCAConsts.default_state);
-					this.pr_setBase64Rule(s64);
+					this.pr_setBase64Rule(oRule);
 					break;
 				case cCAConsts.rule_types.wolfram1d:
 					var oRule = cCAWolfram1DImporter.makeRule(oTextArea.val());
-					var s64 = cCABase64Exporter.export(oRule,cCAConsts.default_state);
-					this.pr_setBase64Rule(s64);
+					this.pr_setBase64Rule(oRule);
 					break;
 				case cCAConsts.rule_types.base64:
 					oRule = cCABase64Importer.makeRule(oTextArea.val());
@@ -283,17 +281,18 @@ $.widget( "ck.cacontrols",{
 	//****************************************************************************
 	pr_makeRandomBase64: function(){
 		var oRule= cCaRandomRule.makeRule();
-		var sBase64 = cCABase64Exporter.export(oRule,cCAConsts.default_state);
-		this.pr_setBase64Rule(sBase64);
+		this.pr_setBase64Rule(oRule);
 	},
 	
 	//****************************************************************************
-	pr_setBase64Rule:function( psBase64){
+	pr_setBase64Rule:function( poRule){
 		var oElement = this.element;
 		
+		var s64 = cCABase64Exporter.export(poRule,cCAConsts.default_state);
+		
 		var oTextArea = $("#" +	cJquery.child_ID(oElement, cCAControlTypes.entry_ID));
-			oTextArea.val(psBase64);		
-			cBrowser.copy_to_clipboard(psBase64);
+			oTextArea.val(s64);		
+			cBrowser.copy_to_clipboard(s64);
 
 		var oSelect = $("#" + cJquery.child_ID(oElement, cCAControlTypes.rules_ID));
 			oSelect.val(cCAConsts.rule_types.base64);

@@ -231,6 +231,7 @@ $.widget( "ck.caeditor",{
 		$("#"+sID).html(psText);
 	},
 	
+	//*************************************************************
 	pr_add_cells: function(){
 		var oThis = this;
 		var oOptions = oThis.options;
@@ -260,14 +261,21 @@ $.widget( "ck.caeditor",{
 		}
 	},
 	
-	//#################################################################
+	//*************************************************************
 	pr_set_identity_rule: function(){
 		var oElement = this.element;
+		var oRule = cCaIdentityRule.makeRule();
 		var s64 = cCABase64Exporter.export(oRule,cCAConsts.default_state);
-		var sID = cJquery.child_ID(oElement, this.IDs.RULE)
-		$("#"+sID).val(s64);
+		this.pr_set_base64Rule(s64);
 		this.pr_set_status( "Identity Rule");
 		this.onSetRuleClick();
+	},
+	
+	//*************************************************************
+	pr_set_base64Rule: function( ps64){
+		var oElement = this.element;
+		var sID = cJquery.child_ID(oElement, this.IDs.RULE)
+		$("#"+sID).val(ps64);
 	},
 		
 	//#################################################################
@@ -275,7 +283,6 @@ $.widget( "ck.caeditor",{
 	//#################################################################`
 	onGotClipText: function(psText){
 		var oElement = this.element;
-		var sID = cJquery.child_ID(oElement, this.IDs.RULE)
 		
 		if (psText === "") {
 			this.pr_set_status( "nothing in clipboard");
@@ -285,7 +292,7 @@ $.widget( "ck.caeditor",{
 			
 		try{
 			this.rule = cCABase64Importer.makeRule(psText);
-			$("#"+sID).val(psText);
+			this.pr_set_base64Rule(psText);
 			this.onSetRuleClick();
 			this.pr_set_status( "rule loaded from clipboard");
 		}catch (e){
@@ -325,9 +332,7 @@ $.widget( "ck.caeditor",{
 		try{
 			oRule.set_output(cCAConsts.default_state, poData.index, poData.value);
 			var s64 = cCABase64Exporter.export(oRule,cCAConsts.default_state);
-			var sID = cJquery.child_ID(oElement, this.IDs.RULE)
-			var oTextArea = $("#"+sID);
-			oTextArea.val(s64);
+			this.pr_set_base64Rule(s64);
 		}catch (e){
 			alert ("Whoops - something went wrong!\n\n" + e.message);
 		}

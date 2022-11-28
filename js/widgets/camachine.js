@@ -34,7 +34,7 @@ $.widget( "ck.camachine",{
 		oElement = oThis.element;
 		
 		//check for classes
-		if (typeof cCArule !== 'function') { $.error("missing cCARule class");}
+		if (typeof cCARule !== 'function') { $.error("missing cCARule class");}
 		if (!bean ) { $.error("missing bean class");}
 		
 		//set basic stuff
