@@ -8,12 +8,25 @@ For licenses that allow for commercial use please contact cluck@chickenkatsu.co.
 // USE AT YOUR OWN RISK - NO GUARANTEES OR ANY FORM ARE EITHER EXPRESSED OR IMPLIED
 **************************************************************************/
 
-//contains widgets: ck.caeditorcell and ck.caeditor
+class cCAWidgetTypes{
+	static click_event = "CAWidclick";
+	static IDs = {
+		RULE : "RU",
+		STATUS : "ST",
+		CELL_CONTAINER : "CC",
+		RULE_NEIGHBOUR_COUNT : "RNC",
+		RULE_VERB : "RVE",
+		RULE_OUT_STATE : "ROS"
+	};
+}
 
-$.widget( "ck.caeditorcell",{
-	//#################################################################
+//#######################################################################
+//#
+//#######################################################################
+$.widget( "ck.caeditwidget",{
+	//*****************************************************************
 	//# Options
-	//#################################################################
+	//*****************************************************************
 	options:{
 		index:-1,
 		value: 0, 
@@ -21,9 +34,9 @@ $.widget( "ck.caeditorcell",{
 		debug:false
 	},
 	
-	//#################################################################
+	//*****************************************************************
 	//# Constructor
-	//#################################################################`
+	//*****************************************************************
 	_create: function(){
 		var oThis = this;
 		var oOptions = oThis.options;
@@ -55,9 +68,9 @@ $.widget( "ck.caeditorcell",{
 		this._set_value(oOptions.value);
 	},
 	
-	//#################################################################
+	//*****************************************************************
 	//# privates
-	//#################################################################`
+	//*****************************************************************
 	_drawGrid: function(oCanvas){
 		var oThis = this;
 		var oOptions = oThis.options;
@@ -129,9 +142,9 @@ $.widget( "ck.caeditorcell",{
 			oElement.addClass("caindexon");
 	},
 	
-	//#################################################################
+	//*****************************************************************
 	//# Events
-	//#################################################################`
+	//*****************************************************************
 	onClick: function(){
 		var oThis = this;
 		var oElement = oThis.element;
@@ -142,72 +155,38 @@ $.widget( "ck.caeditorcell",{
 		else
 			this._set_value(0);
 		
-		var oEvent = new cCAEvent( cCAConsts.event_types.click, oOptions);
-		bean.fire(document, cCAConsts.event_hook, oEvent );
+		bean.fire(document, cCAWidgetTypes.click_event, oOptions );
 	}
 });
 
-//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+//#######################################################################
+//#
+//#######################################################################
 $.widget( "ck.caeditor",{
-	//#################################################################
+	//****************************************************************
 	//# Options
-	//#################################################################
+	//****************************************************************
 	rule:null,
-	IDs:{
-		RULE : "RU",
-		STATUS : "ST",
-		CELL_CONTAINER : "CC"
-	},
 	
 	options:{
-		onCAEvent: null,
 		cell_size:10
 	},
 
-	//#################################################################
+	//*****************************************************************
 	//# Constructor
-	//#################################################################`
+	//*****************************************************************
 	_create: function(){
 		var oThis = this;
-		var oOptions = oThis.options;
-		var oElement = oThis.element;
+		var oElement = this.element;
 		
 		//set basic stuff
 		oElement.uniqueId();
-		oElement.addClass("ui-widget");
-		$(oElement).tooltip();
-		oElement.empty();
 		
-		//Add a status window
-		var sID = cJquery.child_ID(oElement, this.IDs.STATUS);
-		var oDiv = $("<DIV>", {class:"ui-widget-header",id:sID});
-			oDiv.append("??");
-		oElement.append(oDiv);
+		this.pr_render();
 		
-		//Add a rule box
-		oDiv = $("<DIV>", {class:"ui-widget-content"});
-			var sID = cJquery.child_ID(oElement, this.IDs.RULE);
-			var oBox = $("<TEXTAREA>",{ID:sID,rows:5,cols:80 ,class:"rule rule_wide", title:"enter the base64 rule here"});				
-			oBox.keyup( function(){oThis.onRuleKeyUp()}	);
-			oDiv.append(oBox);
-			
-			var oButton = $("<button>",{title:"use the rule entered in the box above"}).button({icon:"ui-icon-circle-arrow-e" });
-			oButton.click(	function(){oThis.onSetRuleClick()}	);		
-			oDiv.append(oButton);
-		oElement.append(oDiv);
-
-		
-		//Add a panel for description
-		oDiv = $("<DIV>", {class:"ui-widget-content"});
-		oDiv.append("input configurations below show the output for a particular configuration of a cell and its neighbours. Those highlighted in blue will output 1 (alive) otherwise 0 (dead). Click to change");
-		oElement.append(oDiv);
-		
-		//Add the individual widgets that can be clicked
-		var sID = cJquery.child_ID(oElement, this.IDs.CELL_CONTAINER);
-		oDiv = $("<DIV>", {class:"ui-widget-content",id:sID});
-		oElement.append(oDiv);
-		
+		//-------------------------------------------------------------------
 		//get the contents of the clipboard
+		//async fetch from clipboard, will display a warning to user
 		cBrowser.get_clipboard_permissions();
 		this.pr_set_status("waiting for clipboard");
 		try{
@@ -216,30 +195,120 @@ $.widget( "ck.caeditor",{
 			cBrowser.writeConsoleWarning(e.message);
 			this.pr_set_identity_rule();
 		}
-		//async fetch from clipboard, will display a warning to user
 		
 		//add event listener
-		bean.on(document, cCAConsts.event_hook, function(poEvent){oThis.onCaEvent(poEvent)});
+		bean.on(document, cCAWidgetTypes.click_event, function(poOptions){oThis.onEditWidgetClick(poOptions)});
 	},
 	
-	//#################################################################
+	//*****************************************************************
 	//# privates
-	//#################################################################`
+	//*****************************************************************
+	pr_render: function(){
+		var oThis = this;
+		var oElement = this.element;
+		
+		oElement.empty();
+		oElement.addClass("ui-widget");
+		
+		//-------------------------------------------------------------------
+		//status window
+		var sID = cJquery.child_ID(oElement, cCAWidgetTypes.IDs.STATUS);
+		var oDiv = $("<DIV>", {class:"ui-widget-header",id:sID});
+			oDiv.append("??");
+		oElement.append(oDiv);
+		
+		//-------------------------------------------------------------------
+		//rule box
+		oDiv = $("<DIV>", {class:"ui-widget-content"});
+			var sID = cJquery.child_ID(oElement, cCAWidgetTypes.IDs.RULE);
+			var oBox = $("<TEXTAREA>",{ID:sID,rows:5,cols:80 ,class:"rule rule_wide", title:"enter the base64 rule here"});				
+			oBox.keyup( function(){oThis.onRuleInputKeyUp()}	);
+			oDiv.append(oBox);
+			
+			var oButton = $("<button>",{title:"use the rule entered in the box above"}).button({icon:"ui-icon-circle-arrow-e" });
+			oButton.click(	function(){oThis.onSetRuleClick()}	);		
+			oDiv.append(oButton);
+		oElement.append(oDiv);
+		oElement.append("<hr>");
+
+		
+		//-------------------------------------------------------------------
+		//panel for description
+		
+		var oDiv = $("<DIV>", {class:"ui-widget-header"});
+			oDiv.append("Rule Widgets");
+		oElement.append(oDiv);
+		
+		oDiv = $("<DIV>", {class:"ui-widget-content"});
+		oDiv.append("input configurations below show the output for a particular configuration of a cell and its neighbours. Those highlighted in blue will output 1 (alive) otherwise 0 (dead). Click to change");
+		oElement.append(oDiv);
+		
+		//-------------------------------------------------------------------
+		//individual widgets that can be clicked
+		var sID = cJquery.child_ID(oElement, cCAWidgetTypes.IDs.CELL_CONTAINER);
+		oDiv = $("<DIV>", {class:"ui-widget-content",id:sID});
+		oElement.append(oDiv);
+		oElement.append("<hr>");
+		
+		//-------------------------------------------------------------------
+		//rule controls
+		var oDiv = $("<DIV>", {class:"ui-widget-header"});
+			oDiv.append("Rule Controls");
+		oElement.append(oDiv);
+		
+		var oDiv = $("<DIV>", {class:"ui-widget-content"});
+			//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+			oDiv.append ("Set widgets with");
+			
+			var sID = cJquery.child_ID(oElement, cCAWidgetTypes.IDs.RULE_VERB);
+			var oVerbSelect = $("<Select>", {id:sID});
+			for (var sProp in cCaModifierTypes.verbs)	{
+				var oVerb = cCaModifierTypes.verbs[sProp];
+				var oOption = $("<option>",{value:oVerb.id}).append(oVerb.label);
+				oVerbSelect.append(oOption);
+			}
+			oDiv.append(oVerbSelect);
+			
+			var sID = cJquery.child_ID(oElement, cCAWidgetTypes.IDs.NEIGHBOUR_COUNT);
+			var oCountSelect = $("<Select>", {id:sID});
+				for (var i=1; i<=8; i++){
+					var oOption = $("<option>").append(i);
+					oCountSelect.append(oOption);
+				}
+			oDiv.append(oCountSelect);
+			
+			//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+			oDiv.append (" Neighbours to output ");
+			var sID = cJquery.child_ID(oElement, cCAWidgetTypes.IDs.OUT_STATE);
+			//any cell with X neighbours will output 1 0r zero
+			var oOutSelect = $("<Select>", {id:sID});
+				oOutSelect.append( $("<option>").append(0) );
+				oOutSelect.append( $("<option>").append(1) );
+			oDiv.append(oOutSelect);
+				
+			//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+			var oButton = $("<button>").append("Apply");
+			oDiv.append (oButton);
+			oButton.click(function(){ oThis.onNeighbourRuleClick() });
+		oElement.append(oDiv);
+	},
+	
+	//*****************************************************************
 	pr_set_status: function(psText){
 		var oElement = this.element;
-		var sID = cJquery.child_ID(oElement, this.IDs.STATUS);
+		var sID = cJquery.child_ID(oElement, cCAWidgetTypes.IDs.STATUS);
 		$("#"+sID).html(psText);
 	},
 	
 	//*************************************************************
-	pr_add_cells: function(){
+	pr_add_edit_widgets: function(){
 		var oThis = this;
 		var oOptions = oThis.options;
 		var oElement = oThis.element;
 		var oRule = this.rule;
 		
 		//clear out any cells present
-		var sID = cJquery.child_ID(oElement, this.IDs.CELL_CONTAINER);
+		var sID = cJquery.child_ID(oElement, cCAWidgetTypes.IDs.CELL_CONTAINER);
 		var oDiv = $("#"+sID);
 		oDiv.empty();
 		
@@ -253,7 +322,7 @@ $.widget( "ck.caeditor",{
 				iVal = 0;
 				console.log(e.message)
 			}
-			var oSpan = $("<SPAN>").caeditorcell({
+			var oSpan = $("<SPAN>").caeditwidget({
 				index:iIndex, value:iVal,
 				cell_size:oOptions.cell_size
 			})
@@ -274,18 +343,18 @@ $.widget( "ck.caeditor",{
 	//*************************************************************
 	pr_set_base64Rule: function( ps64){
 		var oElement = this.element;
-		var sID = cJquery.child_ID(oElement, this.IDs.RULE)
+		var sID = cJquery.child_ID(oElement, cCAWidgetTypes.IDs.RULE)
 		$("#"+sID).val(ps64);
 	},
 		
-	//#################################################################
+	//*****************************************************************
 	//# Events
-	//#################################################################`
+	//*****************************************************************
 	onGotClipText: function(psText){
 		var oElement = this.element;
 		
 		if (psText === "") {
-			this.pr_set_status( "nothing in clipboard");
+			cBrowser.writeConsoleWarning("nothing in clipboard!");
 			this.pr_set_identity_rule();
 			return;
 		}
@@ -296,7 +365,7 @@ $.widget( "ck.caeditor",{
 			this.onSetRuleClick();
 			this.pr_set_status( "rule loaded from clipboard");
 		}catch (e){
-			this.pr_set_status( "not a valid rule in clipboard!");
+			cBrowser.writeConsoleWarning("not a valid rule in clipboard!");
 			this.pr_set_identity_rule();
 		}
 	},
@@ -304,12 +373,12 @@ $.widget( "ck.caeditor",{
 	//*************************************************************
 	onSetRuleClick: function(){
 		var oElement = this.element;
-		var sID = cJquery.child_ID(oElement, this.IDs.RULE)
+		var sID = cJquery.child_ID(oElement, cCAWidgetTypes.IDs.RULE)
 		var oTextArea = $("#"+sID);
 		
 		try{
 			this.rule = cCABase64Importer.makeRule(oTextArea.val());
-			this.pr_add_cells();
+			this.pr_add_edit_widgets();
 		}catch (e){
 			alert ("Whoops - something went wrong!\n\n" + e.message);
 		}
@@ -317,16 +386,8 @@ $.widget( "ck.caeditor",{
 	},
 	
 	//*************************************************************
-	onCaEvent: function(poEvent){
-		if (poEvent.type == cCAConsts.event_types.click)
-			this.onCellClick(poEvent.data);
-	},
-	
-	//*************************************************************
-	onCellClick: function(poData){
-		var oThis = this;
-		var oElement = oThis.element;
-		var oOptions = oThis.options;
+	onEditWidgetClick: function(poData){
+		var oElement = this.element;
 		var oRule = this.rule;
 
 		try{
@@ -339,14 +400,31 @@ $.widget( "ck.caeditor",{
 	},
 	
 	//*************************************************************
-	onRuleKeyUp: function(){
+	onRuleInputKeyUp: function(){
 		var oThis = this;
 		var oElement = oThis.element;
-		var sID = cJquery.child_ID(oElement, this.IDs.RULE)
+		var sID = cJquery.child_ID(oElement, cCAWidgetTypes.IDs.RULE)
 		var oTextArea = $("#" + sID);
 		var sText = oTextArea.val();
 		var iDiff = cCAConsts.base64_length - sText.length;
 		
 		this.pr_set_status( iDiff +" chars remaining");
+	},
+	
+	//*************************************************************
+	onNeighbourRuleClick: function(){
+		var oElement = this.element;
+		var oRule = this.rule;
+
+		var sID = cJquery.child_ID(oElement, cCAWidgetTypes.IDs.NEIGHBOUR_COUNT);
+		var iCount = parseInt( $("#"+sID).val());
+		sID = cJquery.child_ID(oElement, cCAWidgetTypes.IDs.RULE_VERB);
+		var iVerb = parseInt( $("#"+sID).val());
+		sID = cJquery.child_ID(oElement, cCAWidgetTypes.IDs.OUT_STATE);
+		var iValue = parseInt( $("#"+sID).val());
+		
+		cCARuleModifier.modify_neighbours(oRule, iCount, iVerb, iValue);
+		var s64 = cCABase64Exporter.export(oRule,cCAConsts.default_state);
+		this.pr_set_base64Rule(s64);
 	}
 });
