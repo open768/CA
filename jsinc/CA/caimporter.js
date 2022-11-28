@@ -9,59 +9,23 @@ For licenses that allow for commercial use please contact cluck@chickenkatsu.co.
 // USE AT YOUR OWN RISK - NO GUARANTEES OR ANY FORM ARE EITHER EXPRESSED OR IMPLIED
 **************************************************************************/
 
-class cCASimpleBase64 {
-	static toBase64(psBin) {
-		var s64 = "";
-		for ( var istart = 0; istart<psBin.length; istart+=6 ){
-			var sFragment = psBin.substr(istart,6);//grab 6 characters
-			var iIndex = cConverter.binToInt(sFragment);
-			var sChar = cConverterEncodings.BASE64.charAt(iIndex);
-			s64 = s64 + sChar;
-		}
-		return s64;
-	}
-	
-	//*********************************************************************
-	static toBinary(ps64, piOutLen) {
-		var sOutBin = "";
-		var piRemaining = piOutLen;
-		for (var i = 0; i< ps64.length; i++){
-			var ch = ps64.charAt(i);
-			var iVal = cConverter.base64ToDec(ch);
-			var sBin = cConverter.intToBin(iVal);
-			var iPadLen = (piRemaining >5 ? 6 : piRemaining); //padded
-			sBin = sBin.padLeft("0",iPadLen);
-			sOutBin = sOutBin + sBin;
-			piRemaining -= 6;
-		}
-		return sOutBin;
-	}
-	
-	//*********************************************************************
-	static test(){
-		var sBinIn = "";
-		var iLength = Math.floor(50 + Math.random() * 50);
+//###############################################################################
+class cCABinaryExporter{
+	//*****************************************************************************
+	static export (poRule,piState){
+		var sOut = "";
+		if (piState > poRule.stateRules.length)	throw new CAException("invalid state requested");
 		
-		cDebug.write("Testing cCASimpleBase64");
-		for (var i = 0; i< iLength; i++){
-			iRand = Math.floor(Math.random() * 1.99);
-			sBinIn = sBinIn + iRand;
-		}
-		cDebug.write("- in Bin: " + sBinIn);
-		var s64 = this.toBase64(sBinIn);
-		cDebug.write("- base64: " + s64);
-		var sBinOut = this.toBinary(s64, iLength);
-		cDebug.write("-out Bin: " + sBinOut);
-		
-		if (sBinIn !== sBinOut) throw new Error("test Failed");
-		cDebug.write("test succeeded")
+		for (var i=1; i <=cCAConsts.max_inputs; i++)
+			sOut = sOut + poRule.get_rule_output(piState,i);
+		return sOut;		
 	}
 }
 
 //###############################################################################
 class cCABinaryImporter{
 	//*****************************************************************************
-	makeRule(psInput){
+	static makeRule(psInput){
 		if (psInput.length < cCAConsts.max_inputs) throw new CAException("incorrect length binary input:" + psInput.length + " should be " + cCAConsts.max_inputs);
 		if (psInput.length > cCAConsts.max_inputs) psInput = psInput.slice(0,cCAConsts.max_inputs-1);
 
@@ -76,39 +40,16 @@ class cCABinaryImporter{
 		return oRule;
 	}
 	
-	//*****************************************************************************
-	toString (poRule,piState){
-		var sOut = "";
-		if (piState > poRule.stateRules.length)	throw new CAException("invalid state requested");
-		
-		for (var i=1; i <=cCAConsts.max_inputs; i++)
-			sOut = sOut + poRule.get_rule_output(piState,i);
-		return sOut;		
-	}
-	
-	//***************************************************************
-	randomRule(){
-		var oRule = new cCArule();
-		oRule.neighbour_type = cCAConsts.neighbours.eightway;
-		oRule.has_state_transitions = false;
-		
-		for (var i=1; i<=cCAConsts.max_inputs; i++){
-			var iRnd = Math.floor(Math.random() * 1.99);
-			oRule.set_output(cCAConsts.default_state,i,iRnd);
-		}
-		return oRule;
-	}
 	
 	//***************************************************************
 	test(){
 		cDebug.write("Testing cCABinaryImporter");
-		var oLifeImporter = new cCALifeImporter();
-		var oRule1 = oLifeImporter.makeRule(cCALifeRules.LIFE); 
+		var oRule1 = cCALifeImporter.makeRule(cCALifeRules.LIFE); 
 		
-		var sBinaryIn = this.toString(oRule1,1);
+		var sBinaryIn = this.export(oRule1,1);
 		var oRule2 = this.makeRule(sBinaryIn,1);
 		
-		var sBinaryOut = this.toString(oRule2,1);
+		var sBinaryOut = this.export(oRule2,1);
 		if (sBinaryOut !== sBinaryIn) throw new Error("test failed");
 		cDebug.write("Test passed");
 	}
@@ -130,15 +71,30 @@ class cCaIdentityRule{
 	}
 }
 
+//***************************************************************
+class cCaRandomRule{
+	static makeRule(){
+		var oRule = new cCArule();
+		oRule.neighbour_type = cCAConsts.neighbours.eightway;
+		oRule.has_state_transitions = false;
+		
+		for (var i=1; i<=cCAConsts.max_inputs; i++){
+			var iRnd = Math.floor(Math.random() * 1.99);
+			oRule.set_output(cCAConsts.default_state,i,iRnd);
+		}
+		return oRule;
+	}
+}
+
+
 //###############################################################################
 class cCAWolfram1DImporter {
-	makeRule(piRule){
+	static makeRule(piRule){
 		if ( isNaN(piRule) ) throw new CAException("rule must be a number.");
 		if (piRule < 1 || piRule > 256) throw new CAException("rule must be between 1 and 256");
 		
 		//create an identity rule
-		var oMaker = new cCaIdentityRule();
-		var oRule = oMaker.makeRule();
+		var oRule = cCaIdentityRule.makeRule();
 		
 		//create a wolfram lookup table
 		var aWolfram = new Array(8);
@@ -170,7 +126,7 @@ class cCAWolfram1DImporter {
 
 //###############################################################################
 class cCARepeatBase64Importer{
-	makeRule(psShort){
+	static makeRule(psShort){
 		var sInput = psShort.trim();
 		if (sInput.length == 0 ) throw new CAException("no input provided.");
 		if (! cConverterEncodings.isBase64(sInput) ) throw new CAException("input must be base64 string");
@@ -182,29 +138,18 @@ class cCARepeatBase64Importer{
 		if (s64.length < cCAConsts.base64_length) throw new CAException("base64 not long enough, must be " + cCAConsts.base64_length + "chars");
 		
 		var sBin = cCASimpleBase64.toBinary(s64,cCAConsts.max_inputs);
-		var oImporter = new cCABinaryImporter();
-		return oImporter.makeRule(sBin);
+		return cCABinaryImporter.makeRule(sBin);
 	}
 }
 
 //###############################################################################
-class cCABase64Importer{
-	
-	makeRule(ps64){
-		if (ps64.length < cCAConsts.base64_length) throw new CAException("base64 not long enough, must be " + cCAConsts.base64_length + "chars");
-		if (! cConverterEncodings.isBase64(ps64) ) throw new CAException("input must be base64  string");
-		var sBin = cCASimpleBase64.toBinary(ps64,cCAConsts.max_inputs);
-		var oImporter = new cCABinaryImporter();
-		return oImporter.makeRule(sBin);
-	}
-
+class cCABase64Exporter{
 	//*****************************************************************************
-	toString (poRule,piState){
+	static export(poRule,piState){
 		if (piState > poRule.stateRules.length)	throw new CAException("invalid state requested");
 		
 		//a bit of a long way to go about it
-		var oBinImporter = new cCABinaryImporter()
-		var sBin = oBinImporter.toString(poRule,piState);	//convert rule to binary
+		var sBin = cCABinaryExporter.export(poRule,piState);	//convert rule to binary
 		var sOut = cCASimpleBase64.toBase64(sBin);			//convert binary to base64string
 		if (sOut.length !== cCAConsts.base64_length) throw new CAException("generated base64 is the wrong length");	
 		return sOut;
@@ -212,9 +157,19 @@ class cCABase64Importer{
 }
 
 //###############################################################################
+class cCABase64Importer{
+	static makeRule(ps64){
+		if (ps64.length < cCAConsts.base64_length) throw new CAException("base64 not long enough, must be " + cCAConsts.base64_length + "chars");
+		if (! cConverterEncodings.isBase64(ps64) ) throw new CAException("input must be base64  string");
+		var sBin = cCASimpleBase64.toBinary(ps64,cCAConsts.max_inputs);
+		return cCABinaryImporter.makeRule(sBin);
+	}
+}
+
+//###############################################################################
 class cCALifeImporter{
 	//***************************************************************
-	makeRule(psInput){
+	static makeRule(psInput){
 		var sBorn, sSurvive;
 		var aBorn = new Array(9);
 		var aSurvive = new Array(9);

@@ -25,6 +25,19 @@ class cCArule{
 		this.boredom = cCAConsts.no_boredom;
 	}
 	
+	//***************************************************************
+	static randomRule(){
+		var oRule = new cCArule();
+		oRule.neighbour_type = cCAConsts.neighbours.eightway;
+		oRule.has_state_transitions = false;
+		
+		for (var i=1; i<=cCAConsts.max_inputs; i++){
+			var iRnd = Math.floor(Math.random() * 1.99);
+			oRule.set_output(cCAConsts.default_state,i,iRnd);
+		}
+		return oRule;
+	}
+	
 	copy_to(poRule){
 		poRule.neighbour_type = this.neighbour_type ;
 		poRule.has_state_transitions = this.has_state_transitions;
