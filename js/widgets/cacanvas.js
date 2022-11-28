@@ -139,7 +139,7 @@ $.widget( "ck.cacanvas",{
 		oElement.append(oCanvas);
 				
 		//fill the canvas with a pretty random pattern
-		oPrivOptions.oGrid.init(cCAConsts.init_values.block);
+		oPrivOptions.oGrid.init(cCAGridConsts.init.block.id);
 	},
 		
 	//****************************************************************

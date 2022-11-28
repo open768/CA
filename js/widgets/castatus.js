@@ -90,7 +90,7 @@ $.widget( "ck.castatus",{
 			oElement.append(oDiv);
 		oDiv = $("<DIV>",{class:"ui-widget-content",id:sID+caStatusConsts.CHART_ID}).cachart();
 			oElement.append(oDiv);
-		oElement.append("<P>");
+			oElement.append("<P>");
 		
 		//--initialise------------------------------------------------		
 		oDiv = $("<DIV>",{class:"ui-widget-header"});
@@ -101,16 +101,11 @@ $.widget( "ck.castatus",{
 		oDiv = $("<DIV>",{class:"ui-widget-content"});
 			var oSelect = $("<SELECT>",{width:200,title:"choose a pattern to initialise the grid with"});
 			oSelect.append( $("<option>",{selected:1,disabled:1,value:-1}).append("Initialise"));
-			oSelect.append ( $("<option>",{value:cCAConsts.init_values.blank}).append("blank"));
-			oSelect.append ( $("<option>",{value:cCAConsts.init_values.block}).append("block"));
-			oSelect.append ( $("<option>",{value:cCAConsts.init_values.random}).append("random"));
-			oSelect.append ( $("<option>",{value:cCAConsts.init_values.horiz_line}).append("horiz line"));
-			oSelect.append ( $("<option>",{value:cCAConsts.init_values.vert_line}).append("vert line"));
-			oSelect.append ( $("<option>",{value:cCAConsts.init_values.diagonal}).append("diagonal"));
-			oSelect.append ( $("<option>",{value:cCAConsts.init_values.diamond}).append("diamond"));
-			oSelect.append ( $("<option>",{value:cCAConsts.init_values.cross}).append("cross"));
-			oSelect.append ( $("<option>",{value:cCAConsts.init_values.circle}).append("circle"));
-			oSelect.append ( $("<option>",{value:cCAConsts.init_values.sine}).append("sine"));
+			for (var sName in cCAGridConsts.init){
+				var oItem = cCAGridConsts.init[sName];
+				var oOption = $("<option>",{value:oItem.id}).append(oItem.label);
+				oSelect.append ( oOption);
+			}
 			oDiv.append(oSelect);
 			oSelect.selectmenu({
 					select:function(poEvent){oThis.onInitClick(poEvent)}
