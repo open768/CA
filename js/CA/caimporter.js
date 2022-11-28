@@ -243,19 +243,65 @@ class cCALifeImporter{
 	}
 };
 
-class cCaModifierTypes{
+//###############################################################################
+class cCAModifierTypes{
 	static verbs = {
 		at_least: {id:1, label:"At least"},
 		exactly: {id:2, label:"Exactly"},
 		at_most: {id:3, label:"At Most"}
 	};
+	static states = {
+		one: {id:1, label:"1"},
+		zero: {id:2, label:"0"},
+		any: {id:3, label:"any"}
+	}
 }
 
-//###############################################################################
 class cCARuleModifier{
-	static modify_neighbours(poRule, piVerb, piCount, piValue){
+	static modify_neighbours(poRule, piInState, piVerb, piCount, piOutState){
 		if ( !cCommon.obj_is(poRule , "cCARule") ) throw new CAException("function requires cCARule");
-		throw "work in progress";
+		if (piCount <1 || piCount >8) throw new CAException("invalid neighbour count");
+		if (piOutState <0 || piOutState >1) throw new CAException("invalid output state :" + piOutState);
+		
+		for (var i=1; i <=cCAConsts.max_inputs; i++){
+			var iCentre = cCAIndexOps.get_value(i, cCAConsts.directions.centre);
+			//---------------------------------------------------------------
+			var bMatches = false;
+			switch (piInState){
+				case cCAModifierTypes.states.one.id:
+					bMatches = (iCentre == 1);
+					break;
+				case cCAModifierTypes.states.zero.id:
+					bMatches = (iCentre == 0);
+					break;
+				case cCAModifierTypes.states.any.id:
+					bMatches = true;
+					break;
+			}
+			if (!bMatches) continue;
+			
+			//---------------------------------------------------------------
+			var iCount = cCAIndexOps.get_bit_count(i) - iCentre;
+			var bMatches = false;
+			
+			switch(piVerb){
+				case cCAModifierTypes.verbs.at_least.id:
+					bMatches = (iCount >= piCount  );
+					break;
+				case cCAModifierTypes.verbs.exactly.id:
+					bMatches = (piCount == iCount);
+					break;
+				case cCAModifierTypes.verbs.at_most.id:
+					bMatches = (iCount <= piCount );
+					break;
+				default:
+					throw new CAException("invalid verb");
+			}
+			
+			if (bMatches) poRule.set_output(cCAConsts.default_state,i,piOutState);
+		}
+		
+		return poRule;
 	}
 }
 
