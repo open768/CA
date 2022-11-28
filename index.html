@@ -1,32 +1,39 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Cellular Automata explorer</title>
-	<script type="text/javascript" src="../jsinc/ck-inc/common.js"></script>
-	<script type="text/javascript" src="../jsinc/ck-inc/debug.js"></script>
-	<script type="text/javascript" src="../jsinc/extra/bean/bean.js"></script>
-	<script type="text/javascript" src="../jsinc/extra/jquery/jquery-3.2.1.min.js"></script>
-	<script type="text/javascript" src="../jsinc/extra/jquery-ui/jquery-ui.min.js"></script>
-	<script type="text/javascript" src="../jsinc/extra/jquery-spinner/g-spinner.min.js"></script>
-	<script type="text/javascript" src="../jsinc/extra/jquery-cookie/jquery.cookie.js"></script>
-	<script type="text/javascript" src="../jsinc/extra/jquery-canvas/jcanvas.min.js"></script>
-	<link rel="stylesheet" href="../jsinc/extra/jquery-spinner/css/gspinner.min.css">
+	<!-- 3rd party libraries (bean) -->
+	<script  src="../jsinc/extra/bean/bean.js"></script>
+	
+	<!-- 3rd party libraries (jquery) -->
+	<script  src="../jsinc/extra/jquery/jquery-3.2.1.min.js"></script>
+	<script  src="../jsinc/extra/jquery-ui/jquery-ui.min.js"></script>
+	<script  src="../jsinc/extra/jquery-cookie/jquery.cookie.js"></script>
+	<script  src="../jsinc/extra/jquery-canvas/jcanvas.min.js"></script>
+	<script  src="https://www.gstatic.com/charts/loader.js"></script>
+	
+	<!-- stylesheets -->
 	<link rel="stylesheet" href="css/CA.css">
 	<link rel="stylesheet" href="css/jquery/jquery-ui.css">
-	<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
-	<script language="javascript" src="../jsinc/ck-inc/converter.js"></script>
-	<script language="javascript" src="jsinc/CA/catypes.js"></script>
-	<script language="javascript" src="jsinc/CA/cacell.js"></script>
-	<script language="javascript" src="jsinc/CA/carule.js"></script>
-	<script language="javascript" src="jsinc/CA/cagrid.js"></script>
-	<script language="javascript" src="jsinc/CA/caimporter.js"></script>
-	<script language="javascript" src="jsinc/CA/calexicon.js"></script>
-	<script language="javascript" src="js/widgets/cachart.js"></script>
-	<script language="javascript" src="js/widgets/camachine.js"></script>
-	<script language="javascript" src="js/widgets/cacontrols.js"></script>
-	<script language="javascript" src="js/widgets/cacanvas.js"></script>
-	<script language="javascript" src="js/widgets/castatus.js"></script>
+	<!-- my useful functions -->
+	<script src="../jsinc/ck-inc/common.js"></script>
+	<script src="../jsinc/ck-inc/debug.js"></script>
+	<script src="../jsinc/ck-inc/converter.js"></script>
+
+	<!-- cellular automata classes -->
+	<script src="jsinc/CA/catypes.js"></script>
+	<script src="jsinc/CA/cacell.js"></script>
+	<script src="jsinc/CA/carule.js"></script>
+	<script src="jsinc/CA/cagrid.js"></script>
+	<script src="jsinc/CA/caimporter.js"></script>
+	<script src="jsinc/CA/calexicon.js"></script>
+	
+	<!-- widgets for page -->
+	<script src="js/widgets/cachart.js"></script>
+	<script src="js/widgets/camachine.js"></script>
+	<script src="js/widgets/cacontrols.js"></script>
+	<script src="js/widgets/cacanvas.js"></script>
+	<script src="js/widgets/castatus.js"></script>
 </head>
 <body>
 	<!-- Global site tag (gtag.js) - Google Analytics -->
@@ -42,7 +49,7 @@
 	
 	<div id="machine">Loading Machine</div>
 
-	<script language="javascript">
+	<script >
 	function onJqueryLoad(){
 		$("#machine").camachine({no_graphs:false});
 	}
