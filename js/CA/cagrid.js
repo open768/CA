@@ -22,6 +22,12 @@ class cCAGridConsts {
 		random:		{id:9,label:"Random"},
 		vert_line:	{id:10,label:"V-Line"}
 	};
+	static events = {
+		done:"D",
+		clear:"C",
+		nochange:"N",
+		notify_finished:"F",
+	};
 }
 
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -43,7 +49,7 @@ class cCAGridInitialiser{
 					}
 				poGrid.non_zero_count = 0;
 				poGrid.changed_cells = [];
-				bean.fire(poGrid,cCAConsts.events.clear);
+				bean.fire(poGrid,cCAGridConsts.events.clear);
 				break;
 				
 			//------------------------------------------------------
@@ -280,7 +286,7 @@ class cCAGrid {
 		this.status.changed = iChangedLen;
 		if (iChangedLen == 0){
 			this.running = false;
-			bean.fire(this,cCAConsts.events.nochange);
+			bean.fire(this,cCAGridConsts.events.nochange);
 			return;
 		}
 		
@@ -292,7 +298,7 @@ class cCAGrid {
 			else
 				oStatus.active ++;
 		}
-		bean.fire(this,cCAConsts.events.done, oStatus);
+		bean.fire(this,cCAGridConsts.events.done, oStatus);
 	}
 	
 	//****************************************************************
@@ -304,7 +310,7 @@ class cCAGrid {
 		var oInitialiser = new cCAGridInitialiser();
 		oInitialiser.init(this,piInitType);
 		cDebug.write("done init grid: "+ piInitType);
-		bean.fire(this,cCAConsts.events.done);
+		bean.fire(this,cCAGridConsts.events.done);
 	}
 	
 	//****************************************************************
