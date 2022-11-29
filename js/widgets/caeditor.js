@@ -107,7 +107,7 @@ $.widget( "ck.caeditwidget",{
 		iCount = 1
 		x = y= oOptions.cell_size /2;
 		
-		for (iDir = cCAConsts.directions.northwest; iDir <= cCAConsts.directions.southeast; iDir++){
+		for (iDir = cCACellTypes.directions.northwest; iDir <= cCACellTypes.directions.southeast; iDir++){
 			iBit = cCAIndexOps.get_value(oOptions.index, iDir);
 			if (iBit >0)
 				oCanvas.drawRect({
@@ -325,9 +325,9 @@ $.widget( "ck.caeditor",{
 		
 		//add the cells
 		var iVal;
-		for (var iIndex=1; iIndex<=cCAConsts.max_inputs; iIndex++){
+		for (var iIndex=1; iIndex<=cCARuleTypes.max_inputs; iIndex++){
 			try{
-				iVal = oRule.get_rule_output(cCAConsts.default_state, iIndex);
+				iVal = oRule.get_rule_output(cCACellTypes.default_state, iIndex);
 			}
 			catch (e){
 				iVal = 0;
@@ -345,7 +345,7 @@ $.widget( "ck.caeditor",{
 	pr_set_identity_rule: function(){
 		var oElement = this.element;
 		var oRule = cCaIdentityRule.makeRule();
-		var s64 = cCABase64Exporter.export(oRule,cCAConsts.default_state);
+		var s64 = cCABase64Exporter.export(oRule,cCACellTypes.default_state);
 		this.pr_set_base64Rule(s64);
 		this.pr_set_status( "Identity Rule");
 		this.onSetRuleClick();
@@ -402,8 +402,8 @@ $.widget( "ck.caeditor",{
 		var oRule = this.rule;
 
 		try{
-			oRule.set_output(cCAConsts.default_state, poData.index, poData.value);
-			var s64 = cCABase64Exporter.export(oRule,cCAConsts.default_state);
+			oRule.set_output(cCACellTypes.default_state, poData.index, poData.value);
+			var s64 = cCABase64Exporter.export(oRule,cCACellTypes.default_state);
 			this.pr_set_base64Rule(s64);
 		}catch (e){
 			alert ("Whoops - something went wrong!\n\n" + e.message);
@@ -417,7 +417,7 @@ $.widget( "ck.caeditor",{
 		var sID = cJquery.child_ID(oElement, cCAWidgetTypes.IDs.RULE)
 		var oTextArea = $("#" + sID);
 		var sText = oTextArea.val();
-		var iDiff = cCAConsts.base64_length - sText.length;
+		var iDiff = cCARuleTypes.base64_length - sText.length;
 		
 		this.pr_set_status( iDiff +" chars remaining");
 	},
@@ -437,7 +437,7 @@ $.widget( "ck.caeditor",{
 		var iValue = parseInt( $("#"+sOutID).val());
 		
 		cCARuleModifier.modify_neighbours(oRule, iInEnum, iVerb, iCount, iValue);
-		var s64 = cCABase64Exporter.export(oRule,cCAConsts.default_state);
+		var s64 = cCABase64Exporter.export(oRule,cCACellTypes.default_state);
 		this.pr_set_base64Rule(s64);
 		this.onSetRuleClick();
 	}

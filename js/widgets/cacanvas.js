@@ -52,11 +52,14 @@ $.widget( "ck.cacanvas",{
 		bean.on(oGrid, cCAGridConsts.events.done, function(poData){oThis.onGridDone(poData)});
 		bean.on(oGrid, cCAGridConsts.events.clear, function(){oThis.onGridClear()});
 		bean.on(oGrid, cCAGridConsts.events.nochange, function(){oThis.onNoChange()});
+		
+		// publish grid details to anyone interested
+		var oGridEvent = new cCAGridEvent( cCAGridConsts.events.init_grid, oGrid);
+		var oEvent = new cCAEvent( cCAEventTypes.event_types.grid_event, oGridEvent);
+		bean.fire (document, cCAEventTypes.event_hook, oEvent );
 				
 		//subscribe to CAEvents
-		bean.on (document, cCAConsts.event_hook, function(poEvent){ oThis.onCAEvent(poEvent)} );
-		
-		//inform subscribers about the canvas
+		bean.on (document, cCAEventTypes.event_hook, function(poEvent){ oThis.onCAEvent(poEvent)} );
 		
 		//put something in the widget
 		this.pr__initCanvas();
@@ -70,13 +73,13 @@ $.widget( "ck.cacanvas",{
 		var oState = this._state;
 		
 		switch (poEvent.type){
-			case cCAConsts.event_types.set_rule:
+			case cCAEventTypes.event_types.set_rule:
 				oState.grid.set_rule(poEvent.data);
 				break;
-			case cCAConsts.event_types.initialise:
+			case cCAEventTypes.event_types.initialise:
 				oState.grid.init(poEvent.data);
 				break;
-			case cCAConsts.event_types.action:
+			case cCAEventTypes.event_types.action:
 				oState.grid.action(poEvent.data);
 				break;
 		}
@@ -84,16 +87,16 @@ $.widget( "ck.cacanvas",{
 	
 	//****************************************************************
 	onNoChange:function(){
-		var oEvent = new cCAEvent( cCAConsts.event_types.nochange, null);
+		var oEvent = new cCAEvent( cCAEventTypes.event_types.nochange, null);
 		cDebug.write("no change");
-		bean.fire(document, cCAConsts.event_hook, oEvent);
+		bean.fire(document, cCAEventTypes.event_hook, oEvent);
 	},
 	
 	//****************************************************************
 	onGridDone:function(poData){
 		this.pr__drawGrid();
-		var oEvent = new cCAEvent( cCAConsts.event_types.status, poData);
-		bean.fire(document, cCAConsts.event_hook, oEvent);
+		var oEvent = new cCAEvent( cCAEventTypes.event_types.status, poData);
+		bean.fire(document, cCAEventTypes.event_hook, oEvent);
 	},
 
 	//****************************************************************
@@ -129,12 +132,12 @@ $.widget( "ck.cacanvas",{
 		//create the html5 canvas to draw on
 		oElement.empty();
 		var oCanvas = $("<canvas>");
-		oCanvas.attr("width",oOptions.cols*oOptions.cell_size);
-		oCanvas.attr("height",oOptions.rows*oOptions.cell_size);
-		oState.canvas = oCanvas;
-		oElement.append(oCanvas);
+			oCanvas.attr("width",oOptions.cols*oOptions.cell_size);
+			oCanvas.attr("height",oOptions.rows*oOptions.cell_size);
+			oElement.append(oCanvas);
+			oState.canvas = oCanvas;
 				
-		//fill the canvas with a pretty random pattern
+		//initialise the grid
 		oState.grid.init(cCAGridConsts.init.block.id);
 	},
 		
@@ -151,8 +154,8 @@ $.widget( "ck.cacanvas",{
 		var x,y,oCell;
 		for ( var i=0; i< oGrid.changed_cells.length; i++){
 			oCell = oGrid.changed_cells[i];
-			y = oCell.data.get(cCAConsts.hash_values.row) * oOptions.cell_size;
-			x = oCell.data.get(cCAConsts.hash_values.col) * oOptions.cell_size;
+			y = oCell.data.get(cCACellTypes.hash_values.row) * oOptions.cell_size;
+			x = oCell.data.get(cCACellTypes.hash_values.col) * oOptions.cell_size;
 			this.pr__draw_cell(oCell, x,y);
 		}
 	},

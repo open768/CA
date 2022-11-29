@@ -32,7 +32,12 @@ $.widget( "ck.cacontrols",{
 	//#################################################################
 	//# Constructor
 	//#################################################################`
+	_state:{
+		grid:null
+	},
+	
 	_create: function(){
+		var oThis = this;
 		var oElement;
 
 		oElement = this.element;
@@ -50,6 +55,9 @@ $.widget( "ck.cacontrols",{
 		//put something in the widget
 		oElement.empty();
 		this.pr__init();
+		
+		//subscribe to CA Events
+		bean.on(document, cCAEventTypes.event_hook, function(poEvent){ oThis.onCAEvent(poEvent)});
 	},
 
 	//#################################################################
@@ -100,9 +108,9 @@ $.widget( "ck.cacontrols",{
 			sID = cJquery.child_ID(oElement, cCAControlTypes.rules_ID);
 			var oSelect = $("<SELECT>",{id:sID,width:200,title:"choose the rule type to enter in the box above"});
 				oSelect.append( $("<option>",{selected:1,disabled:1,value:-1}).append("Rule Type"));
-				oSelect.append( $("<option>",{value:cCAConsts.rule_types.base64}).append("base64"));
-				oSelect.append( $("<option>",{value:cCAConsts.rule_types.life}).append("life"));
-				oSelect.append( $("<option>",{value:cCAConsts.rule_types.wolfram1d}).append("wolfram"));
+				oSelect.append( $("<option>",{value:cCARuleTypes.rule_types.base64}).append("base64"));
+				oSelect.append( $("<option>",{value:cCARuleTypes.rule_types.life}).append("life"));
+				oSelect.append( $("<option>",{value:cCARuleTypes.rule_types.wolfram1d}).append("wolfram"));
 			oDiv.append(oSelect);
 			oSelect.selectmenu();
 
@@ -143,7 +151,7 @@ $.widget( "ck.cacontrols",{
 			sID = cJquery.child_ID(oElement, cCAControlTypes.boredom_ID);
 			oSelect = $("<SELECT>",{id:sID,width:50,title:"how many times will a cell see a pattern before it gets bored"});
 				oSelect.append( $("<option>",{selected:1,disabled:1}).append("Boredom"));
-				oSelect.append( $("<option>",{value:cCAConsts.no_boredom}).append("Never"));
+				oSelect.append( $("<option>",{value:cCARuleTypes.no_boredom}).append("Never"));
 				for ( var i=3; i<=10; i++){
 					oSelect.append( $("<option>",{value:i}).append(i + " times"));
 				}
@@ -157,6 +165,13 @@ $.widget( "ck.cacontrols",{
 	//#################################################################
 	//# EVENTS
 	//#################################################################`
+	onCAEvent: function(poEvent){
+		if (poEvent.type == cCAEventTypes.event_types.grid_event)
+			if (poEvent.data.event == cCAGridConsts.events.init_grid)
+				this._state.grid = poEvent.data.data;
+	},
+	
+	//****************************************************************************
 	onSetNameClick: function(){
 		var oElement = this.element;
 
@@ -192,15 +207,15 @@ $.widget( "ck.cacontrols",{
 		var oRule;
 		try{
 			switch(iSelected){
-				case cCAConsts.rule_types.life:
+				case cCARuleTypes.rule_types.life:
 					oRule = cCALifeImporter.makeRule(oTextArea.val());
 					this.pr_setBase64Rule(oRule);
 					break;
-				case cCAConsts.rule_types.wolfram1d:
+				case cCARuleTypes.rule_types.wolfram1d:
 					var oRule = cCAWolfram1DImporter.makeRule(oTextArea.val());
 					this.pr_setBase64Rule(oRule);
 					break;
-				case cCAConsts.rule_types.base64:
+				case cCARuleTypes.rule_types.base64:
 					oRule = cCABase64Importer.makeRule(oTextArea.val());
 					caMachineOptions.rule = oRule;
 
@@ -212,8 +227,8 @@ $.widget( "ck.cacontrols",{
 					this.pr__update_json(oRule);
 
 					//inform subscribers
-					var oEvent = new cCAEvent( cCAConsts.event_types.set_rule, oRule);
-					bean.fire(document, cCAConsts.event_hook, oEvent);
+					var oEvent = new cCAEvent( cCAEventTypes.event_types.set_rule, oRule);
+					bean.fire(document, cCAEventTypes.event_hook, oEvent);
 					caMachineOptions.rule_set = true;
 					break;
 				default:
@@ -239,9 +254,9 @@ $.widget( "ck.cacontrols",{
 		var sSelected = oSelect.val();
 		if (sSelected){
 			var iSelected = parseInt(sSelected);
-			if ( iSelected == cCAConsts.rule_types.base64){
+			if ( iSelected == cCARuleTypes.rule_types.base64){
 				var sText = oTextArea.val();
-				var iDiff = cCAConsts.base64_length - sText.length;
+				var iDiff = cCARuleTypes.base64_length - sText.length;
 				var oSpan = $("#" +	cJquery.child_ID(oElement, cCAControlTypes.rules_status_ID));
 				oSpan.html( iDiff +" chars remaining");
 			}
@@ -259,9 +274,9 @@ $.widget( "ck.cacontrols",{
 		var oRuleJson = JSON.parse(sPreset);
 
 		switch (oRuleJson.type){
-			case cCAConsts.rule_types.life:
+			case cCARuleTypes.rule_types.life:
 				oTextArea.val(oRuleJson.rule);
-				oRulesSelect.val(cCAConsts.rule_types.life);
+				oRulesSelect.val(cCARuleTypes.rule_types.life);
 				oRulesSelect.selectmenu("refresh");
 				this.onSetRuleClick();
 				break;
@@ -296,14 +311,14 @@ $.widget( "ck.cacontrols",{
 	pr_setBase64Rule:function( poRule){
 		var oElement = this.element;
 
-		var s64 = cCABase64Exporter.export(poRule,cCAConsts.default_state);
+		var s64 = cCABase64Exporter.export(poRule,cCACellTypes.default_state);
 
 		var oTextArea = $("#" +	cJquery.child_ID(oElement, cCAControlTypes.entry_ID));
 			oTextArea.val(s64);
 			cBrowser.copy_to_clipboard(s64);
 
 		var oSelect = $("#" + cJquery.child_ID(oElement, cCAControlTypes.rules_ID));
-			oSelect.val(cCAConsts.rule_types.base64);
+			oSelect.val(cCARuleTypes.rule_types.base64);
 			oSelect.selectmenu("refresh");
 		this.onSetRuleClick();
 	},

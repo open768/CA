@@ -40,7 +40,7 @@ $.widget( "ck.castatus",{
 		if (!oElement.cachart) $.error("caChart is missing , chack includes");
 		
 		//subscribe to CAEvents
-		bean.on (document, cCAConsts.event_hook, function(poEvent){ oThis.onCAEvent(poEvent)} );
+		bean.on (document, cCAEventTypes.event_hook, function(poEvent){ oThis.onCAEvent(poEvent)} );
 		
 		//put something in the widget
 		oElement.empty();
@@ -121,17 +121,17 @@ $.widget( "ck.castatus",{
 		oDiv = $("<DIV>",{class:"ui-widget-content"});
 			var oButton = $("<button>",{width:"30px",height:"30px",id:"btnStop"}).button({icon:"ui-icon-stop"});
 				oButton.prop("disabled", true);
-				oButton.click(	function(){ oThis.onClickControl(cCAConsts.action_types.stop);}	);
+				oButton.click(	function(){ oThis.onClickControl(cCAGridConsts.actions.stop);}	);
 				oDiv.append(oButton);
 
 			var oButton = $("<button>",{width:"30px",height:"30px",id:"btnPlay"}).button({icon:"ui-icon-circle-triangle-e"});
 				oButton.prop("disabled", true);
-				oButton.click(	function(){ oThis.onClickControl(cCAConsts.action_types.play);}	);
+				oButton.click(	function(){ oThis.onClickControl(cCAGridConsts.actions.play);}	);
 				oDiv.append(oButton);
 
 			var oButton = $("<button>",{width:"30px",height:"30px",title:"step",id:"btnStep"}).button({icon:"ui-icon-seek-end"});
 				oButton.prop("disabled", true);
-				oButton.click(	function(){ oThis.onClickControl(cCAConsts.action_types.step);}	);
+				oButton.click(	function(){ oThis.onClickControl(cCAGridConsts.actions.step);}	);
 				oDiv.append(oButton);
 		oElement.append(oDiv);
 	},
@@ -143,8 +143,8 @@ $.widget( "ck.castatus",{
 
 		
 		var iSelected = parseInt($(poEvent.target).val());
-		var oEvent = new cCAEvent( cCAConsts.event_types.initialise, iSelected);
-		bean.fire(document, cCAConsts.event_hook, oEvent);
+		var oEvent = new cCAEvent( cCAEventTypes.event_types.initialise, iSelected);
+		bean.fire(document, cCAEventTypes.event_hook, oEvent);
 	},
 	
 	//****************************************************************************
@@ -156,19 +156,19 @@ $.widget( "ck.castatus",{
 		}
 	
 		switch (piAction){
-			case cCAConsts.action_types.stop:
+			case cCAGridConsts.actions.stop:
 				$("#btnStep").prop("disabled",false);
 				$("#btnPlay").prop("disabled",false);
 				$("#btnStop").prop("disabled",true);
 				break;
-			case cCAConsts.action_types.play:
+			case cCAGridConsts.actions.play:
 				$("#btnStep").prop("disabled",true);
 				$("#btnPlay").prop("disabled",true);
 				$("#btnStop").prop("disabled",false);
 				break;
 		}
-		var oEvent = new cCAEvent( cCAConsts.event_types.action, parseInt(piAction));
-		bean.fire(document, cCAConsts.event_hook, oEvent);
+		var oEvent = new cCAEvent( cCAEventTypes.event_types.action, parseInt(piAction));
+		bean.fire(document, cCAEventTypes.event_hook, oEvent);
 	},
 	
 	//****************************************************************************
@@ -180,7 +180,7 @@ $.widget( "ck.castatus",{
 		sID = oElement.attr("id");
 
 		switch (poEvent.type){
-			case  cCAConsts.event_types.status:
+			case  cCAEventTypes.event_types.status:
 				if (!poEvent.data) return;
 				
 				oTarget = $("#"+sID+caStatusConsts.ACTIVE_ID);
@@ -194,8 +194,8 @@ $.widget( "ck.castatus",{
 				oTarget.cachart("onCAEvent",poEvent);
 				break;
 				
-			case cCAConsts.event_types.set_rule:
-			case cCAConsts.event_types.initialise:
+			case cCAEventTypes.event_types.set_rule:
+			case cCAEventTypes.event_types.initialise:
 				oTarget = $("#"+sID+caStatusConsts.CHART_ID);
 				oTarget.cachart("onCAEvent",poEvent);
 				break;

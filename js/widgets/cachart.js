@@ -85,7 +85,7 @@ $.widget( "ck.cachart",{
 		
 		cDebug.write("got a chart event");
 		switch (poEvent.type){
-			case cCAConsts.event_types.status:
+			case cCAEventTypes.event_types.status:
 				//add the data to the data structure and draw
 				this._createData();
 				var oData = poEvent.data;
@@ -93,8 +93,8 @@ $.widget( "ck.cachart",{
 				oOptions._chart.draw(oOptions._data);
 				oOptions.runs ++;
 				break;
-			case cCAConsts.event_types.set_rule:
-			case cCAConsts.event_types.initialise:
+			case cCAEventTypes.event_types.set_rule:
+			case cCAEventTypes.event_types.initialise:
 				oOptions._data = null;
 				oOptions._chart = null;
 				oOptions.runs = 0;
