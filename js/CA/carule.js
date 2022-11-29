@@ -12,7 +12,7 @@ class cCAStateRule {
 	constructor(){
 		this.neighbour_type = cCACellTypes.neighbours.eightway;
 		this.outputs = new Array(cCARuleTypes.max_inputs);
-		this.nextStates = new Array(cCARuleTypes.max_inputs);	
+		this.nextStates = new Array(cCARuleTypes.max_inputs);	//for future use
 	}
 }
 
@@ -21,7 +21,7 @@ class cCARule{
 	constructor(){
 		this.neighbour_type = cCACellTypes.neighbours.eightway;
 		this.has_state_transitions = false;
-		this.stateRules = [];
+		this.stateRules = [];  
 		this.boredom = cCARuleTypes.no_boredom;
 	}
 	

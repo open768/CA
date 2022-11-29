@@ -19,22 +19,22 @@ var cCaLexiconRule = function(piType, psLabel, psRule){
 }
 
 class cCALexicon {
-	static get_rules(){
-		var aRules = [];
-		aRules.push( this.pr__make_life_rule("2x2", "B36/S125"));
-		aRules.push( this.pr__make_life_rule("34 life", "B34/S34"));
-		aRules.push( this.pr__make_life_rule("Anneal", "B4678/S35678"));
-		aRules.push( this.pr__make_life_rule("Amoeba", "B357/S1358"));
-		aRules.push( this.pr__make_life_rule("Assimilation", "B345/S4567"));
-		aRules.push( this.pr__make_life_rule("Coagulations", "B378/S235678"));
-		aRules.push( this.pr__make_life_rule("Conways","B3/S23"));
-		aRules.push( this.pr__make_life_rule("Coral", "B3/S45678"));
-		aRules.push( this.pr__make_life_rule("Diamoeba", "B35678/S5678"));
-		aRules.push( this.pr__make_life_rule("Maze", "B3/S1234"));
-		aRules.push( this.pr__make_life_rule("Replicator","B1357/S1357"));
-		aRules.push( this.pr__make_life_rule("Walled Cities", "B45678/S2345"));
+	static get_presets(){
+		var aPresets = [];
+		aPresets.push( this.pr__make_life_rule("2x2", "B36/S125"));
+		aPresets.push( this.pr__make_life_rule("34 life", "B34/S34"));
+		aPresets.push( this.pr__make_life_rule("Anneal", "B4678/S35678"));
+		aPresets.push( this.pr__make_life_rule("Amoeba", "B357/S1358"));
+		aPresets.push( this.pr__make_life_rule("Assimilation", "B345/S4567"));
+		aPresets.push( this.pr__make_life_rule("Coagulations", "B378/S235678"));
+		aPresets.push( this.pr__make_life_rule("Conways","B3/S23"));
+		aPresets.push( this.pr__make_life_rule("Coral", "B3/S45678"));
+		aPresets.push( this.pr__make_life_rule("Diamoeba", "B35678/S5678"));
+		aPresets.push( this.pr__make_life_rule("Maze", "B3/S1234"));
+		aPresets.push( this.pr__make_life_rule("Replicator","B1357/S1357"));
+		aPresets.push( this.pr__make_life_rule("Walled Cities", "B45678/S2345"));
 		
-		return aRules;
+		return aPresets;
 	}
 	
 	static pr__make_life_rule(psName, psRule){

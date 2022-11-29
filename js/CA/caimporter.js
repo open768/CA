@@ -104,16 +104,41 @@ class cCABase64Importer{
 //###############################################################################
 //# Json
 //###############################################################################
+class cCAExportedState{
+	state = null;
+	rule = null;
+	state_transitions = null;
+	
+	constructor(piState){	
+		this.state = piState;
+	}
+}
+	
+class cCAExportedObj{
+	version = 1.0;
+	neighbour_type = null;
+	boredom = null;
+	states = []
+}
 
 class cCAObjExporter{
 	static export(poRule){
 		if ( !cCommon.obj_is(poRule , "cCARule") ) throw new CAException("export requires cCARule")
+			
+		var oObj = new cCAExportedObj;
+		oObj.neighbour_type = poRule.neighbour_type;
+		for ( var iState = 1; iState <= poRule.stateRules.length; iState ++){
+			var oState = new cCAExportedState(iState);
+			oState.rule = cCABase64Exporter.export(poRule,iState);
+			oObj.states.push( oState);
+		}
+		return oObj;
 	}
 }
 
 class cCAObjImporter{
 	static makeRule(poObj){
-		if ( !cCommon.obj_is(poObj , "cCARule") ) throw new CAException("export requires cCARule")
+		if ( !cCommon.obj_is(poObj , "cCAExportedObj") ) throw new CAException("import requires cCAExportedObj")
 	}
 }
 
