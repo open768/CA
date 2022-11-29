@@ -33,7 +33,8 @@ $.widget( "ck.cacontrols",{
 	//# Constructor
 	//#################################################################`
 	_state:{
-		grid:null
+		grid:null, 
+		rule:null
 	},
 	
 	_create: function(){
@@ -97,7 +98,7 @@ $.widget( "ck.cacontrols",{
 
 				var oChildDiv = $("<div>",{id:"tjson"});
 					sID = cJquery.child_ID(oElement, cCAControlTypes.json_ID);
-					var oBox = $("<TEXTAREA>",{ID:sID,rows:5,cols:80 ,class:"rule", title:"jSON will appear here", readonly:1});
+					var oBox = $("<TEXTAREA>",{ID:sID,rows:5,cols:200 ,class:"rule", title:"jSON will appear here", readonly:1});
 					oChildDiv.append(oBox);
 				oParentDiv.append(oChildDiv);
 
@@ -312,6 +313,7 @@ $.widget( "ck.cacontrols",{
 		var oElement = this.element;
 
 		var s64 = cCABase64Exporter.export(poRule,cCACellTypes.default_state);
+		this._state.rule = poRule;
 
 		var oTextArea = $("#" +	cJquery.child_ID(oElement, cCAControlTypes.entry_ID));
 			oTextArea.val(s64);
@@ -325,13 +327,13 @@ $.widget( "ck.cacontrols",{
 
 	//****************************************************************************
 	pr__populate_presets:function(poSelect){
-		var aRules = cCALexicon.get_rules();
+		var aPresets = cCALexicon.get_presets();
 
 		poSelect.append( $("<option>",{selected:1,disabled:1,value:-1}).append("presets"));
 
-		for (var i = 0; i < aRules.length; i++){
-			var oRule = aRules[i];
-			var oOption = $("<option>",{value:JSON.stringify(oRule)}).append(oRule.label);
+		for (var i = 0; i < aPresets.length; i++){
+			var oPreset = aPresets[i];
+			var oOption = $("<option>",{value:JSON.stringify(oPreset)}).append(oPreset.label);
 			poSelect.append(oOption);
 		}
 	},
@@ -339,8 +341,14 @@ $.widget( "ck.cacontrols",{
 	//****************************************************************************
 	pr__update_json: function(poRule){
 		var oElement = this.element;
-		var sID = cJquery.child_ID(oElement, cCAControlTypes.json_ID);
-		$("#"+sID).val("work in progress");
+		
+		//export the rule
+		var oObj = cCAObjExporter.export(this._state.rule);
+		var sJson = JSON.stringify(oObj);
+		
+		//export the rule
+		
+		$("#"+sID).val(sJson);
 	}
 
 });

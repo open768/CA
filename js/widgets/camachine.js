@@ -46,8 +46,8 @@ $.widget( "ck.camachine",{
 		var oTable = $("<table>");
 			var oRow = $("<TR>");
 				//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-				var oCell = $("<TD>", {width:240,valign:"top"});
-					var oControlDiv = $("<DIV>",{width:240,id:"leftControl", canvas_id:"canvas"});
+				var oCell = $("<TD>", {width:350,valign:"top"});
+					var oControlDiv = $("<DIV>",{width:350,id:"leftControl", canvas_id:"canvas"});
 					oControlDiv.cacontrols();
 					oCell.append(oControlDiv);
 				oRow.append(oCell);
