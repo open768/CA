@@ -62,43 +62,43 @@ class cCACell{
 		var oNeigh, iValue, oNorth, oWest, iWPattern;
 		oNeigh = this.neighbours;
 		
-		oNorth = oNeigh.get(cCAConsts.directions.north);
+		oNorth = oNeigh.get(cCACellTypes.directions.north);
 		if (oNorth.evaluated.done){
 			//optimisated by looking at the North cell, reduces the number of ops from 8 to 4
 			iValue = oNorth.evaluated.pattern;
 			iValue <<= 3;		//remove cells not in neighbourhood of this cell (makes number 12 bit, and bits are not in the right place)
-			iValue &= cCAConsts.max_inputs; //truncate number to 9 bit number (but bits are not in the right place)
+			iValue &= cCARuleTypes.max_inputs; //truncate number to 9 bit number (but bits are not in the right place)
 			iValue >>>= 3;		//get ready for adding southerly cells (bits in correct place)
 			
 			//further optimise by 1 op by looking at the evaluated West cell			
-			oWest = oNeigh.get(cCAConsts.directions.west);
+			oWest = oNeigh.get(cCACellTypes.directions.west);
 			if (oWest.evaluated.done){
 				iWPattern = oWest.evaluated.pattern ;
 				iWPattern &= 0b11; //only interested in last 2 bits from west cell
 				iValue <<=2;		//make space to copy pattern from west
 				iValue |= iWPattern; //copy pattern
 				
-				iValue <<= 1; iValue |= oNeigh.get(cCAConsts.directions.southeast).value; 
-				iValue &= cCAConsts.max_inputs;
+				iValue <<= 1; iValue |= oNeigh.get(cCACellTypes.directions.southeast).value; 
+				iValue &= cCARuleTypes.max_inputs;
 			}else{		
-				iValue <<= 1; iValue |= oNeigh.get(cCAConsts.directions.southwest).value;
-				iValue <<= 1; iValue |= oNeigh.get(cCAConsts.directions.south).value;
-				iValue <<= 1; iValue |= oNeigh.get(cCAConsts.directions.southeast).value;
+				iValue <<= 1; iValue |= oNeigh.get(cCACellTypes.directions.southwest).value;
+				iValue <<= 1; iValue |= oNeigh.get(cCACellTypes.directions.south).value;
+				iValue <<= 1; iValue |= oNeigh.get(cCACellTypes.directions.southeast).value;
 			}
 		}else{
 			//create a 9 bit number consisting of the values of the neighbours
 			//-------------------------------------------------------
-			iValue = oNeigh.get(cCAConsts.directions.northwest).value;
-			iValue <<= 1; iValue |= oNeigh.get(cCAConsts.directions.north).value;
-			iValue <<= 1; iValue |= oNeigh.get(cCAConsts.directions.northeast).value;
+			iValue = oNeigh.get(cCACellTypes.directions.northwest).value;
+			iValue <<= 1; iValue |= oNeigh.get(cCACellTypes.directions.north).value;
+			iValue <<= 1; iValue |= oNeigh.get(cCACellTypes.directions.northeast).value;
 			//-------------------------------------------------------
-			iValue <<= 1; iValue |= oNeigh.get(cCAConsts.directions.west).value;
+			iValue <<= 1; iValue |= oNeigh.get(cCACellTypes.directions.west).value;
 			iValue <<= 1;iValue |= this.value;
-			iValue <<= 1; iValue |= oNeigh.get(cCAConsts.directions.east).value;
+			iValue <<= 1; iValue |= oNeigh.get(cCACellTypes.directions.east).value;
 			//-------------------------------------------------------
-			iValue <<= 1; iValue |= oNeigh.get(cCAConsts.directions.southwest).value;
-			iValue <<= 1; iValue |= oNeigh.get(cCAConsts.directions.south).value;
-			iValue <<= 1; iValue |= oNeigh.get(cCAConsts.directions.southeast).value;
+			iValue <<= 1; iValue |= oNeigh.get(cCACellTypes.directions.southwest).value;
+			iValue <<= 1; iValue |= oNeigh.get(cCACellTypes.directions.south).value;
+			iValue <<= 1; iValue |= oNeigh.get(cCACellTypes.directions.southeast).value;
 		}
 		
 		return iValue;
@@ -110,19 +110,19 @@ class cCACell{
 
 		oHash = this.neighbours;
 		switch (piNeighbourType){
-			case cCAConsts.neighbours.eightway:
+			case cCACellTypes.neighbours.eightway:
 				iValue = this.get8WayPattern();
 				break;
-			case cCAConsts.neighbours.fourway:
+			case cCACellTypes.neighbours.fourway:
 				//-------------------------------------------------------
-				iValue = oHash.get(cCAConsts.directions.northwest).value;
-				iValue <<= 1; iValue |= oHash.get(cCAConsts.directions.north).value;
+				iValue = oHash.get(cCACellTypes.directions.northwest).value;
+				iValue <<= 1; iValue |= oHash.get(cCACellTypes.directions.north).value;
 				//-------------------------------------------------------
-				iValue <<= 1; iValue |= oHash.get(cCAConsts.directions.west).value;
+				iValue <<= 1; iValue |= oHash.get(cCACellTypes.directions.west).value;
 				iValue <<= 1;iValue |= this.value;
-				iValue <<= 1; iValue |= oHash.get(cCAConsts.directions.east).value;
+				iValue <<= 1; iValue |= oHash.get(cCACellTypes.directions.east).value;
 				//-------------------------------------------------------
-				iValue <<= 1; iValue |= oHash.get(cCAConsts.directions.south).value;
+				iValue <<= 1; iValue |= oHash.get(cCACellTypes.directions.south).value;
 				break;
 			default:
 				throw new CAException("unknown neighbour type: " + piNeighbourType);

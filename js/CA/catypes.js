@@ -9,39 +9,28 @@ For licenses that allow for commercial use please contact cluck@chickenkatsu.co.
 **************************************************************************/
 
 //###############################################################################
-var cCAEvent = function(piType, poData){
-	this.type = piType;
-	this.data = poData;
+class cCAEvent{
+	constructor(piType, poData){
+		this.type = piType;
+		this.data = poData;
+	}
 }
 
-var cCARunData = function(){
-	this.active = 0;
-	this.runs = 0;
-	this.changed = 0;
-}
-
-//###############################################################################
-class cCALifeRules {
-	static LIFE ="B3/S23"
-}
-
-//###############################################################################
-class cCAConsts {
+class cCAEventTypes {
 	static event_hook = "CAEV";
-	static events = {
-		done:"D",
-		clear:"C",
-		nochange:"N",
-		notify_finished:"F",
-	};
 	static event_types={
 		set_rule:1,
 		initialise:2,
 		resize:3,
 		action:4,
 		nochange:5,
-		status:6
+		status:6,
+		grid_event:7
 	};
+}
+
+//###############################################################################
+class cCACellTypes {
 	static neighbours={
 		fourway: 0,
 		eightway: 1,
@@ -57,9 +46,7 @@ class cCAConsts {
 		southwest:7,
 		south:8,
 		southeast:9
-	};
-	static max_inputs =Math.pow(2,9)-1;
-	static base64_length =  Math.ceil((Math.pow(2,9)-1)/6);
+		};
 	static default_state = 1;
 	static states={
 		same: 0,
@@ -67,6 +54,15 @@ class cCAConsts {
 		down:2,
 		reset:3
 	};
+	static hash_values={
+		row:"R",
+		col:"C"
+	};	
+}
+
+class cCARuleTypes {
+	static max_inputs =Math.pow(2,9)-1;
+	static base64_length =  Math.ceil((Math.pow(2,9)-1)/6);
 	static no_boredom= -1;
 	static rule_types={
 		life:1,
@@ -75,16 +71,6 @@ class cCAConsts {
 		wolfram1d:4,
 		random:5
 	};
-	static action_types={
-		play:1,
-		stop:2,
-		step:3
-	};
-	
-	static hash_values={
-		row:"R",
-		col:"C"
-	};	
 }
 
 //###############################################################################
@@ -102,31 +88,31 @@ class cCAIndexOps {
 		var iVal;
 		
 		switch (piDirection){
-			case cCAConsts.directions.northwest:
+			case cCACellTypes.directions.northwest:
 				iVal = 256;
 				break;
-			case cCAConsts.directions.north:
+			case cCACellTypes.directions.north:
 				iVal = 128;
 				break;
-			case cCAConsts.directions.northeast:
+			case cCACellTypes.directions.northeast:
 				iVal = 64;
 				break;
-			case cCAConsts.directions.west:
+			case cCACellTypes.directions.west:
 				iVal = 32;
 				break;
-			case cCAConsts.directions.centre:
+			case cCACellTypes.directions.centre:
 				iVal = 16;
 				break;
-			case cCAConsts.directions.east:
+			case cCACellTypes.directions.east:
 				iVal = 8;
 				break;
-			case cCAConsts.directions.southwest:
+			case cCACellTypes.directions.southwest:
 				iVal = 4;
 				break;
-			case cCAConsts.directions.south:
+			case cCACellTypes.directions.south:
 				iVal = 2;
 				break;
-			case cCAConsts.directions.southeast:
+			case cCACellTypes.directions.southeast:
 				iVal = 1;
 				break;
 			default:
@@ -155,27 +141,27 @@ class cCAIndexOps {
 	//***************************************************************
 	static get_north_bits(piIndex){
 		var iVal = 0;
-		iVal |= this.get_value(piIndex, cCAConsts.directions.northwest );
-		iVal <<=1; iVal |= this.get_value(piIndex, cCAConsts.directions.north );
-		iVal <<=1; iVal |= this.get_value(piIndex, cCAConsts.directions.northeast );
+		iVal |= this.get_value(piIndex, cCACellTypes.directions.northwest );
+		iVal <<=1; iVal |= this.get_value(piIndex, cCACellTypes.directions.north );
+		iVal <<=1; iVal |= this.get_value(piIndex, cCACellTypes.directions.northeast );
 		return iVal;
 	}
 	
 	//***************************************************************
 	static get_centre_bits(piIndex){
 		var iVal = 0;
-		iVal |= this.get_value(piIndex, cCAConsts.directions.west );
-		iVal <<=1; iVal |= this.get_value(piIndex, cCAConsts.directions.centre );
-		iVal <<=1; iVal |= this.get_value(piIndex, cCAConsts.directions.east );
+		iVal |= this.get_value(piIndex, cCACellTypes.directions.west );
+		iVal <<=1; iVal |= this.get_value(piIndex, cCACellTypes.directions.centre );
+		iVal <<=1; iVal |= this.get_value(piIndex, cCACellTypes.directions.east );
 		return iVal;
 	}
 	
 	//***************************************************************
 	static get_south_bits(piIndex){
 		var iVal = 0;
-		iVal |= this.get_value(piIndex, cCAConsts.directions.southwest );
-		iVal <<=1; iVal |= this.get_value(piIndex, cCAConsts.directions.south );
-		iVal <<=1; iVal |= this.get_value(piIndex, cCAConsts.directions.southeast );
+		iVal |= this.get_value(piIndex, cCACellTypes.directions.southwest );
+		iVal <<=1; iVal |= this.get_value(piIndex, cCACellTypes.directions.south );
+		iVal <<=1; iVal |= this.get_value(piIndex, cCACellTypes.directions.southeast );
 		return iVal;
 	}
 };

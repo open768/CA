@@ -23,11 +23,31 @@ class cCAGridConsts {
 		vert_line:	{id:10,label:"V-Line"}
 	};
 	static events = {
-		done:"D",
-		clear:"C",
-		nochange:"N",
-		notify_finished:"F",
+		done:"GD",
+		clear:"GC",
+		nochange:"GN",
+		notify_finished:"GF",
+		init_grid:"GI"
 	};
+	static actions={
+		play:1,
+		stop:2,
+		step:3
+	};
+}
+
+class cCAGridRunData{
+	active = 0;
+	runs = 0;
+	changed = 0;
+}
+
+//*************************************************************************
+class cCAGridEvent{
+	constructor (psEvent, poData){
+		this.event = psEvent;
+		this.data = poData;
+	}
 }
 
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -187,6 +207,17 @@ class cCAGridInitialiser{
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 //%
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+class cCAJsonGridExporter{
+	static export(poRule, poGrid){
+		if ( !cCommon.obj_is(poRule , "cCARule") ) throw new CAException("param 1 is not cCARule")
+		if ( !cCommon.obj_is(poGrid , "cCARule") ) throw new CAException("param 2 is not cCAGrid")
+	}
+}
+
+
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+//%
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 class cCAGrid {
 	//#######################################################################
 	//# instance variables
@@ -197,7 +228,7 @@ class cCAGrid {
 		this.rule = null;
 		this.changed_cells = null;
 		this.running = false;
-		this.status = new cCARunData();
+		this.status = new cCAGridRunData();
 		
 		this.privates = {
 			iLastRow : -1,
@@ -214,18 +245,18 @@ class cCAGrid {
 		
 		cDebug.write("running action: " + piAction);
 		switch (piAction){
-			case cCAConsts.action_types.play:
+			case cCAGridConsts.actions.play:
 				if (this.running) throw new CAException("CA is allready running");
 				this.running = true;
 				this.step();
 				this.status.runs = 1;
 				break;
-			case cCAConsts.action_types.stop:
+			case cCAGridConsts.actions.stop:
 				if (! this.running)
 					throw new CAException("CA is not running");
 				this.running = false;
 				break;
-			case cCAConsts.action_types.step:
+			case cCAGridConsts.actions.step:
 				this.step();
 				break;
 			default:
@@ -319,15 +350,15 @@ class cCAGrid {
 		for (var ir=1; ir<= this.rows; ir++)
 			for (var ic=1; ic<= this.cols; ic++){
 				var oCell = this.getCell(ir,ic,false);
-				this.pr__link_cell(oCell,cCAConsts.directions.north, ir-1, ic);
-				this.pr__link_cell(oCell,cCAConsts.directions.east, ir, ic+1);
-				this.pr__link_cell(oCell,cCAConsts.directions.south, ir+1, ic);
-				this.pr__link_cell(oCell,cCAConsts.directions.west, ir, ic-1);
-				if (piNeighbourType == cCAConsts.neighbours.eightway){
-					this.pr__link_cell(oCell,cCAConsts.directions.northeast, ir-1, ic+1);
-					this.pr__link_cell(oCell,cCAConsts.directions.southeast, ir+1, ic+1);
-					this.pr__link_cell(oCell,cCAConsts.directions.southwest, ir+1, ic-1);
-					this.pr__link_cell(oCell,cCAConsts.directions.northwest, ir-1, ic-1);
+				this.pr__link_cell(oCell,cCACellTypes.directions.north, ir-1, ic);
+				this.pr__link_cell(oCell,cCACellTypes.directions.east, ir, ic+1);
+				this.pr__link_cell(oCell,cCACellTypes.directions.south, ir+1, ic);
+				this.pr__link_cell(oCell,cCACellTypes.directions.west, ir, ic-1);
+				if (piNeighbourType == cCACellTypes.neighbours.eightway){
+					this.pr__link_cell(oCell,cCACellTypes.directions.northeast, ir-1, ic+1);
+					this.pr__link_cell(oCell,cCACellTypes.directions.southeast, ir+1, ic+1);
+					this.pr__link_cell(oCell,cCACellTypes.directions.southwest, ir+1, ic-1);
+					this.pr__link_cell(oCell,cCACellTypes.directions.northwest, ir-1, ic-1);
 				}
 			}
 		cDebug.write("completed cell linking");
@@ -369,8 +400,8 @@ class cCAGrid {
 		if (! oCell){
 			if (!pbCreateCell) return null;
 			oCell = new cCACell();
-			oCell.data.set(cCAConsts.hash_values.row, piRow);
-			oCell.data.set(cCAConsts.hash_values.col, piCol);
+			oCell.data.set(cCACellTypes.hash_values.row, piRow);
+			oCell.data.set(cCACellTypes.hash_values.col, piCol);
 			oRowMap.set(piCol, oCell);
 		}
 		

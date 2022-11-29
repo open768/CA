@@ -38,7 +38,7 @@ class cCALexicon {
 	}
 	
 	static pr__make_life_rule(psName, psRule){
-		return new cCaLexiconRule(cCAConsts.rule_types.life,psName,psRule);
+		return new cCaLexiconRule(cCARuleTypes.rule_types.life,psName,psRule);
 	}
 	
 }
