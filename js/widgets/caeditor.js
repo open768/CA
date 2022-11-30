@@ -345,7 +345,7 @@ $.widget( "ck.caeditor",{
 	pr_set_identity_rule: function(){
 		var oElement = this.element;
 		var oRule = cCaIdentityRule.makeRule();
-		var s64 = cCABase64Exporter.export(oRule,cCACellTypes.default_state);
+		var s64 = cCARuleBase64Exporter.export(oRule,cCACellTypes.default_state);
 		this.pr_set_base64Rule(s64);
 		this.pr_set_status( "Identity Rule");
 		this.onSetRuleClick();
@@ -371,7 +371,7 @@ $.widget( "ck.caeditor",{
 		}
 			
 		try{
-			this.rule = cCABase64Importer.makeRule(psText);
+			this.rule = cCARuleBase64Importer.makeRule(psText);
 			this.pr_set_base64Rule(psText);
 			this.onSetRuleClick();
 			this.pr_set_status( "rule loaded from clipboard");
@@ -388,7 +388,7 @@ $.widget( "ck.caeditor",{
 		var oTextArea = $("#"+sID);
 		
 		try{
-			this.rule = cCABase64Importer.makeRule(oTextArea.val());
+			this.rule = cCARuleBase64Importer.makeRule(oTextArea.val());
 			this.pr_add_edit_widgets();
 		}catch (e){
 			alert ("Whoops - something went wrong!\n\n" + e.message);
@@ -403,7 +403,7 @@ $.widget( "ck.caeditor",{
 
 		try{
 			oRule.set_output(cCACellTypes.default_state, poData.index, poData.value);
-			var s64 = cCABase64Exporter.export(oRule,cCACellTypes.default_state);
+			var s64 = cCARuleBase64Exporter.export(oRule,cCACellTypes.default_state);
 			this.pr_set_base64Rule(s64);
 		}catch (e){
 			alert ("Whoops - something went wrong!\n\n" + e.message);
@@ -437,7 +437,7 @@ $.widget( "ck.caeditor",{
 		var iValue = parseInt( $("#"+sOutID).val());
 		
 		cCARuleModifier.modify_neighbours(oRule, iInEnum, iVerb, iCount, iValue);
-		var s64 = cCABase64Exporter.export(oRule,cCACellTypes.default_state);
+		var s64 = cCARuleBase64Exporter.export(oRule,cCACellTypes.default_state);
 		this.pr_set_base64Rule(s64);
 		this.onSetRuleClick();
 	}

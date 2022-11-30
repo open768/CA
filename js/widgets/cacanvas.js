@@ -13,27 +13,26 @@ class cCACanvasConsts{
 }
 
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-$.widget( "ck.cacanvas",{
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+class cCACanvas{
 	//#################################################################
 	//# Definition
 	//#################################################################
-	_state:{
+	static _state={
 		grid: null,
 		canvas:null,
 		drawing:false,
 		image_count:0,
 		images_done:0
-	},
-	options:{
-		cols:100,
-		rows:100,
-		cell_size:5
-	},
+	};
 	
 	//#################################################################
 	//# Constructor
 	//#################################################################`
-	_create: function(){
+	static _create(poOptions, poElement){
+		this.element = poElement;
+		this.options = poOptions;
+		
 		var oThis = this;
 		var oOptions = this.options;
 		var oElement = this.element;
@@ -49,12 +48,12 @@ $.widget( "ck.cacanvas",{
 		//associate a CA grid with the widget
 		var oGrid = new cCAGrid(oOptions.rows, oOptions.cols);
 		this._state.grid = oGrid;
-		bean.on(oGrid, cCAGridConsts.events.done, function(poData){oThis.onGridDone(poData)});
-		bean.on(oGrid, cCAGridConsts.events.clear, function(){oThis.onGridClear()});
-		bean.on(oGrid, cCAGridConsts.events.nochange, function(){oThis.onNoChange()});
+		bean.on(oGrid, cCAGridTypes.events.done, function(poData){oThis.onGridDone(poData)});
+		bean.on(oGrid, cCAGridTypes.events.clear, function(){oThis.onGridClear()});
+		bean.on(oGrid, cCAGridTypes.events.nochange, function(){oThis.onNoChange()});
 		
 		// publish grid details to anyone interested
-		var oGridEvent = new cCAGridEvent( cCAGridConsts.events.init_grid, oGrid);
+		var oGridEvent = new cCAGridEvent( cCAGridTypes.events.init_grid, oGrid);
 		var oEvent = new cCAEvent( cCAEventTypes.event_types.grid_event, oGridEvent);
 		bean.fire (document, cCAEventTypes.event_hook, oEvent );
 				
@@ -63,51 +62,64 @@ $.widget( "ck.cacanvas",{
 		
 		//put something in the widget
 		this.pr__initCanvas();
-	},
+	}
 	
 	//#################################################################
 	//# events
 	//#################################################################`
 	//****************************************************************
-	onCAEvent: function( poEvent){
+	static onCAEvent( poEvent){
+		cDebug.enter();
 		var oState = this._state;
 		
 		switch (poEvent.type){
 			case cCAEventTypes.event_types.set_rule:
+				cDebug.write("event: set rule");
 				oState.grid.set_rule(poEvent.data);
+				var oGridEvent = new cCAGridEvent( cCAGridTypes.events.set_rule, oState.grid);
+				bean.fire(document, cCAGridTypes.event_hook , oGridEvent);
 				break;
 			case cCAEventTypes.event_types.initialise:
+				cDebug.write("event: initialise");
 				oState.grid.init(poEvent.data);
 				break;
 			case cCAEventTypes.event_types.action:
+				cDebug.write("event: acion");
 				oState.grid.action(poEvent.data);
 				break;
 		}
-	},
+		cDebug.leave();
+	}
 	
 	//****************************************************************
-	onNoChange:function(){
+	static onNoChange(){
+		cDebug.enter();
 		var oEvent = new cCAEvent( cCAEventTypes.event_types.nochange, null);
 		cDebug.write("no change");
 		bean.fire(document, cCAEventTypes.event_hook, oEvent);
-	},
+		cDebug.leave();
+	}
 	
 	//****************************************************************
-	onGridDone:function(poData){
+	static onGridDone(poData){
+		cDebug.enter();
 		this.pr__drawGrid();
 		var oEvent = new cCAEvent( cCAEventTypes.event_types.status, poData);
 		bean.fire(document, cCAEventTypes.event_hook, oEvent);
-	},
+		cDebug.leave();
+	}
 
 	//****************************************************************
-	onGridClear:function(){
+	static onGridClear(){
+		cDebug.enter();
 		var oCanvas = this._state.canvas;
 		cDebug.write("Clearing canvas");
 		oCanvas.clearCanvas();
-	},
+		cDebug.leave();
+	}
 	
 	//****************************************************************
-	onImageLoad:function(){
+	static onImageLoad(){
 		var oState = this._state;
 		
 		oState.images_done ++;
@@ -118,12 +130,13 @@ $.widget( "ck.cacanvas",{
 			var oGrid = this._state.grid;
 			setTimeout(function(){ oGrid.notify_drawn();}, 0);
 		}
-	},
+	}
 	
 	//#################################################################
 	//# privates
 	//#################################################################`
-	pr__initCanvas: function(){
+	static pr__initCanvas(){
+		cDebug.enter();
 		var oOptions = this.options;
 		var oState = this._state;
 		var oElement = this.element;
@@ -138,11 +151,13 @@ $.widget( "ck.cacanvas",{
 			oState.canvas = oCanvas;
 				
 		//initialise the grid
-		oState.grid.init(cCAGridConsts.init.block.id);
-	},
+		oState.grid.init(cCAGridTypes.init.block.id);
+		cDebug.leave();
+	}
 		
 	//****************************************************************
-	pr__drawGrid: function(){
+	static pr__drawGrid(){
+		cDebug.enter();
 		var oOptions = this.options;
 		var oState = this._state;
 		var oGrid = oState.grid;
@@ -152,16 +167,23 @@ $.widget( "ck.cacanvas",{
 		oState.drawing = true;
 		
 		var x,y,oCell;
+		if (oGrid.changed_cells.length == 0){
+			cDebug.warn ("no changed cells - nothing to draw");
+			return;
+		}
+		
 		for ( var i=0; i< oGrid.changed_cells.length; i++){
 			oCell = oGrid.changed_cells[i];
 			y = oCell.data.get(cCACellTypes.hash_values.row) * oOptions.cell_size;
 			x = oCell.data.get(cCACellTypes.hash_values.col) * oOptions.cell_size;
 			this.pr__draw_cell(oCell, x,y);
 		}
-	},
+		cDebug.leave();
+	}
 	
 	//****************************************************************
-	pr__drawFullGrid: function(){
+	static pr__drawFullGrid(){
+		cDebug.enter();
 		var oOptions = this.options;
 		var oState = this._state;
 		var oGrid = oState.grid;
@@ -180,10 +202,11 @@ $.widget( "ck.cacanvas",{
 			}
 			y+= oOptions.cell_size;
 		}
-	},	
+		cDebug.leave();
+	}	
 	
 	//****************************************************************
-	pr__draw_cell(poCell,piX, piY){
+	static pr__draw_cell(poCell,piX, piY){
 		var sImg = (poCell.value==0?cCACanvasConsts.white_image:cCACanvasConsts.black_image);
 		var oThis = this;
 		var oCanvas = this._state.canvas;
@@ -191,9 +214,22 @@ $.widget( "ck.cacanvas",{
 		//its faster to blit images than it is to draw vectors
 		oCanvas.drawImage({
 			source: sImg, x: piX, y: piY,
-			fromCenter:false, load:function(){	oThis.onImageLoad();}
+			fromCenter:false, load(){	oThis.onImageLoad();}
 		});
 	}
 	
+}
+
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+$.widget( "ck.cacanvas",{
+	options:{
+		cols:100,
+		rows:100,
+		cell_size:5
+	},
 	
+	_create(){
+		cCACanvas._create(this.options, this.element);
+	}
 });

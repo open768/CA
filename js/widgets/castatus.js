@@ -101,8 +101,8 @@ $.widget( "ck.castatus",{
 		oDiv = $("<DIV>",{class:"ui-widget-content"});
 			var oSelect = $("<SELECT>",{width:200,title:"choose a pattern to initialise the grid with"});
 			oSelect.append( $("<option>",{selected:1,disabled:1,value:-1}).append("Initialise"));
-			for (var sName in cCAGridConsts.init){
-				var oItem = cCAGridConsts.init[sName];
+			for (var sName in cCAGridTypes.init){
+				var oItem = cCAGridTypes.init[sName];
 				var oOption = $("<option>",{value:oItem.id}).append(oItem.label);
 				oSelect.append ( oOption);
 			}
@@ -121,17 +121,17 @@ $.widget( "ck.castatus",{
 		oDiv = $("<DIV>",{class:"ui-widget-content"});
 			var oButton = $("<button>",{width:"30px",height:"30px",id:"btnStop"}).button({icon:"ui-icon-stop"});
 				oButton.prop("disabled", true);
-				oButton.click(	function(){ oThis.onClickControl(cCAGridConsts.actions.stop);}	);
+				oButton.click(	function(){ oThis.onClickControl(cCAGridTypes.actions.stop);}	);
 				oDiv.append(oButton);
 
 			var oButton = $("<button>",{width:"30px",height:"30px",id:"btnPlay"}).button({icon:"ui-icon-circle-triangle-e"});
 				oButton.prop("disabled", true);
-				oButton.click(	function(){ oThis.onClickControl(cCAGridConsts.actions.play);}	);
+				oButton.click(	function(){ oThis.onClickControl(cCAGridTypes.actions.play);}	);
 				oDiv.append(oButton);
 
 			var oButton = $("<button>",{width:"30px",height:"30px",title:"step",id:"btnStep"}).button({icon:"ui-icon-seek-end"});
 				oButton.prop("disabled", true);
-				oButton.click(	function(){ oThis.onClickControl(cCAGridConsts.actions.step);}	);
+				oButton.click(	function(){ oThis.onClickControl(cCAGridTypes.actions.step);}	);
 				oDiv.append(oButton);
 		oElement.append(oDiv);
 	},
@@ -156,12 +156,12 @@ $.widget( "ck.castatus",{
 		}
 	
 		switch (piAction){
-			case cCAGridConsts.actions.stop:
+			case cCAGridTypes.actions.stop:
 				$("#btnStep").prop("disabled",false);
 				$("#btnPlay").prop("disabled",false);
 				$("#btnStop").prop("disabled",true);
 				break;
-			case cCAGridConsts.actions.play:
+			case cCAGridTypes.actions.play:
 				$("#btnStep").prop("disabled",true);
 				$("#btnPlay").prop("disabled",true);
 				$("#btnStop").prop("disabled",false);
