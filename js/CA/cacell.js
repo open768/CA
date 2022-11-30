@@ -20,7 +20,10 @@ class cCAEvaluatedCell {
 //#
 //###################################################################################
 class cCACell{
-	constructor(){
+	rule = null;
+	
+	constructor(){ 
+		//not passing in row and col as cells dont have to be limited to 2d
 		this.rule = null;
 		this.state = 1;
 		this.value = 0;
