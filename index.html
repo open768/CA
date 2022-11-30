@@ -30,11 +30,12 @@
 	<script src="js/CA/calexicon.js"></script>
 	
 	<!-- widgets for page -->
-	<script src="js/widgets/cachart.js"></script>
-	<script src="js/widgets/camachine.js"></script>
-	<script src="js/widgets/cacontrols.js"></script>
-	<script src="js/widgets/cacanvas.js"></script>
-	<script src="js/widgets/castatus.js"></script>
+	<script src="js/widgets/index/cachart.js"></script>
+	<script src="js/widgets/index/camachine.js"></script>
+	<script src="js/widgets/index/cajson.js"></script>
+	<script src="js/widgets/index/cacontrols.js"></script>
+	<script src="js/widgets/index/cacanvas.js"></script>
+	<script src="js/widgets/index/castatus.js"></script>
 </head>
 <body>
 	<!-- Global site tag (gtag.js) - Google Analytics -->
@@ -51,7 +52,6 @@
 	<div id="machine">Loading Machine</div>
 
 	<script >
-	cDebug.on();
 	function onJqueryLoad(){
 		$("#machine").camachine({no_graphs:false});
 	}
