@@ -81,28 +81,10 @@ class cCAControls{
 
 		oDiv = $("<DIV>",{class:"ui-widget-content"});
 			//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-			var oParentDiv = $("<DIV>", {id:"tcontainer"});
-			oParentDiv.append(
-				"<ul>" +
-					"<li><a href='#tbase64'>base64</a></li>" +
-					"<li><a href='#tjson'>JSON</a></li>" +
-				"</ul>");
-
-				var oChildDiv = $("<div>",{id:"tbase64"});
-					sID = cJquery.child_ID(oElement, cCAControlTypes.entry_ID);
-					var oBox = $("<TEXTAREA>",{ID:sID,rows:5,cols:80 ,class:"rule", title:"enter the rule here"});
-						oBox.keyup( function(){oThis.onRuleChange()}	);
-					oChildDiv.append(oBox);
-				oParentDiv.append(oChildDiv);
-
-				var oChildDiv = $("<div>",{id:"tjson"});
-					sID = cJquery.child_ID(oElement, cCAControlTypes.json_ID);
-					var oBox = $("<TEXTAREA>",{ID:sID, class:"json", title:"jSON will appear here", readonly:1});
-					oChildDiv.append(oBox);
-				oParentDiv.append(oChildDiv);
-
-			oDiv.append(oParentDiv)
-			oParentDiv.tabs();
+			sID = cJquery.child_ID(oElement, cCAControlTypes.entry_ID);
+			var oBox = $("<TEXTAREA>",{ID:sID,class:"rule", title:"enter the rule here"});
+				oBox.keyup( function(){oThis.onRuleChange()}	);
+			oDiv.append(oBox)
 
 			//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 			sID = cJquery.child_ID(oElement, cCAControlTypes.rules_ID);

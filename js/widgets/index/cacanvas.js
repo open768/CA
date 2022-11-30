@@ -128,7 +128,8 @@ class cCACanvas{
 			cDebug.write("finished drawing");
 			oState.drawing = false;
 			var oGrid = this._state.grid;
-			setTimeout(function(){ oGrid.notify_drawn();}, 0);
+			var oEvent = new cCAGridEvent(cCAGridTypes.events.notify_drawn,null);
+			bean.fire(document, cCAGridTypes.event_hook, oEvent);
 		}
 	}
 	

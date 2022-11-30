@@ -49,8 +49,8 @@ $.widget( "ck.camachine",{
 				var oCell = $("<TD>", {width:350,valign:"top"});
 					var oControlDiv = $("<DIV>",{width:350,id:"leftControl", canvas_id:"canvas"});
 					oControlDiv.cacontrols();
-					oCell.append(oControlDiv);
-				oRow.append(oCell);
+						oCell.append(oControlDiv);
+					oRow.append(oCell);
 				
 				//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 				var oCell = $("<TD>");
@@ -60,15 +60,22 @@ $.widget( "ck.camachine",{
 						height:oOptions.height,
 						cell_size:oOptions.cell_size,
 					});
-					oCell.append(oCanvasDiv);
-				oRow.append(oCell);
+						oCell.append(oCanvasDiv);
+					oRow.append(oCell);
 				
 				//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 				var oCell = $("<TD>", {width:240,valign:"top",canvas_id:"canvas"});
 					var oStatusDiv = $("<DIV>", {width:240}).castatus({});
 					oCell.append(oStatusDiv);
-				oRow.append(oCell);
+					oRow.append(oCell);
 				
+			oTable.append(oRow);
+			var oRow = $("<TR>");
+				var oCell = $("<TD>", {valign:"top",colspan:3});
+					var oJsonDiv = $("<DIV>", {title:"json will appear here"});
+						oJsonDiv.cajson();
+						oCell.append(oJsonDiv);
+				oRow.append(oCell);
 			oTable.append(oRow);
 		oElement.append(oTable);
 		
