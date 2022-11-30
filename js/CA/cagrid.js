@@ -29,7 +29,8 @@ class cCAGridTypes {
 		nochange:"GN",
 		notify_finished:"GF",
 		init_grid:"GI",
-		set_rule:"GSR"
+		set_rule:"GSR",
+		notify_drawn: "GND"
 	};
 	static actions={
 		play:1,
@@ -265,6 +266,8 @@ class cCAGrid {
 		this.changed_cells = null;
 		this.running = false;
 		this.status = new cCAGridRunData();
+		var oThis = this;
+		bean.on(document, cCAGridTypes.event_hook, function(poEvent){oThis.onCAEvent(poEvent)});
 	}
 	
 	//#######################################################################
@@ -309,16 +312,6 @@ class cCAGrid {
 		cDebug.leave();
 	}
 	
-	//****************************************************************
-	notify_drawn(){
-		var oThis = this;
-		if (this.running){
-			cDebug.write("running again");
-			this.status.runs ++;
-			setTimeout(function(){ oThis.step();}, 50);
-		}else
-			cDebug.write("not running again");
-	}
 
 
 	//****************************************************************
@@ -343,7 +336,7 @@ class cCAGrid {
 				if (oCell.value > 0) oStatus.active ++;
 			}
 
-		//promote changed cells
+		//check how many cells changed
 		var iChangedLen = this.changed_cells.length;
 		this.status.changed = iChangedLen;
 		if (iChangedLen == 0){
@@ -352,6 +345,7 @@ class cCAGrid {
 			return;
 		}
 		
+		//promote changed cells
 		for ( var ic = 0; ic < iChangedLen; ic++){
 			var oCell = this.changed_cells[ic];
 			oCell.promote();
@@ -432,7 +426,27 @@ class cCAGrid {
 		
 		return oCell;
 	}
-
+	
+	//#######################################################################
+	//# events
+	//#######################################################################
+	onCAEvent(poEvent){
+		if (poEvent.event === cCAGridTypes.events.notify_drawn)
+			this.OnNotifyDrawn();
+	}
+	//****************************************************************
+	OnNotifyDrawn(){
+		cDebug.enter();
+		var oThis = this;
+		if (this.running){
+			cDebug.write("running again");
+			this.status.runs ++;
+			setTimeout(function(){ oThis.step();}, 50);
+		}else
+			cDebug.write("not running again");
+		cDebug.leave();
+	}
+	
 	//#######################################################################
 	//# privates
 	//#######################################################################
