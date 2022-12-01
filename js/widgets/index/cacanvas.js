@@ -175,9 +175,7 @@ class cCACanvas{
 		
 		for ( var i=0; i< oGrid.changed_cells.length; i++){
 			oCell = oGrid.changed_cells[i];
-			y = oCell.data.get(cCACellTypes.hash_values.row) * oOptions.cell_size;
-			x = oCell.data.get(cCACellTypes.hash_values.col) * oOptions.cell_size;
-			this.pr__draw_cell(oCell, x,y);
+			this.pr__draw_cell(oCell);
 		}
 		cDebug.leave();
 	}
@@ -185,7 +183,6 @@ class cCACanvas{
 	//****************************************************************
 	static pr__drawFullGrid(){
 		cDebug.enter();
-		var oOptions = this.options;
 		var oState = this._state;
 		var oGrid = oState.grid;
 		
@@ -193,28 +190,35 @@ class cCACanvas{
 		oState.images_done = 0;		
 		oState.drawing = true;
 		
-		var x,y=0;
 		for (var ir=1; ir<= oGrid.rows; ir++){
-			x=0;
 			for (var ic=1; ic<= oGrid.cols; ic++){
 				var oCell = oGrid.getCell(ir,ic);
-				this.pr__draw_cell(oCell, x,y);
-				x+= oOptions.cell_size;
+				this.pr__draw_cell(oCell);
 			}
-			y+= oOptions.cell_size;
 		}
 		cDebug.leave();
 	}	
 	
 	//****************************************************************
-	static pr__draw_cell(poCell,piX, piY){
-		var sImg = (poCell.value==0?cCACanvasConsts.white_image:cCACanvasConsts.black_image);
+	static pr__draw_cell(poCell){
 		var oThis = this;
 		var oCanvas = this._state.canvas;
+		var oOptions = this.options;
 		
+		//-----------------what img to use
+		var sImg = (poCell.value==0?cCACanvasConsts.white_image:cCACanvasConsts.black_image);
+		
+		//-----------------coords of cell
+		var iRow, iCol;
+		iRow = poCell.data.get(cCACellTypes.hash_values.row);
+		iCol = poCell.data.get(cCACellTypes.hash_values.col);
+		var iy = (iRow -1) * oOptions.cell_size;
+		var ix = (iCol-1) * oOptions.cell_size;
+		
+		//------------------draw
 		//its faster to blit images than it is to draw vectors
 		oCanvas.drawImage({
-			source: sImg, x: piX, y: piY,
+			source: sImg, x: ix, y: iy,
 			fromCenter:false, load(){	oThis.onImageLoad();}
 		});
 	}
