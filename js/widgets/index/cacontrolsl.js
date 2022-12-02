@@ -7,10 +7,9 @@ http://creativecommons.org/licenses/by-nc-nd/4.0/legalcode
 For licenses that allow for commercial use please contact cluck@chickenkatsu.co.uk
 // USE AT YOUR OWN RISK - NO GUARANTEES OR ANY FORM ARE EITHER EXPRESSED OR IMPLIED
 **************************************************************************/
-class cCAControlTypes {
+class cCAControlLTypes {
 	static entry_ID="en";
 	static rules_ID="ru";
-	static json_ID="js";
 	static rules_status_ID="rs";
 	static rule_random_ID= "rr";
 	static name_ID="na";
@@ -24,7 +23,7 @@ class cCAControlTypes {
 
 
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-class cCAControls{
+class cCAControlsL{
 	static _state={
 		grid:null,
 		rule:null
@@ -57,7 +56,7 @@ class cCAControls{
 		this.pr__init();
 
 		//subscribe to CA Events
-		bean.on(document, cCAGridTypes.event_hook, function(poEvent){ oThis.onGridEvent(poEvent)});
+		bean.on(document, cCAEventTypes.event_hook, function(poEvent){ oThis.onCAEvent(poEvent)});
 	}
 
 	//#################################################################
@@ -74,20 +73,20 @@ class cCAControls{
 		//--rules widgets-------------------------------------------------
 		oDiv = $("<DIV>",{class:"ui-widget-header"});
 			oDiv.append("Rule");
-			sID = cJquery.child_ID(oElement, cCAControlTypes.rules_status_ID);
+			sID = cJquery.child_ID(oElement, cCAControlLTypes.rules_status_ID);
 			var oSpan = $("<SPAN>",{id:sID}).html("??");
 			oDiv.append(oSpan);
 		oElement.append(oDiv);
 
 		oDiv = $("<DIV>",{class:"ui-widget-content"});
 			//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-			sID = cJquery.child_ID(oElement, cCAControlTypes.entry_ID);
+			sID = cJquery.child_ID(oElement, cCAControlLTypes.entry_ID);
 			var oBox = $("<TEXTAREA>",{ID:sID,class:"rule", title:"enter the rule here"});
 				oBox.keyup( function(){oThis.onRuleChange()}	);
 			oDiv.append(oBox)
 
 			//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-			sID = cJquery.child_ID(oElement, cCAControlTypes.rules_ID);
+			sID = cJquery.child_ID(oElement, cCAControlLTypes.rules_ID);
 			var oSelect = $("<SELECT>",{id:sID,width:200,title:"choose the rule type to enter in the box above"});
 				oSelect.append( $("<option>",{selected:1,disabled:1,value:-1}).append("Rule Type"));
 				oSelect.append( $("<option>",{value:cCARuleTypes.rule_types.base64}).append("base64"));
@@ -102,7 +101,7 @@ class cCAControls{
 
 			//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 			oDiv.append("<HR>");
-			sID = cJquery.child_ID(oElement, cCAControlTypes.preset_ID);
+			sID = cJquery.child_ID(oElement, cCAControlLTypes.preset_ID);
 			var oSelect = $("<SELECT>",{id:sID,width:200,title:"pick a preset rule"});
 				this.pr__populate_presets(oSelect);
 				oDiv.append(oSelect);
@@ -119,7 +118,7 @@ class cCAControls{
 
 			//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 			oDiv.append("<HR>");
-			sID = cJquery.child_ID(oElement, cCAControlTypes.name_ID);
+			sID = cJquery.child_ID(oElement, cCAControlLTypes.name_ID);
 			oDiv.append("word repeater");
 			var oInput = $("<INPUT>",{type:"text",id:sID,size:12,icon:"ui-icon-circle-arrow-e",title:"put anything in this box - eg your name"});
 				oDiv.append(oInput);
@@ -130,7 +129,7 @@ class cCAControls{
 
 			//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 			oDiv.append("<HR>");
-			sID = cJquery.child_ID(oElement, cCAControlTypes.boredom_ID);
+			sID = cJquery.child_ID(oElement, cCAControlLTypes.boredom_ID);
 			oSelect = $("<SELECT>",{id:sID,width:50,title:"how many times will a cell see a pattern before it gets bored"});
 				oSelect.append( $("<option>",{selected:1,disabled:1}).append("Boredom"));
 				oSelect.append( $("<option>",{value:cCARuleTypes.no_boredom}).append("Never"));
@@ -147,19 +146,26 @@ class cCAControls{
 	//#################################################################
 	//# EVENTS
 	//#################################################################`
-	static onGridEvent(poEvent){
-		if (poEvent.event == cCAGridTypes.events.set_rule){
-			this._state.grid = poEvent.data;
-			//create JSON
-			this.pr__update_json();
+	static onCAEvent(poEvent){
+		cDebug.enter();
+		switch(poEvent.event){
+			case cCAEventTypes.event_types.update_rule:
+				cDebug.write("update_rule");
+				var oRule = poEvent.data;
+				this.pr_setBase64Rule(oRule);
+				break;
+			case cCAEventTypes.event_types.set_grid:
+				cDebug.write("set_grid");
+				this._state.grid = poEvent.data;
 		}
+		cDebug.leave();
 	}
-
+	
 	//****************************************************************************
 	static onSetNameClick(){
 		var oElement = this.element;
 
-		var sID = cJquery.child_ID(oElement, cCAControlTypes.name_ID);
+		var sID = cJquery.child_ID(oElement, cCAControlLTypes.name_ID);
 		var oInput = $("#" + sID);
 		var sInput = oInput.val().trim();
 		if (sInput === ""){
@@ -179,8 +185,8 @@ class cCAControls{
 	static onSetRuleClick(){
 		var oElement = this.element;
 
-		var oTextArea = $("#" +	cJquery.child_ID(oElement, cCAControlTypes.entry_ID));
-		var oSelect = $("#" + cJquery.child_ID(oElement, cCAControlTypes.rules_ID));
+		var oTextArea = $("#" +	cJquery.child_ID(oElement, cCAControlLTypes.entry_ID));
+		var oSelect = $("#" + cJquery.child_ID(oElement, cCAControlLTypes.rules_ID));
 
 		if (!oSelect.val()) {
 			alert("choose a rule type to import");
@@ -204,7 +210,7 @@ class cCAControls{
 					caMachineOptions.rule = oRule;
 
 					//set the boredom if chosen
-					var oBoredomList = $("#" + cJquery.child_ID(oElement, cCAControlTypes.boredom_ID));
+					var oBoredomList = $("#" + cJquery.child_ID(oElement, cCAControlLTypes.boredom_ID));
 					if (!isNaN(oBoredomList.val())) oRule.boredom = oBoredomList.val();
 
 					//inform subscribers
@@ -230,15 +236,15 @@ class cCAControls{
 	static onRuleChange(){
 		var oElement = this.element;
 
-		var oTextArea = $("#" +	cJquery.child_ID(oElement, cCAControlTypes.entry_ID));
-		var oSelect = $("#" + cJquery.child_ID(oElement, cCAControlTypes.rules_ID));
+		var oTextArea = $("#" +	cJquery.child_ID(oElement, cCAControlLTypes.entry_ID));
+		var oSelect = $("#" + cJquery.child_ID(oElement, cCAControlLTypes.rules_ID));
 		var sSelected = oSelect.val();
 		if (sSelected){
 			var iSelected = parseInt(sSelected);
 			if ( iSelected == cCARuleTypes.rule_types.base64){
 				var sText = oTextArea.val();
 				var iDiff = cCARuleTypes.base64_length - sText.length;
-				var oSpan = $("#" +	cJquery.child_ID(oElement, cCAControlTypes.rules_status_ID));
+				var oSpan = $("#" +	cJquery.child_ID(oElement, cCAControlLTypes.rules_status_ID));
 				oSpan.html( iDiff +" chars remaining");
 			}
 		}
@@ -248,8 +254,8 @@ class cCAControls{
 	static onPresetsClick(poEvent){
 		var oElement = this.element;
 
-		var oTextArea = $("#" +	cJquery.child_ID(oElement, cCAControlTypes.entry_ID));
-		var oRulesSelect = $("#" + cJquery.child_ID(oElement, cCAControlTypes.rules_ID));
+		var oTextArea = $("#" +	cJquery.child_ID(oElement, cCAControlLTypes.entry_ID));
+		var oRulesSelect = $("#" + cJquery.child_ID(oElement, cCAControlLTypes.rules_ID));
 
 		var sPreset = $(poEvent.target).val();
 		var oRuleJson = JSON.parse(sPreset);
@@ -295,11 +301,11 @@ class cCAControls{
 		var s64 = cCARuleBase64Exporter.export(poRule,cCACellTypes.default_state);
 		this._state.rule = poRule;
 
-		var oTextArea = $("#" +	cJquery.child_ID(oElement, cCAControlTypes.entry_ID));
+		var oTextArea = $("#" +	cJquery.child_ID(oElement, cCAControlLTypes.entry_ID));
 			oTextArea.val(s64);
 			cBrowser.copy_to_clipboard(s64);
 
-		var oSelect = $("#" + cJquery.child_ID(oElement, cCAControlTypes.rules_ID));
+		var oSelect = $("#" + cJquery.child_ID(oElement, cCAControlLTypes.rules_ID));
 			oSelect.val(cCARuleTypes.rule_types.base64);
 			oSelect.selectmenu("refresh");
 		this.onSetRuleClick();
@@ -317,29 +323,16 @@ class cCAControls{
 			poSelect.append(oOption);
 		}
 	}
-
-	//****************************************************************************
-	static pr__update_json(){
-		var oElement = this.element;
-
-		//export the grid
-		var oObj = cCAGridJSONExporter.export(this._state.grid);
-		var sJson = JSON.stringify(oObj);
-
-		//updatethe UI with JSON
-		var sID = cJquery.child_ID(oElement, cCAControlTypes.json_ID)
-		$("#"+sID).val(sJson);
-	}
 }
 
 //###############################################################################
 //# widget
 //###############################################################################
 $.widget(
-	"ck.cacontrols",
+	"ck.cacontrolsl",
 	{
 		_create(){
-			cCAControls.create(this.element);
+			cCAControlsL.create(this.element);
 		}
 	}
 );
