@@ -94,7 +94,7 @@ $.widget( "ck.cachart",{
 				oOptions.runs ++;
 				break;
 			case cCAEventTypes.event_types.set_rule:
-			case cCAEventTypes.event_types.initialise:
+			case cCAEventTypes.event_types.grid_init:
 				oOptions._data = null;
 				oOptions._chart = null;
 				oOptions.runs = 0;

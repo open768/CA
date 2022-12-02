@@ -10,6 +10,7 @@ For licenses that allow for commercial use please contact cluck@chickenkatsu.co.
 
 class cCAJsonTypes {
 	static textarea_id = "txt";
+	static tabs_id = "tab";
 }
 
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -30,8 +31,10 @@ class cCAJson{
 
 		//check dependencies
 		if (!bean ) 	$.error("bean class is missing! check includes");
+		if (!oElement.tabs ) 	$.error("tabs class is missing! check includes");
 
 		//set basic stuff
+		oElement.uniqueId();
 		oElement.addClass("ui-widget");
 		$(oElement).tooltip();
 
@@ -41,6 +44,7 @@ class cCAJson{
 
 		//subscribe to CA Events
 		bean.on(document, cCAGridTypes.event_hook, function(poEvent){ oThis.onGridEvent(poEvent)});
+		cDebug.leave();
 	}
 
 	//#################################################################
@@ -50,6 +54,7 @@ class cCAJson{
 		var oThis, oOptions, oElement;
 		var oDiv, sID;
 
+		cDebug.enter();
 		oElement = this.element;
 		oThis = this;
 		
@@ -59,40 +64,64 @@ class cCAJson{
 			
 		oDiv = $("<DIV>",{class:"ui-widget-content"});
 			sID = cJquery.child_ID(oElement, cCAJsonTypes.textarea_id);
-			var oBox = $("<TEXTAREA>",{ID:sID,class:"json", title:"Json goes here", readonly:1});
+			var oBox = $("<TEXTAREA>",{ID:sID,class:"json", title:"Json goes here"});
 				oDiv.append(oBox);
-			var oButton = $("<button>").append("Get Json");
-				oButton.click( function(){oThis.onClickButton()} );
+			var oButton = $("<button>").append("Create");
+				oButton.click( function(){oThis.onClickExport()} );
+				oDiv.append(oButton);
+			
+			var oButton = $("<button>").append("import");
+				oButton.click( function(){oThis.onClickImport()} );
 				oDiv.append(oButton);
 			oElement.append(oDiv);
 
+		cDebug.leave();
 	}
 
 	//#################################################################
 	//# EVENTS
 	//#################################################################`
-	static onClickButton(){
+	static onClickExport(){
 		cDebug.enter();
 		if ( this._state.grid == null)
 			alert("no rule set");
 		else
-			this.pr__update_json()
+			this.pr__create_json()
+		cDebug.leave();
+	}
+	
+	//*****************************************************************
+	static onClickImport(){
+		cDebug.enter();
+	
+		var oElement = this.element;
+		var sID = cJquery.child_ID(oElement, cCAJsonTypes.textarea_id)
+		var sJson = $("#" + sID).val();
+		var oJson = JSON.parse(sJson)
+		var oGrid = cCAGridJSONImporter.populate(oJson);
+		
+		//fire events to tell other controls there is a new rule and grid in town
+		var oEvent = new cCAEvent( cCAEventTypes.event_types.import_grid, oGrid);
+		bean.fire(document, cCAEventTypes.event_hook, oEvent);
 		cDebug.leave();
 	}
 	
 	
+	//*****************************************************************
 	static onGridEvent(poEvent){
 		cDebug.enter();
-		if (poEvent.event == cCAGridTypes.events.set_rule){
+		if (poEvent.event == cCAGridTypes.events.set_grid){
+			cDebug.write("got grid event: grid set");
 			this._state.grid = poEvent.data;
-			//create JSON
-			this.pr__update_json();
 		}
 		cDebug.leave();
 	}
 
-	//****************************************************************************
-	static pr__update_json(){
+	//#################################################################
+	//# EVENTS
+	//#################################################################`
+	static pr__create_json(){
+		cDebug.enter();
 		var oElement = this.element;
 
 		//export the grid
@@ -100,8 +129,9 @@ class cCAJson{
 		var sJson = JSON.stringify(oObj);
 
 		//updatethe UI with JSON
-		var sID = cJquery.child_ID(oElement, cCAJsonTypes.textarea_id)
+		var sID = cJquery.child_ID(oElement, cCAJsonTypes.textarea_id);
 		$("#"+sID).val(sJson);
+		cDebug.leave();
 	}
 }
 

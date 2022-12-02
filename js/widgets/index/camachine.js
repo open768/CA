@@ -44,12 +44,13 @@ $.widget( "ck.camachine",{
 		//widgets will subscribe and publish events themselves
 		oElement.empty();
 		var oTable = $("<table>");
+			//----------------------------------------------------------------------------------
 			var oRow = $("<TR>");
 				//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 				var oCell = $("<TD>", {width:350,valign:"top"});
-					var oControlDiv = $("<DIV>",{width:350,id:"leftControl", canvas_id:"canvas"});
-					oControlDiv.cacontrols();
-						oCell.append(oControlDiv);
+					var oLeftCtrlDiv = $("<DIV>",{width:350,id:"leftControl", canvas_id:"canvas"});
+					oLeftCtrlDiv.cacontrolsl();
+						oCell.append(oLeftCtrlDiv);
 					oRow.append(oCell);
 				
 				//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
@@ -60,16 +61,18 @@ $.widget( "ck.camachine",{
 						height:oOptions.height,
 						cell_size:oOptions.cell_size,
 					});
-						oCell.append(oCanvasDiv);
-					oRow.append(oCell);
+					oCell.append(oCanvasDiv);
+				oRow.append(oCell);
 				
 				//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 				var oCell = $("<TD>", {width:240,valign:"top",canvas_id:"canvas"});
-					var oStatusDiv = $("<DIV>", {width:240}).castatus({});
-					oCell.append(oStatusDiv);
-					oRow.append(oCell);
-				
+					var oRightCtrlDiv = $("<DIV>", {width:240});
+					oRightCtrlDiv.cacontrolsr();
+					oCell.append(oRightCtrlDiv);
+				oRow.append(oCell);
 			oTable.append(oRow);
+			
+			//----------------------------------------------------------------------------------
 			var oRow = $("<TR>");
 				var oCell = $("<TD>", {valign:"top",colspan:3});
 					var oJsonDiv = $("<DIV>", {title:"json will appear here"});
