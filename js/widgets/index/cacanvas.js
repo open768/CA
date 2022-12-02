@@ -7,9 +7,26 @@ http://creativecommons.org/licenses/by-nc-nd/4.0/legalcode
 For licenses that allow for commercial use please contact cluck@chickenkatsu.co.uk
 // USE AT YOUR OWN RISK - NO GUARANTEES OR ANY FORM ARE EITHER EXPRESSED OR IMPLIED
 **************************************************************************/
-class cCACanvasConsts{
+class cCACanvasTypes{
 	static white_image = "images/whitebox.png";
 	static black_image = "images/blackbox.png";
+}
+
+class caCanvasEvent{
+	name =null;
+	
+	//*****************************************************
+	constructor (psName, psEvent, poData){
+		this.event = psEvent;
+		this.data = poData;
+		this.name = psName;
+	}
+	
+	//*****************************************************
+	fire_event(){
+		var oEvent = new cCAEvent( cCAEventTypes.events.canvas_event, this);
+		bean.fire(document, cCAEventTypes.event_hook , oEvent);
+	}
 }
 
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -18,7 +35,7 @@ class cCACanvas{
 	//#################################################################
 	//# Definition
 	//#################################################################
-	 _state={
+	 state={
 		grid: null,
 		canvas:null,
 		drawing:false,
@@ -59,7 +76,7 @@ class cCACanvas{
 	//****************************************************************
 	 onCAEvent( poEvent){
 		cDebug.enter();
-		var oState = this._state;
+		var oState = this.state;
 		var oOptions = this.options;
 		
 		switch (poEvent.type){
@@ -81,6 +98,7 @@ class cCACanvas{
 				this.pr__set_grid(oGrid);
 				
 				//rule has been set
+
 				var oEvent = new cCAEvent( cCAEventTypes.events.update_rule, oGrid.rule);
 				bean.fire(document, cCAEventTypes.event_hook , oEvent);
 				break;
@@ -134,7 +152,7 @@ class cCACanvas{
 	//****************************************************************
 	 onGridClear(){
 		cDebug.enter();
-		var oCanvas = this._state.canvas;
+		var oCanvas = this.state.canvas;
 		cDebug.write("Clearing canvas");
 		oCanvas.clearCanvas();
 		cDebug.leave();
@@ -142,14 +160,14 @@ class cCACanvas{
 	
 	//****************************************************************
 	 onImageLoad(){
-		var oState = this._state;
+		var oState = this.state;
 		
 		oState.images_done ++;
 		
 		if (oState.images_done >= oState.image_count){
 			cDebug.write("finished drawing");
 			oState.drawing = false;
-			var oGrid = this._state.grid;
+			var oGrid = this.state.grid;
 			var oEvent = new cCAGridEvent(cCAGridTypes.events.notify_drawn,null);
 			bean.fire(document, cCAGridTypes.event_hook, oEvent);
 		}
@@ -160,7 +178,7 @@ class cCACanvas{
 	//#################################################################`
 	 pr__set_grid(poGrid){
 		var oThis = this;
-		this._state.grid = poGrid;
+		this.state.grid = poGrid;
 		bean.on(poGrid, cCAGridTypes.events.done, function(poData){oThis.onGridDone(poData)});
 		bean.on(poGrid, cCAGridTypes.events.clear, function(){oThis.onGridClear()});
 		bean.on(poGrid, cCAGridTypes.events.nochange, function(){oThis.onNoChange()});
@@ -174,7 +192,7 @@ class cCACanvas{
 	 pr__initCanvas(){
 		cDebug.enter();
 		var oOptions = this.options;
-		var oState = this._state;
+		var oState = this.state;
 		var oElement = this.element;
 
 		
@@ -195,7 +213,7 @@ class cCACanvas{
 	 pr__drawGrid(){
 		cDebug.enter();
 		var oOptions = this.options;
-		var oState = this._state;
+		var oState = this.state;
 		var oGrid = oState.grid;
 
 		oState.image_count = oGrid.changed_cells.length;
@@ -218,7 +236,7 @@ class cCACanvas{
 	//****************************************************************
 	 pr__drawFullGrid(){
 		cDebug.enter();
-		var oState = this._state;
+		var oState = this.state;
 		var oGrid = oState.grid;
 		
 		oState.image_count = oGrid.rows * oGrid.cols;
@@ -237,11 +255,11 @@ class cCACanvas{
 	//****************************************************************
 	 pr__draw_cell(poCell){
 		var oThis = this;
-		var oCanvas = this._state.canvas;
+		var oCanvas = this.state.canvas;
 		var oOptions = this.options;
 		
 		//-----------------what img to use
-		var sImg = (poCell.value==0?cCACanvasConsts.white_image:cCACanvasConsts.black_image);
+		var sImg = (poCell.value==0?cCACanvasTypes.white_image:cCACanvasTypes.black_image);
 		
 		//-----------------coords of cell
 		var iRow, iCol;
