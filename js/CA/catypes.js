@@ -11,6 +11,7 @@ For licenses that allow for commercial use please contact cluck@chickenkatsu.co.
 //###############################################################################
 class cCAEvent{
 	constructor(piType, poData){
+		if (piType == null) throw new Error("null type");	
 		this.type = piType;
 		this.data = poData;
 	}
@@ -20,11 +21,14 @@ class cCAEventTypes {
 	static event_hook = "CAEV";
 	static event_types={
 		set_rule:1,
-		initialise:2,
+		grid_init:2,
 		resize:3,
 		action:4,
 		nochange:5,
-		status:6
+		status:6,
+		import_grid:7,
+		update_rule:8,
+		set_grid:9
 	};
 }
 

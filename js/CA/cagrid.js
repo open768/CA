@@ -226,10 +226,19 @@ class cCAGridExported {
 		data:null
 	};
 	rule = null;
+	
+	static is_valid_obj( poObj){
+		if (!poObj.version) throw new Error("no version");
+		if (!poObj.grid) throw new Error("no grid");
+		if (!poObj.rule) throw new Error("no Rule");
+		if (poObj.version !== 1) throw new Error("incompatible version");
+		return true;
+	}
 }
 
 class cCAGridJSONExporter{
 	static export(poGrid){
+		cDebug.enter();
 		if ( !cCommon.obj_is(poGrid , "cCAGrid") ) throw new CAException("param 1 is not cCAGrid")
 		
 		var oObj = new cCAGridExported;
@@ -239,14 +248,60 @@ class cCAGridJSONExporter{
 			//get the status of the cells from the grid
 			oObj.grid.rows = poGrid.rows;
 			oObj.grid.cols = poGrid.cols;
+			
 			//todo
+			oObj.grid.data = this.get_grid_base64(poGrid);
+		cDebug.leave();
 		return oObj;
+	}
+	
+	//*************************************************************************
+	static get_grid_base64(poGrid)
+	{
+		if ( !cCommon.obj_is(poGrid , "cCAGrid") ) throw new CAException("param 1 is not cCAGrid")
+		if (poGrid.rule.stateRules.length > 1) throw new CAException("rules can only have 1 state")
+			
+		var sBin = "";
+		var s64 = null;
+		
+		for (var iRow=1; iRow <= poGrid.rows; iRow++)
+			for (var iCol=1; iCol <= poGrid.cols; iCol++){
+				var oCell  = poGrid.getCell(iRow,iCol,true);
+				sBin = sBin + oCell.value;
+			}
+			
+		var s64 = cCASimpleBase64.toBase64(sBin);
+			
+		return s64;
 	}
 }
 
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+//%
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 class cCAGridJSONImporter{
-	static create_grid(poObj){
-		if ( !cCommon.obj_is(poObj , "cCAGridExported") ) throw new CAException("param 1 is not cCAGridExported")
+	//*********************************************
+	static populate(poJson){
+		if (!cCAGridExported.is_valid_obj(poJson)) throw new CAException("invalid object")
+		//-------------------------------------------------------------------
+		var oGrid = new cCAGrid(poJson.grid.rows, poJson.grid.cols);
+
+		//-------------------------------------------------------------------
+		var oRule = cCARuleObjImporter.makeRule(poJson.rule);
+		oGrid.rule = oRule;
+		
+		//-------------------------------------------------------------------
+		oGrid.init_cells();		
+		var s64 = poJson.grid.data;
+		var sBin = cCASimpleBase64.toBinary(s64);
+		var iIndex = 0;
+		
+		for (var iRow=1; iRow <= oGrid.rows; iRow++)
+			for (var iCol=1; iCol <= oGrid.cols; iCol++){
+				var sBinDigit = sBin[iIndex];
+				oGrid.setCellValue(iRow,iCol,parseInt(sBinDigit));
+			}
+		return oGrid;
 	}
 }
 
@@ -403,6 +458,9 @@ class cCAGrid {
 	
 	//****************************************************************
 	setCellValue(piRow,piCol,iValue){
+		if (this.cell_data == null)
+			throw new CAException("grid not initialised");
+			
 		var oCell = this.getCell(piRow, piCol, false);
 		if (oCell == null) {
 			oCell = new cCACell;
@@ -420,6 +478,7 @@ class cCAGrid {
 	
 	//****************************************************************
 	getCell(piRow,piCol, pbCreate = false){
+		if (this.cell_data == null) return null;
 		var oCell = this.cell_data.get(piRow,piCol);
 		if (pbCreate && oCell == null)
 			oCell = this.setCellValue(piRow,piCol,0);

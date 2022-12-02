@@ -119,6 +119,16 @@ class cCAExportedObj{
 	neighbour_type = null;
 	boredom = null;
 	states = []
+
+	static is_valid_obj( poObj){
+		if (!poObj.version) throw new Error("no version");
+		if (!poObj.neighbour_type) throw new Error("no neighbour_type");
+		if (!poObj.states) throw new Error("no states");
+		
+		if (poObj.version !== 1) throw new Error("incompatible version");
+		if (poObj.states.length !== 1) throw new Error("unsupported number of states");
+		return true;
+	}
 }
 
 class cCARuleObjExporter{
@@ -138,7 +148,12 @@ class cCARuleObjExporter{
 
 class cCARuleObjImporter{
 	static makeRule(poObj){
-		if ( !cCommon.obj_is(poObj , "cCAExportedObj") ) throw new CAException("import requires cCAExportedObj")
+		if ( !cCAExportedObj.is_valid_obj(poObj)) throw new CAException("import requires cCAExportedObj")
+		var oRule = cCARuleBase64Importer.makeRule(poObj.states[0].rule);
+		oRule.neighbour_type = poObj.neighbour_type;
+		oRule.boredom = poObj.boredom;
+		
+		return oRule;
 	}
 }
 
