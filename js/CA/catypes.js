@@ -20,15 +20,16 @@ class cCAEvent{
 class cCAEventTypes {
 	static event_hook = "CAEV";
 	static event_types={
-		set_rule:1,
-		grid_init:2,
-		resize:3,
-		action:4,
-		nochange:5,
-		status:6,
-		import_grid:7,
-		update_rule:8,
-		set_grid:9
+		action:"AC",
+		grid_init:"GI",
+		import_grid:"IG",
+		nochange:"NC",
+		resize:"RS",
+		set_grid:"SG",
+		set_rule:"SR",
+		status:"ST",
+		ready:"RD",
+		update_rule:"UR"
 	};
 }
 

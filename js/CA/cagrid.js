@@ -75,9 +75,9 @@ class cCAGridInitialiser{
 				cDebug.write("init block");
 				var iMidC = Math.floor( poGrid.cols/2);
 				var iMidR = Math.floor( poGrid.rows/2);
-				for (var ic=iMidC; ic<= iMidC+1; ic++)
-					for (var ir=iMidR; ir<= iMidR+1; ir++)
-						poGrid.setCellValue(ir,ic,1);
+				for (var iNc=iMidC; iNc<= iMidC+1; iNc++)
+					for (var iNr=iMidR; iNr<= iMidR+1; iNr++)
+						poGrid.setCellValue(iNr,iNc,1);
 				poGrid.non_zero_count = 4;
 				poGrid.changed_count = 4;
 				break;
@@ -140,9 +140,9 @@ class cCAGridInitialiser{
 			//------------------------------------------------------
 			case cCAGridTypes.init.diagonal.id:
 				cDebug.write("init diagonal");
-				for (var ir=1; ir<= poGrid.rows; ir++){
-					if (ir>poGrid.cols) break;
-					poGrid.setCellValue(ir,ir,1);
+				for (var iNr=1; iNr<= poGrid.rows; iNr++){
+					if (iNr>poGrid.cols) break;
+					poGrid.setCellValue(iNr,iNr,1);
 				}
 				break;
 				
@@ -167,18 +167,18 @@ class cCAGridInitialiser{
 			//------------------------------------------------------
 			case cCAGridTypes.init.horiz_line.id:
 				cDebug.write("init hline");
-				var ir = Math.floor(poGrid.rows / 2);
-				for (var ic=1; ic<= poGrid.cols; ic++)
-					poGrid.setCellValue(ir,ic,1);
+				var iNr = Math.floor(poGrid.rows / 2);
+				for (var iNc=1; iNc<= poGrid.cols; iNc++)
+					poGrid.setCellValue(iNr,iNc,1);
 				break;
 				
 			//--------------------------------------------------------
 			case cCAGridTypes.init.random.id:
 				cDebug.write("init random");
-				for (var ir=1; ir<= poGrid.rows; ir++)
-					for (var ic=1; ic<= poGrid.cols; ic++){
+				for (var iNr=1; iNr<= poGrid.rows; iNr++)
+					for (var iNc=1; iNc<= poGrid.cols; iNc++){
 						var iRnd = Math.round(Math.random());
-						poGrid.setCellValue(ir,ic,iRnd);
+						poGrid.setCellValue(iNr,iNc,iRnd);
 						poGrid.non_zero_count += iRnd;
 					}
 				poGrid.changed_count = poGrid.non_zero_count;
@@ -191,10 +191,10 @@ class cCAGridInitialiser{
 				var iRad = 0;
 				var iMidrow = Math.round(poGrid.rows/2);
 				
-				for (var ic=1; ic<= poGrid.cols; ic++){
+				for (var iNc=1; iNc<= poGrid.cols; iNc++){
 					var fSin = Math.sin(iRad);					
-					var ir = iMidrow + Math.round(fSin * iMidrow);
-					poGrid.setCellValue(ir,ic,1);
+					var iNr = iMidrow + Math.round(fSin * iMidrow);
+					poGrid.setCellValue(iNr,iNc,1);
 					iRad += dRadian;
 				}
 				break;
@@ -202,9 +202,9 @@ class cCAGridInitialiser{
 			//------------------------------------------------------
 			case cCAGridTypes.init.vert_line.id:
 				cDebug.write("init vline");
-				var ic = Math.floor(poGrid.cols / 2);
-				for (var ir=1; ir<= poGrid.cols; ir++)
-					poGrid.setCellValue(ir,ic,1);
+				var iNc = Math.floor(poGrid.cols / 2);
+				for (var iNr=1; iNr<= poGrid.cols; iNr++)
+					poGrid.setCellValue(iNr,iNc,1);
 				break;
 				
 			//--------------------------------------------------------
@@ -380,9 +380,9 @@ class cCAGrid {
 		
 		cDebug.write("stepping");
 		//apply rules
-		for (var ir=1; ir<= this.rows; ir++)
-			for (var ic=1; ic<= this.cols; ic++){
-				var oCell = this.getCell(ir,ic,true);
+		for (var iNr=1; iNr<= this.rows; iNr++)
+			for (var iNc=1; iNc<= this.cols; iNc++){
+				var oCell = this.getCell(iNr,iNc,true);
 				if (oCell.rule == null) oCell.rule = this.rule;
 				if (oCell.apply_rule()){
 					this.changed_count++;
@@ -401,8 +401,8 @@ class cCAGrid {
 		}
 		
 		//promote changed cells
-		for ( var ic = 0; ic < iChangedLen; ic++){
-			var oCell = this.changed_cells[ic];
+		for ( var iNc = 0; iNc < iChangedLen; iNc++){
+			var oCell = this.changed_cells[iNc];
 			oCell.promote();
 			if (oCell.value == 0) 
 				oStatus.active --;
@@ -433,9 +433,9 @@ class cCAGrid {
 		cDebug.enter();
 		this.cell_data = new cSparseArray(this.rows, this.cols);
 		
-		for (var ir=1; ir<= this.rows; ir++)
-			for (var ic=1; ic<= this.cols; ic++)
-				this.setCellValue(ir,ic,0);
+		for (var iNr=1; iNr<= this.rows; iNr++)
+			for (var iNc=1; iNc<= this.cols; iNc++)
+				this.setCellValue(iNr,iNc,0);
 		
 		//reset instance state
 		this.non_zero_count = 0;
@@ -448,9 +448,9 @@ class cCAGrid {
 	clear_cell_rules(){
 		cDebug.enter();
 		var oCell;
-		for (var ir=1; ir<= this.rows; ir++)
-			for (var ic=1; ic<= this.cols; ic++){
-				oCell = this.getCell(ir,ic);
+		for (var iNr=1; iNr<= this.rows; iNr++)
+			for (var iNc=1; iNc<= this.cols; iNc++){
+				oCell = this.getCell(iNr,iNc);
 				if (oCell !== null ) oCell.rule = null;
 			}
 		cDebug.leave();
@@ -512,18 +512,18 @@ class cCAGrid {
 	pr__link_cells(piNeighbourType){
 		cDebug.enter();
 		cDebug.write("linking cells");
-		for (var ir=1; ir<= this.rows; ir++)
-			for (var ic=1; ic<= this.cols; ic++){
-				var oCell = this.getCell(ir,ic);
-				this.pr__link_cell(oCell,cCACellTypes.directions.north, ir-1, ic);
-				this.pr__link_cell(oCell,cCACellTypes.directions.east, ir, ic+1);
-				this.pr__link_cell(oCell,cCACellTypes.directions.south, ir+1, ic);
-				this.pr__link_cell(oCell,cCACellTypes.directions.west, ir, ic-1);
+		for (var iNr=1; iNr<= this.rows; iNr++)
+			for (var iNc=1; iNc<= this.cols; iNc++){
+				var oCell = this.getCell(iNr,iNc,true); //create cells
+				this.pr__link_cell(oCell,cCACellTypes.directions.north, iNr-1, iNc);
+				this.pr__link_cell(oCell,cCACellTypes.directions.east, iNr, iNc+1);
+				this.pr__link_cell(oCell,cCACellTypes.directions.south, iNr+1, iNc);
+				this.pr__link_cell(oCell,cCACellTypes.directions.west, iNr, iNc-1);
 				if (piNeighbourType == cCACellTypes.neighbours.eightway){
-					this.pr__link_cell(oCell,cCACellTypes.directions.northeast, ir-1, ic+1);
-					this.pr__link_cell(oCell,cCACellTypes.directions.southeast, ir+1, ic+1);
-					this.pr__link_cell(oCell,cCACellTypes.directions.southwest, ir+1, ic-1);
-					this.pr__link_cell(oCell,cCACellTypes.directions.northwest, ir-1, ic-1);
+					this.pr__link_cell(oCell,cCACellTypes.directions.northeast, iNr-1, iNc+1);
+					this.pr__link_cell(oCell,cCACellTypes.directions.southeast, iNr+1, iNc+1);
+					this.pr__link_cell(oCell,cCACellTypes.directions.southwest, iNr+1, iNc-1);
+					this.pr__link_cell(oCell,cCACellTypes.directions.northwest, iNr-1, iNc-1);
 				}
 			}
 		cDebug.write("completed cell linking");
@@ -531,17 +531,19 @@ class cCAGrid {
 	}
 	
 	//****************************************************************
-	pr__link_cell (poCell, piDirection, piRow, piCol){
-		var ir, ic;
-		ir=piRow;
-		if (ir<1) ir= this.rows;
-		if (ir>this.rows) ir=1;
+	pr__link_cell (poCell, piDirection, piNRow, piNCol){
+		var iNr, iNc;
+		//wrap around neighbour row and col
+		iNr=piNRow;
+		if (iNr<1) iNr= this.rows;
+		if (iNr>this.rows) iNr=1;
 		
-		ic=piCol;
-		if (ic<1) ic= this.cols;
-		if (ic>this.cols) ic=1;
+		iNc=piNCol;
+		if (iNc<1) iNc= this.cols;
+		if (iNc>this.cols) iNc=1;
 		
-		var oNeigh = this.getCell(ir,ic,false);
+		//get the neighbour
+		var oNeigh = this.getCell(iNr,iNc,true); //shouldnt need to create cells, but just in case
 		poCell.setNeighbour(piDirection,oNeigh);		
 	}
 	
