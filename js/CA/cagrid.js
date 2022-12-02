@@ -63,7 +63,7 @@ class cCAGridInitialiser{
 		cDebug.enter();
 		cDebug.write("init_type:" + piInitType);
 		
-		poGrid.init_cells();
+		poGrid.create_cells();
 		
 		switch(piInitType){
 			case cCAGridTypes.init.blank.id:
@@ -291,7 +291,7 @@ class cCAGridJSONImporter{
 		oGrid.rule = oRule;
 		
 		//-------------------------------------------------------------------
-		oGrid.init_cells();		
+		oGrid.create_cells();		
 		var s64 = poJson.grid.data;
 		var sBin = cCASimpleBase64.toBinary(s64);
 		var iIndex = 0;
@@ -363,7 +363,7 @@ class cCAGrid {
 			
 		//set the rule for the grid
 		this.rule = poRule;
-		this.pr__link_cells(poRule.neighbour_type);
+		this.pr__link_cells();
 		cDebug.leave();
 	}
 	
@@ -429,10 +429,13 @@ class cCAGrid {
 	}
 	
 	//****************************************************************
-	init_cells(){
+	create_cells(){
 		cDebug.enter();
+		
+		//clear out existing cells
 		this.cell_data = new cSparseArray(this.rows, this.cols);
 		
+		//create blank cells
 		for (var iNr=1; iNr<= this.rows; iNr++)
 			for (var iNc=1; iNc<= this.cols; iNc++)
 				this.setCellValue(iNr,iNc,0);
@@ -440,8 +443,15 @@ class cCAGrid {
 		//reset instance state
 		this.non_zero_count = 0;
 		this.changed_cells = [];
+		
+		//link if there is a rule
+		if (this.rule)	this.pr__link_cells();
+
+		
 		bean.fire(this,cCAGridTypes.events.clear);
 		cDebug.leave();
+		
+		
 	}
 	
 	//****************************************************************
@@ -509,8 +519,12 @@ class cCAGrid {
 	//#######################################################################
 	//# privates
 	//#######################################################################
-	pr__link_cells(piNeighbourType){
+	pr__link_cells(){
 		cDebug.enter();
+		if (!this.rule) throw new Error("no rule set");
+		
+		var iType = this.rule.neighbour_type
+		
 		cDebug.write("linking cells");
 		for (var iNr=1; iNr<= this.rows; iNr++)
 			for (var iNc=1; iNc<= this.cols; iNc++){
@@ -519,7 +533,7 @@ class cCAGrid {
 				this.pr__link_cell(oCell,cCACellTypes.directions.east, iNr, iNc+1);
 				this.pr__link_cell(oCell,cCACellTypes.directions.south, iNr+1, iNc);
 				this.pr__link_cell(oCell,cCACellTypes.directions.west, iNr, iNc-1);
-				if (piNeighbourType == cCACellTypes.neighbours.eightway){
+				if (iType == cCACellTypes.neighbours.eightway){
 					this.pr__link_cell(oCell,cCACellTypes.directions.northeast, iNr-1, iNc+1);
 					this.pr__link_cell(oCell,cCACellTypes.directions.southeast, iNr+1, iNc+1);
 					this.pr__link_cell(oCell,cCACellTypes.directions.southwest, iNr+1, iNc-1);

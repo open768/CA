@@ -15,20 +15,19 @@ class cCAControlRTypes {
 	static CHART_ID="CHI";
 }
 
-//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-$.widget( "ck.cacontrolsr",{
-	//#################################################################
-	//# Options
-	//#################################################################
+//###################################################################
+//#
+//###################################################################
+class cCAControlsR{
+	grid = null;
+	element = null;
+	
+	//***************************************************************
+	constructor(poElement){
+		this.element = poElement;
 
-	//#################################################################
-	//# Constructor
-	//#################################################################`
-	_create: function(){
-		var oElement;
 		var oThis = this;
-		
-		oElement = this.element;
+		var oElement = this.element;
 		
 		//set basic stuff
 		oElement.uniqueId();
@@ -46,10 +45,70 @@ $.widget( "ck.cacontrolsr",{
 		oElement.empty();
 		this.pr__init();
 
-	},
+	}
 	
-	//*************************************************************************
-	pr__init: function(){
+	//***************************************************************
+	//* Events
+	//***************************************************************
+	onInitClick(poEvent){
+		var oElement = this.element;
+
+		var iSelected = parseInt($(poEvent.target).val());
+		
+		//---------tell subscribers to init
+		var oEvent = new cCAEvent( cCAEventTypes.event_types.grid_init, iSelected);
+		bean.fire(document, cCAEventTypes.event_hook, oEvent);
+	}
+	
+	//****************************************************************************
+	onClickControl(piAction){
+		var oThis = this;
+		if (!caMachineTypes.rule_set){
+			alert("set a rule first!!");
+			return;
+		}
+	
+		switch (piAction){
+			case cCAGridTypes.actions.stop:
+				$("#btnStep").prop("disabled",false);
+				$("#btnPlay").prop("disabled",false);
+				$("#btnStop").prop("disabled",true);
+				break;
+			case cCAGridTypes.actions.play:
+				$("#btnStep").prop("disabled",true);
+				$("#btnPlay").prop("disabled",true);
+				$("#btnStop").prop("disabled",false);
+				break;
+		}
+		var oEvent = new cCAEvent( cCAEventTypes.event_types.action, parseInt(piAction));
+		bean.fire(document, cCAEventTypes.event_hook, oEvent);
+	}
+	
+	//****************************************************************************
+	onCAEvent(poEvent){
+		var oElement,  sID;
+		var oTarget;
+		
+		oElement = this.element;
+		sID = oElement.attr("id");
+
+		switch (poEvent.type){
+			case  cCAEventTypes.event_types.grid_status:
+				if (!poEvent.data) return;
+				
+				oTarget = $("#"+sID+cCAControlRTypes.ACTIVE_ID);
+				oTarget.html(poEvent.data.active);
+				oTarget = $("#"+sID+cCAControlRTypes.CHANGED_ID);
+				oTarget.html(poEvent.data.changed);
+				oTarget = $("#"+sID+cCAControlRTypes.RUNS_ID);
+				oTarget.html(poEvent.data.runs);
+		}
+	}
+	
+	//***************************************************************
+	//* Privates
+	//***************************************************************
+	pr__init(){
 		var oDiv, oTable, oRow, oCell;
 		var oElement, sID;
 		
@@ -134,73 +193,18 @@ $.widget( "ck.cacontrolsr",{
 				oButton.click(	function(){ oThis.onClickControl(cCAGridTypes.actions.step);}	);
 				oDiv.append(oButton);
 		oElement.append(oDiv);
-	},
-	
-	//#################################################################
-	//#################################################################
-	onInitClick: function(poEvent){
-		var oElement = this.element;
-
-		var iSelected = parseInt($(poEvent.target).val());
-		
-		//---------tell subscribers to init
-		var oEvent = new cCAEvent( cCAEventTypes.event_types.grid_init, iSelected);
-		bean.fire(document, cCAEventTypes.event_hook, oEvent);
-	},
-	
-	//****************************************************************************
-	onClickControl: function(piAction){
-		var oThis = this;
-		if (!caMachineOptions.rule_set){
-			alert("set a rule first!!");
-			return;
-		}
-	
-		switch (piAction){
-			case cCAGridTypes.actions.stop:
-				$("#btnStep").prop("disabled",false);
-				$("#btnPlay").prop("disabled",false);
-				$("#btnStop").prop("disabled",true);
-				break;
-			case cCAGridTypes.actions.play:
-				$("#btnStep").prop("disabled",true);
-				$("#btnPlay").prop("disabled",true);
-				$("#btnStop").prop("disabled",false);
-				break;
-		}
-		var oEvent = new cCAEvent( cCAEventTypes.event_types.action, parseInt(piAction));
-		bean.fire(document, cCAEventTypes.event_hook, oEvent);
-	},
-	
-	//****************************************************************************
-	onCAEvent: function(poEvent){
-		var oElement,  sID;
-		var oTarget;
-		
-		oElement = this.element;
-		sID = oElement.attr("id");
-
-		switch (poEvent.type){
-			case  cCAEventTypes.event_types.status:
-				if (!poEvent.data) return;
-				
-				oTarget = $("#"+sID+cCAControlRTypes.ACTIVE_ID);
-				oTarget.html(poEvent.data.active);
-				oTarget = $("#"+sID+cCAControlRTypes.CHANGED_ID);
-				oTarget.html(poEvent.data.changed);
-				oTarget = $("#"+sID+cCAControlRTypes.RUNS_ID);
-				oTarget.html(poEvent.data.runs);
-				
-				oTarget = $("#"+sID+cCAControlRTypes.CHART_ID);
-				oTarget.cachart("onCAEvent",poEvent);
-				break;
-				
-			case cCAEventTypes.event_types.set_rule:
-			case cCAEventTypes.event_types.grid_init:
-				oTarget = $("#"+sID+cCAControlRTypes.CHART_ID);
-				oTarget.cachart("onCAEvent",poEvent);
-				break;
-		}
 	}
 	
-});
+}
+
+//###################################################################
+//#
+//###################################################################
+$.widget( 
+	"ck.cacontrolsr",
+	{
+		_create(){
+			var oControls = new cCAControlsR(this.element);
+		}
+	}
+);

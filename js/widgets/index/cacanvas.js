@@ -18,7 +18,7 @@ class cCACanvas{
 	//#################################################################
 	//# Definition
 	//#################################################################
-	static _state={
+	 _state={
 		grid: null,
 		canvas:null,
 		drawing:false,
@@ -29,7 +29,7 @@ class cCACanvas{
 	//#################################################################
 	//# Constructor
 	//#################################################################`
-	static _create(poOptions, poElement){
+	 constructor(poOptions, poElement){
 		this.element = poElement;
 		this.options = poOptions;
 		
@@ -39,6 +39,8 @@ class cCACanvas{
 		
 		//check dependencies
 		if (!bean ) 	$.error("bean class is missing! check includes");	
+		if (!oOptions.name) $.error("name must be provided");	
+		
 		
 		//set basic stuff
 		oElement.uniqueId();
@@ -55,7 +57,7 @@ class cCACanvas{
 	//# events
 	//#################################################################`
 	//****************************************************************
-	static onCAEvent( poEvent){
+	 onCAEvent( poEvent){
 		cDebug.enter();
 		var oState = this._state;
 		var oOptions = this.options;
@@ -77,7 +79,6 @@ class cCACanvas{
 				cDebug.write("event: import grid");
 				var oGrid = poEvent.data;
 				this.pr__set_grid(oGrid);
-				bean.fire(oGrid,cCAGridTypes.events.done);
 				
 				//rule has been set
 				var oEvent = new cCAEvent( cCAEventTypes.events.update_rule, oGrid.rule);
@@ -113,7 +114,7 @@ class cCACanvas{
 	}
 	
 	//****************************************************************
-	static onNoChange(){
+	 onNoChange(){
 		cDebug.enter();
 		var oEvent = new cCAEvent( cCAEventTypes.event_types.nochange, null);
 		cDebug.write("no change");
@@ -122,16 +123,16 @@ class cCACanvas{
 	}
 	
 	//****************************************************************
-	static onGridDone(poData){
+	 onGridDone(poData){
 		cDebug.enter();
 		this.pr__drawGrid();
-		var oEvent = new cCAEvent( cCAEventTypes.event_types.status, poData);
+		var oEvent = new cCAEvent( cCAEventTypes.event_types.grid_status, poData);
 		bean.fire(document, cCAEventTypes.event_hook, oEvent);
 		cDebug.leave();
 	}
 
 	//****************************************************************
-	static onGridClear(){
+	 onGridClear(){
 		cDebug.enter();
 		var oCanvas = this._state.canvas;
 		cDebug.write("Clearing canvas");
@@ -140,7 +141,7 @@ class cCACanvas{
 	}
 	
 	//****************************************************************
-	static onImageLoad(){
+	 onImageLoad(){
 		var oState = this._state;
 		
 		oState.images_done ++;
@@ -157,7 +158,7 @@ class cCACanvas{
 	//#################################################################
 	//# privates
 	//#################################################################`
-	static pr__set_grid(poGrid){
+	 pr__set_grid(poGrid){
 		var oThis = this;
 		this._state.grid = poGrid;
 		bean.on(poGrid, cCAGridTypes.events.done, function(poData){oThis.onGridDone(poData)});
@@ -170,7 +171,7 @@ class cCACanvas{
 	}
 	
 	//****************************************************************
-	static pr__initCanvas(){
+	 pr__initCanvas(){
 		cDebug.enter();
 		var oOptions = this.options;
 		var oState = this._state;
@@ -191,7 +192,7 @@ class cCACanvas{
 	}
 		
 	//****************************************************************
-	static pr__drawGrid(){
+	 pr__drawGrid(){
 		cDebug.enter();
 		var oOptions = this.options;
 		var oState = this._state;
@@ -215,7 +216,7 @@ class cCACanvas{
 	}
 	
 	//****************************************************************
-	static pr__drawFullGrid(){
+	 pr__drawFullGrid(){
 		cDebug.enter();
 		var oState = this._state;
 		var oGrid = oState.grid;
@@ -234,7 +235,7 @@ class cCACanvas{
 	}	
 	
 	//****************************************************************
-	static pr__draw_cell(poCell){
+	 pr__draw_cell(poCell){
 		var oThis = this;
 		var oCanvas = this._state.canvas;
 		var oOptions = this.options;
@@ -265,10 +266,11 @@ $.widget( "ck.cacanvas",{
 	options:{
 		cols:100,
 		rows:100,
-		cell_size:5
+		cell_size:5,
+		name:null
 	},
 	
 	_create(){
-		cCACanvas._create(this.options, this.element);
+		var oControl = new cCACanvas(this.options, this.element, );
 	}
 });

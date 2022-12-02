@@ -15,14 +15,14 @@ class cCAJsonTypes {
 
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 class cCAJson{
-	static _state ={
+	 _state ={
 		grid:null
 	};
 	
 	//#################################################################
 	//# Constructor
 	//#################################################################`
-	static create(poElement){
+	 constructor (poElement){
 		cDebug.enter();
 		this.element = poElement;
 		var oThis = this;
@@ -50,7 +50,7 @@ class cCAJson{
 	//#################################################################
 	//# Initialise
 	//#################################################################`
-	static pr__init(){
+	 pr__init(){
 		var oThis, oOptions, oElement;
 		var oDiv, sID;
 
@@ -81,7 +81,7 @@ class cCAJson{
 	//#################################################################
 	//# EVENTS
 	//#################################################################`
-	static onClickExport(){
+	 onClickExport(){
 		cDebug.enter();
 		if ( this._state.grid == null)
 			alert("no grid set");
@@ -91,7 +91,7 @@ class cCAJson{
 	}
 	
 	//*****************************************************************
-	static onClickImport(){
+	 onClickImport(){
 		cDebug.enter();
 	
 		var oElement = this.element;
@@ -108,7 +108,7 @@ class cCAJson{
 	
 	
 	//*****************************************************************
-	static onCAEvent(poEvent){
+	 onCAEvent(poEvent){
 		cDebug.enter();
 		switch(poEvent.type){
 			case cCAEventTypes.event_types.set_grid:
@@ -121,7 +121,7 @@ class cCAJson{
 	//#################################################################
 	//# EVENTS
 	//#################################################################`
-	static pr__create_json(){
+	 pr__create_json(){
 		cDebug.enter();
 		var oElement = this.element;
 
@@ -143,7 +143,7 @@ $.widget(
 	"ck.cajson",
 	{
 		_create(){
-			cCAJson.create(this.element);
+			var oWidget = new cCAJson(this.element);
 		}
 	}
 );

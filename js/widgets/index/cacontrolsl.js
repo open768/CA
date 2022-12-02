@@ -21,19 +21,18 @@ class cCAControlLTypes {
 	static random_value= "Random";
 }
 
-
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 class cCAControlsL{
-	static _state={
+	_state={
 		grid:null,
 		rule:null
 	};
-	static element = null;
+	element = null;
 
 	//#################################################################
 	//# Constructor
 	//#################################################################`
-	static create(poElement){
+	constructor(poElement){
 		cDebug.enter();
 		this.element = poElement;
 		var oThis = this;
@@ -62,7 +61,7 @@ class cCAControlsL{
 	//#################################################################
 	//# Initialise
 	//#################################################################`
-	static pr__init(){
+	 pr__init(){
 		var oThis, oOptions, oElement;
 		var oDiv, sID;
 
@@ -146,7 +145,7 @@ class cCAControlsL{
 	//#################################################################
 	//# EVENTS
 	//#################################################################`
-	static onCAEvent(poEvent){
+	 onCAEvent(poEvent){
 		cDebug.enter();
 		switch(poEvent.event){
 			case cCAEventTypes.event_types.update_rule:
@@ -162,7 +161,7 @@ class cCAControlsL{
 	}
 	
 	//****************************************************************************
-	static onSetNameClick(){
+	 onSetNameClick(){
 		var oElement = this.element;
 
 		var sID = cJquery.child_ID(oElement, cCAControlLTypes.name_ID);
@@ -182,7 +181,7 @@ class cCAControlsL{
 	}
 
 	//****************************************************************************
-	static onSetRuleClick(){
+	 onSetRuleClick(){
 		var oElement = this.element;
 
 		var oTextArea = $("#" +	cJquery.child_ID(oElement, cCAControlLTypes.entry_ID));
@@ -207,7 +206,7 @@ class cCAControlsL{
 					break;
 				case cCARuleTypes.rule_types.base64:
 					oRule = cCARuleBase64Importer.makeRule(oTextArea.val());
-					caMachineOptions.rule = oRule;
+					caMachineTypes.rule = oRule;
 
 					//set the boredom if chosen
 					var oBoredomList = $("#" + cJquery.child_ID(oElement, cCAControlLTypes.boredom_ID));
@@ -216,7 +215,7 @@ class cCAControlsL{
 					//inform subscribers
 					var oEvent = new cCAEvent( cCAEventTypes.event_types.set_rule, oRule);
 					bean.fire(document, cCAEventTypes.event_hook, oEvent);
-					caMachineOptions.rule_set = true;
+					caMachineTypes.rule_set = true;
 					break;
 				default:
 					throw new Exception("unknown rule type");
@@ -233,7 +232,7 @@ class cCAControlsL{
 
 
 	//****************************************************************************
-	static onRuleChange(){
+	 onRuleChange(){
 		var oElement = this.element;
 
 		var oTextArea = $("#" +	cJquery.child_ID(oElement, cCAControlLTypes.entry_ID));
@@ -251,7 +250,7 @@ class cCAControlsL{
 	}
 
 	//****************************************************************************
-	static onPresetsClick(poEvent){
+	 onPresetsClick(poEvent){
 		var oElement = this.element;
 
 		var oTextArea = $("#" +	cJquery.child_ID(oElement, cCAControlLTypes.entry_ID));
@@ -274,14 +273,14 @@ class cCAControlsL{
 	}
 
 	//****************************************************************************
-	static onBoredomClick(poEvent){
+	 onBoredomClick(poEvent){
 
-		if (!caMachineOptions.rule_set){
+		if (!caMachineTypes.rule_set){
 			alert("set a rule first");
 			return;
 		}
 		var iBoredem = parseInt($(poEvent.target).val());
-		caMachineOptions.rule.boredom = iBoredem;
+		caMachineTypes.rule.boredom = iBoredem;
 	}
 
 	//#################################################################
@@ -289,13 +288,13 @@ class cCAControlsL{
 	//#################################################################`
 
 	//****************************************************************************
-	static pr_makeRandomBase64(){
+	 pr_makeRandomBase64(){
 		var oRule= cCaRandomRule.makeRule();
 		this.pr_setBase64Rule(oRule);
 	}
 
 	//****************************************************************************
-	static pr_setBase64Rule( poRule){
+	 pr_setBase64Rule( poRule){
 		var oElement = this.element;
 
 		var s64 = cCARuleBase64Exporter.export(poRule,cCACellTypes.default_state);
@@ -312,7 +311,7 @@ class cCAControlsL{
 	}
 
 	//****************************************************************************
-	static pr__populate_presets(poSelect){
+	 pr__populate_presets(poSelect){
 		var aPresets = cCALexicon.get_presets();
 
 		poSelect.append( $("<option>",{selected:1,disabled:1,value:-1}).append("presets"));
@@ -332,7 +331,7 @@ $.widget(
 	"ck.cacontrolsl",
 	{
 		_create(){
-			cCAControlsL.create(this.element);
+			var oControls = new cCAControlsL(this.element);
 		}
 	}
 );

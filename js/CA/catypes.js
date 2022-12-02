@@ -27,7 +27,7 @@ class cCAEventTypes {
 		resize:"RS",
 		set_grid:"SG",
 		set_rule:"SR",
-		status:"ST",
+		grid_status:"GS",
 		ready:"RD",
 		update_rule:"UR"
 	};
