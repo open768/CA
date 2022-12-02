@@ -8,7 +8,7 @@ For licenses that allow for commercial use please contact cluck@chickenkatsu.co.
 // USE AT YOUR OWN RISK - NO GUARANTEES OR ANY FORM ARE EITHER EXPRESSED OR IMPLIED
 **************************************************************************/
 
-class cCAControlRTypes {
+class caStatusConsts {
 	static ACTIVE_ID ="A";
 	static CHANGED_ID ="C";
 	static RUNS_ID ="R";
@@ -16,7 +16,7 @@ class cCAControlRTypes {
 }
 
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-$.widget( "ck.cacontrolsr",{
+$.widget( "ck.castatus",{
 	//#################################################################
 	//# Options
 	//#################################################################
@@ -65,19 +65,19 @@ $.widget( "ck.cacontrolsr",{
 				oRow = $("<tr>");
 					oCell = $("<td>", {align:"right"}).append("Active");
 					oRow.append(oCell);
-					oCell = $("<td>",{id:sID+cCAControlRTypes.ACTIVE_ID}).append("??");
+					oCell = $("<td>",{id:sID+caStatusConsts.ACTIVE_ID}).append("??");
 					oRow.append(oCell);
 					oTable.append(oRow);
 				oRow = $("<tr>");
 					oCell = $("<td>", {align:"right"}).append("Changed");
 					oRow.append(oCell);
-					oCell = $("<td>",{id:sID+cCAControlRTypes.CHANGED_ID}).append("??");
+					oCell = $("<td>",{id:sID+caStatusConsts.CHANGED_ID}).append("??");
 					oRow.append(oCell);
 					oTable.append(oRow);
 				oRow = $("<tr>");
 					oCell = $("<td>", {align:"right"}).append("Runs");
 					oRow.append(oCell);
-					oCell = $("<td>",{id:sID+cCAControlRTypes.RUNS_ID}).append("??");
+					oCell = $("<td>",{id:sID+caStatusConsts.RUNS_ID}).append("??");
 					oRow.append(oCell);
 					oTable.append(oRow);
 				oDiv.append(oTable);
@@ -88,7 +88,7 @@ $.widget( "ck.cacontrolsr",{
 		oElement.append("<HR>")
 		oDiv = $("<DIV>",{class:"ui-widget-header"}).append("Chart");
 			oElement.append(oDiv);
-		oDiv = $("<DIV>",{class:"ui-widget-content",id:sID+cCAControlRTypes.CHART_ID}).cachart();
+		oDiv = $("<DIV>",{class:"ui-widget-content",id:sID+caStatusConsts.CHART_ID}).cachart();
 			oElement.append(oDiv);
 			oElement.append("<P>");
 		
@@ -141,10 +141,9 @@ $.widget( "ck.cacontrolsr",{
 	onInitClick: function(poEvent){
 		var oElement = this.element;
 
-		var iSelected = parseInt($(poEvent.target).val());
 		
-		//---------tell subscribers to init
-		var oEvent = new cCAEvent( cCAEventTypes.event_types.grid_init, iSelected);
+		var iSelected = parseInt($(poEvent.target).val());
+		var oEvent = new cCAEvent( cCAEventTypes.event_types.initialise, iSelected);
 		bean.fire(document, cCAEventTypes.event_hook, oEvent);
 	},
 	
@@ -184,20 +183,20 @@ $.widget( "ck.cacontrolsr",{
 			case  cCAEventTypes.event_types.status:
 				if (!poEvent.data) return;
 				
-				oTarget = $("#"+sID+cCAControlRTypes.ACTIVE_ID);
+				oTarget = $("#"+sID+caStatusConsts.ACTIVE_ID);
 				oTarget.html(poEvent.data.active);
-				oTarget = $("#"+sID+cCAControlRTypes.CHANGED_ID);
+				oTarget = $("#"+sID+caStatusConsts.CHANGED_ID);
 				oTarget.html(poEvent.data.changed);
-				oTarget = $("#"+sID+cCAControlRTypes.RUNS_ID);
+				oTarget = $("#"+sID+caStatusConsts.RUNS_ID);
 				oTarget.html(poEvent.data.runs);
 				
-				oTarget = $("#"+sID+cCAControlRTypes.CHART_ID);
+				oTarget = $("#"+sID+caStatusConsts.CHART_ID);
 				oTarget.cachart("onCAEvent",poEvent);
 				break;
 				
 			case cCAEventTypes.event_types.set_rule:
-			case cCAEventTypes.event_types.grid_init:
-				oTarget = $("#"+sID+cCAControlRTypes.CHART_ID);
+			case cCAEventTypes.event_types.initialise:
+				oTarget = $("#"+sID+caStatusConsts.CHART_ID);
 				oTarget.cachart("onCAEvent",poEvent);
 				break;
 		}
