@@ -84,5 +84,10 @@ $.widget( "ck.camachine",{
 		
 		//check clipboard
 		cBrowser.get_clipboard_permissions(true);
+		
+		//---------------informs subscribers that UI is ready -------------------------------
+		var oEvent = new cCAEvent( cCAEventTypes.event_types.ready,null);
+		bean.fire(document, cCAEventTypes.event_hook , oEvent);
+
 	},
 });

@@ -43,7 +43,7 @@ class cCAJson{
 		this.pr__init();
 
 		//subscribe to CA Events
-		bean.on(document, cCAGridTypes.event_hook, function(poEvent){ oThis.onGridEvent(poEvent)});
+		bean.on (document, cCAEventTypes.event_hook, function(poEvent){ oThis.onCAEvent(poEvent)} );
 		cDebug.leave();
 	}
 
@@ -84,7 +84,7 @@ class cCAJson{
 	static onClickExport(){
 		cDebug.enter();
 		if ( this._state.grid == null)
-			alert("no rule set");
+			alert("no grid set");
 		else
 			this.pr__create_json()
 		cDebug.leave();
@@ -108,11 +108,12 @@ class cCAJson{
 	
 	
 	//*****************************************************************
-	static onGridEvent(poEvent){
+	static onCAEvent(poEvent){
 		cDebug.enter();
-		if (poEvent.event == cCAGridTypes.events.set_grid){
-			cDebug.write("got grid event: grid set");
-			this._state.grid = poEvent.data;
+		switch(poEvent.type){
+			case cCAEventTypes.event_types.set_grid:
+				cDebug.write("set_grid");
+				this._state.grid = poEvent.data;
 		}
 		cDebug.leave();
 	}

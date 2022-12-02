@@ -45,16 +45,10 @@ class cCACanvas{
 		oElement.addClass("ui-widget");
 		oElement.addClass("CACanvas");
 		
-		//associate a CA grid with the widget
-		var oGrid = new cCAGrid(oOptions.rows, oOptions.cols);
-		this.pr__set_grid(oGrid);
-		
 				
 		//subscribe to CAEvents
 		bean.on (document, cCAEventTypes.event_hook, function(poEvent){ oThis.onCAEvent(poEvent)} );
 		
-		//put something in the widget
-		this.pr__initCanvas();
 	}
 	
 	//#################################################################
@@ -64,8 +58,20 @@ class cCACanvas{
 	static onCAEvent( poEvent){
 		cDebug.enter();
 		var oState = this._state;
+		var oOptions = this.options;
 		
 		switch (poEvent.type){
+			//-------------------------------------------------------------------
+			case cCAEventTypes.event_types.ready:
+				cDebug.write("event: ready");
+				//associate a CA grid with the widget
+				var oGrid = new cCAGrid(oOptions.rows, oOptions.cols);
+				this.pr__set_grid(oGrid);
+				//put something in the widget
+				this.pr__initCanvas();
+				
+				break;
+				
 			//-------------------------------------------------------------------
 			case cCAEventTypes.event_types.import_grid:
 				cDebug.write("event: import grid");
