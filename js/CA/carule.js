@@ -27,6 +27,7 @@ class cCARule{
 	
 	//***************************************************************
 	static randomRule(){
+		cDebug.enter();
 		var oRule = new cCARule();
 		oRule.neighbour_type = cCACellTypes.neighbours.eightway;
 		oRule.has_state_transitions = false;
@@ -35,16 +36,21 @@ class cCARule{
 			var iRnd = Math.floor(Math.random() * 1.99);
 			oRule.set_output(cCACellTypes.default_state,i,iRnd);
 		}
+		cDebug.leave();
 		return oRule;
 	}
 	
+	//***************************************************************
 	copy_to(poRule){
+		cDebug.enter();
 		poRule.neighbour_type = this.neighbour_type ;
 		poRule.has_state_transitions = this.has_state_transitions;
 		poRule.boredom = this.boredom ;
 		poRule.stateRules = cCommon.deep_copy(this.stateRules);
 	}
 			
+	//*****************************************************************
+	//rule State level functions
 	//*****************************************************************
 	set_output(piState, piPattern, piValue){
 		if (piState <1 ) throw new CAException("invalid state");

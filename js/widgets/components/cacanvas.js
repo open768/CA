@@ -13,17 +13,19 @@ class cCACanvasTypes{
 }
 
 class caCanvasEvent{
-	name =null;
+	grid_name =null;
 	
 	//*****************************************************
-	constructor (psName, psEvent, poData){
+	constructor (psGridName, psEvent, poData){
+		if (!psGridName ) throw new CAException("no name provided");
+		if (!psEvent ) throw new CAException("no event  provided");
 		this.event = psEvent;
 		this.data = poData;
-		this.name = psName;
+		this.grid_name = psGridName;
 	}
 	
 	//*****************************************************
-	fire_event(){
+	throw_event(){
 		var oEvent = new cCAEvent( cCAEventTypes.events.canvas_event, this);
 		bean.fire(document, cCAEventTypes.event_hook , oEvent);
 	}
@@ -35,37 +37,36 @@ class cCACanvas{
 	//#################################################################
 	//# Definition
 	//#################################################################
-	 state={
-		grid: null,
-		canvas:null,
-		drawing:false,
-		image_count:0,
-		images_done:0
-	};
+	grid =  null;
+	rows = 100;
+	cols=100;
+	grid_name=null;
+	canvas = null;
+	drawing =false;
+	image_count = 0;
+	images_done = 0;
 	
 	//#################################################################
 	//# Constructor
 	//#################################################################`
 	 constructor(poOptions, poElement){
-		this.element = poElement;
-		this.options = poOptions;
-		
-		var oThis = this;
-		var oOptions = this.options;
-		var oElement = this.element;
-		
 		//check dependencies
 		if (!bean ) 	$.error("bean class is missing! check includes");	
-		if (!oOptions.name) $.error("name must be provided");	
+		if (!poOptions.name) $.error("name must be provided");	
 		
+		this.element = poElement;
+		this.rows = poOptions.rows;
+		this.cols = poOptions.cols;
+		this.grid_name = poOptions.name;
+		this.cell_size = poOptions.cell_size;
 		
 		//set basic stuff
-		oElement.uniqueId();
-		oElement.addClass("ui-widget");
-		oElement.addClass("CACanvas");
+		poElement.uniqueId();
+		poElement.addClass("ui-widget");
+		poElement.addClass("CACanvas");
 		
-				
 		//subscribe to CAEvents
+		var oThis = this;
 		bean.on (document, cCAEventTypes.event_hook, function(poEvent){ oThis.onCAEvent(poEvent)} );
 		
 	}
@@ -76,15 +77,13 @@ class cCACanvas{
 	//****************************************************************
 	 onCAEvent( poEvent){
 		cDebug.enter();
-		var oState = this.state;
-		var oOptions = this.options;
 		
 		switch (poEvent.type){
 			//-------------------------------------------------------------------
-			case cCAEventTypes.event_types.ready:
+			case cCAEventTypes.event_types.ready: //all widgets are ready
 				cDebug.write("event: ready");
 				//associate a CA grid with the widget
-				var oGrid = new cCAGrid(oOptions.rows, oOptions.cols);
+				var oGrid = new cCAGrid(this.grid_name, this.rows, this.cols);
 				this.pr__set_grid(oGrid);
 				//put something in the widget
 				this.pr__initCanvas();
@@ -92,39 +91,38 @@ class cCACanvas{
 				break;
 				
 			//-------------------------------------------------------------------
-			case cCAEventTypes.event_types.import_grid:
+			case cCAEventTypes.event_types.import_grid: //a new grid has been imported
 				cDebug.write("event: import grid");
 				var oGrid = poEvent.data;
 				this.pr__set_grid(oGrid);
+				//draw the grid
+				this.pr__drawGrid();
 				
 				//rule has been set
-
-				var oEvent = new cCAEvent( cCAEventTypes.events.update_rule, oGrid.rule);
+				var oEvent = new cCAEvent( cCAEventTypes.event_types.update_rule, oGrid.rule);
 				bean.fire(document, cCAEventTypes.event_hook , oEvent);
 				break;
 				
 			//-------------------------------------------------------------------
-			case cCAEventTypes.event_types.set_rule:
+			case cCAEventTypes.event_types.set_rule: //rule has been set 
 				cDebug.write("event: set rule");
-				oState.grid.set_rule(poEvent.data);
-				var oGridEvent = new cCAGridEvent( cCAGridTypes.events.set_rule, oState.grid);
-				bean.fire(document, cCAGridTypes.event_hook , oGridEvent);
+				this.grid.set_rule(poEvent.data);
 				break;
 				
 			//-------------------------------------------------------------------
-			case cCAEventTypes.event_types.grid_init:
+			case cCAEventTypes.event_types.grid_init: //grid to be initialised
 				cDebug.write("event: initialise");
 				var iInitType = poEvent.data;
-				oState.grid.init(iInitType);
+				this.grid.init(iInitType);
 				break;
 				
 			//-------------------------------------------------------------------
-			case cCAEventTypes.event_types.action:
+			case cCAEventTypes.event_types.action: //tell the grid to do something
 				cDebug.write("event: acion");
-				oState.grid.action(poEvent.data);
+				this.grid.action(poEvent.data);
 				break;
 				
-			case null:
+			case null:	//should never get here
 				cDebug.warn("null event type");
 			
 		}
@@ -152,23 +150,20 @@ class cCACanvas{
 	//****************************************************************
 	 onGridClear(){
 		cDebug.enter();
-		var oCanvas = this.state.canvas;
 		cDebug.write("Clearing canvas");
-		oCanvas.clearCanvas();
+		this.canvas.clearCanvas();
 		cDebug.leave();
 	}
 	
 	//****************************************************************
 	 onImageLoad(){
-		var oState = this.state;
+		this.images_done ++;
 		
-		oState.images_done ++;
-		
-		if (oState.images_done >= oState.image_count){
+		if (this.images_done >= this.image_count){
 			cDebug.write("finished drawing");
-			oState.drawing = false;
-			var oGrid = this.state.grid;
-			var oEvent = new cCAGridEvent(cCAGridTypes.events.notify_drawn,null);
+			this.drawing = false;
+			var oGrid = this.grid;
+			var oEvent = new cCAGridEvent(this.grid_name, cCAGridTypes.events.notify_drawn,null);
 			bean.fire(document, cCAGridTypes.event_hook, oEvent);
 		}
 	}
@@ -178,7 +173,7 @@ class cCACanvas{
 	//#################################################################`
 	 pr__set_grid(poGrid){
 		var oThis = this;
-		this.state.grid = poGrid;
+		this.grid = poGrid;
 		bean.on(poGrid, cCAGridTypes.events.done, function(poData){oThis.onGridDone(poData)});
 		bean.on(poGrid, cCAGridTypes.events.clear, function(){oThis.onGridClear()});
 		bean.on(poGrid, cCAGridTypes.events.nochange, function(){oThis.onNoChange()});
@@ -191,34 +186,30 @@ class cCACanvas{
 	//****************************************************************
 	 pr__initCanvas(){
 		cDebug.enter();
-		var oOptions = this.options;
-		var oState = this.state;
 		var oElement = this.element;
 
 		
 		//create the html5 canvas to draw on
 		oElement.empty();
 		var oCanvas = $("<canvas>");
-			oCanvas.attr("width",oOptions.cols*oOptions.cell_size);
-			oCanvas.attr("height",oOptions.rows*oOptions.cell_size);
+			oCanvas.attr("width",this.cols*this.cell_size);
+			oCanvas.attr("height",this.rows*this.cell_size);
 			oElement.append(oCanvas);
-			oState.canvas = oCanvas;
+			this.canvas = oCanvas;
 				
 		//initialise the grid
-		oState.grid.init(cCAGridTypes.init.block.id);
+		this.grid.init(cCAGridTypes.init.block.id);
 		cDebug.leave();
 	}
 		
 	//****************************************************************
 	 pr__drawGrid(){
 		cDebug.enter();
-		var oOptions = this.options;
-		var oState = this.state;
-		var oGrid = oState.grid;
+		var oGrid = this.grid;
 
-		oState.image_count = oGrid.changed_cells.length;
-		oState.images_done = 0;		
-		oState.drawing = true;
+		this.image_count = oGrid.changed_cells.length;
+		this.images_done = 0;		
+		this.drawing = true;
 		
 		var x,y,oCell;
 		if (oGrid.changed_cells.length == 0){
@@ -236,12 +227,11 @@ class cCACanvas{
 	//****************************************************************
 	 pr__drawFullGrid(){
 		cDebug.enter();
-		var oState = this.state;
-		var oGrid = oState.grid;
+		var oGrid = this.grid;
 		
-		oState.image_count = oGrid.rows * oGrid.cols;
-		oState.images_done = 0;		
-		oState.drawing = true;
+		this.image_count = oGrid.rows * oGrid.cols;
+		this.images_done = 0;		
+		this.drawing = true;
 		
 		for (var ir=1; ir<= oGrid.rows; ir++){
 			for (var ic=1; ic<= oGrid.cols; ic++){
@@ -255,8 +245,7 @@ class cCACanvas{
 	//****************************************************************
 	 pr__draw_cell(poCell){
 		var oThis = this;
-		var oCanvas = this.state.canvas;
-		var oOptions = this.options;
+		var oCanvas = this.canvas;
 		
 		//-----------------what img to use
 		var sImg = (poCell.value==0?cCACanvasTypes.white_image:cCACanvasTypes.black_image);
@@ -265,8 +254,8 @@ class cCACanvas{
 		var iRow, iCol;
 		iRow = poCell.data.get(cCACellTypes.hash_values.row);
 		iCol = poCell.data.get(cCACellTypes.hash_values.col);
-		var iy = (iRow -1) * oOptions.cell_size;
-		var ix = (iCol-1) * oOptions.cell_size;
+		var iy = (iRow -1) * this.cell_size;
+		var ix = (iCol-1) * this.cell_size;
 		
 		//------------------draw
 		//its faster to blit images than it is to draw vectors
@@ -289,6 +278,6 @@ $.widget( "ck.cacanvas",{
 	},
 	
 	_create(){
-		var oControl = new cCACanvas(this.options, this.element, );
+		var oControl = new cCACanvas(this.options, this.element );
 	}
 });

@@ -47,9 +47,14 @@ class cCAGridRunData{
 
 //*************************************************************************
 class cCAGridEvent{
-	constructor (psEvent, poData){
+	event = null;
+	data = null;
+	name = null;
+	
+	constructor (psName, psEvent, poData){
 		this.event = psEvent;
 		this.data = poData;
+		this.name = psName;
 	}
 }
 
@@ -240,6 +245,7 @@ class cCAGridJSONExporter{
 	static export(poGrid){
 		cDebug.enter();
 		if ( !cCommon.obj_is(poGrid , "cCAGrid") ) throw new CAException("param 1 is not cCAGrid")
+		if ( !poGrid.rule ) throw new CAException("no rule set!");
 		
 		var oObj = new cCAGridExported;
 			//get the rule from the grid
@@ -269,6 +275,10 @@ class cCAGridJSONExporter{
 				var oCell  = poGrid.getCell(iRow,iCol,true);
 				sBin = sBin + oCell.value;
 			}
+
+		var iBinLength = poGrid.rows * poGrid.cols;
+		if (sBin.length !== iBinLength)
+			throw new CAException("wrong binary length");
 			
 		var s64 = cCASimpleBase64.toBase64(sBin);
 			
@@ -281,10 +291,10 @@ class cCAGridJSONExporter{
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 class cCAGridJSONImporter{
 	//*********************************************
-	static populate(poJson){
+	static populate(psName, poJson){
 		if (!cCAGridExported.is_valid_obj(poJson)) throw new CAException("invalid object")
 		//-------------------------------------------------------------------
-		var oGrid = new cCAGrid(poJson.grid.rows, poJson.grid.cols);
+		var oGrid = new cCAGrid(psName, poJson.grid.rows, poJson.grid.cols);
 
 		//-------------------------------------------------------------------
 		var oRule = cCARuleObjImporter.makeRule(poJson.rule);
@@ -293,7 +303,8 @@ class cCAGridJSONImporter{
 		//-------------------------------------------------------------------
 		oGrid.create_cells();		
 		var s64 = poJson.grid.data;
-		var sBin = cCASimpleBase64.toBinary(s64);
+		var iBinLength = oGrid.rows * oGrid.cols;
+		var sBin = cCASimpleBase64.toBinary(s64, iBinLength); //have to set expected bin length
 		var iIndex = 0;
 		
 		for (var iRow=1; iRow <= oGrid.rows; iRow++)
@@ -313,16 +324,21 @@ class cCAGrid {
 	//# instance variables
 	//#######################################################################
 	cell_data = null;
+	name = null;
 	
-	constructor (piRows, piCols){
+	constructor (psName, piRows, piCols){
+		if (!psName) throw new CAException("no grid name");
+		if (piRows == null || piCols == null) throw new CAException("bad size information");
+		
 		this.rows = piRows;
 		this.cols = piCols;
+		this.name = psName;
 		this.rule = null;
 		this.changed_cells = null;
 		this.running = false;
 		this.status = new cCAGridRunData();
 		var oThis = this;
-		bean.on(document, cCAGridTypes.event_hook, function(poEvent){oThis.onCAEvent(poEvent)});
+		bean.on(document, cCAGridTypes.event_hook, function(poEvent){oThis.onCAGridEvent(poEvent)});
 	}
 	
 	//#######################################################################
@@ -499,9 +515,10 @@ class cCAGrid {
 	//#######################################################################
 	//# events
 	//#######################################################################
-	onCAEvent(poEvent){
+	onCAGridEvent(poEvent){
 		if (poEvent.event === cCAGridTypes.events.notify_drawn)
-			this.OnNotifyDrawn();
+			if (poEvent.name === this.name)
+				this.OnNotifyDrawn();
 	}
 	//****************************************************************
 	OnNotifyDrawn(){

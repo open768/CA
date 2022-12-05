@@ -29,7 +29,8 @@ class cCAEventTypes {
 		set_rule:"SR",
 		grid_status:"GS",
 		ready:"RD",
-		update_rule:"UR"
+		update_rule:"UR",
+		canvas_event: "CE"
 	};
 }
 

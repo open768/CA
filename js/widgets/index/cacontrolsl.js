@@ -257,6 +257,8 @@ class cCAControlsL{
 		var oRulesSelect = $("#" + cJquery.child_ID(oElement, cCAControlLTypes.rules_ID));
 
 		var sPreset = $(poEvent.target).val();
+		if (!sPreset) return;
+		
 		var oRuleJson = JSON.parse(sPreset);
 
 		switch (oRuleJson.type){

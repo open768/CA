@@ -85,6 +85,8 @@ class cCAJson{
 		cDebug.enter();
 		if ( this._state.grid == null)
 			alert("no grid set");
+		else if (!this._state.grid.rule)
+			alert("no rule set");
 		else
 			this.pr__create_json()
 		cDebug.leave();
@@ -98,7 +100,7 @@ class cCAJson{
 		var sID = cJquery.child_ID(oElement, cCAJsonTypes.textarea_id)
 		var sJson = $("#" + sID).val();
 		var oJson = JSON.parse(sJson)
-		var oGrid = cCAGridJSONImporter.populate(oJson);
+		var oGrid = cCAGridJSONImporter.populate(caMachineTypes.grid_name, oJson);
 		
 		//fire events to tell other controls there is a new rule and grid in town
 		var oEvent = new cCAEvent( cCAEventTypes.event_types.import_grid, oGrid);
