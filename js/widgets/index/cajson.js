@@ -43,7 +43,7 @@ class cCAJson{
 		this.pr__init();
 
 		//subscribe to CA Events
-		bean.on (document, cCAEventTypes.event_hook, function(poEvent){ oThis.onCAEvent(poEvent)} );
+		bean.on (document, cCAEvent.hook, function(poEvent){ oThis.onCAEvent(poEvent)} );
 		cDebug.leave();
 	}
 
@@ -103,8 +103,8 @@ class cCAJson{
 		var oGrid = cCAGridJSONImporter.populate(caMachineTypes.grid_name, oJson);
 		
 		//fire events to tell other controls there is a new rule and grid in town
-		var oEvent = new cCAEvent( cCAEventTypes.event_types.import_grid, oGrid);
-		bean.fire(document, cCAEventTypes.event_hook, oEvent);
+		var oEvent = new cCAEvent( cCAEvent.types.general, cCAGeneralEvent.actions.import_grid, oGrid);
+		oEvent.trigger(document);
 		cDebug.leave();
 	}
 	
@@ -112,11 +112,11 @@ class cCAJson{
 	//*****************************************************************
 	 onCAEvent(poEvent){
 		cDebug.enter();
-		switch(poEvent.type){
-			case cCAEventTypes.event_types.set_grid:
+		if (poEvent.type == cCAEvent.types.canvas)
+			if (poEvent.action == cCACanvasEvent.actions.set_grid){
 				cDebug.write("set_grid");
 				this._state.grid = poEvent.data;
-		}
+			}
 		cDebug.leave();
 	}
 

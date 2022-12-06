@@ -55,7 +55,7 @@ class cCAControlsL{
 		this.pr__init();
 
 		//subscribe to CA Events
-		bean.on(document, cCAEventTypes.event_hook, function(poEvent){ oThis.onCAEvent(poEvent)});
+		bean.on(document, cCAEvent.hook, function(poEvent){ oThis.onCAEvent(poEvent)});
 	}
 
 	//#################################################################
@@ -147,15 +147,24 @@ class cCAControlsL{
 	//#################################################################`
 	 onCAEvent(poEvent){
 		cDebug.enter();
+		
 		switch(poEvent.event){
-			case cCAEventTypes.event_types.update_rule:
-				cDebug.write("update_rule");
-				var oRule = poEvent.data;
-				this.pr_setBase64Rule(oRule);
+			case cCAEvent.types.rule:
+				switch(poEvent.action){
+					case cCARuleEvent.actions.update_rule:
+						cDebug.write("update_rule");
+						var oRule = poEvent.data;
+						this.pr_setBase64Rule(oRule);
+						break;
+				}
 				break;
-			case cCAEventTypes.event_types.set_grid:
-				cDebug.write("set_grid");
-				this._state.grid = poEvent.data;
+				
+			case cCAActionEvent.types.canvas:
+				switch(poEvent.action){
+					case cCACanvasEvent.actions.set_grid:
+						cDebug.write("set_grid");
+						this._state.grid = poEvent.data;
+				}
 		}
 		cDebug.leave();
 	}
@@ -213,8 +222,8 @@ class cCAControlsL{
 					if (!isNaN(oBoredomList.val())) oRule.boredom = oBoredomList.val();
 
 					//inform subscribers
-					var oEvent = new cCAEvent( cCAEventTypes.event_types.set_rule, oRule);
-					bean.fire(document, cCAEventTypes.event_hook, oEvent);
+					var oEvent = new cCAEvent( cCAEvent.types.general, cCAGeneralEvent.actions.set_rule, oRule);
+					oEvent.trigger(document);
 					caMachineTypes.rule_set = true;
 					break;
 				default:

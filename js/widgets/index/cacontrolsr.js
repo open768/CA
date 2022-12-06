@@ -39,7 +39,7 @@ class cCAControlsR{
 		if (!oElement.cachart) $.error("caChart is missing , chack includes");
 		
 		//subscribe to CAEvents
-		bean.on (document, cCAEventTypes.event_hook, function(poEvent){ oThis.onCAEvent(poEvent)} );
+		bean.on (document, cCAEvent.hook, function(poEvent){ oThis.onCAEvent(poEvent)} );
 		
 		//put something in the widget
 		oElement.empty();
@@ -56,8 +56,8 @@ class cCAControlsR{
 		var iSelected = parseInt($(poEvent.target).val());
 		
 		//---------tell subscribers to init
-		var oEvent = new cCAEvent( cCAEventTypes.event_types.grid_init, iSelected);
-		bean.fire(document, cCAEventTypes.event_hook, oEvent);
+		var oEvent = new cCAEvent( cCAEvent.types.action, cCAActionEvent.actions.grid_init, iSelected);
+		oEvent.trigger(document);
 	}
 	
 	//****************************************************************************
@@ -80,8 +80,8 @@ class cCAControlsR{
 				$("#btnStop").prop("disabled",false);
 				break;
 		}
-		var oEvent = new cCAEvent( cCAEventTypes.event_types.action, parseInt(piAction));
-		bean.fire(document, cCAEventTypes.event_hook, oEvent);
+		var oEvent = new cCAEvent( cCAEvent.types.action, cCAActionEvent.actions.control, parseInt(piAction));
+		oEvent.trigger(document);
 	}
 	
 	//****************************************************************************
@@ -92,8 +92,8 @@ class cCAControlsR{
 		oElement = this.element;
 		sID = oElement.attr("id");
 
-		switch (poEvent.type){
-			case  cCAEventTypes.event_types.grid_status:
+		if (poEvent.type == cCAEvent.types.canvas)
+			if (poEvent.action == cCACanvasEvent.actions.grid_status){
 				if (!poEvent.data) return;
 				
 				oTarget = $("#"+sID+cCAControlRTypes.ACTIVE_ID);
@@ -102,7 +102,7 @@ class cCAControlsR{
 				oTarget.html(poEvent.data.changed);
 				oTarget = $("#"+sID+cCAControlRTypes.RUNS_ID);
 				oTarget.html(poEvent.data.runs);
-		}
+			}
 	}
 	
 	//***************************************************************

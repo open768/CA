@@ -11,10 +11,6 @@ For licenses that allow for commercial use please contact cluck@chickenkatsu.co.
 
 class cCAChartTypes {
 	static is_charts_loaded= false;
-	static event_hook = "CEVHook";
-	static event_types={
-		charts_loaded: "gcl"
-	};
 	
 	static{
 		var oThis = this;
@@ -31,7 +27,6 @@ class cCAChartTypes {
 	
 	static OnGoogleChartsLoaded(poEvent){
 		this.is_charts_loaded = true;
-		bean.fire(document, cCAChartTypes.event_hook, cCAChartTypes.event_types.charts_loaded);
 	}
 }
 
@@ -47,16 +42,13 @@ class cCAChart{
 	
 	constructor(poElement){
 		this.element = poElement;
-		var oElement = poElement;
 		var oThis = this;
 		
 		//put something in the widget
-		var oDiv;
-		oElement.empty();
-		oElement.append("Waiting for Data ...");
+		this.clear();
 		
 		//subscribe to CAEvents
-		bean.on (document, cCAEventTypes.event_hook, function(poEvent){ oThis.onCAEvent(poEvent)} );
+		bean.on (document, cCAEvent.hook, function(poEvent){ oThis.onCAEvent(poEvent)} );
 	}
 	
 	//*****************************************************************
@@ -90,38 +82,63 @@ class cCAChart{
 		var oElement = this.element;
 		cDebug.enter();
 		
-		cDebug.write("got a chart event");
 		switch (poEvent.type){
-			case cCAEventTypes.event_types.grid_status:
-				//add the data to the data structure and draw
-				cDebug.write("status event");
-				if (!cCAChartTypes.is_charts_loaded){
-					cDebug.extra_debug("still waiting for google charts");
-					cDebug.leave();
-					return;
+			//----------------------------------------------------------------------
+			case cCAEvent.types.canvas:
+				cDebug.write("canvas event");
+				switch (poEvent.action){
+					case cCAActionEvent.actions.grid_status:
+						//add the data to the data structure and draw
+						cDebug.write("status action");
+						if (!cCAChartTypes.is_charts_loaded){
+							cDebug.extra_debug("still waiting for google charts");
+							cDebug.leave();
+							return;
+						}
+						var oData = poEvent.data;
+						if (!oData){
+							cDebug.extra_debug("no data");
+							return;
+						}
+						this.pr__create_data();
+						this.vis_data.addRow([this.runs, oData.changed, oData.active, "Run: " + this.runs]);
+						this.chart.draw(this.vis_data);
+						this.runs ++;
+						break;
 				}
-				var oData = poEvent.data;
-				if (!oData){
-					cDebug.extra_debug("no data");
-					return;
-				}
-				this.pr__create_data();
-				this.vis_data.addRow([this.runs, oData.changed, oData.active, "Run: " + this.runs]);
-				this.chart.draw(this.vis_data);
-				this.runs ++;
 				break;
-			case cCAEventTypes.event_types.set_rule:
-				cDebug.write("set_rule event");
-			case cCAEventTypes.event_types.grid_init:
-				cDebug.write("grid_init event");
-				this.vis_data = null;
-				this.chart = null;
-				this.runs = 0;
-				oElement.empty();
-				oElement.append("Waiting for Data ...");
+				
+			//----------------------------------------------------------------------
+			case cCAEvent.types.rule:
+				cDebug.write("rule event");
+				switch (poEvent.action){
+					case cCARuleEvent.actions.set_rule:
+						cDebug.write("set_rule action");
+						this.clear();
+				}
+				break;
+			//----------------------------------------------------------------------
+			case cCAEvent.types.canvas:
+				cDebug.write("canvas event");
+				switch (poEvent.action){
+					case cCACanvasEvent.actions.grid_init:
+						cDebug.write("grid_init action");
+						this.clear();
+				}
+				break;
 		}
 		cDebug.leave();
 	}
+	
+	clear(){
+		var oElement = this.element;
+		this.vis_data = null;
+		this.chart = null;
+		this.runs = 0;
+		oElement.empty();
+		oElement.append("Waiting for Data ...");
+	}
+
 }
 
 //#################################################################

@@ -88,8 +88,8 @@ $.widget( "ck.camachine",{
 		cBrowser.get_clipboard_permissions(true);
 		
 		//---------------informs subscribers that UI is ready -------------------------------
-		var oEvent = new cCAEvent( cCAEventTypes.event_types.ready,null);
-		bean.fire(document, cCAEventTypes.event_hook , oEvent);
+		var oEvent = new cCAEvent( cCAEvent.types.action, cCAActionEvent.actions.ready,null);
+		oEvent.trigger(document);
 
 	},
 });
