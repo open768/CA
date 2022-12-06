@@ -101,6 +101,7 @@ class cCAGridJSONImporter{
 			for (var iCol=1; iCol <= oGrid.cols; iCol++){
 				var sBinDigit = sBin[iIndex];
 				oGrid.setCellValue(iRow,iCol,parseInt(sBinDigit));
+				iIndex++;
 			}
 		return oGrid;
 	}

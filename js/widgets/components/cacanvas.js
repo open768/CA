@@ -110,6 +110,7 @@ class cCACanvas{
 						var oGrid = poEvent.data;
 						this.pr__set_grid(oGrid);
 						//draw the grid
+						this.pr__grid_clear();
 						this.pr__drawGrid();
 						
 						//rule has been set
