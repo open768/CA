@@ -101,7 +101,17 @@ class cCAJson{
 		//get the json
 		var sID = cJquery.child_ID(oElement, cCAJsonTypes.textarea_id)
 		var sJson = $("#" + sID).val();
-		var oJson = JSON.parse(sJson)
+		if (sJson === ""){
+			alert ("no JSON to import");
+			return;
+		}
+			
+		try{
+			var oJson = JSON.parse(sJson)
+		}catch(e){
+			alert("unable to import JSON");
+			return;
+		}
 		
 		//create the grid
 		var oGrid = cCAGridJSONImporter.populate(caMachineTypes.grid_name, oJson);

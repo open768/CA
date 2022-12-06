@@ -138,8 +138,8 @@ class cCACanvas{
 			cDebug.write("finished drawing");
 			this.drawing = false;
 			var oGrid = this.grid;
-			var oEvent = new cCAGridEvent(this.grid_name, cCAGridEvent.actions.notify_drawn,null);
-			oEvent.trigger(document);
+			
+			setTimeout( function(){ oGrid.notifyDrawn();}, 50); //async
 		}
 	}
 	

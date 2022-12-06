@@ -107,7 +107,8 @@ class cCAControlsR{
 					oTarget.html(poEvent.data.runs);
 					break;
 				case cCACanvasEvent.actions.nochange:
-					this.pr__set_controls(false);
+					var oThis = this;
+					setTimeout( function(){	oThis.pr__set_controls(false);}, 100);
 			}
 	}
 	

@@ -39,13 +39,10 @@ class cCAGridRunData{
 class cCAGridEvent{
 	static hook = "CAGEVH";
 	static actions = {
-		done:"GD",
-		clear:"GC",
-		nochange:"GN",
-		notify_finished:"GF",
-		init_grid:"GI",
-		set_rule:"GSR",
-		notify_drawn: "GND"
+		done:"GDN",
+		clear:"GCL",
+		nochange:"GNO",
+		init_grid:"GID"
 	};
 		
 	action = null;
@@ -241,7 +238,6 @@ class cCAGrid {
 		this.running = false;
 		this.status = new cCAGridRunData();
 		var oThis = this;
-		bean.on(document, cCAGridEvent.hook, function(poEvent){oThis.onCAGridEvent(poEvent)});
 	}
 	
 	//#######################################################################
@@ -367,7 +363,6 @@ class cCAGrid {
 		//link if there is a rule
 		if (this.rule)	this.pr__link_cells();
 
-		
 		var oEvent = new cCAGridEvent(this.name, cCAGridEvent.actions.clear)
 		oEvent.trigger(this);
 		cDebug.leave();
@@ -418,13 +413,8 @@ class cCAGrid {
 	//#######################################################################
 	//# events
 	//#######################################################################
-	onCAGridEvent(poEvent){
-		if (poEvent.action === cCAGridEvent.actions.notify_drawn)
-			if (poEvent.name === this.name)
-				this.OnNotifyDrawn();
-	}
 	//****************************************************************
-	OnNotifyDrawn(){
+	notifyDrawn(){
 		cDebug.enter();
 		var oThis = this;
 		if (this.running){
