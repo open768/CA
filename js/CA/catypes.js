@@ -10,27 +10,56 @@ For licenses that allow for commercial use please contact cluck@chickenkatsu.co.
 
 //###############################################################################
 class cCAEvent{
-	constructor(piType, poData){
-		if (piType == null) throw new Error("null type");	
-		this.type = piType;
+	static hook = "CAEV";
+	static types = {
+		canvas: "CNV",
+		action: "ACT",
+		general: "GNR"
+	};
+	type=null;
+	action=null;
+	data = null;
+	
+	constructor(psType, psAction, poData){
+		if (psType == null) throw new Error("null type");	
+		this.type = psType;
+		this.action = psAction;
 		this.data = poData;
+	}
+
+	trigger(poHost){
+		if (!poHost) $.error("host missing");
+		var sHook = this.constructor.hook;
+		bean.fire(poHost, sHook, this);
 	}
 }
 
-class cCAEventTypes {
-	static event_hook = "CAEV";
-	static event_types={
-		action:"AC",
-		grid_init:"GI",
-		import_grid:"IG",
-		nochange:"NC",
-		resize:"RS",
-		set_grid:"SG",
-		set_rule:"SR",
-		grid_status:"GS",
-		ready:"RD",
-		update_rule:"UR",
-		canvas_event: "CE"
+class cCAActionEvent{
+	static actions = {
+		ready: "AERD",
+		grid_init: "AEGI",
+		control: "AECN"
+	};
+}
+
+class cCAGeneralEvent{
+	static actions = {
+		import_grid: "GEIG",
+		set_rule: "GESR"
+	};
+}
+
+class cCACanvasEvent{
+	static actions = {
+		nochange:"CENC",
+		grid_status:"CEGS",
+		set_grid:"CESG"
+	};
+}
+
+class cCARuleEvent{
+	static actions = {
+		update_rule:"REUR"
 	};
 }
 
