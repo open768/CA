@@ -87,7 +87,7 @@ class cCAChart{
 			case cCAEvent.types.canvas:
 				cDebug.write("canvas event");
 				switch (poEvent.action){
-					case cCAActionEvent.actions.grid_status:
+					case cCACanvasEvent.actions.grid_status:
 						//add the data to the data structure and draw
 						cDebug.write("status action");
 						if (!cCAChartTypes.is_charts_loaded){

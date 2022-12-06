@@ -154,7 +154,7 @@ class cCAControlsL{
 					case cCARuleEvent.actions.update_rule:
 						cDebug.write("update_rule");
 						var oRule = poEvent.data;
-						this.pr_setBase64Rule(oRule);
+						this.pr__set_rule(oRule);
 						break;
 				}
 				break;
@@ -182,7 +182,7 @@ class cCAControlsL{
 		}
 		try{
 			var oRule = cCARuleRepeatBase64Importer.makeRule(sInput);
-			this.pr_setBase64Rule(oRule);
+			this.pr__set_rule(oRule);
 		}
 		catch(e){
 			alert("something went wrong:\n" + e.message);
@@ -207,11 +207,11 @@ class cCAControlsL{
 			switch(iSelected){
 				case cCARuleTypes.rule_types.life:
 					oRule = cCARuleLifeImporter.makeRule(oTextArea.val());
-					this.pr_setBase64Rule(oRule);
+					this.pr__set_rule(oRule);
 					break;
 				case cCARuleTypes.rule_types.wolfram1d:
 					var oRule = cCARuleWolfram1DImporter.makeRule(oTextArea.val());
-					this.pr_setBase64Rule(oRule);
+					this.pr__set_rule(oRule);
 					break;
 				case cCARuleTypes.rule_types.base64:
 					oRule = cCARuleBase64Importer.makeRule(oTextArea.val());
@@ -301,11 +301,11 @@ class cCAControlsL{
 	//****************************************************************************
 	 pr_makeRandomBase64(){
 		var oRule= cCaRandomRule.makeRule();
-		this.pr_setBase64Rule(oRule);
+		this.pr__set_rule(oRule);
 	}
 
 	//****************************************************************************
-	 pr_setBase64Rule( poRule){
+	 pr__set_rule( poRule){
 		var oElement = this.element;
 
 		var s64 = cCARuleBase64Exporter.export(poRule,cCACellTypes.default_state);

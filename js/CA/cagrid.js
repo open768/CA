@@ -9,7 +9,6 @@ For licenses that allow for commercial use please contact cluck@chickenkatsu.co.
 **************************************************************************/
 
 class cCAGridTypes {
-	static event_hook = "CAGEVH";
 	static init={
 		blank:		{id:0,label:"Blank"},
 		block:		{id:1,label:"Block"},
@@ -22,15 +21,6 @@ class cCAGridTypes {
 		sine:		{id:8,label:"Sine"},
 		random:		{id:9,label:"Random"},
 		vert_line:	{id:10,label:"V-Line"}
-	};
-	static events = {
-		done:"GD",
-		clear:"GC",
-		nochange:"GN",
-		notify_finished:"GF",
-		init_grid:"GI",
-		set_rule:"GSR",
-		notify_drawn: "GND"
 	};
 	static actions={
 		play:1,
@@ -47,14 +37,30 @@ class cCAGridRunData{
 
 //*************************************************************************
 class cCAGridEvent{
-	event = null;
+	static hook = "CAGEVH";
+	static actions = {
+		done:"GD",
+		clear:"GC",
+		nochange:"GN",
+		notify_finished:"GF",
+		init_grid:"GI",
+		set_rule:"GSR",
+		notify_drawn: "GND"
+	};
+		
+	action = null;
 	data = null;
 	name = null;
 	
-	constructor (psName, psEvent, poData){
-		this.event = psEvent;
-		this.data = poData;
+	constructor (psName, psAction, poData){
+		if (psName == null || psAction ==null) $.error("missing params");
 		this.name = psName;
+		this.action = psAction;
+		this.data = poData;
+	}
+	
+	trigger(poObject){
+		bean.fire( poObject, this.constructor.hook, this);
 	}
 }
 
@@ -64,10 +70,10 @@ class cCAGridEvent{
 class cCAGridInitialiser{
 	
 	init(poGrid, piInitType){
-		//always blank first
 		cDebug.enter();
 		cDebug.write("init_type:" + piInitType);
 		
+		//always blank first by creating new cells
 		poGrid.create_cells();
 		
 		switch(piInitType){
@@ -83,8 +89,6 @@ class cCAGridInitialiser{
 				for (var iNc=iMidC; iNc<= iMidC+1; iNc++)
 					for (var iNr=iMidR; iNr<= iMidR+1; iNr++)
 						poGrid.setCellValue(iNr,iNc,1);
-				poGrid.non_zero_count = 4;
-				poGrid.changed_count = 4;
 				break;
 				
 			//------------------------------------------------------
@@ -137,9 +141,6 @@ class cCAGridInitialiser{
 					poGrid.setCellValue(iMidR,iMidC+i,1);
 					poGrid.setCellValue(iMidR,iMidC-i,1);
 				}
-
-				poGrid.non_zero_count = 17;
-				poGrid.changed_count = 17;
 				break;
 				
 			//------------------------------------------------------
@@ -184,9 +185,7 @@ class cCAGridInitialiser{
 					for (var iNc=1; iNc<= poGrid.cols; iNc++){
 						var iRnd = Math.round(Math.random());
 						poGrid.setCellValue(iNr,iNc,iRnd);
-						poGrid.non_zero_count += iRnd;
 					}
-				poGrid.changed_count = poGrid.non_zero_count;
 				break;
 			//--------------------------------------------------------
 			case cCAGridTypes.init.sine.id:
@@ -223,102 +222,6 @@ class cCAGridInitialiser{
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 //%
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-class cCAGridExported {
-	version = 1;
-	grid = {
-		rows:0,
-		cols:0,
-		data:null
-	};
-	rule = null;
-	
-	static is_valid_obj( poObj){
-		if (!poObj.version) throw new Error("no version");
-		if (!poObj.grid) throw new Error("no grid");
-		if (!poObj.rule) throw new Error("no Rule");
-		if (poObj.version !== 1) throw new Error("incompatible version");
-		return true;
-	}
-}
-
-class cCAGridJSONExporter{
-	static export(poGrid){
-		cDebug.enter();
-		if ( !cCommon.obj_is(poGrid , "cCAGrid") ) throw new CAException("param 1 is not cCAGrid")
-		if ( !poGrid.rule ) throw new CAException("no rule set!");
-		
-		var oObj = new cCAGridExported;
-			//get the rule from the grid
-			oObj.rule = cCARuleObjExporter.export(poGrid.rule);
-			
-			//get the status of the cells from the grid
-			oObj.grid.rows = poGrid.rows;
-			oObj.grid.cols = poGrid.cols;
-			
-			//todo
-			oObj.grid.data = this.get_grid_base64(poGrid);
-		cDebug.leave();
-		return oObj;
-	}
-	
-	//*************************************************************************
-	static get_grid_base64(poGrid)
-	{
-		if ( !cCommon.obj_is(poGrid , "cCAGrid") ) throw new CAException("param 1 is not cCAGrid")
-		if (poGrid.rule.stateRules.length > 1) throw new CAException("rules can only have 1 state")
-			
-		var sBin = "";
-		var s64 = null;
-		
-		for (var iRow=1; iRow <= poGrid.rows; iRow++)
-			for (var iCol=1; iCol <= poGrid.cols; iCol++){
-				var oCell  = poGrid.getCell(iRow,iCol,true);
-				sBin = sBin + oCell.value;
-			}
-
-		var iBinLength = poGrid.rows * poGrid.cols;
-		if (sBin.length !== iBinLength)
-			throw new CAException("wrong binary length");
-			
-		var s64 = cCASimpleBase64.toBase64(sBin);
-			
-		return s64;
-	}
-}
-
-//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-//%
-//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-class cCAGridJSONImporter{
-	//*********************************************
-	static populate(psName, poJson){
-		if (!cCAGridExported.is_valid_obj(poJson)) throw new CAException("invalid object")
-		//-------------------------------------------------------------------
-		var oGrid = new cCAGrid(psName, poJson.grid.rows, poJson.grid.cols);
-
-		//-------------------------------------------------------------------
-		var oRule = cCARuleObjImporter.makeRule(poJson.rule);
-		oGrid.rule = oRule;
-		
-		//-------------------------------------------------------------------
-		oGrid.create_cells();		
-		var s64 = poJson.grid.data;
-		var iBinLength = oGrid.rows * oGrid.cols;
-		var sBin = cCASimpleBase64.toBinary(s64, iBinLength); //have to set expected bin length
-		var iIndex = 0;
-		
-		for (var iRow=1; iRow <= oGrid.rows; iRow++)
-			for (var iCol=1; iCol <= oGrid.cols; iCol++){
-				var sBinDigit = sBin[iIndex];
-				oGrid.setCellValue(iRow,iCol,parseInt(sBinDigit));
-			}
-		return oGrid;
-	}
-}
-
-//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-//%
-//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 class cCAGrid {
 	//#######################################################################
 	//# instance variables
@@ -338,7 +241,7 @@ class cCAGrid {
 		this.running = false;
 		this.status = new cCAGridRunData();
 		var oThis = this;
-		bean.on(document, cCAGridTypes.event_hook, function(poEvent){oThis.onCAGridEvent(poEvent)});
+		bean.on(document, cCAGridEvent.hook, function(poEvent){oThis.onCAGridEvent(poEvent)});
 	}
 	
 	//#######################################################################
@@ -388,7 +291,6 @@ class cCAGrid {
 	//****************************************************************
 	step(){
 		var oRule = this.rule;
-		var oStatus = this.status;
 		
 		this.changed_cells = [];
 		this.status.changed = 0;
@@ -400,11 +302,10 @@ class cCAGrid {
 			for (var iNc=1; iNc<= this.cols; iNc++){
 				var oCell = this.getCell(iNr,iNc,true);
 				if (oCell.rule == null) oCell.rule = this.rule;
-				if (oCell.apply_rule()){
-					this.changed_count++;
+				var bHasChanged = oCell.apply_rule();
+				if (bHasChanged)
 					this.changed_cells.push(oCell);
-				}
-				if (oCell.value > 0) oStatus.active ++;
+				if (oCell.value > 0) this.status.active ++;
 			}
 
 		//check how many cells changed
@@ -412,7 +313,8 @@ class cCAGrid {
 		this.status.changed = iChangedLen;
 		if (iChangedLen == 0){
 			this.running = false;
-			bean.fire(this,cCAGridTypes.events.nochange);
+			var oEvent = new cCAGridEvent(this.name, cCAGridEvent.actions.nochange)
+			oEvent.trigger(this);
 			return;
 		}
 		
@@ -421,11 +323,12 @@ class cCAGrid {
 			var oCell = this.changed_cells[iNc];
 			oCell.promote();
 			if (oCell.value == 0) 
-				oStatus.active --;
+				this.status.active --;
 			else
-				oStatus.active ++;
+				this.status.active ++;
 		}
-		bean.fire(this,cCAGridTypes.events.done, oStatus);
+		var oEvent = new cCAGridEvent(this.name, cCAGridEvent.actions.done, this.status)
+		oEvent.trigger(this);
 	}
 	
 	//****************************************************************
@@ -440,7 +343,9 @@ class cCAGrid {
 		oInitialiser.init(this,piInitType);
 		cDebug.write("done init grid: "+ piInitType);
 		
-		bean.fire(this,cCAGridTypes.events.done);
+		var oEvent = new cCAGridEvent(this.name, cCAGridEvent.actions.done, this.status)
+		oEvent.trigger(this);
+		
 		cDebug.leave();
 	}
 	
@@ -457,17 +362,15 @@ class cCAGrid {
 				this.setCellValue(iNr,iNc,0);
 		
 		//reset instance state
-		this.non_zero_count = 0;
 		this.changed_cells = [];
 		
 		//link if there is a rule
 		if (this.rule)	this.pr__link_cells();
 
 		
-		bean.fire(this,cCAGridTypes.events.clear);
+		var oEvent = new cCAGridEvent(this.name, cCAGridEvent.actions.clear)
+		oEvent.trigger(this);
 		cDebug.leave();
-		
-		
 	}
 	
 	//****************************************************************
@@ -516,7 +419,7 @@ class cCAGrid {
 	//# events
 	//#######################################################################
 	onCAGridEvent(poEvent){
-		if (poEvent.event === cCAGridTypes.events.notify_drawn)
+		if (poEvent.action === cCAGridEvent.actions.notify_drawn)
 			if (poEvent.name === this.name)
 				this.OnNotifyDrawn();
 	}
@@ -527,9 +430,8 @@ class cCAGrid {
 		if (this.running){
 			cDebug.write("running again");
 			this.status.runs ++;
-			setTimeout(function(){ oThis.step();}, 50);
-		}else
-			cDebug.write("not running again");
+			setTimeout(function(){ oThis.step();}, 50); //delay is needed to yield
+		}
 		cDebug.leave();
 	}
 	

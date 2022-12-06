@@ -70,18 +70,20 @@ class cCAControlsR{
 	
 		switch (piAction){
 			case cCAGridTypes.actions.stop:
-				$("#btnStep").prop("disabled",false);
-				$("#btnPlay").prop("disabled",false);
-				$("#btnStop").prop("disabled",true);
+				this.pr__set_controls(false);
 				break;
 			case cCAGridTypes.actions.play:
-				$("#btnStep").prop("disabled",true);
-				$("#btnPlay").prop("disabled",true);
-				$("#btnStop").prop("disabled",false);
+				this.pr__set_controls(true);
 				break;
 		}
 		var oEvent = new cCAEvent( cCAEvent.types.action, cCAActionEvent.actions.control, parseInt(piAction));
 		oEvent.trigger(document);
+	}
+	
+	pr__set_controls(pbRunning){
+		$("#btnStep").prop("disabled",pbRunning);
+		$("#btnPlay").prop("disabled",pbRunning);
+		$("#btnStop").prop("disabled",!pbRunning);
 	}
 	
 	//****************************************************************************
@@ -92,16 +94,20 @@ class cCAControlsR{
 		oElement = this.element;
 		sID = oElement.attr("id");
 
-		if (poEvent.type == cCAEvent.types.canvas)
-			if (poEvent.action == cCACanvasEvent.actions.grid_status){
-				if (!poEvent.data) return;
-				
-				oTarget = $("#"+sID+cCAControlRTypes.ACTIVE_ID);
-				oTarget.html(poEvent.data.active);
-				oTarget = $("#"+sID+cCAControlRTypes.CHANGED_ID);
-				oTarget.html(poEvent.data.changed);
-				oTarget = $("#"+sID+cCAControlRTypes.RUNS_ID);
-				oTarget.html(poEvent.data.runs);
+		if (poEvent.type === cCAEvent.types.canvas)
+			switch(poEvent.action){
+				case cCACanvasEvent.actions.grid_status:
+					if (!poEvent.data) return;
+					
+					oTarget = $("#"+sID+cCAControlRTypes.ACTIVE_ID);
+					oTarget.html(poEvent.data.active);
+					oTarget = $("#"+sID+cCAControlRTypes.CHANGED_ID);
+					oTarget.html(poEvent.data.changed);
+					oTarget = $("#"+sID+cCAControlRTypes.RUNS_ID);
+					oTarget.html(poEvent.data.runs);
+					break;
+				case cCACanvasEvent.actions.nochange:
+					this.pr__set_controls(false);
 			}
 	}
 	

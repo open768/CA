@@ -55,6 +55,21 @@ class cCACanvas{
 	//#################################################################
 	//# events
 	//#################################################################`
+	onCAGridEvent(poEvent){
+		switch (poEvent.action){
+			case cCAGridEvent.actions.done:
+				this.pr__grid_done(poEvent.data);
+				break;
+			case cCAGridEvent.actions.clear:
+				this.pr__grid_clear();
+				break;
+			case cCAGridEvent.actions.nochange:
+				this.pr__grid_nochange();
+				break;
+		}
+	}
+		
+	//****************************************************************
 	onCAEvent( poEvent){
 		cDebug.enter();
 		
@@ -115,18 +130,37 @@ class cCACanvas{
 	}
 	
 	//****************************************************************
-	 onGridNoChange(){
+	 onImageLoad(){
+		this.images_done ++;
+		
+		if (this.images_done >= this.image_count){
+			//let the grid know that the canvas completed drawing
+			cDebug.write("finished drawing");
+			this.drawing = false;
+			var oGrid = this.grid;
+			var oEvent = new cCAGridEvent(this.grid_name, cCAGridEvent.actions.notify_drawn,null);
+			oEvent.trigger(document);
+		}
+	}
+	
+	
+	//#################################################################
+	//# privates
+	//#################################################################`
+	//****************************************************************
+	 pr__grid_nochange(){
 		cDebug.enter();
 		
-		var oEvent = new cCAEvent( cCAEvent.types.canvas, cCACanvasEvent.actions.nochange, null);
 		cDebug.write("no change");
+		
+		var oEvent = new cCAEvent( cCAEvent.types.canvas, cCACanvasEvent.actions.nochange, null);
 		oEvent.trigger(document);
 		
 		cDebug.leave();
 	}
 	
 	//****************************************************************
-	 onGridDone(poData){
+	 pr__grid_done(poData){
 		cDebug.enter();
 		
 		this.pr__drawGrid();
@@ -137,7 +171,7 @@ class cCACanvas{
 	}
 
 	//****************************************************************
-	 onGridClear(){
+	 pr__grid_clear(){
 		cDebug.enter();
 		
 		cDebug.write("Clearing canvas");
@@ -146,29 +180,11 @@ class cCACanvas{
 		cDebug.leave();
 	}
 	
-	//****************************************************************
-	 onImageLoad(){
-		this.images_done ++;
-		
-		if (this.images_done >= this.image_count){
-			//let the grid know that the canvas completed drawing
-			cDebug.write("finished drawing");
-			this.drawing = false;
-			var oGrid = this.grid;
-			var oEvent = new cCAGridEvent(this.grid_name, cCAGridTypes.events.notify_drawn,null);
-			bean.fire(document, cCAGridTypes.event_hook, oEvent);
-		}
-	}
-	
-	//#################################################################
-	//# privates
-	//#################################################################`
-	 pr__set_grid(poGrid){
+	pr__set_grid(poGrid){
 		var oThis = this;
 		this.grid = poGrid;
-		bean.on(poGrid, cCAGridTypes.events.done, function(poData){oThis.onGridDone(poData)});
-		bean.on(poGrid, cCAGridTypes.events.clear, function(){oThis.onGridClear()});
-		bean.on(poGrid, cCAGridTypes.events.nochange, function(){oThis.onGridNoChange()});
+		
+		bean.on(poGrid, cCAGridEvent.hook, function(poEvent){oThis.onCAGridEvent(poEvent)});
 		
 		// publish grid details to anyone interested - eg to export grid data, or start/stop the grid
 		var oEvent = new cCAEvent( cCAEvent.types.canvas, cCACanvasEvent.actions.set_grid, poGrid);

@@ -120,7 +120,7 @@ class cCARule{
 		poCell.evaluated.pattern = iBitmap;
 		
 		//set the evaluated state
-		return (poCell.evaluated.value !== poCell.value);
-		
+		var bHasChanged = (poCell.evaluated.value !== poCell.value);
+		return bHasChanged;
 	}
 }

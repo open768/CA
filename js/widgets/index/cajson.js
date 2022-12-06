@@ -97,9 +97,13 @@ class cCAJson{
 		cDebug.enter();
 	
 		var oElement = this.element;
+		
+		//get the json
 		var sID = cJquery.child_ID(oElement, cCAJsonTypes.textarea_id)
 		var sJson = $("#" + sID).val();
 		var oJson = JSON.parse(sJson)
+		
+		//create the grid
 		var oGrid = cCAGridJSONImporter.populate(caMachineTypes.grid_name, oJson);
 		
 		//fire events to tell other controls there is a new rule and grid in town

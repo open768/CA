@@ -21,7 +21,8 @@ class cCAEvent{
 	data = null;
 	
 	constructor(psType, psAction, poData){
-		if (psType == null) throw new Error("null type");	
+		if (psType === null) throw new Error("null type");	
+		if (psAction === null) throw new Error("null action");	
 		this.type = psType;
 		this.action = psAction;
 		this.data = poData;
