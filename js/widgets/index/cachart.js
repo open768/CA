@@ -118,10 +118,10 @@ class cCAChart{
 				}
 				break;
 			//----------------------------------------------------------------------
-			case cCAEvent.types.canvas:
-				cDebug.write("canvas event");
+			case cCAEvent.types.action:
+				cDebug.write("action event");
 				switch (poEvent.action){
-					case cCACanvasEvent.actions.grid_init:
+					case cCAActionEvent.actions.grid_init:
 						cDebug.write("grid_init action");
 						this.clear();
 				}
