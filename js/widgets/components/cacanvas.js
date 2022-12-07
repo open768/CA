@@ -26,6 +26,16 @@ class cCACanvas{
 	drawing =false;
 	image_count = 0;
 	images_done = 0;
+	mouse={
+		X : 0,
+		Y : 0,
+		has_events : false,
+		is_down : false
+	};
+	last ={
+		row : -1,
+		col : -1
+	};
 	
 	//#################################################################
 	//# Constructor
@@ -49,8 +59,7 @@ class cCACanvas{
 		//subscribe to CAEvents
 		var oThis = this;
 		bean.on (document, cCAEvent.hook, function(poEvent){ oThis.onCAEvent(poEvent)} );
-		
-	}
+	 }
 	
 	//#################################################################
 	//# events
@@ -71,6 +80,9 @@ class cCACanvas{
 		
 	//****************************************************************
 	onCAEvent( poEvent){
+		var oElement = this.element;
+		var oThis = this;
+		
 		cDebug.enter();
 		
 		switch (poEvent.type){
@@ -85,6 +97,12 @@ class cCACanvas{
 						this.pr__set_grid(oGrid);
 						//put something in the widget
 						this.pr__initCanvas();
+						if (!this.has_mouseup){
+							oElement.mouseup( function(){ oThis.onMouseUp(); } );
+							oElement.mousemove( function(poEvent){ oThis.onMouseMove(poEvent); } );
+							oElement.mousedown( function(poEvent){ oThis.onMouseDown(poEvent); } );
+							this.has_mouseup = true;
+						}
 						break;
 						
 					//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
@@ -144,10 +162,65 @@ class cCACanvas{
 		}
 	}
 	
+	//****************************************************************
+	onMouseDown(poEvent){
+		if (!this.grid) return;
+		
+		this.mouse.is_down = true;
+		this.pr__set_one_cell(poEvent);
+	}
+	
+	//****************************************************************
+	onMouseMove(poEvent){
+		if (this.grid && this.mouse.is_down){
+			this.pr__set_one_cell(poEvent);
+		}
+	}
+	
+	//****************************************************************
+	onMouseUp(){
+		this.mouse.is_down = false;
+	}
 	
 	//#################################################################
 	//# privates
 	//#################################################################`
+	pr__set_one_cell(poEvent){
+		if (this.grid.running) return;
+		
+		var oRC = this.pr__get_cell_rc_from_event(poEvent);
+		if (oRC){
+			this.grid.changed_cells = [];
+			this.grid.setCellValue(oRC.row, oRC.col, 1);
+			this.pr__drawGrid();
+		}
+	}
+	
+	//****************************************************************
+	pr__get_cell_rc_from_event(poEvent){
+		var oElement = this.element;
+		var X = poEvent.offsetX - cJquery.get_padding_width(oElement) + this.cell_size;
+		var Y = poEvent.offsetY - cJquery.get_padding_height(oElement)+ this.cell_size;
+		var ir = Math.trunc(Y / this.cell_size) +1;
+		var ic = Math.trunc(X / this.cell_size) +1;
+		
+		if (ir<1) ir = 1;
+		if (ir > this.rows) ir=this.rows;
+		if (ic<1) ic = 1;
+		if (ic > this.cols) ir=this.cols;
+		
+		var oRC = null;
+		if (ir != this.last.row || ic != this.last.col){
+			this.last.row = ir;
+			this.last.col = ic;
+			oRC = {
+				row:ir,
+				col:ic
+			}
+		}
+		return oRC;
+	}
+	
 	//****************************************************************
 	 pr__grid_nochange(){
 		cDebug.enter();
