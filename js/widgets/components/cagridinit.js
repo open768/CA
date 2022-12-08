@@ -12,8 +12,7 @@ For licenses that allow for commercial use please contact cluck@chickenkatsu.co.
 //###################################################################
 //#
 //###################################################################
-class cCAControlsR{
-	grid = null;
+class cCAGridInit{
 	element = null;
 	grid_name = null;
 	
@@ -31,15 +30,24 @@ class cCAControlsR{
 
 		//check dependencies
 		if (!bean ) $.error("bean is missing , chack includes");
-		if (!oElement.cagridinit) $.error("cainit is missing , chack includes");
-		if (!oElement.castatus) $.error("castatus is missing , chack includes");
-		if (!oElement.cachart) $.error("caChart is missing , chack includes");
-		if (!oElement.caremotecontrols) $.error("caremotecontrols is missing , chack includes");
 		
 		//put something in the widget
 		oElement.empty();
 		this.pr__init();
 
+	}
+	
+	//***************************************************************
+	//* Events
+	//***************************************************************
+	onInitClick(poEvent){
+		var oElement = this.element;
+
+		var iSelected = parseInt($(poEvent.target).val());
+		
+		//---------tell subscribers to init
+		var oEvent = new cCAEvent( cCAEvent.types.action, cCAActionEvent.actions.grid_init, iSelected);
+		oEvent.trigger(document);
 	}
 	
 	
@@ -48,33 +56,26 @@ class cCAControlsR{
 	//* Privates
 	//***************************************************************
 	pr__init(){
-		var oDiv, oTable, oRow, oCell;
-		var oElement;
+		var oElement = this.element;
+		var oThis = this;
 		
-		oElement = this.element;
-		
-		//--input-------------------------------------------------
-		oDiv = $("<DIV>");
-			oDiv.castatus({grid_name:this.grid_name});
+		var oDiv = $("<DIV>",{class:"ui-widget-header"});
+			oDiv.append("initialise");
 			oElement.append(oDiv);
-		oElement.append("<P>");
-		
-		//-------------------------------------------------------------
-		oDiv = $("<DIV>");
-			oDiv.cachart({grid_name:this.grid_name});
+			
+		oDiv = $("<DIV>",{class:"ui-widget-content"});
+			var oSelect = $("<SELECT>",{width:200,title:"choose a pattern to initialise the grid with"});
+			oSelect.append( $("<option>",{selected:1,disabled:1,value:-1}).append("Initialise"));
+			for (var sName in cCAGridTypes.init){
+				var oItem = cCAGridTypes.init[sName];
+				var oOption = $("<option>",{value:oItem.id}).append(oItem.label);
+				oSelect.append ( oOption);
+			}
+			oDiv.append(oSelect);
+			oSelect.selectmenu({
+					select:function(poEvent){oThis.onInitClick(poEvent)}
+			});
 			oElement.append(oDiv);
-		oElement.append("<P>");
-		
-		//--initialise------------------------------------------------		
-		oDiv = $("<DIV>");
-			oDiv.cagridinit({grid_name:this.grid_name});
-			oElement.append(oDiv);
-		oElement.append("<P>");
-		
-		//--controls------------------------------------------------		
-		oDiv = $("<DIV>",{class:"ui-widget-header"});
-			oDiv.caremotecontrols({grid_name:this.grid_name});
-		oElement.append(oDiv);
 	}
 	
 }
@@ -83,7 +84,7 @@ class cCAControlsR{
 //#
 //###################################################################
 $.widget( 
-	"ck.cacontrolsr",
+	"ck.cagridinit",
 	{
 		options:{
 			grid_name:null
@@ -93,7 +94,7 @@ $.widget(
 			var oOptions = this.options;
 			if (!oOptions.grid_name) $.error("grid name not provided");
 			
-			var oControls = new cCAControlsR(oOptions ,this.element);
+			var oControls = new cCAGridInit(oOptions ,this.element);
 		}
 	}
 );
