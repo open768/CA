@@ -43,12 +43,27 @@ class cCAChart{
 	
 	constructor(poOptions, poElement){
 		this.element = poElement;
-		var oThis = this;
 		this.grid_name = poOptions.grid_name;
 		
-		//put something in the widget
-		this.clear();
+		var oElement = this.element;
+		var oThis = this;
 		
+		//basic stuff
+		oElement.empty();
+		oElement.uniqueId();
+		oElement.addClass("ui-widget");
+		oElement.width(poOptions.width);
+		
+		//put something in the widget
+		var oDiv = $("<DIV>",{class:"ui-widget-header"}).append("Chart");
+			oDiv.width(poOptions.width);
+			oElement.append(oDiv);
+		oDiv = $("<DIV>",{class:"ui-widget-content",id:cJquery.child_ID(oElement, "chart")});
+			oDiv.width(poOptions.width);
+			oDiv.height(poOptions.height);
+			oElement.append(oDiv);
+		this.pr__clear_chart();
+
 		//subscribe to CAEvents
 		bean.on (document, cCAEvent.hook, function(poEvent){ oThis.onCAEvent(poEvent)} );
 	}
@@ -61,9 +76,10 @@ class cCAChart{
 	pr__create_data(){
 		var oElement = this.element;
 		
+		//check if the data has been previously created
 		if (this.vis_data) return;
-
 		if (!google.visualization)  $.error("google.visualization class is missing! check includes");	
+		this.pr__clear_chart();
 
 		//create the google data
 		var oData = new google.visualization.DataTable();
@@ -73,15 +89,15 @@ class cCAChart{
 		oData.addColumn('number', 'active');		
 		oData.addColumn({type: 'string', role: 'tooltip', p: {html: true}});				
 
-
-		this.chart = new google.visualization.LineChart( oElement[0] );
+		//create the chart
+		var oChartElement = $("#"+cJquery.child_ID(oElement, "chart"));
+		this.chart = new google.visualization.LineChart( oChartElement[0] );
 	}
 	
 	//*****************************************************************
 	//# events
 	//*****************************************************************
 	onCAEvent(poEvent){
-		var oElement = this.element;
 		cDebug.enter();
 		
 		switch (poEvent.type){
@@ -103,9 +119,11 @@ class cCAChart{
 								cDebug.extra_debug("no data");
 								return;
 							}
+							
 							this.pr__create_data();
 							this.vis_data.addRow([this.runs, oData.changed, oData.active, "Run: " + this.runs]);
 							this.chart.draw(this.vis_data);
+							
 							this.runs ++;
 							break;
 					}
@@ -133,13 +151,14 @@ class cCAChart{
 		cDebug.leave();
 	}
 	
-	clear(){
+	pr__clear_chart(){
 		var oElement = this.element;
+		var oChartElement = $("#"+cJquery.child_ID(oElement, "chart"));
 		this.vis_data = null;
 		this.chart = null;
 		this.runs = 0;
-		oElement.empty();
-		oElement.append("Waiting for Data ...");
+		oChartElement.empty();
+		oChartElement.append("Waiting for Data ...");
 	}
 
 }
@@ -166,9 +185,6 @@ $.widget( "ck.cachart",{
 		//set basic stuff
 		oElement.uniqueId();
 		oElement.addClass("ui-widget");
-		$(oElement).tooltip();
-		oElement.width(oOptions.width);
-		oElement.height(oOptions.height);
 		
 		var oWidget = new cCAChart(oOptions, oElement);
 

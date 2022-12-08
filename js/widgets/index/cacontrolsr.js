@@ -128,10 +128,7 @@ class cCAControlsR{
 		oElement.append("<P>");
 		
 		//-------------------------------------------------------------
-		oElement.append("<HR>")
-		oDiv = $("<DIV>",{class:"ui-widget-header"}).append("Chart");
-			oElement.append(oDiv);
-		oDiv = $("<DIV>",{class:"ui-widget-content",id:cJquery.child_ID(oElement, cCAControlRTypes.CHART_ID)});
+		oDiv = $("<DIV>",{id:cJquery.child_ID(oElement, cCAControlRTypes.CHART_ID)});
 			oDiv.cachart({grid_name:this.grid_name});
 			oElement.append(oDiv);
 			oElement.append("<P>");
