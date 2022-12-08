@@ -15,16 +15,16 @@ class cCAJsonTypes {
 
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 class cCAJson{
-	 _state ={
-		grid:null
-	};
+	grid=null;
+	grid_name=null;
 	
 	//#################################################################
 	//# Constructor
 	//#################################################################`
-	 constructor (poElement){
+	 constructor (poOptions, poElement){
 		cDebug.enter();
 		this.element = poElement;
+		this.grid_name = poOptions.grid_name;
 		var oThis = this;
 		var oElement;
 		oElement = this.element;
@@ -83,9 +83,9 @@ class cCAJson{
 	//#################################################################`
 	 onClickExport(){
 		cDebug.enter();
-		if ( this._state.grid == null)
+		if ( this.grid == null)
 			alert("no grid set");
-		else if (!this._state.grid.rule)
+		else if (!this.grid.rule)
 			alert("no rule set");
 		else
 			this.pr__create_json()
@@ -126,11 +126,12 @@ class cCAJson{
 	//*****************************************************************
 	 onCAEvent(poEvent){
 		cDebug.enter();
-		if (poEvent.type == cCAEvent.types.canvas)
-			if (poEvent.action == cCACanvasEvent.actions.set_grid){
-				cDebug.write("set_grid");
-				this._state.grid = poEvent.data;
-			}
+		if (poEvent.type === cCAEvent.types.canvas)
+			if (poEvent.action === cCACanvasEvent.actions.set_grid)
+				if (poEvent.data.grid_name === this.grid_name){
+					cDebug.write("set_grid");
+					this.grid = poEvent.data.data;
+				}
 		cDebug.leave();
 	}
 
@@ -142,7 +143,7 @@ class cCAJson{
 		var oElement = this.element;
 
 		//export the grid
-		var oObj = cCAGridJSONExporter.export(this._state.grid);
+		var oObj = cCAGridJSONExporter.export(this.grid);
 		var sJson = JSON.stringify(oObj);
 
 		//updatethe UI with JSON
@@ -158,8 +159,14 @@ class cCAJson{
 $.widget(
 	"ck.cajson",
 	{
-		_create(){
-			var oWidget = new cCAJson(this.element);
+		options:{
+			grid_name:null
+		},
+		_create: function(){
+			var oOptions = this.options;
+			if (!oOptions.grid_name) $.error("grid name not provided");
+			
+			var oWidget = new cCAJson(oOptions, this.element);
 		}
 	}
 );

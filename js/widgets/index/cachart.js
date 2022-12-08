@@ -39,10 +39,12 @@ class cCAChart{
 	vis_data= null;
 	chart= null;
 	element = null;
+	grid_name = null;
 	
-	constructor(poElement){
+	constructor(poOptions, poElement){
 		this.element = poElement;
 		var oThis = this;
+		this.grid_name = poOptions.grid_name;
 		
 		//put something in the widget
 		this.clear();
@@ -86,26 +88,27 @@ class cCAChart{
 			//----------------------------------------------------------------------
 			case cCAEvent.types.canvas:
 				cDebug.write("canvas event");
-				switch (poEvent.action){
-					case cCACanvasEvent.actions.grid_status:
-						//add the data to the data structure and draw
-						cDebug.write("status action");
-						if (!cCAChartTypes.is_charts_loaded){
-							cDebug.extra_debug("still waiting for google charts");
-							cDebug.leave();
-							return;
-						}
-						var oData = poEvent.data;
-						if (!oData){
-							cDebug.extra_debug("no data");
-							return;
-						}
-						this.pr__create_data();
-						this.vis_data.addRow([this.runs, oData.changed, oData.active, "Run: " + this.runs]);
-						this.chart.draw(this.vis_data);
-						this.runs ++;
-						break;
-				}
+				if (poEvent.data.grid_name == this.grid_name)
+					switch (poEvent.action){
+						case cCACanvasEvent.actions.grid_status:
+							//add the data to the data structure and draw
+							cDebug.write("status action");
+							if (!cCAChartTypes.is_charts_loaded){
+								cDebug.extra_debug("still waiting for google charts");
+								cDebug.leave();
+								return;
+							}
+							var oData = poEvent.data.data;
+							if (!oData){
+								cDebug.extra_debug("no data");
+								return;
+							}
+							this.pr__create_data();
+							this.vis_data.addRow([this.runs, oData.changed, oData.active, "Run: " + this.runs]);
+							this.chart.draw(this.vis_data);
+							this.runs ++;
+							break;
+					}
 				break;
 				
 			//----------------------------------------------------------------------
@@ -148,6 +151,7 @@ $.widget( "ck.cachart",{
 	options:{
 		width: 240,
 		height:100,
+		grid_name:null
 	},
 
 	//*****************************************************************
@@ -156,6 +160,9 @@ $.widget( "ck.cachart",{
 		var oOptions = this.options;
 		var oElement = this.element;
 		
+		//checks
+		if (!oOptions.grid_name) $.error("grid name not provided");
+		
 		//set basic stuff
 		oElement.uniqueId();
 		oElement.addClass("ui-widget");
@@ -163,7 +170,7 @@ $.widget( "ck.cachart",{
 		oElement.width(oOptions.width);
 		oElement.height(oOptions.height);
 		
-		var oWidget = new cCAChart(oElement);
+		var oWidget = new cCAChart(oOptions, oElement);
 
 	}
 });

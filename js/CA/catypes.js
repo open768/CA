@@ -50,14 +50,6 @@ class cCAGeneralEvent{
 	};
 }
 
-class cCACanvasEvent{
-	static actions = {
-		nochange:"CENC",
-		grid_status:"CEGS",
-		set_grid:"CESG"
-	};
-}
-
 class cCARuleEvent{
 	static actions = {
 		update_rule:"REUR"

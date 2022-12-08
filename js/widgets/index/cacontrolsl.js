@@ -23,20 +23,20 @@ class cCAControlLTypes {
 
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 class cCAControlsL{
-	_state={
-		grid:null,
-		rule:null
-	};
+	grid=null;
+	rule=null;
 	element = null;
+	grid_name=null;
 
 	//#################################################################
 	//# Constructor
 	//#################################################################`
-	constructor(poElement){
+	constructor(poOptions, poElement){
 		cDebug.enter();
 		this.element = poElement;
 		var oThis = this;
 		var oElement;
+		this.grid_name = poOptions.grid_name;
 
 		oElement = this.element;
 
@@ -162,8 +162,10 @@ class cCAControlsL{
 			case cCAActionEvent.types.canvas:
 				switch(poEvent.action){
 					case cCACanvasEvent.actions.set_grid:
-						cDebug.write("set_grid");
-						this._state.grid = poEvent.data;
+						if (poEvent.data.grid_name == this.grid_name){
+							cDebug.write("set_grid");
+							this.grid = poEvent.data.data;
+						}
 				}
 		}
 		cDebug.leave();
@@ -309,7 +311,7 @@ class cCAControlsL{
 		var oElement = this.element;
 
 		var s64 = cCARuleBase64Exporter.export(poRule,cCACellTypes.default_state);
-		this._state.rule = poRule;
+		this.rule = poRule;
 
 		var oTextArea = $("#" +	cJquery.child_ID(oElement, cCAControlLTypes.entry_ID));
 			oTextArea.val(s64);
@@ -341,8 +343,15 @@ class cCAControlsL{
 $.widget(
 	"ck.cacontrolsl",
 	{
-		_create(){
-			var oControls = new cCAControlsL(this.element);
+		options:{
+			grid_name:null
+		},
+		
+		_create:function(){
+			var oOptions = this.options;
+			if (!oOptions.grid_name) $.error("grid name not provided");
+			
+			var oControls = new cCAControlsL(oOptions, this.element);
 		}
 	}
 );

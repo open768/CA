@@ -12,6 +12,39 @@ class cCACanvasTypes{
 	static black_image = "images/blackbox.png";
 }
 
+class cCACanvasEventData{
+	grid_name=null;
+	data=null;
+	
+	constructor(psGridName, poData){
+		this.grid_name = psGridName;
+		this.data = poData;
+	}
+}
+
+class cCACanvasEvent{
+	static actions = {
+		nochange:"CENC",
+		grid_status:"CEGS",
+		set_grid:"CESG"
+	};
+
+	action=null;
+	data=null;
+	constructor(psGridName, psAction, poData){
+		if (!psGridName || !psAction) $.error("incorrect number of arguments");
+		this.grid_name = psGridName;
+		this.action = psAction;
+		this.data = poData;
+	}
+	
+	trigger(poSubject){
+		var oData = new cCACanvasEventData(this.grid_name,this.data); 
+		var oEvent = new cCAEvent(cCAEvent.types.canvas, this.action, oData);
+		oEvent.trigger(poSubject);
+	}
+}
+
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 class cCACanvas{
@@ -43,12 +76,12 @@ class cCACanvas{
 	 constructor(poOptions, poElement){
 		//check dependencies
 		if (!bean ) 	$.error("bean class is missing! check includes");	
-		if (!poOptions.name) $.error("name must be provided");	
+		if (!poOptions.grid_name) $.error("name must be provided");	
 		
 		this.element = poElement;
 		this.rows = poOptions.rows;
 		this.cols = poOptions.cols;
-		this.grid_name = poOptions.name;
+		this.grid_name = poOptions.grid_name;
 		this.cell_size = poOptions.cell_size;
 		
 		//set basic stuff
@@ -227,7 +260,7 @@ class cCACanvas{
 		
 		cDebug.write("no change");
 		
-		var oEvent = new cCAEvent( cCAEvent.types.canvas, cCACanvasEvent.actions.nochange, null);
+		var oEvent = new cCACanvasEvent( this.grid_name, cCACanvasEvent.actions.nochange, null);
 		oEvent.trigger(document);
 		
 		cDebug.leave();
@@ -238,7 +271,7 @@ class cCACanvas{
 		cDebug.enter();
 		
 		this.pr__drawGrid();
-		var oEvent = new cCAEvent( cCAEvent.types.canvas, cCACanvasEvent.actions.grid_status, poData);
+		var oEvent = new cCACanvasEvent( this.grid_name, cCACanvasEvent.actions.grid_status, poData);
 		oEvent.trigger(document);
 		
 		cDebug.leave();
@@ -261,7 +294,7 @@ class cCACanvas{
 		bean.on(poGrid, cCAGridEvent.hook, function(poEvent){oThis.onCAGridEvent(poEvent)});
 		
 		// publish grid details to anyone interested - eg to export grid data, or start/stop the grid
-		var oEvent = new cCAEvent( cCAEvent.types.canvas, cCACanvasEvent.actions.set_grid, poGrid);
+		var oEvent = new cCACanvasEvent( this.grid_name, cCACanvasEvent.actions.set_grid, poGrid);
 		oEvent.trigger(document);
 	}
 	
@@ -356,10 +389,13 @@ $.widget( "ck.cacanvas",{
 		cols:100,
 		rows:100,
 		cell_size:5,
-		name:null
+		grid_name:null
 	},
 	
-	_create(){
+	_create:function(){
+		var oOptions = this.options;
+		if (!oOptions.grid_name) $.error("grid name not provided");
+		
 		var oControl = new cCACanvas(this.options, this.element );
 	}
 });

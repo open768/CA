@@ -21,10 +21,12 @@ class cCAControlRTypes {
 class cCAControlsR{
 	grid = null;
 	element = null;
+	grid_name = null;
 	
 	//***************************************************************
-	constructor(poElement){
+	constructor(poOptions, poElement){
 		this.element = poElement;
+		this.grid_name = poOptions.grid_name;
 
 		var oThis = this;
 		var oElement = this.element;
@@ -95,21 +97,22 @@ class cCAControlsR{
 		sID = oElement.attr("id");
 
 		if (poEvent.type === cCAEvent.types.canvas)
-			switch(poEvent.action){
-				case cCACanvasEvent.actions.grid_status:
-					if (!poEvent.data) return;
-					
-					oTarget = $("#"+sID+cCAControlRTypes.ACTIVE_ID);
-					oTarget.html(poEvent.data.active);
-					oTarget = $("#"+sID+cCAControlRTypes.CHANGED_ID);
-					oTarget.html(poEvent.data.changed);
-					oTarget = $("#"+sID+cCAControlRTypes.RUNS_ID);
-					oTarget.html(poEvent.data.runs);
-					break;
-				case cCACanvasEvent.actions.nochange:
-					var oThis = this;
-					setTimeout( function(){	oThis.pr__set_controls(false);}, 100);
-			}
+			if (poEvent.data.grid_name === this.grid_name)			
+				switch(poEvent.action){
+					case cCACanvasEvent.actions.grid_status:
+						if (!poEvent.data) return;
+						
+						oTarget = $("#"+sID+cCAControlRTypes.ACTIVE_ID);
+						oTarget.html(poEvent.data.data.active);
+						oTarget = $("#"+sID+cCAControlRTypes.CHANGED_ID);
+						oTarget.html(poEvent.data.data.changed);
+						oTarget = $("#"+sID+cCAControlRTypes.RUNS_ID);
+						oTarget.html(poEvent.data.data.runs);
+						break;
+					case cCACanvasEvent.actions.nochange:
+						var oThis = this;
+						setTimeout( function(){	oThis.pr__set_controls(false);}, 100);
+				}
 	}
 	
 	//***************************************************************
@@ -154,7 +157,8 @@ class cCAControlsR{
 		oElement.append("<HR>")
 		oDiv = $("<DIV>",{class:"ui-widget-header"}).append("Chart");
 			oElement.append(oDiv);
-		oDiv = $("<DIV>",{class:"ui-widget-content",id:sID+cCAControlRTypes.CHART_ID}).cachart();
+		oDiv = $("<DIV>",{class:"ui-widget-content",id:sID+cCAControlRTypes.CHART_ID});
+			oDiv.cachart({grid_name:this.grid_name});
 			oElement.append(oDiv);
 			oElement.append("<P>");
 		
@@ -210,8 +214,15 @@ class cCAControlsR{
 $.widget( 
 	"ck.cacontrolsr",
 	{
-		_create(){
-			var oControls = new cCAControlsR(this.element);
+		options:{
+			grid_name:null
+		},
+		_create: function(){
+			//checks
+			var oOptions = this.options;
+			if (!oOptions.grid_name) $.error("grid name not provided");
+			
+			var oControls = new cCAControlsR(oOptions ,this.element);
 		}
 	}
 );
