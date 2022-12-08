@@ -159,14 +159,16 @@ class cCACanvas{
 					case cCAGeneralEvent.actions.import_grid:
 						cDebug.write("action: import grid");
 						var oGrid = poEvent.data;
-						this.pr__set_grid(oGrid);
-						//draw the grid
-						this.pr__grid_clear();
-						this.pr__drawGrid();
-						
-						//rule has been set
-						var oEvent = new cCAEvent( cCAEvent.types.rule, cCARuleEvent.actions.update_rule, oGrid.rule);
-						oEvent.trigger(document);
+						if (oGrid.name === this.grid_name){
+							this.pr__set_grid(oGrid);
+							//draw the grid
+							this.pr__grid_clear();
+							this.pr__drawGrid();
+							
+							//rule has been set
+							var oEvent = new cCAEvent( cCAEvent.types.rule, cCARuleEvent.actions.update_rule, oGrid.rule);
+							oEvent.trigger(document);
+						}
 						break;
 						
 					//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 

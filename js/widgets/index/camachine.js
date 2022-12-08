@@ -50,7 +50,7 @@ $.widget( "ck.camachine",{
 				//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 				var oCell = $("<TD>", {width:350,valign:"top"});
 					var oLeftCtrlDiv = $("<DIV>",{width:350,id:"leftControl", canvas_id:"canvas"});
-					oLeftCtrlDiv.cacontrolsl({grid_name:caMachineTypes.name});
+					oLeftCtrlDiv.cacontrolsl({grid_name:caMachineTypes.grid_name});
 						oCell.append(oLeftCtrlDiv);
 					oRow.append(oCell);
 				
@@ -61,7 +61,7 @@ $.widget( "ck.camachine",{
 						width:oOptions.width,
 						height:oOptions.height,
 						cell_size:oOptions.cell_size,
-						grid_name: caMachineTypes.name
+						grid_name: caMachineTypes.grid_name
 					});
 					oCell.append(oCanvasDiv);
 				oRow.append(oCell);
@@ -69,7 +69,7 @@ $.widget( "ck.camachine",{
 				//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 				var oCell = $("<TD>", {width:240,valign:"top",canvas_id:"canvas"});
 					var oRightCtrlDiv = $("<DIV>", {width:240});
-					oRightCtrlDiv.cacontrolsr({grid_name:caMachineTypes.name});
+					oRightCtrlDiv.cacontrolsr({grid_name:caMachineTypes.grid_name});
 					oCell.append(oRightCtrlDiv);
 				oRow.append(oCell);
 			oTable.append(oRow);
@@ -78,7 +78,7 @@ $.widget( "ck.camachine",{
 			var oRow = $("<TR>");
 				var oCell = $("<TD>", {valign:"top",colspan:3});
 					var oJsonDiv = $("<DIV>", {title:"json will appear here"});
-						oJsonDiv.cajson({grid_name:caMachineTypes.name});
+						oJsonDiv.cajson({grid_name:caMachineTypes.grid_name});
 						oCell.append(oJsonDiv);
 				oRow.append(oCell);
 			oTable.append(oRow);
