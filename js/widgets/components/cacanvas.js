@@ -147,7 +147,7 @@ class cCACanvas{
 						
 					//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 					case cCAActionEvent.actions.control: //grid to be initialised
-						cDebug.write("event: acion");
+						cDebug.write("event: action");
 						this.grid.action(poEvent.data);
 						break;
 				}

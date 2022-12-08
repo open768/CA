@@ -39,6 +39,7 @@ class cCAControlsR{
 		//check dependencies
 		if (!bean ) $.error("bean is missing , chack includes");
 		if (!oElement.cachart) $.error("caChart is missing , chack includes");
+		if (!oElement.caremotecontrols) $.error("caremotecontrols is missing , chack includes");
 		
 		//subscribe to CAEvents
 		bean.on (document, cCAEvent.hook, function(poEvent){ oThis.onCAEvent(poEvent)} );
@@ -62,39 +63,13 @@ class cCAControlsR{
 		oEvent.trigger(document);
 	}
 	
-	//****************************************************************************
-	onClickControl(piAction){
-		var oThis = this;
-		if (!caMachineTypes.rule_set){
-			alert("set a rule first!!");
-			return;
-		}
-	
-		switch (piAction){
-			case cCAGridTypes.actions.stop:
-				this.pr__set_controls(false);
-				break;
-			case cCAGridTypes.actions.play:
-				this.pr__set_controls(true);
-				break;
-		}
-		var oEvent = new cCAEvent( cCAEvent.types.action, cCAActionEvent.actions.control, parseInt(piAction));
-		oEvent.trigger(document);
-	}
-	
-	pr__set_controls(pbRunning){
-		$("#btnStep").prop("disabled",pbRunning);
-		$("#btnPlay").prop("disabled",pbRunning);
-		$("#btnStop").prop("disabled",!pbRunning);
-	}
 	
 	//****************************************************************************
 	onCAEvent(poEvent){
-		var oElement,  sID;
+		var oElement;
 		var oTarget;
 		
 		oElement = this.element;
-		sID = oElement.attr("id");
 
 		if (poEvent.type === cCAEvent.types.canvas)
 			if (poEvent.data.grid_name === this.grid_name)			
@@ -102,16 +77,13 @@ class cCAControlsR{
 					case cCACanvasEvent.actions.grid_status:
 						if (!poEvent.data) return;
 						
-						oTarget = $("#"+sID+cCAControlRTypes.ACTIVE_ID);
+						oTarget = $("#"+cJquery.child_ID(oElement, cCAControlRTypes.ACTIVE_ID));
 						oTarget.html(poEvent.data.data.active);
-						oTarget = $("#"+sID+cCAControlRTypes.CHANGED_ID);
+						oTarget = $("#"+cJquery.child_ID(oElement, cCAControlRTypes.CHANGED_ID));
 						oTarget.html(poEvent.data.data.changed);
-						oTarget = $("#"+sID+cCAControlRTypes.RUNS_ID);
+						oTarget = $("#"+cJquery.child_ID(oElement, cCAControlRTypes.RUNS_ID));
 						oTarget.html(poEvent.data.data.runs);
 						break;
-					case cCACanvasEvent.actions.nochange:
-						var oThis = this;
-						setTimeout( function(){	oThis.pr__set_controls(false);}, 100);
 				}
 	}
 	
@@ -120,10 +92,9 @@ class cCAControlsR{
 	//***************************************************************
 	pr__init(){
 		var oDiv, oTable, oRow, oCell;
-		var oElement, sID;
+		var oElement;
 		
 		oElement = this.element;
-		sID = oElement.attr("id");
 		
 		//--input-------------------------------------------------
 		oDiv = $("<DIV>",{class:"ui-widget-header"}).append("Status");
@@ -134,19 +105,22 @@ class cCAControlsR{
 				oRow = $("<tr>");
 					oCell = $("<td>", {align:"right"}).append("Active");
 					oRow.append(oCell);
-					oCell = $("<td>",{id:sID+cCAControlRTypes.ACTIVE_ID}).append("??");
+					oCell = $("<td>",{id:cJquery.child_ID(oElement, cCAControlRTypes.ACTIVE_ID)});
+						oCell.append("??");
 					oRow.append(oCell);
 					oTable.append(oRow);
 				oRow = $("<tr>");
 					oCell = $("<td>", {align:"right"}).append("Changed");
 					oRow.append(oCell);
-					oCell = $("<td>",{id:sID+cCAControlRTypes.CHANGED_ID}).append("??");
+					oCell = $("<td>",{id:cJquery.child_ID(oElement, cCAControlRTypes.CHANGED_ID)});
+						oCell.append("??");
 					oRow.append(oCell);
 					oTable.append(oRow);
 				oRow = $("<tr>");
 					oCell = $("<td>", {align:"right"}).append("Runs");
 					oRow.append(oCell);
-					oCell = $("<td>",{id:sID+cCAControlRTypes.RUNS_ID}).append("??");
+					oCell = $("<td>",{id:cJquery.child_ID(oElement, cCAControlRTypes.RUNS_ID)});
+						oCell.append("??");
 					oRow.append(oCell);
 					oTable.append(oRow);
 				oDiv.append(oTable);
@@ -157,7 +131,7 @@ class cCAControlsR{
 		oElement.append("<HR>")
 		oDiv = $("<DIV>",{class:"ui-widget-header"}).append("Chart");
 			oElement.append(oDiv);
-		oDiv = $("<DIV>",{class:"ui-widget-content",id:sID+cCAControlRTypes.CHART_ID});
+		oDiv = $("<DIV>",{class:"ui-widget-content",id:cJquery.child_ID(oElement, cCAControlRTypes.CHART_ID)});
 			oDiv.cachart({grid_name:this.grid_name});
 			oElement.append(oDiv);
 			oElement.append("<P>");
@@ -185,24 +159,7 @@ class cCAControlsR{
 		
 		//--controls------------------------------------------------		
 		oDiv = $("<DIV>",{class:"ui-widget-header"});
-			oDiv.append("controls");
-		oElement.append(oDiv);
-		
-		oDiv = $("<DIV>",{class:"ui-widget-content"});
-			var oButton = $("<button>",{width:"30px",height:"30px",id:"btnStop"}).button({icon:"ui-icon-stop"});
-				oButton.prop("disabled", true);
-				oButton.click(	function(){ oThis.onClickControl(cCAGridTypes.actions.stop);}	);
-				oDiv.append(oButton);
-
-			var oButton = $("<button>",{width:"30px",height:"30px",id:"btnPlay"}).button({icon:"ui-icon-circle-triangle-e"});
-				oButton.prop("disabled", true);
-				oButton.click(	function(){ oThis.onClickControl(cCAGridTypes.actions.play);}	);
-				oDiv.append(oButton);
-
-			var oButton = $("<button>",{width:"30px",height:"30px",title:"step",id:"btnStep"}).button({icon:"ui-icon-seek-end"});
-				oButton.prop("disabled", true);
-				oButton.click(	function(){ oThis.onClickControl(cCAGridTypes.actions.step);}	);
-				oDiv.append(oButton);
+			oDiv.caremotecontrols({grid_name:this.grid_name});
 		oElement.append(oDiv);
 	}
 	

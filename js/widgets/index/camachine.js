@@ -28,11 +28,10 @@ $.widget( "ck.camachine",{
 	//# Constructor
 	//#################################################################`
 	_create: function(){
-		var oThis, oOptions, oElement;
+		var oOptions, oElement;
 		
-		oThis = this;
-		oOptions = oThis.options;
-		oElement = oThis.element;
+		oOptions = this.options;
+		oElement = this.element;
 		
 		//check for classes
 		if (typeof cCARule !== 'function') { $.error("missing cCARule class");}
