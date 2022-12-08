@@ -135,7 +135,7 @@ class cCAChart{
 				switch (poEvent.action){
 					case cCARuleEvent.actions.set_rule:
 						cDebug.write("set_rule action");
-						this.clear();
+						this.pr__clear_chart();
 				}
 				break;
 			//----------------------------------------------------------------------
@@ -144,7 +144,7 @@ class cCAChart{
 				switch (poEvent.action){
 					case cCAActionEvent.actions.grid_init:
 						cDebug.write("grid_init action");
-						this.clear();
+						this.pr__clear_chart();
 				}
 				break;
 		}
