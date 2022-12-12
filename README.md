@@ -7,3 +7,7 @@ this uses a new notation called CARB which allows all possible CA rules to be ex
 
 see https://docs.google.com/document/d/1Rw_CsPg5KUKUC3DDpbSPLkvWDMxqy7L_8Z0UfjmEHSg/edit
 
+License
+=======
+Creative Commons Attribution 4.0 International License
+https://creativecommons.org/licenses/by/4.0/legalcode
