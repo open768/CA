@@ -1,6 +1,23 @@
 <!DOCTYPE html>
 <html>
 <head>
+	<!--**************************************************************************
+	Copyright (C) Chicken Katsu 2013-2022
+	This code is protected by copyright under the terms of the 
+	Creative Commons Attribution 4.0 International License
+	https://creativecommons.org/licenses/by/4.0/legalcode
+	contact cluck@chickenkatsu.co.uk
+	// USE AT YOUR OWN RISK - NO GUARANTEES OF ANY FORM ARE EITHER EXPRESSED OR IMPLIED
+
+	Cryptography code demonstrated in this application is covered by the UK Govt 
+	Open General Export License for Cryptographic development 
+	(see https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/1101784/open-general-export-licence-cryptographic-development.pdf) 
+	and is not intended for dual use as defined by this license. 
+	You the consumer of this application are entirely responsible for importing 
+	this code into your own country. if you disagree please close this page.
+
+	**************************************************************************-->
+
 	<title>Cellular Automata Encryption</title>
 	<!-- 3rd party libraries (bean) -->
 	<script  src="../jsinc/extra/bean/bean.js"></script>
@@ -13,6 +30,7 @@
 	<script  src="https://www.gstatic.com/charts/loader.js"></script>
 	
 	<!-- stylesheets -->
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">	
 	<link rel="stylesheet" href="css/CA.css">
 	<link rel="stylesheet" href="css/jquery/jquery-ui.css">
 
@@ -26,10 +44,17 @@
 	<script src="js/CA/catypes.js"></script>
 	<script src="js/CA/cacell.js"></script>
 	<script src="js/CA/carule.js"></script>
+	<script src="js/CA/cagrid.js"></script>
+	<script src="js/CA/cagridimporter.js"></script>
 	<script src="js/CA/caimporter.js"></script>
 	
 	<!-- widgets for page -->
-	<script src="js/widgets/cacrypt.js"></script>
+	<script src="js/widgets/components/cacanvas.js"></script>
+	<script src="js/widgets/components/cajson.js"></script>
+	
+	<script src="js/widgets/crypt/cacryptca.js"></script>
+	<script src="js/widgets/crypt/cacryptdata.js"></script>
+	<script src="js/widgets/crypt/cacrypt.js"></script>
 </head>
 
 <body>

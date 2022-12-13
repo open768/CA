@@ -4,8 +4,8 @@ Copyright (C) Chicken Katsu 2013-2022
 This code is protected by copyright under the terms of the 
 Creative Commons Attribution 4.0 International License
 https://creativecommons.org/licenses/by/4.0/legalcode
-contact cluck@chickenkatsu.co.uk
-// USE AT YOUR OWN RISK - NO GUARANTEES OR ANY FORM ARE EITHER EXPRESSED OR IMPLIED
+For licenses that allow for commercial use please contact cluck@chickenkatsu.co.uk
+// USE AT YOUR OWN RISK - NO GUARANTEES OF ANY FORM ARE EITHER EXPRESSED OR IMPLIED
 **************************************************************************/
 class cCACanvasTypes{
 	static white_image = "images/whitebox.png";
@@ -59,6 +59,7 @@ class cCACanvas{
 	drawing =false;
 	image_count = 0;
 	images_done = 0;
+	interactive = false;
 	mouse={
 		X : 0,
 		Y : 0,
@@ -77,6 +78,7 @@ class cCACanvas{
 		//check dependencies
 		if (!bean ) 	$.error("bean class is missing! check includes");	
 		if (!poOptions.grid_name) $.error("name must be provided");	
+		this.interactive = poOptions.interactive;
 		
 		this.element = poElement;
 		this.rows = poOptions.rows;
@@ -200,6 +202,7 @@ class cCACanvas{
 	//****************************************************************
 	onMouseDown(poEvent){
 		if (!this.grid) return;
+		if (!this.interactive) return;
 		
 		this.mouse.is_down = true;
 		this.pr__set_one_cell(poEvent);
@@ -207,6 +210,7 @@ class cCACanvas{
 	
 	//****************************************************************
 	onMouseMove(poEvent){
+		if (!this.interactive) return;
 		if (this.grid && this.mouse.is_down){
 			this.pr__set_one_cell(poEvent);
 		}
@@ -283,8 +287,10 @@ class cCACanvas{
 	 pr__grid_clear(){
 		cDebug.enter();
 		
-		cDebug.write("Clearing canvas");
-		this.canvas.clearCanvas();
+		if (this.canvas){
+			cDebug.write("Clearing canvas");
+			this.canvas.clearCanvas();
+		}
 		
 		cDebug.leave();
 	}
@@ -391,7 +397,8 @@ $.widget( "ck.cacanvas",{
 		cols:100,
 		rows:100,
 		cell_size:5,
-		grid_name:null
+		grid_name:null,
+		interactive:true
 	},
 	
 	_create:function(){

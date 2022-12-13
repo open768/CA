@@ -4,8 +4,8 @@ Copyright (C) Chicken Katsu 2013-2022
 This code is protected by copyright under the terms of the 
 Creative Commons Attribution 4.0 International License
 https://creativecommons.org/licenses/by/4.0/legalcode
-contact cluck@chickenkatsu.co.uk
-// USE AT YOUR OWN RISK - NO GUARANTEES OR ANY FORM ARE EITHER EXPRESSED OR IMPLIED
+For licenses that allow for commercial use please contact cluck@chickenkatsu.co.uk
+// USE AT YOUR OWN RISK - NO GUARANTEES OF ANY FORM ARE EITHER EXPRESSED OR IMPLIED
 **************************************************************************/
 
 //###################################################################
@@ -99,15 +99,9 @@ class cCARemoteControls{
 
 	pr__set_controls(pbRunning){
 		var oElement = this.element;
-		if (pbRunning){
-			$("#"+cJquery.child_ID(oElement,"Step")).prop("disabled",true);
-			$("#"+cJquery.child_ID(oElement,"Play")).prop("disabled",true);
-			$("#"+cJquery.child_ID(oElement,"Stop")).removeAttr("disabled");
-		}else{
-			$("#"+cJquery.child_ID(oElement,"Step")).removeAttr("disabled");
-			$("#"+cJquery.child_ID(oElement,"Play")).removeAttr("disabled");
-			$("#"+cJquery.child_ID(oElement,"Stop")).prop("disabled",true);
-		}
+		$("#"+cJquery.child_ID(oElement,"Step")).prop("disabled",pbRunning);
+		$("#"+cJquery.child_ID(oElement,"Play")).prop("disabled",pbRunning);
+		$("#"+cJquery.child_ID(oElement,"Stop")).prop("disabled", !pbRunning);
 	}
 	
 	pr__init(){

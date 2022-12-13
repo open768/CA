@@ -4,8 +4,8 @@ Copyright (C) Chicken Katsu 2013-2022
 This code is protected by copyright under the terms of the 
 Creative Commons Attribution 4.0 International License
 https://creativecommons.org/licenses/by/4.0/legalcode
-contact cluck@chickenkatsu.co.uk
-// USE AT YOUR OWN RISK - NO GUARANTEES OR ANY FORM ARE EITHER EXPRESSED OR IMPLIED
+For licenses that allow for commercial use please contact cluck@chickenkatsu.co.uk
+// USE AT YOUR OWN RISK - NO GUARANTEES OF ANY FORM ARE EITHER EXPRESSED OR IMPLIED
 **************************************************************************/
 class caMachineTypes{
 	static rule_set = false;
@@ -19,8 +19,8 @@ $.widget( "ck.camachine",{
 	//# Definition
 	//#################################################################
 	options:{
-		width:100,
-		height:200,
+		cols:100,
+		rows:100,
 		cell_size:5,
 	},
 
@@ -57,8 +57,8 @@ $.widget( "ck.camachine",{
 				var oCell = $("<TD>");
 					var oCanvasDiv = $("<SPAN>",{title:"this is where the magic happens", id:"canvas"});
 					oCanvasDiv.cacanvas({
-						width:oOptions.width,
-						height:oOptions.height,
+						cols:oOptions.cols,
+						rows:oOptions.rows,
 						cell_size:oOptions.cell_size,
 						grid_name: caMachineTypes.grid_name
 					});

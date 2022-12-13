@@ -1,11 +1,11 @@
 "use strict";
 /**************************************************************************
-Copyright (C) Chicken Katsu 2013-2018
+Copyright (C) Chicken Katsu 2013-2022
 This code is protected by copyright under the terms of the 
 Creative Commons Attribution 4.0 International License
 https://creativecommons.org/licenses/by/4.0/legalcode
 contact cluck@chickenkatsu.co.uk
-// USE AT YOUR OWN RISK - NO GUARANTEES OR ANY FORM ARE EITHER EXPRESSED OR IMPLIED
+// USE AT YOUR OWN RISK - NO GUARANTEES OF ANY FORM ARE EITHER EXPRESSED OR IMPLIED
 
 Cryptography code demonstrated in this application is covered by the UK Govt 
 Open General Export License for Cryptographic development 
@@ -19,66 +19,11 @@ You the consumer of this application are entirely responsible for importing this
 //###################################################################################
 class cCACryptTypes{
 	static name =  "cacryptgrid";
+	static rows = 100;
+	static cols = 100;
+	cell_size = 5;
 }
 
-//###################################################################################
-//###################################################################################
-class cCACryptData{
-	element = null;
-	constructor(poElement){
-		this.element = poElement;
-		var oElement = poElement;
-		oElement.uniqueId();
-		oElement.addClass("ui-widget");
-		oElement.empty();
-		this.init();
-	}
-	
-	//*******************************************************************************
-	init(){
-		var oElement = this.element;
-		var oDiv = $("<DIV>", {class:"ui-widget-header"});
-			oDiv.append("Data");
-			oElement.append(oDiv);
-		oDiv = $("<DIV>", {class:"ui-widget-content"});
-			oDiv.append("Crypt goes here");
-			oDiv.append("<li>initial rule executions");
-			oDiv.append("<li>text to encrypt");
-			oDiv.append("<li>text to decrypt");
-			oDiv.append("<li>encrypt and decrypt buttons");
-			oElement.append(oDiv);
-	}
-}
-	
-//###################################################################################
-//###################################################################################
-class cCACryptCA{
-	element = null;
-	constructor(poOptions, poElement){
-		if (!bean ) 	$.error("bean class is missing! check includes");	
-		this.element = poElement;
-		this.ca_name = poOptions.ca_name;
-		var oElement = poElement;
-		oElement.uniqueId();
-		oElement.addClass("ui-widget");
-		oElement.empty();
-		this.init();
-	}
-	
-	//*******************************************************************************
-	init(){
-		var oElement = this.element;
-		var oDiv = $("<DIV>", {class:"ui-widget-header"});
-			oDiv.append("Cellular Automata");
-			oElement.append(oDiv);
-		oDiv = $("<DIV>", {class:"ui-widget-content"});
-			oDiv.append("CA goes here");
-			oDiv.append("<li>BASE64 rule");
-			oDiv.append("<li>initial pattern");
-			oDiv.append("<li>Json import and export");
-			oElement.append(oDiv);
-	}
-}
 
 //###################################################################################
 //###################################################################################
@@ -136,12 +81,12 @@ class cCACrypt {
 			oTR = $("<tr>");
 				oTD = $("<TD>",{width:"50%", id:"ca",valign:"top"});
 					oDiv = $("<DIV>").append("CA goes here");
-						oDiv.cacryptca({ca_name: this.ca_name});
+						oDiv.cacryptca({ca_name: this.ca_name, rows:cCACryptTypes.rows, cols:cCACryptTypes.cols});
 						oTD.append(oDiv);
 					oTR.append(oTD);
 				oTD = $("<TD>",{width:"50%", id:"crypt",valign:"top"});
 					oDiv = $("<DIV>").append("Data goes here");
-						oDiv.cacryptdata();
+						oDiv.cacryptdata({ca_name: this.ca_name});
 						oTD.append(oDiv);
 					oTR.append(oTD);
 				oTable.append(oTR);
@@ -153,6 +98,10 @@ class cCACrypt {
 					oTR.append(oTD);
 				oTable.append(oTR);
 		oElement.append(oTable);
+		
+		//---------------informs subscribers that UI is ready -------------------------------
+		var oEvent = new cCAEvent( cCAEvent.types.action, cCAActionEvent.actions.ready,null);
+		oEvent.trigger(document);
 	}
 }
 
@@ -160,16 +109,6 @@ class cCACrypt {
 $.widget( "ck.cacrypt",{
 	_create: function(){
 		var oWidget = new cCACrypt(cCACryptTypes.name, this.element);
-	}
-});
-$.widget( "ck.cacryptca",{
-	_create: function(){
-		var oWidget = new cCACryptCA(this.options, this.element);
-	}
-});
-$.widget( "ck.cacryptdata",{
-	_create: function(){
-		var oWidget = new cCACryptData(this.element);
 	}
 });
 $.widget( "ck.cacryptstatus",{
