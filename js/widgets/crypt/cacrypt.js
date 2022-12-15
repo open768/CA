@@ -21,7 +21,9 @@ class cCACryptTypes{
 	static name =  "cacryptgrid";
 	static rows = 100;
 	static cols = 100;
-	cell_size = 5;
+	static cell_size = 5;
+	static input_name = "CRinput";	
+	static output_name = "CROutput";
 }
 
 
@@ -100,6 +102,8 @@ class cCACrypt {
 		oElement.append(oTable);
 		
 		//---------------informs subscribers that UI is ready -------------------------------
+		var sTxt = "the quick brown fox jumped over the lazy dog".repeat(10);
+		$("#"+cCACryptTypes.input_name).val(sTxt);
 		var oEvent = new cCAEvent( cCAEvent.types.action, cCAActionEvent.actions.ready,null);
 		oEvent.trigger(document);
 	}

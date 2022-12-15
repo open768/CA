@@ -15,7 +15,6 @@ You the consumer of this application are entirely responsible for importing this
 
 **************************************************************************/
 
-
 //###################################################################################
 //###################################################################################
 class cCACryptData{
@@ -36,27 +35,40 @@ class cCACryptData{
 	init(){
 		var oElement = this.element;
 		var oInputDiv = $("<DIV>");
-			oInputDiv.cacryptinput();
+			oInputDiv.cacrypttext({id:cCACryptTypes.input_name, title:"text to encrypt", read_only:false});
 			oElement.append(oInputDiv);
 		oElement.append("<p>");
+		
 		var oControlDiv = $("<DIV>");
 			oControlDiv.cacryptcontrol({ca_name:this.ca_name});
 			oElement.append(oControlDiv);
+		oElement.append("<p>");
+		
+		var oOutDiv = $("<DIV>");
+			oOutDiv.cacrypttext({id:cCACryptTypes.output_name, title:"encrypted text", read_only:true});
+			oElement.append(oOutDiv);
+		oElement.append("<p>");
+		
 	}
 }
 
 //###################################################################################
 //###################################################################################
-class cCACryptInput{
+class cCACryptText{
 	element = null;
+	read_only = false;
+	title = "no title set";
+	id=null;
 	
 	constructor(poOptions, poElement){
 		this.element = poElement;
-		this.ca_name = poOptions.ca_name;
-
 		var oElement = poElement;
-		oElement.uniqueId();
 		oElement.addClass("ui-widget");
+		
+		this.read_only = poOptions.read_only;
+		this.title = poOptions.title;
+		this.id = poOptions.id;
+		
 		oElement.empty();
 		this.init();
 	}
@@ -65,10 +77,13 @@ class cCACryptInput{
 	init(){
 		var oElement = this.element;
 		var oDiv = $("<DIV>", {class:"ui-widget-header"});
-			oDiv.append("Input");
+			oDiv.append(this.title);
 			oElement.append(oDiv);
 		oDiv = $("<DIV>", {class:"ui-widget-content"});
-			oDiv.append("text to encrypt goes here");
+			var oBox = $("<TEXTAREA>",{id:this.id,class:"json"})
+			if (this.read_only)
+				oBox.prop("readonly",true);
+			oDiv.append(oBox);
 			oElement.append(oDiv);
 	}
 }
@@ -141,10 +156,28 @@ class cCACryptControl{
 	
 	//*******************************************************************************
 	onEncryptClick(){
+		var oElement = this.element;
+		var oThis = this;
+		
+		var runs_ID = cJquery.child_ID(oElement, this.child_names.inital_runs);
+		var oTxtBox = $("#" + runs_ID);
+		var iInitialruns = parseInt(oTxtBox.val());
+		
+		var sPlaintext = $("#" + cCACryptTypes.input_name).val();
+		
+		var oScrambler = new cCAScrambler(this.grid, iInitialruns, sPlaintext);
+		bean.on(oScrambler, cScramblerEvent.hook, function(poEvent){oThis.onCAScramblerEvent(poEvent)} );
+		oScrambler.scramble().then()
+		var sID = cJquery.child_ID(oElement, this.child_names.crypt);
 	}
 	
 	//*******************************************************************************
-	onCAEvent(poEvent, poData){
+	onCAScramblerEvent(poEvent){
+		//TODO
+	}
+	
+	//*******************************************************************************
+	onCAEvent(poEvent){
 		var oElement = this.element;
 		var oThis = this;
 		
@@ -179,8 +212,14 @@ $.widget( "ck.cacryptcontrol",{
 		var oWidget = new cCACryptControl(this.options, this.element);
 	}
 });
-$.widget( "ck.cacryptinput",{
+$.widget( "ck.cacrypttext",{
+	options:{
+		read_only:false,
+		title: "no title set",
+		id:null
+	},
 	_create: function(){
-		var oWidget = new cCACryptInput(this.options, this.element);
+		if (!this.options.id) $.error("id missing");
+		var oWidget = new cCACryptText(this.options, this.element);
 	}
 });
