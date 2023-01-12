@@ -52,6 +52,15 @@ class cCACryptData{
 	}
 }
 
+
+//###############################################################################
+class CACryptException{
+	constructor (psMessage) {
+   		this.message = psMessage;
+		this.name = 'CAException';
+	}
+}
+
 //###################################################################################
 //###################################################################################
 class cCACryptText{
@@ -114,6 +123,7 @@ class cCACryptControl{
 		oElement.addClass("ui-widget");
 		oElement.empty();
 		this.init();
+
 		//subscribe to CAEvents
 		bean.on (document, cCAEvent.hook, function(poEvent){ oThis.onCAEvent(poEvent)} );
 	}
@@ -155,20 +165,26 @@ class cCACryptControl{
 	}
 	
 	//*******************************************************************************
-	onEncryptClick(){
+	async onEncryptClick(){
 		var oElement = this.element;
 		var oThis = this;
+
+		//check that a grid is definitely there
+		if (!this.grid) throw new CACryptException("no Grid")
 		
+		//get the control values from the UI
 		var runs_ID = cJquery.child_ID(oElement, this.child_names.inital_runs);
 		var oTxtBox = $("#" + runs_ID);
 		var iInitialruns = parseInt(oTxtBox.val());
 		
+		//get plaintext to encrypt from the UI
 		var sPlaintext = $("#" + cCACryptTypes.input_name).val();
 		
+		//start the scrambling
+		cCACryptEvent.triggerStatus("scrambling started");
 		var oScrambler = new cCAScrambler(this.grid, iInitialruns, sPlaintext);
-		bean.on(oScrambler, cScramblerEvent.hook, function(poEvent){oThis.onCAScramblerEvent(poEvent)} );
-		oScrambler.scramble().then()
-		var sID = cJquery.child_ID(oElement, this.child_names.crypt);
+		bean.on( oScrambler, cScramblerEvent.hook, function(poEvent){oThis.onCAScramblerEvent(poEvent)} );
+		await oScrambler.scramble();
 	}
 	
 	//*******************************************************************************
@@ -183,12 +199,20 @@ class cCACryptControl{
 		
 		switch (poEvent.type){
 			case cCAEvent.types.canvas:
-				if (poEvent.data.grid_name === this.grid_name)			
-					if (poEvent.action === cCACanvasEvent.actions.set_grid)
+				if (poEvent.action === cCACanvasEvent.actions.set_grid)
+					if (poEvent.data.grid_name === this.ca_name){
 						//remember the grid, its needed for encryption.
 						this.grid = poEvent.data.grid;
+						cCACryptEvent.triggerStatus("grid initialised");
+					}
+				
 				break;
-					
+
+			case cCAEvent.types.general:
+				if (poEvent.action === cCAGeneralEvent.actions.import_grid)
+				cCACryptEvent.triggerStatus("grid imported - ready to rock");
+				break;
+
 			case cCAEvent.types.actions:
 				if (poEvent.action === cCARuleEvent.actions.update_rule){
 					//enable buttons when any rule is set

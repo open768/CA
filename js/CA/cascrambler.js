@@ -38,13 +38,7 @@ class cCAScrambler{
 	}
 	
 	//*******************************************************************************
-	scramble(){ //returns a promise
+	async scramble(){ //returns a promise
 		var oThis = this;
-		return new Promise( function (pfnOK, pfnFail){oThis.pr__scramble(pfnOK, pfnFail)} );
-	}
-	
-	//*******************************************************************************
-	//*******************************************************************************
-	pr__scramble(pfnOK, pfnFail){
 	}
 }

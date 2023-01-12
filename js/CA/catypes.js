@@ -28,10 +28,10 @@ class cCAEvent{
 		this.data = poData;
 	}
 
-	trigger(poHost){
-		if (!poHost) $.error("host missing");
+	trigger(poTarget){
+		if (!poTarget) $.error("target missing");
 		var sHook = this.constructor.hook;
-		bean.fire(poHost, sHook, this);
+		bean.fire(poTarget, sHook, this);
 	}
 }
 
@@ -87,6 +87,7 @@ class cCACellTypes {
 	};	
 }
 
+//###############################################################################
 class cCARuleTypes {
 	static max_inputs =Math.pow(2,9)-1;
 	static base64_length =  Math.ceil((Math.pow(2,9)-1)/6);
@@ -101,9 +102,11 @@ class cCARuleTypes {
 }
 
 //###############################################################################
-function CAException(psMessage) {
-   this.message = psMessage;
-   this.name = 'CAException';
+class CAException{
+	constructor (psMessage) {
+   		this.message = psMessage;
+		this.name = 'CAException';
+	}
 }
 
 

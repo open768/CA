@@ -26,11 +26,61 @@ class cCACryptTypes{
 	static output_name = "CROutput";
 }
 
+//###############################################################################
+class cCACryptEvent{
+	static hook = "CACRYEV";
+	static types = {
+		general: "GNR"
+	};
+	static actions = {
+		status: "STA"
+	}
+	type=null;
+	action=null;
+	data = null;
+	
+	/**
+	 * constructor
+	 * @param {cCACryptEvent.types} psType
+	 * @param {cCACryptEvent.actions} psAction
+	 * @param {any} poData
+	 */
+	constructor(psType, psAction, poData){
+		if (psType === null) throw new Error("null type");	
+		if (psAction === null) throw new Error("null action");	
+		this.type = psType;
+		this.action = psAction;
+		this.data = poData;
+	}
+
+	
+	/**
+	 * Description
+	 * @param {Element} poTarget
+	 * @returns {any}
+	 */
+	trigger(poTarget){
+		if (!poTarget) $.error("target missing");
+		var sHook = this.constructor.hook;
+		bean.fire(poTarget, sHook, this);
+	}
+
+	/**
+	 * Description
+	 * @param {string} psMessage
+	 * @returns {null}
+	 */
+	static triggerStatus( psMessage){
+		var oEvent = new cCACryptEvent(this.types.general, this.actions.status, psMessage);
+		oEvent.trigger(document);
+	}
+}
 
 //###################################################################################
 //###################################################################################
 class cCACryptStatus{
-	element = null;
+	/** @type Element */ element = null;
+	/** @type boolean */ first_message = true;
 	constructor(poElement){
 		if (!bean ) 	$.error("bean class is missing! check includes");	
 		this.element = poElement;
@@ -47,9 +97,36 @@ class cCACryptStatus{
 		var oDiv = $("<DIV>", {class:"ui-widget-header"});
 			oDiv.append("Status");
 			oElement.append(oDiv);
-		oDiv = $("<DIV>", {class:"ui-widget-content"});
+		var sID = cJquery.child_ID(oElement,"status");
+		oDiv = $("<DIV>", {class:"ui-widget-content",id:sID});
 			oDiv.append("Status goes here");
 			oElement.append(oDiv);
+
+			
+		//subscribe to CAEvents
+		var oThis = this;
+		bean.on (document, cCACryptEvent.hook, function(poEvent){ oThis.onCACryptEvent(poEvent)} );
+	}
+	
+	//*******************************************************************************
+	/**
+		@param {cCACryptEvent} poEvent
+	*/
+	onCACryptEvent(poEvent){
+		var oElement = this.element;
+		
+		if (poEvent.type === cCACryptEvent.types.general)
+			if (poEvent.action === cCACryptEvent.actions.status){
+				var sID = cJquery.child_ID(oElement,"status");
+				var oDiv = $("#" + sID);
+				if (this.first_message) 
+					oDiv.empty();
+				else
+					oDiv.append("<br>")
+				oDiv.append(poEvent.data);
+				this.first_message = false;
+			}
+
 	}
 }
 
@@ -90,11 +167,7 @@ class cCACrypt {
 					oDiv = $("<DIV>").append("Data goes here");
 						oDiv.cacryptdata({ca_name: this.ca_name});
 						oTD.append(oDiv);
-					oTR.append(oTD);
-				oTable.append(oTR);
-			oTR = $("<tr>", {height:100});
-				oTD = $("<TD>",{colspan:2, id:"status",valign:"top"});
-					oDiv = $("<DIV>").append("statuc goes here");
+					oDiv = $("<DIV>").append("Data goes here");
 						oDiv.cacryptstatus();
 						oTD.append(oDiv);
 					oTR.append(oTD);
@@ -106,6 +179,8 @@ class cCACrypt {
 		$("#"+cCACryptTypes.input_name).val(sTxt);
 		var oEvent = new cCAEvent( cCAEvent.types.action, cCAActionEvent.actions.ready,null);
 		oEvent.trigger(document);
+
+		cCACryptEvent.triggerStatus("UI is ready");
 	}
 }
 
