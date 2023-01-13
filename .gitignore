@@ -3,11 +3,13 @@ Thumbs.db
 ehthumbs.db
 zipit.sh
 
+#VScode stuff
+CA.code-workspace
+.vscode/
+
 # Folder config file
 Desktop.ini
-
-css/jquery/
 images/vector/
 build.sh
 release.zip
-CA.code-workspace
+css/jquery/
