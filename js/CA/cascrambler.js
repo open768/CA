@@ -14,18 +14,32 @@ and is not intended for dual use as defined by this license.
 You the consumer of this application are entirely responsible for importing this code into your own country. if you disagree please close this page.
 
 **************************************************************************/
-class cScramblerEvent{
+/** Scrambler Events */
+class cCAScramblerEvent extends cCAEvent{
 	static hook = "cascramev";
+	static types = {
+		general: "G"
+	};
+	static actions = {
+		status:"S"
+	}
 }
 
 //###################################################################################
 //#
 //###################################################################################
+/** class that performs data scrambling */
 class cCAScrambler{
 	grid=null;
 	inital_runs = -1;
 	plaintext = null;
 	
+	/**
+	 * Description
+	 * @param {cCAGrid} poGrid	CA grid to use to generate Scrambler instructions
+	 * @param {number} piInitialRuns	how many iterations to advance the CA grid before scrambling starts
+	 * @param {string} psPlainTxt	the plaintext to scramble
+	 */
 	constructor(poGrid, piInitialRuns, psPlainTxt){
 		if (!poGrid) $.error("Grid param, missing");
 		if (!poGrid.rule) $.error("no rule in the grid");
@@ -38,7 +52,9 @@ class cCAScrambler{
 	}
 	
 	//*******************************************************************************
-	async scramble(){ //returns a promise
+	async scramble(){ 
 		var oThis = this;
+		var oEvent = new cCAScramblerEvent( cCAScramblerEvent.types.general, cCAScramblerEvent.actions.status, "Started scrambler");
+		oEvent.trigger(this);
 	}
 }

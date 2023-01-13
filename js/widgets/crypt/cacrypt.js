@@ -27,7 +27,7 @@ class cCACryptTypes{
 }
 
 //###############################################################################
-class cCACryptEvent{
+class cCACryptEvent extends cCAEvent{
 	static hook = "CACRYEV";
 	static types = {
 		general: "GNR"
@@ -35,36 +35,7 @@ class cCACryptEvent{
 	static actions = {
 		status: "STA"
 	}
-	type=null;
-	action=null;
-	data = null;
 	
-	/**
-	 * constructor
-	 * @param {cCACryptEvent.types} psType
-	 * @param {cCACryptEvent.actions} psAction
-	 * @param {any} poData
-	 */
-	constructor(psType, psAction, poData){
-		if (psType === null) throw new Error("null type");	
-		if (psAction === null) throw new Error("null action");	
-		this.type = psType;
-		this.action = psAction;
-		this.data = poData;
-	}
-
-	
-	/**
-	 * Description
-	 * @param {Element} poTarget
-	 * @returns {any}
-	 */
-	trigger(poTarget){
-		if (!poTarget) $.error("target missing");
-		var sHook = this.constructor.hook;
-		bean.fire(poTarget, sHook, this);
-	}
-
 	/**
 	 * Description
 	 * @param {string} psMessage

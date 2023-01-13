@@ -18,9 +18,14 @@ You the consumer of this application are entirely responsible for importing this
 //###################################################################################
 //###################################################################################
 class cCACryptData{
-	element = null;
+	/** @type Element */ element = null;
 	ca_name = null;
 	
+	/**
+	 * Description
+	 * @param {Object} poOptions
+	 * @param {Element} poElement
+	 */
 	constructor(poOptions, poElement){
 		this.element = poElement;
 		if (!poOptions.ca_name) $.error("missing ca_name option");
@@ -55,6 +60,10 @@ class cCACryptData{
 
 //###############################################################################
 class CACryptException{
+	/**
+	 * Description
+	 * @param {string} psMessage
+	 */
 	constructor (psMessage) {
    		this.message = psMessage;
 		this.name = 'CAException';
@@ -69,6 +78,11 @@ class cCACryptText{
 	title = "no title set";
 	id=null;
 	
+	/**
+	 * Description
+	 * @param {Object} poOptions
+	 * @param {Element} poElement
+	 */
 	constructor(poOptions, poElement){
 		this.element = poElement;
 		var oElement = poElement;
@@ -183,7 +197,7 @@ class cCACryptControl{
 		//start the scrambling
 		cCACryptEvent.triggerStatus("scrambling started");
 		var oScrambler = new cCAScrambler(this.grid, iInitialruns, sPlaintext);
-		bean.on( oScrambler, cScramblerEvent.hook, function(poEvent){oThis.onCAScramblerEvent(poEvent)} );
+		bean.on( oScrambler, cCAScramblerEvent.hook, function(poEvent){oThis.onCAScramblerEvent(poEvent)} );
 		await oScrambler.scramble();
 	}
 	
@@ -202,7 +216,7 @@ class cCACryptControl{
 				if (poEvent.action === cCACanvasEvent.actions.set_grid)
 					if (poEvent.data.grid_name === this.ca_name){
 						//remember the grid, its needed for encryption.
-						this.grid = poEvent.data.grid;
+						this.grid = poEvent.data.data;
 						cCACryptEvent.triggerStatus("grid initialised");
 					}
 				
@@ -210,7 +224,10 @@ class cCACryptControl{
 
 			case cCAEvent.types.general:
 				if (poEvent.action === cCAGeneralEvent.actions.import_grid)
-				cCACryptEvent.triggerStatus("grid imported - ready to rock");
+					if (poEvent.data.name === this.ca_name){
+						this.grid = poEvent.data;
+						cCACryptEvent.triggerStatus("grid imported - ready to rock");
+					}
 				break;
 
 			case cCAEvent.types.actions:

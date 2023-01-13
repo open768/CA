@@ -9,6 +9,7 @@ For licenses that allow for commercial use please contact cluck@chickenkatsu.co.
 **************************************************************************/
 
 //###############################################################################
+/** cCAEvent class */
 class cCAEvent{
 	static hook = "CAEV";
 	static types = {
@@ -20,6 +21,12 @@ class cCAEvent{
 	action=null;
 	data = null;
 	
+	/**
+	 * Description
+	 * @param {string} psType
+	 * @param {string} psAction
+	 * @param {any} poData
+	 */
 	constructor(psType, psAction, poData){
 		if (psType === null) throw new Error("null type");	
 		if (psAction === null) throw new Error("null action");	
@@ -28,6 +35,10 @@ class cCAEvent{
 		this.data = poData;
 	}
 
+	/**
+	 * Description
+	 * @param {Element} poTarget
+	 */
 	trigger(poTarget){
 		if (!poTarget) $.error("target missing");
 		var sHook = this.constructor.hook;
