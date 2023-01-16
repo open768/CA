@@ -18,6 +18,11 @@ class cCAStateRule {
 
 //###############################################################################
 class cCARule{
+	/** @type number */ neighbour_type = cCACellTypes.neighbours.eightway;
+	/** @type boolean */ has_state_transitions = false;
+	/** @type Array */ 	 stateRules = null;  
+	/** @type number */  boredom = cCARuleTypes.no_boredom;
+
 	constructor(){
 		this.neighbour_type = cCACellTypes.neighbours.eightway;
 		this.has_state_transitions = false;
@@ -41,6 +46,10 @@ class cCARule{
 	}
 	
 	//***************************************************************
+	/**
+	 * Description
+	 * @param {cCARule} poRule
+	 */
 	copy_to(poRule){
 		cDebug.enter();
 		poRule.neighbour_type = this.neighbour_type ;
@@ -58,13 +67,23 @@ class cCARule{
 			this.create_state(piState);
 		this.stateRules[piState-1].outputs[piPattern] = piValue;
 	}
+
+	//*****************************************************************
+	/**
+	 * Description
+	 * @param {number} piBoredom
+	 */
+	set_boredom(piBoredom){
+		if (piBoredom < 2) throw new CAException("boredom must be at least 2");
+		this.boredom = piBoredom;
+	}
 	
 	//*****************************************************************
-	get_rule_output (piState, piPattern){
-		if (piPattern == 0) return 0;
+	get_rule_output (piState, piBitmap){
+		if (piBitmap == 0) return 0;	// cells must have neighbours - 0 doesnt become 1 
 		if (piState > this.stateRules.length)	throw new CAException("invalid state requested");
 		try{
-			var iOutput = this.stateRules[piState-1].outputs[piPattern]; //TBD should be using a method
+			var iOutput = this.stateRules[piState-1].outputs[piBitmap]; //TBD should be using a method
 			if (iOutput == null) iOutput = 0;
 			return iOutput;
 		} catch (e){
@@ -102,22 +121,45 @@ class cCARule{
 	}	
 	
 	//*****************************************************************
+	/**
+	 * Description
+	 * @param {cCACell} poCell
+	 */
 	evaluateCell(poCell){
 		if (poCell == null) throw new CAException("no cell provided");
 
 		//get the cell neighbour value
 		var iBitmap = poCell.getPattern(this.neighbour_type);
 		
+		//modify rule if cell boredom
+		/** @type Hash */ var oRuleFlips;
+		if (this.boredom !== cCARuleTypes.no_boredom && (iBitmap !== 0) ){
+			//history doesnt need to be stored, just need to know the same pattern was seen
+			if (poCell.previous_bitmap == iBitmap)
+				poCell.previous_bitmap_count++;
+				if (poCell.previous_bitmap_count >= this.boredom){
+					oRuleFlips = poCell.data.get( cCACellTypes.hash_values.rule_flips);
+					if (!oRuleFlips) {
+						oRuleFlips = new Hash;
+						poCell.data.get( cCACellTypes.hash_values.rule_flips, oRuleFlips);
+					}
+				}
+			else{
+				poCell.previous_bitmap_count=1;
+				poCell.previous_bitmap = iBitmap
+			}
+		}
+
 		//get the output
 		poCell.evaluated.value = this.get_rule_output(poCell.state, iBitmap);
 		
-		//check for boredom
-		if (this.has_state_transitions) 
-			poCell.evaluated.state = this.get_nextState(poCell.state, iBitmap);
-		else
+		//mark cell as done
+		if (this.has_state_transitions) {
+			// TBD state _transitions not implemented
+		}else
 			poCell.evaluated.state = poCell.state;
 		poCell.evaluated.done = true;
-		poCell.evaluated.pattern = iBitmap;
+		poCell.evaluated.pattern = iBitmap; //the pattern evaluated - used to optimise cell evaluation
 		
 		//set the evaluated state
 		var bHasChanged = (poCell.evaluated.value !== poCell.value);

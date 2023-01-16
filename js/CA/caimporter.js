@@ -165,6 +165,7 @@ class cCARuleObjExporter{
 			oState.rule = cCARuleBase64Exporter.export(poRule,iState);
 			oObj.states.push( oState);
 		}
+		oObj.boredom = poRule.boredom;
 		
 		cDebug.leave();
 		return oObj;

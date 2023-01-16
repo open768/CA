@@ -31,6 +31,7 @@ class cCAGridExported {
 	}
 }
 
+//*************************************************************************
 class cCAGridJSONExporter{
 	static export(poGrid){
 		cDebug.enter();

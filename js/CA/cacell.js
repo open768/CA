@@ -20,28 +20,29 @@ class cCAEvaluatedCell {
 //#
 //###################################################################################
 class cCACell{
-	rule = null;
-	
+	/** @type cCARule */ rule = null;
+	/** @type number */ state = null;
+	/** @type number */ value = 0;
+	/** @type Map */ data = null;
+	/** @type Map */ neighbours = null; 
+	/** @type cCAEvaluatedCell */ evaluated = null;
+	/** @type number */ previous_bitmap = 0;
+	/** @type number */ previous_bitmap_count = 0;
+
 	constructor(){ 
-		//not passing in row and col as cells dont have to be limited to 2d
+		//not passing in row and col as cells dont have to be limited to 2d and only know about their neighbours 
 		this.rule = null;
-		this.state = 1;
-		this.value = 0;
-		this.lastPattern = -1;
-		this.samePatternCount = 0;
-		
 		this.data = new Map();	//the cell doesnt know what the data means, only that there is some data in there. this leaves the implementation of the cell flexible.
 		this.neighbours = new Map(); //hash map of neighbours
-		
-		this.evaluated = new cCAEvaluatedCell();
+		this.clear();
 	}
 
 	//****************************************************************
 	clear(){
-		this.lastPattern = -1;
-		this.samePatternCount = 0;
 		this.state = 1;
 		this.value = 0;
+		this.previous_bitmap = 0;
+		this.previous_bitmap_count = 0;
 		this.evaluated = new cCAEvaluatedCell();
 	}
 	

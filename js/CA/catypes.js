@@ -94,7 +94,8 @@ class cCACellTypes {
 	};
 	static hash_values={
 		row:"R",
-		col:"C"
+		col:"C",
+		rule_flips: "B"
 	};	
 }
 

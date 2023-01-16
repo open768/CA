@@ -190,15 +190,29 @@ class cCACryptControl{
 		var runs_ID = cJquery.child_ID(oElement, this.child_names.inital_runs);
 		var oTxtBox = $("#" + runs_ID);
 		var iInitialruns = parseInt(oTxtBox.val());
+		if (isNaN(iInitialruns)) {
+			alert("number of runs must be an integer");
+			return;
+		}
 		
 		//get plaintext to encrypt from the UI
-		var sPlaintext = $("#" + cCACryptTypes.input_name).val();
+		var /* @type String */ sPlaintext = $("#" + cCACryptTypes.input_name).val();
+		if (sPlaintext.trim() === ""){
+			alert("no plaintext");
+			return;
+		}
 		
+		//disable buttons
+		var sID = cJquery.child_ID(oElement, this.child_names.decrypt);
+		cJquery.enable_element(sID,false);
+		sID = cJquery.child_ID(oElement, this.child_names.crypt);
+		cJquery.enable_element(sID,false);
+	
 		//start the scrambling
 		cCACryptEvent.triggerStatus("scrambling started");
 		var oScrambler = new cCAScrambler(this.grid, iInitialruns, sPlaintext);
 		bean.on( oScrambler, cCAScramblerEvent.hook, function(poEvent){oThis.onCAScramblerEvent(poEvent)} );
-		await oScrambler.scramble();
+		oScrambler.scramble();
 	}
 	
 	//*******************************************************************************

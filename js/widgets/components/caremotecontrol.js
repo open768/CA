@@ -12,6 +12,12 @@ For licenses that allow for commercial use please contact cluck@chickenkatsu.co.
 //#
 //###################################################################
 class cCARemoteControls{
+	static buttonNames = {
+		play: "P",
+		stop: "O",
+		step: "E"
+	};
+
 	element = null;
 	grid_name = null;
 	rule_set = false;
@@ -97,11 +103,20 @@ class cCARemoteControls{
 			this.pr__set_controls(false);
 	}
 
+	/**
+	 * Description
+	 * @param {boolean} pbRunning
+	 */
 	pr__set_controls(pbRunning){
 		var oElement = this.element;
-		$("#"+cJquery.child_ID(oElement,"Step")).prop("disabled",pbRunning);
-		$("#"+cJquery.child_ID(oElement,"Play")).prop("disabled",pbRunning);
-		$("#"+cJquery.child_ID(oElement,"Stop")).prop("disabled", !pbRunning);
+		var sID = cJquery.child_ID(oElement,cCARemoteControls.buttonNames.play);
+		cJquery.enable_element(sID, !pbRunning);
+
+		sID = cJquery.child_ID(oElement,cCARemoteControls.buttonNames.step);
+		cJquery.enable_element(sID, !pbRunning);
+		
+		sID = cJquery.child_ID(oElement,cCARemoteControls.buttonNames.stop);
+		cJquery.enable_element(sID, pbRunning);
 	}
 	
 	pr__init(){
@@ -116,21 +131,24 @@ class cCARemoteControls{
 		
 		//disabled until grid and rule are set
 		oDiv = $("<DIV>",{class:"ui-widget-content"});
-			oButton = $("<button>",{width:"30px",height:"30px",id:cJquery.child_ID(oElement, "Stop")});
+			var sID = cJquery.child_ID(oElement, cCARemoteControls.buttonNames.stop);
+			oButton = $("<button>",{width:"30px",height:"30px",id:sID});
 				oButton.button({icon:"ui-icon-stop"});
-				oButton.prop("disabled", true);
+				cJquery.enable_element(oButton,false);
 				oButton.click(	function(){ oThis.onClickControl(cCAGridTypes.actions.stop);}	);
 				oDiv.append(oButton);
 
-			oButton = $("<button>",{width:"30px",height:"30px",id:cJquery.child_ID(oElement, "Play")});
+			var sID = cJquery.child_ID(oElement, cCARemoteControls.buttonNames.play);
+			oButton = $("<button>",{width:"30px",height:"30px",id:sID});
 				oButton.button({icon:"ui-icon-circle-triangle-e"});
-				oButton.prop("disabled", true);
+				cJquery.enable_element(oButton,false);
 				oButton.click(	function(){ oThis.onClickControl(cCAGridTypes.actions.play);}	);
 				oDiv.append(oButton);
 
-			oButton = $("<button>",{width:"30px",height:"30px",title:"step",id:cJquery.child_ID(oElement, "Step")});
+			var sID = cJquery.child_ID(oElement, cCARemoteControls.buttonNames.step);
+			oButton = $("<button>",{width:"30px",height:"30px",title:"step",id:sID});
 				oButton.button({icon:"ui-icon-seek-end"});
-				oButton.prop("disabled", true);
+				cJquery.enable_element(oButton,false);
 				oButton.click(	function(){ oThis.onClickControl(cCAGridTypes.actions.step);}	);
 				oDiv.append(oButton);
 		oElement.append(oDiv);

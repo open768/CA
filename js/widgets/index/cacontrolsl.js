@@ -100,6 +100,7 @@ class cCAControlsL{
 
 			//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 			oDiv.append("<HR>");
+			oDiv.append("Rule Presets");
 			sID = cJquery.child_ID(oElement, cCAControlLTypes.preset_ID);
 			var oSelect = $("<SELECT>",{id:sID,width:200,title:"pick a preset rule"});
 				this.pr__populate_presets(oSelect);
@@ -110,7 +111,7 @@ class cCAControlsL{
 
 			//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 			oDiv.append("<HR>");
-			oDiv.append("Random ");
+			oDiv.append("Random Rule: ");
 				var oButton = $("<button>",{title:"Random Rule"}).button({icon:"ui-icon-circle-arrow-e"});
 				oDiv.append(oButton);
 				oButton.click(	function(){oThis.pr_makeRandomBase64()}	);
@@ -127,12 +128,12 @@ class cCAControlsL{
 
 
 			//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-			oDiv.append("<HR>");
+			oDiv.append("<HR>Boredom");
 			sID = cJquery.child_ID(oElement, cCAControlLTypes.boredom_ID);
 			oSelect = $("<SELECT>",{id:sID,width:50,title:"how many times will a cell see a pattern before it gets bored"});
-				oSelect.append( $("<option>",{selected:1,disabled:1}).append("Boredom"));
+				oSelect.append( $("<option>",{selected:1,disabled:1}).append("Select"));
 				oSelect.append( $("<option>",{value:cCARuleTypes.no_boredom}).append("Never"));
-				for ( var i=3; i<=10; i++){
+				for ( var i=2; i<=10; i++){
 					oSelect.append( $("<option>",{value:i}).append(i + " times"));
 				}
 				oDiv.append(oSelect);
@@ -293,7 +294,7 @@ class cCAControlsL{
 			return;
 		}
 		var iBoredem = parseInt($(poEvent.target).val());
-		caMachineTypes.rule.boredom = iBoredem;
+		caMachineTypes.rule.set_boredom(iBoredem);
 	}
 
 	//#################################################################
@@ -327,7 +328,7 @@ class cCAControlsL{
 	 pr__populate_presets(poSelect){
 		var aPresets = cCALexicon.get_presets();
 
-		poSelect.append( $("<option>",{selected:1,disabled:1,value:-1}).append("presets"));
+		poSelect.append( $("<option>",{selected:1,disabled:1,value:-1}).append("Select"));
 
 		for (var i = 0; i < aPresets.length; i++){
 			var oPreset = aPresets[i];

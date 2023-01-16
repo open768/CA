@@ -141,14 +141,14 @@ class cCACanvas{
 						break;
 						
 					//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-					case cCAActionEvent.actions.grid_init: //grid to be initialised
+					case cCAActionEvent.actions.grid_init:
 						cDebug.write("event: initialise");
 						var iInitType = poEvent.data;
 						this.grid.init(iInitType);
 						break;
 						
 					//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-					case cCAActionEvent.actions.control: //grid to be initialised
+					case cCAActionEvent.actions.control:
 						cDebug.write("event: action");
 						this.grid.action(poEvent.data);
 						break;

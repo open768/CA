@@ -18,10 +18,16 @@ You the consumer of this application are entirely responsible for importing this
 class cCAScramblerEvent extends cCAEvent{
 	static hook = "cascramev";
 	static types = {
-		general: "G"
+		general: "G",
+		progress: "P"
 	};
+	
 	static actions = {
 		status:"S"
+	}
+
+	trigger(poObject){
+		bean.fire( poObject, this.constructor.hook, this);
 	}
 }
 
@@ -30,9 +36,10 @@ class cCAScramblerEvent extends cCAEvent{
 //###################################################################################
 /** class that performs data scrambling */
 class cCAScrambler{
-	grid=null;
-	inital_runs = -1;
-	plaintext = null;
+	/** @type cCAGrid */ grid=null;
+	/** @type number  */ inital_runs = -1;
+	/** @type string  */ plaintext = null;
+	/** @type number  */ initial_runs_completed = 0;
 	
 	/**
 	 * Description
@@ -49,6 +56,9 @@ class cCAScrambler{
 		this.grid = poGrid;
 		this.plaintext = psPlainTxt;
 		this.inital_runs = piInitialRuns;
+		this.initial_runs_completed = 0;
+
+		bean.on(this.grid, )
 	}
 	
 	//*******************************************************************************
