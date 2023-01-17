@@ -120,6 +120,8 @@ class cCARule{
 		return iOutState;
 	}	
 	
+
+
 	//*****************************************************************
 	/**
 	 * Description
@@ -132,26 +134,15 @@ class cCARule{
 		var iBitmap = poCell.getPattern(this.neighbour_type);
 		
 		//modify rule if cell boredom
-		/** @type Hash */ var oRuleFlips;
-		if (this.boredom !== cCARuleTypes.no_boredom && (iBitmap !== 0) ){
-			//history doesnt need to be stored, just need to know the same pattern was seen
-			if (poCell.previous_bitmap == iBitmap)
-				poCell.previous_bitmap_count++;
-				if (poCell.previous_bitmap_count >= this.boredom){
-					oRuleFlips = poCell.data.get( cCACellTypes.hash_values.rule_flips);
-					if (!oRuleFlips) {
-						oRuleFlips = new Hash;
-						poCell.data.get( cCACellTypes.hash_values.rule_flips, oRuleFlips);
-					}
-				}
-			else{
-				poCell.previous_bitmap_count=1;
-				poCell.previous_bitmap = iBitmap
-			}
-		}
+		/** @type Boolean */ var bBored = false;
+		if (this.boredom !== cCARuleTypes.no_boredom || (piBitmap != 0))
+			bBored = poCell.check_boredom(iBitmap);
 
 		//get the output
 		poCell.evaluated.value = this.get_rule_output(poCell.state, iBitmap);
+		if (bBored){
+			
+		}
 		
 		//mark cell as done
 		if (this.has_state_transitions) {

@@ -293,14 +293,16 @@ class cCAGrid {
 		this.status.active = 0;
 		
 		cDebug.write("stepping");
+
 		//apply rules
-		for (var iNr=1; iNr<= this.rows; iNr++)
-			for (var iNc=1; iNc<= this.cols; iNc++){
-				var oCell = this.getCell(iNr,iNc,true);
+		var bHasChanged, oCell;
+		for (var iRow=1; iRow<= this.rows; iRow++)
+			for (var iCol=1; iCol<= this.cols; iCol++){
+				cDebug.write("cell row: " +iRow + " col:" +iCol);
+				oCell = this.getCell(iRow,iCol,true);
 				if (oCell.rule == null) oCell.rule = this.rule;
-				var bHasChanged = oCell.apply_rule();
-				if (bHasChanged)
-					this.changed_cells.push(oCell);
+				bHasChanged = oCell.apply_rule();
+				if (bHasChanged) this.changed_cells.push(oCell);
 				if (oCell.value > 0) this.status.active ++;
 			}
 
@@ -315,8 +317,8 @@ class cCAGrid {
 		}
 		
 		//promote changed cells
-		for ( var iNc = 0; iNc < iChangedLen; iNc++){
-			var oCell = this.changed_cells[iNc];
+		for ( var iIndex = 0; iIndex < iChangedLen; iIndex++){
+			var oCell = this.changed_cells[iIndex];
 			oCell.promote();
 			if (oCell.value == 0) 
 				this.status.active --;

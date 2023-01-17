@@ -28,6 +28,7 @@ class cCACell{
 	/** @type cCAEvaluatedCell */ evaluated = null;
 	/** @type number */ previous_bitmap = 0;
 	/** @type number */ previous_bitmap_count = 0;
+	/** @type Map */ boredom_flips = null;
 
 	constructor(){ 
 		//not passing in row and col as cells dont have to be limited to 2d and only know about their neighbours 
@@ -44,6 +45,7 @@ class cCACell{
 		this.previous_bitmap = 0;
 		this.previous_bitmap_count = 0;
 		this.evaluated = new cCAEvaluatedCell();
+		this.boredom_flips = new Map;
 	}
 	
 	//****************************************************************
@@ -136,6 +138,38 @@ class cCACell{
 		return iValue;
 	}
 	
+	//*****************************************************************
+	/**
+	 * Description
+	 * @param {number} piBitmap
+	 * @returns {Boolean}  true if cell is bored of this bitmap. false otherwise
+	 */
+	check_boredom(piBitmap){
+		if (this.rule.boredom == cCARuleTypes.no_boredom || (piBitmap == 0))
+			return false;
+			
+		//history doesnt need to be stored, just need to know the same pattern was seen
+		if (this.previous_bitmap == piBitmap)
+			this.previous_bitmap_count++;
+			if (this.previous_bitmap_count >= this.rule.boredom){
+				//reset the count (so it doesnt start triggering everytime)
+				this.previous_bitmap_count = 1;
+
+				//add the bitmap to the rule flips, or remove if its allready there
+				if (this.boredom_flips.get(piBitmap))
+					this.boredom_flips.remove(piBitmap);
+				else{
+					this.boredom_flips.set(piBitmap, 1);
+					return true;
+				}
+			}
+		else{
+			this.previous_bitmap_count=1;
+			this.previous_bitmap = piBitmap
+		}
+		return false;
+	}
+
 	//*****************************************************************
 	setNeighbour(piDirection, poCell){
 		if (poCell == null) throw new CAException("no neighbour cell provided");
