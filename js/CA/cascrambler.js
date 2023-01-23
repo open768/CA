@@ -63,23 +63,17 @@ class cCAScrambler{
 	
 	//*******************************************************************************
 	/**
-	 * Description
+	 * performs the initial runs of the grid
 	 * @returns {Promise}
 	 */
 	async perform_inital_runs(){
-		return new Promise(function(resolve,reject){
-
-		});
 	}
 	
 	//*******************************************************************************
 	async scramble(){ 
-		var oThis = this;
 		var oEvent = new cCAScramblerEvent( cCAScramblerEvent.types.general, cCAScramblerEvent.actions.status, "Started scrambler");
-		oEvent.trigger(this);
+		oEvent.trigger(oThis);
 
-		return new Promise(function(resolve,reject){
-
-		});
+		await this.perform_inital_runs();
 	}
 }
