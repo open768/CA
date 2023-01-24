@@ -31,6 +31,8 @@ class cCACanvasEvent{
 
 	action=null;
 	data=null;
+	grid_name = null;
+
 	constructor(psGridName, psAction, poData){
 		if (!psGridName || !psAction) $.error("incorrect number of arguments");
 		this.grid_name = psGridName;
