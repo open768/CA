@@ -135,7 +135,7 @@ class cCARule{
 		
 		//modify rule if cell boredom
 		/** @type Boolean */ var bBored = false;
-		if (this.boredom !== cCARuleTypes.no_boredom || (piBitmap != 0))
+		if (this.boredom !== cCARuleTypes.no_boredom || (iBitmap != 0))
 			bBored = poCell.check_boredom(iBitmap);
 
 		//get the output
