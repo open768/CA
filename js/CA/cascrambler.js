@@ -31,6 +31,12 @@ class cCAScramblerEvent extends cCAEvent{
 	}
 }
 
+class cCAScramblerTypes{
+	static status = {
+		dormant: null,
+		initialRuns: 1
+	}
+}
 //###################################################################################
 //#
 //###################################################################################
@@ -40,6 +46,8 @@ class cCAScrambler{
 	/** @type number  */ inital_runs = -1;
 	/** @type string  */ plaintext = null;
 	/** @type number  */ initial_runs_completed = 0;
+	/** @type enum */ status = null;
+
 	
 	/**
 	 * Description
@@ -57,23 +65,44 @@ class cCAScrambler{
 		this.plaintext = psPlainTxt;
 		this.inital_runs = piInitialRuns;
 		this.initial_runs_completed = 0;
+		this.status = cCAScramblerTypes.status.dormant;
 
-		bean.on(this.grid, )
+		var oThis = this;
+		bean.on(this.grid, cCAGridEvent.hook, (poEvent)=>{oThis.onGridEvent(poEvent)} )
 	}
 	
 	//*******************************************************************************
 	/**
 	 * performs the initial runs of the grid
-	 * @returns {Promise}
 	 */
 	async perform_inital_runs(){
+		if (this.initial_runs_completed < this.inital_runs){
+			this.status = cCAScramblerTypes.status.initialRuns;
+			this.grid.action(cCAGridTypes.actions.step);
+		}else
+			throw new Error("not implemented");
 	}
 	
 	//*******************************************************************************
 	async scramble(){ 
 		var oEvent = new cCAScramblerEvent( cCAScramblerEvent.types.general, cCAScramblerEvent.actions.status, "Started scrambler");
-		oEvent.trigger(oThis);
+		oEvent.trigger(this);
 
-		await this.perform_inital_runs();
+		this.initial_runs_completed = 0;
+		this.perform_inital_runs();
+	}
+
+	/**
+	 * Description
+	 * @param {cCAGridEvent} poEvent
+	 */
+	onGridEvent(poEvent){
+		cDebug.write(poEvent);
+		if (poEvent.data.name === this.name)
+			if (poEvent.action == cCAGridEvent.actions.done)
+				if (this.status == cCAScramblerTypes.status.initialRuns){
+					this.initial_runs_completed++;
+					this.perform_inital_runs();
+				}
 	}
 }

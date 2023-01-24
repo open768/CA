@@ -57,13 +57,14 @@ class cCAGridEvent{
 	}
 	
 	trigger(poObject){
-		bean.fire( poObject, this.constructor.hook, this);
+		bean.fire( poObject, cCAGridEvent.hook, this);
 	}
 }
 
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 //%
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+/** initialises the grid */
 class cCAGridInitialiser{
 	
 	init(poGrid, piInitType){

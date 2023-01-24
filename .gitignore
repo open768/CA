@@ -5,7 +5,7 @@ zipit.sh
 
 #VScode stuff
 CA.code-workspace
-.vscode/
+
 
 # Folder config file
 Desktop.ini
