@@ -68,7 +68,7 @@ class cCAScrambler{
 		this.status = cCAScramblerTypes.status.dormant;
 
 		var oThis = this;
-		bean.on(this.grid, cCAGridEvent.hook, (poEvent)=>{oThis.onGridEvent(poEvent)} )
+		bean.on(this.grid, cCAGridEvent.hook_name(this.grid), (poEvent)=>{oThis.onGridEvent(poEvent)} )
 	}
 	
 	//*******************************************************************************
@@ -98,11 +98,10 @@ class cCAScrambler{
 	 */
 	onGridEvent(poEvent){
 		cDebug.write(poEvent);
-		if (poEvent.data.name === this.name)
-			if (poEvent.action == cCAGridEvent.actions.done)
-				if (this.status == cCAScramblerTypes.status.initialRuns){
-					this.initial_runs_completed++;
-					this.perform_inital_runs();
-				}
+		if (poEvent.action == cCAGridEvent.actions.done)
+			if (this.status == cCAScramblerTypes.status.initialRuns){
+				this.initial_runs_completed++;
+				this.perform_inital_runs();
+			}
 	}
 }

@@ -57,7 +57,19 @@ class cCAGridEvent{
 	}
 	
 	trigger(poObject){
-		bean.fire( poObject, cCAGridEvent.hook, this);
+		bean.fire( poObject, cCAGridEvent.hook_name(this.name), this);
+	}
+
+	/**
+	 * Description
+	 * @param {cCAGrid|string} pvGrid
+	 * @returns {any}
+	 */
+	static hook_name( pvGrid){
+		if (typeof pvGrid == "string")
+			return (this.hook + pvGrid);
+		else
+			return (this.hook + pvGrid.name);
 	}
 }
 
