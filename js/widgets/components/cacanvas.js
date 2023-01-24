@@ -299,7 +299,7 @@ class cCACanvas{
 		var oThis = this;
 		this.grid = poGrid;
 		
-		bean.on(poGrid, cCAGridEvent.hook_name(this.grid.name), function(poEvent){oThis.onCAGridEvent(poEvent)});
+		this.grid.on_event((poEvent)=>{oThis.onCAGridEvent(poEvent)} );
 		
 		// publish grid details to anyone interested - eg to export grid data, or start/stop the grid
 		var oEvent = new cCACanvasEvent( this.grid_name, cCACanvasEvent.actions.set_grid, poGrid);

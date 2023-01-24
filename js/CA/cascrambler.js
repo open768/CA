@@ -68,7 +68,7 @@ class cCAScrambler{
 		this.status = cCAScramblerTypes.status.dormant;
 
 		var oThis = this;
-		bean.on(this.grid, cCAGridEvent.hook_name(this.grid), (poEvent)=>{oThis.onGridEvent(poEvent)} )
+		this.grid.on_event((poEvent)=>{oThis.onGridEvent(poEvent)} );
 	}
 	
 	//*******************************************************************************
