@@ -1,11 +1,13 @@
 "use strict";
 /**************************************************************************
-Copyright (C) Chicken Katsu 2013-2022
-This code is protected by copyright under the terms of the 
-Creative Commons Attribution 4.0 International License
-https://creativecommons.org/licenses/by/4.0/legalcode
+Cellular Automata Simulator © 2013 by open768 
+is licensed under Attribution-NonCommercial-ShareAlike 4.0 International. 
+To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-sa/4.0/
+contact: https://github.com/open768/
+
 For licenses that allow for commercial use please contact cluck@chickenkatsu.co.uk
-// USE AT YOUR OWN RISK - NO GUARANTEES OF ANY FORM ARE EITHER EXPRESSED OR IMPLIED
+
+USE AT YOUR OWN RISK - NO GUARANTEES OF ANY FORM ARE EITHER EXPRESSED OR IMPLIED
 **************************************************************************/
 class cCACanvasTypes{
 	static white_image = "images/whitebox.png";
@@ -68,10 +70,11 @@ class cCACanvas{
 		has_events : false,
 		is_down : false
 	};
-	last ={
+	last_mouse_pos ={
 		row : -1,
 		col : -1
 	};
+	has_mouseup = false;
 	
 	//#################################################################
 	//# Constructor
@@ -134,7 +137,7 @@ class cCACanvas{
 						this.pr__set_grid(oGrid);
 						//put something in the widget
 						this.pr__initCanvas();
-						if (!this.has_mouseup){
+						if (!this.has_mouseup){ //only set mouse event handler once
 							oElement.mouseup( function(){ oThis.onMouseUp(); } );
 							oElement.mousemove( function(poEvent){ oThis.onMouseMove(poEvent); } );
 							oElement.mousedown( function(poEvent){ oThis.onMouseDown(poEvent); } );
@@ -213,6 +216,9 @@ class cCACanvas{
 	//****************************************************************
 	onMouseMove(poEvent){
 		if (!this.interactive) return;
+
+		var oRC = this.pr__get_cell_rc_from_event(poEvent, false);
+
 		if (this.grid && this.mouse.is_down){
 			this.pr__set_one_cell(poEvent);
 		}
@@ -229,7 +235,7 @@ class cCACanvas{
 	pr__set_one_cell(poEvent){
 		if (this.grid.running) return;
 		
-		var oRC = this.pr__get_cell_rc_from_event(poEvent);
+		var oRC = this.pr__get_cell_rc_from_event(poEvent, true);
 		if (oRC){
 			this.grid.changed_cells = [];
 			this.grid.setCellValue(oRC.row, oRC.col, 1);
@@ -238,7 +244,7 @@ class cCACanvas{
 	}
 	
 	//****************************************************************
-	pr__get_cell_rc_from_event(poEvent){
+	pr__get_cell_rc_from_event(poEvent, pbChangedOnly){
 		var oElement = this.element;
 		var X = poEvent.offsetX - cJquery.get_padding_width(oElement) + this.cell_size;
 		var Y = poEvent.offsetY - cJquery.get_padding_height(oElement)+ this.cell_size;
@@ -251,14 +257,12 @@ class cCACanvas{
 		if (ic > this.cols) ir=this.cols;
 		
 		var oRC = null;
-		if (ir != this.last.row || ic != this.last.col){
-			this.last.row = ir;
-			this.last.col = ic;
-			oRC = {
-				row:ir,
-				col:ic
-			}
-		}
+		if (ir != this.last_mouse_pos.row || ic != this.last_mouse_pos.col){
+			this.last_mouse_pos.row = ir;
+			this.last_mouse_pos.col = ic;
+			oRC = this.last_mouse_pos
+		}elseif (!pbChangedOnly)
+			oRC = this.last_mouse_pos
 		return oRC;
 	}
 	

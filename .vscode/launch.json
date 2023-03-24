@@ -7,14 +7,22 @@
         {
             "type": "chrome",
             "request": "launch",
-            "name": "Open crypt.html",
-            "file": "crypt.html"
-        }
+            "name": "crypt",
+            "file": "crypt.html",
+            "runtimeArgs": [
+                "--user-data-dir=${env:LOCALAPPDATA}\\Google\\Chrome\\User Data",
+                "--profile-directory=Profile 1"
+              ]
+        },
         {
             "type": "chrome",
             "request": "launch",
-            "name": "Open index.html",
-            "file": "index.html"
+            "name": "index",
+            "file": "index.html",
+            "runtimeArgs": [
+                "--user-data-dir=${env:LOCALAPPDATA}\\Google\\Chrome\\User Data",
+                "--profile-directory=Profile 1"
+              ]
         }
     ]
 }

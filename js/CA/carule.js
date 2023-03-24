@@ -134,14 +134,12 @@ class cCARule{
 		var iBitmap = poCell.getPattern(this.neighbour_type);
 		
 		//modify rule if cell boredom
-		/** @type Boolean */ var bBored = false;
-		if (this.boredom !== cCARuleTypes.no_boredom || (iBitmap != 0))
-			bBored = poCell.check_boredom(iBitmap);
+		/** @type Boolean */ var bBored = poCell.check_boredom(iBitmap);
 
 		//get the output
 		poCell.evaluated.value = this.get_rule_output(poCell.state, iBitmap);
 		if (bBored){
-			
+			console.log("bored");
 		}
 		
 		//mark cell as done
