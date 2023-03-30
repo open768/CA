@@ -8,7 +8,19 @@ For licenses that allow for commercial use please contact cluck@chickenkatsu.co.
 // USE AT YOUR OWN RISK - NO GUARANTEES OF ANY FORM ARE EITHER EXPRESSED OR IMPLIED
 **************************************************************************/
 
-class cCAStateRule {
+/**
+ * Description placeholder
+ * @date 3/29/2023 - 9:53:42 AM
+ *
+ * @class cCAStateRule
+ * @typedef {cCAStateRule}
+ */class cCAStateRule {
+	/**
+	 * Creates an instance of cCAStateRule.
+	 * @date 3/29/2023 - 9:53:42 AM
+	 *
+	 * @constructor
+	 */
 	constructor(){
 		this.neighbour_type = cCACellTypes.neighbours.eightway;
 		this.outputs = new Array(cCARuleTypes.max_inputs);
@@ -17,12 +29,25 @@ class cCAStateRule {
 }
 
 //###############################################################################
+/**
+ * Description placeholder
+ * @date 3/29/2023 - 9:53:42 AM
+ *
+ * @class cCARule
+ * @typedef {cCARule}
+ */
 class cCARule{
 	/** @type number */ neighbour_type = cCACellTypes.neighbours.eightway;
 	/** @type boolean */ has_state_transitions = false;
 	/** @type Array */ 	 stateRules = null;  
 	/** @type number */  boredom = cCARuleTypes.no_boredom;
 
+	/**
+	 * Creates an instance of cCARule.
+	 * @date 3/29/2023 - 9:53:42 AM
+	 *
+	 * @constructor
+	 */
 	constructor(){
 		this.neighbour_type = cCACellTypes.neighbours.eightway;
 		this.has_state_transitions = false;
@@ -31,6 +56,13 @@ class cCARule{
 	}
 	
 	//***************************************************************
+	/**
+	 * Description placeholder
+	 * @date 3/29/2023 - 9:53:42 AM
+	 *
+	 * @static
+	 * @returns {cCARule}
+	 */
 	static randomRule(){
 		cDebug.enter();
 		var oRule = new cCARule();
@@ -61,6 +93,14 @@ class cCARule{
 	//*****************************************************************
 	//rule State level functions
 	//*****************************************************************
+	/**
+	 * Description placeholder
+	 * @date 3/29/2023 - 9:53:42 AM
+	 *
+	 * @param {*} piState
+	 * @param {*} piPattern
+	 * @param {*} piValue
+	 */
 	set_output(piState, piPattern, piValue){
 		if (piState <1 ) throw new CAException("invalid state");
 		if (piState > this.stateRules.length)			//create a new state if the state is unknown 
@@ -79,6 +119,14 @@ class cCARule{
 	}
 	
 	//*****************************************************************
+	/**
+	 * Description placeholder
+	 * @date 3/29/2023 - 9:53:42 AM
+	 *
+	 * @param {*} piState
+	 * @param {*} piBitmap
+	 * @returns {*}
+	 */
 	get_rule_output (piState, piBitmap){
 		if (piBitmap == 0) return 0;	// cells must have neighbours - 0 doesnt become 1 
 		if (piState > this.stateRules.length)	throw new CAException("invalid state requested");
@@ -93,6 +141,12 @@ class cCARule{
 	}
 	
 	//*****************************************************************
+	/**
+	 * Description placeholder
+	 * @date 3/29/2023 - 9:53:42 AM
+	 *
+	 * @param {*} piState
+	 */
 	create_state(piState){
 		if (piState <= this.stateRules.length)	return; 
 		if ( (!this.has_state_transitions) && (piState !== cCACellTypes.default_state))
@@ -104,6 +158,14 @@ class cCARule{
 	}
 	
 	//*****************************************************************
+	/**
+	 * Description placeholder
+	 * @date 3/29/2023 - 9:53:42 AM
+	 *
+	 * @param {*} piInState
+	 * @param {*} piPattern
+	 * @param {*} piNextState
+	 */
 	set_nextState(piInState, piPattern, piNextState){
 		if (!this.has_state_transitions)	throw new CAException("no state transitions possible");
 		if (piInState > this.stateRules.length)	throw new CAException("invalid input state ");
@@ -112,6 +174,14 @@ class cCARule{
 	}
 
 	//*****************************************************************
+	/**
+	 * Description placeholder
+	 * @date 3/29/2023 - 9:53:42 AM
+	 *
+	 * @param {*} piInState
+	 * @param {*} piPattern
+	 * @returns {*}
+	 */
 	get_nextState(piInState, piPattern){
 		if (piPattern == 0) return piInState;
 		if (!this.has_state_transitions)	throw new CAException("no state transitions possible");
@@ -153,5 +223,18 @@ class cCARule{
 		//set the evaluated state
 		var bHasChanged = (poCell.evaluated.value !== poCell.value);
 		return bHasChanged;
+	}
+
+	//******************************************************************************************************* */
+	/**
+	 * Description placeholder
+	 * @date 3/30/2023 - 5:05:52 PM
+	 *
+	 * @static
+	 */
+	static test_boredom(){
+        var oRule = cCARuleBase64Importer.makeRule("0yMK,2Pg,t0IQfTgQg7h02Pg,t3h0t40Qg7h0g01000IQfTgQg7h0d41Qg400g00Qg7h0g0100400g00000000") //conways 
+		var oCell = new cCACell()
+		oCell.rule = oRule
 	}
 }

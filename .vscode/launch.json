@@ -23,6 +23,12 @@
                 "--user-data-dir=${env:LOCALAPPDATA}\\Google\\Chrome\\User Data",
                 "--profile-directory=Profile 1"
               ]
+        },
+        {
+            "type": "chrome",
+            "request": "launch",
+            "name": "test",
+            "file": "test/test-boredom.html"
         }
     ]
 }

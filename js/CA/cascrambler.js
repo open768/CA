@@ -16,22 +16,63 @@ You the consumer of this application are entirely responsible for importing this
 **************************************************************************/
 /** Scrambler Events */
 class cCAScramblerEvent extends cCAEvent{
+	/**
+	 * Description placeholder
+	 * @date 3/29/2023 - 9:53:46 AM
+	 *
+	 * @static
+	 * @type {string}
+	 */
 	static hook = "cascramev";
+	/**
+	 * Description placeholder
+	 * @date 3/29/2023 - 9:53:46 AM
+	 *
+	 * @static
+	 * @type {{ general: string; progress: string; }}
+	 */
 	static types = {
 		general: "G",
 		progress: "P"
 	};
 	
+	/**
+	 * Description placeholder
+	 * @date 3/29/2023 - 9:53:46 AM
+	 *
+	 * @static
+	 * @type {{ status: string; }}
+	 */
 	static actions = {
 		status:"S"
 	}
 
+	/**
+	 * Description placeholder
+	 * @date 3/29/2023 - 9:53:45 AM
+	 *
+	 * @param {*} poObject
+	 */
 	trigger(poObject){
 		bean.fire( poObject, this.constructor.hook, this);
 	}
 }
 
+/**
+ * Description placeholder
+ * @date 3/29/2023 - 9:53:45 AM
+ *
+ * @class cCAScramblerTypes
+ * @typedef {cCAScramblerTypes}
+ */
 class cCAScramblerTypes{
+	/**
+	 * Description placeholder
+	 * @date 3/29/2023 - 9:53:45 AM
+	 *
+	 * @static
+	 * @type {{ dormant: any; initialRuns: number; }}
+	 */
 	static status = {
 		dormant: null,
 		initialRuns: 1
@@ -84,6 +125,13 @@ class cCAScrambler{
 	}
 	
 	//*******************************************************************************
+	/**
+	 * Description placeholder
+	 * @date 3/29/2023 - 9:53:45 AM
+	 *
+	 * @async
+	 * @returns {*}
+	 */
 	async scramble(){ 
 		var oEvent = new cCAScramblerEvent( cCAScramblerEvent.types.general, cCAScramblerEvent.actions.status, "Started scrambler");
 		oEvent.trigger(this);

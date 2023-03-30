@@ -8,56 +8,155 @@ For licenses that allow for commercial use please contact cluck@chickenkatsu.co.
 // USE AT YOUR OWN RISK - NO GUARANTEES OF ANY FORM ARE EITHER EXPRESSED OR IMPLIED
 **************************************************************************/
 
-class cCAGridTypes {
-	static init={
-		blank:		{id:0,label:"Blank"},
-		block:		{id:1,label:"Block"},
-		checker:	{id:2,label:"Checker"},
-		circle:		{id:3,label:"Circle"},
-		cross:		{id:4,label:"Cross"},
-		diagonal:	{id:5,label:"Diagonal"},
-		diamond:	{id:6,label:"Diamond"},
-		horiz_line:	{id:7,label:"H-Line"},
-		sine:		{id:8,label:"Sine"},
-		random:		{id:9,label:"Random"},
-		vert_line:	{id:10,label:"V-Line"}
+/**
+ * Description placeholder
+ * @date 3/30/2023 - 5:04:53 PM
+ *
+ * @class cCAGridTypes
+ * @typedef {cCAGridTypes}
+ */class cCAGridTypes {
+	/**
+	 * Description placeholder
+	 * @date 3/30/2023 - 5:04:53 PM
+	 *
+	 * @static
+	 * @type {{ blank: { id: number; label: string; }; block: { id: number; label: string; }; checker: { id: number; label: string; }; circle: { id: number; label: string; }; cross: { id: number; label: string; }; diagonal: { id: number; label: string; }; ... 4 more ...; vert_line: { ...; }; }}
+	 */
+	static init = {
+		blank: { id: 0, label: "Blank" },
+		block: { id: 1, label: "Block" },
+		checker: { id: 2, label: "Checker" },
+		circle: { id: 3, label: "Circle" },
+		cross: { id: 4, label: "Cross" },
+		diagonal: { id: 5, label: "Diagonal" },
+		diamond: { id: 6, label: "Diamond" },
+		horiz_line: { id: 7, label: "H-Line" },
+		sine: { id: 8, label: "Sine" },
+		random: { id: 9, label: "Random" },
+		vert_line: { id: 10, label: "V-Line" }
 	};
-	static actions={
-		play:1,
-		stop:2,
-		step:3
+	/**
+	 * Description placeholder
+	 * @date 3/30/2023 - 5:04:53 PM
+	 *
+	 * @static
+	 * @type {{ play: number; stop: number; step: number; }}
+	 */
+	static actions = {
+		play: 1,
+		stop: 2,
+		step: 3
 	};
 }
 
-class cCAGridRunData{
+/**
+ * Description placeholder
+ * @date 3/30/2023 - 5:04:53 PM
+ *
+ * @class cCAGridRunData
+ * @typedef {cCAGridRunData}
+ */
+class cCAGridRunData {
+	/**
+	 * Description placeholder
+	 * @date 3/30/2023 - 5:04:53 PM
+	 *
+	 * @type {number}
+	 */
 	active = 0;
+	/**
+	 * Description placeholder
+	 * @date 3/30/2023 - 5:04:53 PM
+	 *
+	 * @type {number}
+	 */
 	runs = 0;
+	/**
+	 * Description placeholder
+	 * @date 3/30/2023 - 5:04:53 PM
+	 *
+	 * @type {number}
+	 */
 	changed = 0;
 }
 
 //*************************************************************************
-class cCAGridEvent{
+/**
+ * Description placeholder
+ * @date 3/30/2023 - 5:04:53 PM
+ *
+ * @class cCAGridEvent
+ * @typedef {cCAGridEvent}
+ */
+class cCAGridEvent {
+	/**
+	 * Description placeholder
+	 * @date 3/30/2023 - 5:04:53 PM
+	 *
+	 * @static
+	 * @type {string}
+	 */
 	static hook = "CAGEVH";
+	/**
+	 * Description placeholder
+	 * @date 3/30/2023 - 5:04:53 PM
+	 *
+	 * @static
+	 * @type {{ done: string; clear: string; nochange: string; init_grid: string; }}
+	 */
 	static actions = {
-		done:"GDN",
-		clear:"GCL",
-		nochange:"GNO",
-		init_grid:"GID"
+		done: "GDN",
+		clear: "GCL",
+		nochange: "GNO",
+		init_grid: "GID"
 	};
-		
+
+	/**
+	 * Description placeholder
+	 * @date 3/30/2023 - 5:04:53 PM
+	 *
+	 * @type {*}
+	 */
 	action = null;
+	/**
+	 * Description placeholder
+	 * @date 3/30/2023 - 5:04:53 PM
+	 *
+	 * @type {*}
+	 */
 	data = null;
+	/**
+	 * Description placeholder
+	 * @date 3/30/2023 - 5:04:53 PM
+	 *
+	 * @type {*}
+	 */
 	name = null;
-	
-	constructor (psName, psAction, poData){
-		if (psName == null || psAction ==null) $.error("missing params");
+
+	/**
+	 * Creates an instance of cCAGridEvent.
+	 * @date 3/30/2023 - 5:04:53 PM
+	 *
+	 * @constructor
+	 * @param {*} psName
+	 * @param {*} psAction
+	 * @param {*} poData
+	 */
+	constructor(psName, psAction, poData) {
+		if (psName == null || psAction == null) $.error("missing params");
 		this.name = psName;
 		this.action = psAction;
 		this.data = poData;
 	}
-	
-	trigger(poObject){
-		bean.fire( poObject, cCAGridEvent.hook_name(this.name), this);
+
+	/**
+	 * Description placeholder
+	 * @date 3/30/2023 - 5:04:53 PM
+	 *
+	 * @param {*} poObject
+	 */
+	trigger(poObject) {
+		bean.fire(poObject, cCAGridEvent.hook_name(this.name), this);
 	}
 
 	/**
@@ -65,7 +164,7 @@ class cCAGridEvent{
 	 * @param {cCAGrid|string} pvGrid
 	 * @returns {any}
 	 */
-	static hook_name( pvGrid){
+	static hook_name(pvGrid) {
 		if (typeof pvGrid == "string")
 			return (this.hook + pvGrid);
 		else
@@ -77,138 +176,145 @@ class cCAGridEvent{
 //%
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 /** initialises the grid */
-class cCAGridInitialiser{
-	
-	init(poGrid, piInitType){
+class cCAGridInitialiser {
+
+	/**
+	 * Description placeholder
+	 * @date 3/30/2023 - 5:04:53 PM
+	 *
+	 * @param {*} poGrid
+	 * @param {*} piInitType
+	 */
+	init(poGrid, piInitType) {
 		cDebug.enter();
 		cDebug.write("init_type:" + piInitType);
-		
+
 		//always blank first by creating new cells
 		poGrid.create_cells();
-		
-		switch(piInitType){
+
+		switch (piInitType) {
 			case cCAGridTypes.init.blank.id:
 				cDebug.write("init blank");
 				break;
-				
+
 			//------------------------------------------------------
 			case cCAGridTypes.init.block.id:
 				cDebug.write("init block");
-				var iMidC = Math.floor( poGrid.cols/2);
-				var iMidR = Math.floor( poGrid.rows/2);
-				for (var iNc=iMidC; iNc<= iMidC+1; iNc++)
-					for (var iNr=iMidR; iNr<= iMidR+1; iNr++)
-						poGrid.setCellValue(iNr,iNc,1);
+				var iMidC = Math.floor(poGrid.cols / 2);
+				var iMidR = Math.floor(poGrid.rows / 2);
+				for (var iNc = iMidC; iNc <= iMidC + 1; iNc++)
+					for (var iNr = iMidR; iNr <= iMidR + 1; iNr++)
+						poGrid.setCellValue(iNr, iNc, 1);
 				break;
-				
+
 			//------------------------------------------------------
 			case cCAGridTypes.init.checker.id:
 				cDebug.write("init checker");
 				var iStartCol = 1;
 				var iSize = 3;
-				for (var iRow=1; iRow<=poGrid.rows; iRow+=iSize){
-					for (var iCol=iStartCol; iCol<=poGrid.cols; iCol+=(iSize*2)){
-						for (var iDeltaR=0;iDeltaR<iSize;iDeltaR++)
-							for (var iDeltaC=0;iDeltaC<iSize;iDeltaC++)
-								poGrid.setCellValue	(iRow+ iDeltaR,iCol+iDeltaC,1);
+				for (var iRow = 1; iRow <= poGrid.rows; iRow += iSize) {
+					for (var iCol = iStartCol; iCol <= poGrid.cols; iCol += (iSize * 2)) {
+						for (var iDeltaR = 0; iDeltaR < iSize; iDeltaR++)
+							for (var iDeltaC = 0; iDeltaC < iSize; iDeltaC++)
+								poGrid.setCellValue(iRow + iDeltaR, iCol + iDeltaC, 1);
 					}
 
-					if (iStartCol ==1)
-						iStartCol=iSize +1;
+					if (iStartCol == 1)
+						iStartCol = iSize + 1;
 					else
-						iStartCol=1;
+						iStartCol = 1;
 				}
-			break;
-			
+				break;
+
 			//------------------------------------------------------
 			case cCAGridTypes.init.circle.id:
 				cDebug.write("init circle");
-				var iMidC = Math.floor( poGrid.cols/2);
-				var iMidR = Math.floor( poGrid.rows/2);
-				
-				var iDiameter = Math.min (iMidC, iMidR)/2;
+				var iMidC = Math.floor(poGrid.cols / 2);
+				var iMidR = Math.floor(poGrid.rows / 2);
+
+				var iDiameter = Math.min(iMidC, iMidR) / 2;
 				var iDSq = iDiameter * iDiameter;
-				for (var x=iDiameter; x>=0; x--){
-					var y = Math.sqrt( iDSq - Math.pow(x,2));
+				for (var x = iDiameter; x >= 0; x--) {
+					var y = Math.sqrt(iDSq - Math.pow(x, 2));
 					y = Math.round(Math.abs(y));
-					poGrid.setCellValue(iMidR+y,iMidC-x,1);
-					poGrid.setCellValue(iMidR-y,iMidC-x,1);
-					poGrid.setCellValue(iMidR+y,iMidC+x,1);
-					poGrid.setCellValue(iMidR-y,iMidC+x,1);
+					poGrid.setCellValue(iMidR + y, iMidC - x, 1);
+					poGrid.setCellValue(iMidR - y, iMidC - x, 1);
+					poGrid.setCellValue(iMidR + y, iMidC + x, 1);
+					poGrid.setCellValue(iMidR - y, iMidC + x, 1);
 				}
-			break;
-			
+				break;
+
 			//------------------------------------------------------
 			case cCAGridTypes.init.cross.id:
 				cDebug.write("init cross");
-				var iMidC = Math.floor( poGrid.cols/2);
-				var iMidR = Math.floor( poGrid.rows/2);
-				
-				poGrid.setCellValue(iMidR,iMidC,1);
-				for (var i=1; i<= 4; i++){
-					poGrid.setCellValue(iMidR+i,iMidC,1);
-					poGrid.setCellValue(iMidR-i,iMidC,1);
-					poGrid.setCellValue(iMidR,iMidC+i,1);
-					poGrid.setCellValue(iMidR,iMidC-i,1);
+				var iMidC = Math.floor(poGrid.cols / 2);
+				var iMidR = Math.floor(poGrid.rows / 2);
+
+				poGrid.setCellValue(iMidR, iMidC, 1);
+				for (var i = 1; i <= 4; i++) {
+					poGrid.setCellValue(iMidR + i, iMidC, 1);
+					poGrid.setCellValue(iMidR - i, iMidC, 1);
+					poGrid.setCellValue(iMidR, iMidC + i, 1);
+					poGrid.setCellValue(iMidR, iMidC - i, 1);
 				}
 				break;
-				
+
 			//------------------------------------------------------
 			case cCAGridTypes.init.diagonal.id:
 				cDebug.write("init diagonal");
-				for (var iNr=1; iNr<= poGrid.rows; iNr++){
-					if (iNr>poGrid.cols) break;
-					poGrid.setCellValue(iNr,iNr,1);
+				for (var iNr = 1; iNr <= poGrid.rows; iNr++) {
+					if (iNr > poGrid.cols) break;
+					poGrid.setCellValue(iNr, iNr, 1);
 				}
 				break;
-				
+
 			//------------------------------------------------------
 			case cCAGridTypes.init.diamond.id:
 				cDebug.write("init diamond");
 				var icc = Math.floor(poGrid.cols / 2);
 				var icr = Math.floor(poGrid.rows / 2);
-				
-				for (var i=10; i>= 0; i--){
+
+				for (var i = 10; i >= 0; i--) {
 					var dx = i;
 					var dy = 10 - dx;
-					
-					poGrid.setCellValue(icr-dy,icc-dx,1);
-					poGrid.setCellValue(icr-dy,icc+dx,1);
-					poGrid.setCellValue(icr+dy,icc-dx,1);
-					poGrid.setCellValue(icr+dy,icc+dx,1);
+
+					poGrid.setCellValue(icr - dy, icc - dx, 1);
+					poGrid.setCellValue(icr - dy, icc + dx, 1);
+					poGrid.setCellValue(icr + dy, icc - dx, 1);
+					poGrid.setCellValue(icr + dy, icc + dx, 1);
 				}
-				
+
 				break;
-				
+
 			//------------------------------------------------------
 			case cCAGridTypes.init.horiz_line.id:
 				cDebug.write("init hline");
 				var iNr = Math.floor(poGrid.rows / 2);
-				for (var iNc=1; iNc<= poGrid.cols; iNc++)
-					poGrid.setCellValue(iNr,iNc,1);
+				for (var iNc = 1; iNc <= poGrid.cols; iNc++)
+					poGrid.setCellValue(iNr, iNc, 1);
 				break;
-				
+
 			//--------------------------------------------------------
 			case cCAGridTypes.init.random.id:
 				cDebug.write("init random");
-				for (var iNr=1; iNr<= poGrid.rows; iNr++)
-					for (var iNc=1; iNc<= poGrid.cols; iNc++){
+				for (var iNr = 1; iNr <= poGrid.rows; iNr++)
+					for (var iNc = 1; iNc <= poGrid.cols; iNc++) {
 						var iRnd = Math.round(Math.random());
-						poGrid.setCellValue(iNr,iNc,iRnd);
+						poGrid.setCellValue(iNr, iNc, iRnd);
 					}
 				break;
 			//--------------------------------------------------------
 			case cCAGridTypes.init.sine.id:
 				cDebug.write("init sine");
-				var dRadian= 2*Math.PI/poGrid.cols;
-				var iMidR = Math.floor( poGrid.rows/2);
+				var dRadian = 2 * Math.PI / poGrid.cols;
+				var iMidR = Math.floor(poGrid.rows / 2);
 				var iRad = 0;
-				var iMidrow = Math.round(poGrid.rows/2);
-				
-				for (var iNc=1; iNc<= poGrid.cols; iNc++){
-					var fSin = Math.sin(iRad);					
+				var iMidrow = Math.round(poGrid.rows / 2);
+
+				for (var iNc = 1; iNc <= poGrid.cols; iNc++) {
+					var fSin = Math.sin(iRad);
 					var iNr = iMidrow + Math.round(fSin * iMidrow);
-					poGrid.setCellValue(iNr,iNc,1);
+					poGrid.setCellValue(iNr, iNc, 1);
 					iRad += dRadian;
 				}
 				break;
@@ -217,10 +323,10 @@ class cCAGridInitialiser{
 			case cCAGridTypes.init.vert_line.id:
 				cDebug.write("init vline");
 				var iNc = Math.floor(poGrid.cols / 2);
-				for (var iNr=1; iNr<= poGrid.cols; iNr++)
-					poGrid.setCellValue(iNr,iNc,1);
+				for (var iNr = 1; iNr <= poGrid.cols; iNr++)
+					poGrid.setCellValue(iNr, iNc, 1);
 				break;
-				
+
 			//--------------------------------------------------------
 			default:
 				throw new CAException("unknown init_type: " + piInitType);
@@ -232,17 +338,45 @@ class cCAGridInitialiser{
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 //%
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+/**
+ * Description placeholder
+ * @date 3/30/2023 - 5:04:53 PM
+ *
+ * @class cCAGrid
+ * @typedef {cCAGrid}
+ */
 class cCAGrid {
 	//#######################################################################
 	//# instance variables
 	//#######################################################################
+	/**
+	 * Description placeholder
+	 * @date 3/30/2023 - 5:04:53 PM
+	 *
+	 * @type {*}
+	 */
 	cell_data = null;
+	/**
+	 * Description placeholder
+	 * @date 3/30/2023 - 5:04:53 PM
+	 *
+	 * @type {*}
+	 */
 	name = null;
-	
-	constructor (psName, piRows, piCols){
+
+	/**
+	 * Creates an instance of cCAGrid.
+	 * @date 3/30/2023 - 5:04:53 PM
+	 *
+	 * @constructor
+	 * @param {*} psName
+	 * @param {*} piRows
+	 * @param {*} piCols
+	 */
+	constructor(psName, piRows, piCols) {
 		if (!psName) throw new CAException("no grid name");
 		if (piRows == null || piCols == null) throw new CAException("bad size information");
-		
+
 		this.rows = piRows;
 		this.cols = piCols;
 		this.name = psName;
@@ -252,16 +386,22 @@ class cCAGrid {
 		this.status = new cCAGridRunData();
 		var oThis = this;
 	}
-	
+
 	//#######################################################################
 	//# methods
 	//#######################################################################
-	action(piAction){
+	/**
+	 * Description placeholder
+	 * @date 3/30/2023 - 5:04:53 PM
+	 *
+	 * @param {*} piAction
+	 */
+	action(piAction) {
 		cDebug.enter();
 		if (this.rule == null) throw new CAException("no rule set");
-		
+
 		cDebug.write("running action: " + piAction);
-		switch (piAction){
+		switch (piAction) {
 			case cCAGridTypes.actions.play:
 				if (this.running) throw new CAException("CA is allready running");
 				this.running = true;
@@ -269,7 +409,7 @@ class cCAGrid {
 				this.status.runs = 1;
 				break;
 			case cCAGridTypes.actions.stop:
-				if (! this.running)
+				if (!this.running)
 					throw new CAException("CA is not running");
 				this.running = false;
 				break;
@@ -282,68 +422,84 @@ class cCAGrid {
 		cDebug.write("done action: " + piAction);
 		cDebug.leave();
 	}
-	
+
 	//****************************************************************
-	set_rule(poRule){
+	/**
+	 * Description placeholder
+	 * @date 3/30/2023 - 5:04:53 PM
+	 *
+	 * @param {*} poRule
+	 */
+	set_rule(poRule) {
 		cDebug.enter();
 		//clear rules from all cells
 		this.clear_cell_rules()
-			
+
 		//set the rule for the grid
 		this.rule = poRule;
 		this.pr__link_cells();
 		cDebug.leave();
 	}
-	
+
 
 
 	//****************************************************************
-	step(){
+	/**
+	 * Description placeholder
+	 * @date 3/30/2023 - 5:04:53 PM
+	 */
+	step() {
 		var oRule = this.rule;
-		
+
 		this.changed_cells = [];
 		this.status.changed = 0;
 		this.status.active = 0;
-		
+
 		cDebug.write("stepping");
 
 		//apply rules
 		var bHasChanged, oCell;
-		for (var iRow=1; iRow<= this.rows; iRow++)
-			for (var iCol=1; iCol<= this.cols; iCol++){
-				cDebug.write("cell row: " +iRow + " col:" +iCol);
-				oCell = this.getCell(iRow,iCol,true);
+		for (var iRow = 1; iRow <= this.rows; iRow++)
+			for (var iCol = 1; iCol <= this.cols; iCol++) {
+				cDebug.write("cell row: " + iRow + " col:" + iCol);
+				oCell = this.getCell(iRow, iCol, true);
 				if (oCell.rule == null) oCell.rule = this.rule;
 				bHasChanged = oCell.apply_rule();
 				if (bHasChanged) this.changed_cells.push(oCell);
-				if (oCell.value > 0) this.status.active ++;
+				if (oCell.value > 0) this.status.active++;
 			}
 
 		//check how many cells changed
 		var iChangedLen = this.changed_cells.length;
 		this.status.changed = iChangedLen;
-		if (iChangedLen == 0){
+		if (iChangedLen == 0) {
 			this.running = false;
 			var oEvent = new cCAGridEvent(this.name, cCAGridEvent.actions.nochange)
 			oEvent.trigger(this);
 			return;
 		}
-		
+
 		//promote changed cells
-		for ( var iIndex = 0; iIndex < iChangedLen; iIndex++){
+		for (var iIndex = 0; iIndex < iChangedLen; iIndex++) {
 			var oCell = this.changed_cells[iIndex];
 			oCell.promote();
-			if (oCell.value == 0) 
-				this.status.active --;
+			if (oCell.value == 0)
+				this.status.active--;
 			else
-				this.status.active ++;
+				this.status.active++;
 		}
 		var oEvent = new cCAGridEvent(this.name, cCAGridEvent.actions.done, this.status)
 		oEvent.trigger(this);
 	}
-	
+
 	//****************************************************************
-	init(piInitType){
+	/**
+	 * Description placeholder
+	 * @date 3/30/2023 - 5:04:53 PM
+	 *
+	 * @param {*} piInitType
+	 */
+	init(piInitType) {
 		cDebug.enter();
 		if (this.running) throw new CAException("cant init when running");
 
@@ -351,80 +507,106 @@ class cCAGrid {
 		var oRule = this.rule;
 		cDebug.write("initialising grid:" + piInitType);
 		var oInitialiser = new cCAGridInitialiser();
-		oInitialiser.init(this,piInitType);
-		cDebug.write("done init grid: "+ piInitType);
-		
+		oInitialiser.init(this, piInitType);
+		cDebug.write("done init grid: " + piInitType);
+
 		var oEvent = new cCAGridEvent(this.name, cCAGridEvent.actions.done, this.status)
 		oEvent.trigger(this);
-		
+
 		cDebug.leave();
 	}
-	
+
 	//****************************************************************
-	create_cells(){
+	/**
+	 * Description placeholder
+	 * @date 3/30/2023 - 5:04:53 PM
+	 */
+	create_cells() {
 		cDebug.enter();
-		
+
 		//clear out existing cells
 		this.cell_data = new cSparseArray(this.rows, this.cols);
-		
+
 		//create blank cells
-		for (var iNr=1; iNr<= this.rows; iNr++)
-			for (var iNc=1; iNc<= this.cols; iNc++)
-				this.setCellValue(iNr,iNc,0);
-		
+		for (var iNr = 1; iNr <= this.rows; iNr++)
+			for (var iNc = 1; iNc <= this.cols; iNc++)
+				this.setCellValue(iNr, iNc, 0);
+
 		//reset instance state
 		this.changed_cells = [];
-		
+
 		//link if there is a rule
-		if (this.rule)	this.pr__link_cells();
+		if (this.rule) this.pr__link_cells();
 
 		var oEvent = new cCAGridEvent(this.name, cCAGridEvent.actions.clear)
 		oEvent.trigger(this);
 		cDebug.leave();
 	}
-	
+
 	//****************************************************************
-	clear_cell_rules(){
+	/**
+	 * Description placeholder
+	 * @date 3/30/2023 - 5:04:52 PM
+	 */
+	clear_cell_rules() {
 		cDebug.enter();
 		var oCell;
-		for (var iNr=1; iNr<= this.rows; iNr++)
-			for (var iNc=1; iNc<= this.cols; iNc++){
-				oCell = this.getCell(iNr,iNc);
-				if (oCell !== null ) oCell.rule = null;
+		for (var iNr = 1; iNr <= this.rows; iNr++)
+			for (var iNc = 1; iNc <= this.cols; iNc++) {
+				oCell = this.getCell(iNr, iNc);
+				if (oCell !== null) oCell.rule = null;
 			}
 		cDebug.leave();
 	}
-	
+
 	//****************************************************************
-	setCellValue(piRow,piCol,iValue){
+	/**
+	 * Description placeholder
+	 * @date 3/30/2023 - 5:04:52 PM
+	 *
+	 * @param {*} piRow
+	 * @param {*} piCol
+	 * @param {*} iValue
+	 * @returns {*}
+	 */
+	setCellValue(piRow, piCol, iValue) {
 		if (this.cell_data == null)
 			throw new CAException("grid not initialised");
-			
+
 		var oCell = this.getCell(piRow, piCol, false);
 		if (oCell == null) {
 			oCell = new cCACell;
 			oCell.data.set(cCACellTypes.hash_values.row, piRow);
 			oCell.data.set(cCACellTypes.hash_values.col, piCol);
-			this.cell_data.set(piRow,piCol, oCell);
+			this.cell_data.set(piRow, piCol, oCell);
 		}
 
-		if (iValue !== oCell.value){
+		if (iValue !== oCell.value) {
 			oCell.value = iValue;
 			this.changed_cells.push(oCell);
 		}
 		return oCell;
 	}
-	
+
 	//****************************************************************
-	getCell(piRow,piCol, pbCreate = false){
+	/**
+	 * Description placeholder
+	 * @date 3/30/2023 - 5:04:52 PM
+	 *
+	 * @param {*} piRow
+	 * @param {*} piCol
+	 * @param {boolean} [pbCreate=false]
+	 * @returns {*}
+	 */
+	getCell(piRow, piCol, pbCreate = false) {
 		if (this.cell_data == null) return null;
-		var oCell = this.cell_data.get(piRow,piCol);
+		var oCell = this.cell_data.get(piRow, piCol);
 		if (pbCreate && oCell == null)
-			oCell = this.setCellValue(piRow,piCol,0);
-		
+			oCell = this.setCellValue(piRow, piCol, 0);
+
 		return oCell;
 	}
-	
+
 	//#######################################################################
 	//# events
 	//#######################################################################
@@ -432,65 +614,82 @@ class cCAGrid {
 	 * Description
 	 * @param {Function} pFn
 	 */
-	on_event(pFn){
-		bean.on(this, cCAGridEvent.hook_name(this), pFn )
+	on_event(pFn) {
+		bean.on(this, cCAGridEvent.hook_name(this), pFn)
 	}
 
 	//****************************************************************
-	notifyDrawn(){
+	/**
+	 * Description placeholder
+	 * @date 3/30/2023 - 5:04:52 PM
+	 */
+	notifyDrawn() {
 		cDebug.enter();
 		var oThis = this;
-		if (this.running){
+		if (this.running) {
 			cDebug.write("running again");
-			this.status.runs ++;
-			setTimeout(function(){ oThis.step();}, 50); //delay is needed to yield
+			this.status.runs++;
+			setTimeout(function () { oThis.step(); }, 50); //delay is needed to yield
 		}
 		cDebug.leave();
 	}
-	
+
 	//#######################################################################
 	//# privates
 	//#######################################################################
-	pr__link_cells(){
+	/**
+	 * Description placeholder
+	 * @date 3/30/2023 - 5:04:52 PM
+	 */
+	pr__link_cells() {
 		cDebug.enter();
 		if (!this.rule) throw new Error("no rule set");
-		
+
 		var iType = this.rule.neighbour_type
-		
+
 		cDebug.write("linking cells");
-		for (var iNr=1; iNr<= this.rows; iNr++)
-			for (var iNc=1; iNc<= this.cols; iNc++){
-				var oCell = this.getCell(iNr,iNc,true); //create cells
-				this.pr__link_cell(oCell,cCACellTypes.directions.north, iNr-1, iNc);
-				this.pr__link_cell(oCell,cCACellTypes.directions.east, iNr, iNc+1);
-				this.pr__link_cell(oCell,cCACellTypes.directions.south, iNr+1, iNc);
-				this.pr__link_cell(oCell,cCACellTypes.directions.west, iNr, iNc-1);
-				if (iType == cCACellTypes.neighbours.eightway){
-					this.pr__link_cell(oCell,cCACellTypes.directions.northeast, iNr-1, iNc+1);
-					this.pr__link_cell(oCell,cCACellTypes.directions.southeast, iNr+1, iNc+1);
-					this.pr__link_cell(oCell,cCACellTypes.directions.southwest, iNr+1, iNc-1);
-					this.pr__link_cell(oCell,cCACellTypes.directions.northwest, iNr-1, iNc-1);
+		for (var iNr = 1; iNr <= this.rows; iNr++)
+			for (var iNc = 1; iNc <= this.cols; iNc++) {
+				var oCell = this.getCell(iNr, iNc, true); //create cells
+				this.pr__link_cell(oCell, cCACellTypes.directions.north, iNr - 1, iNc);
+				this.pr__link_cell(oCell, cCACellTypes.directions.east, iNr, iNc + 1);
+				this.pr__link_cell(oCell, cCACellTypes.directions.south, iNr + 1, iNc);
+				this.pr__link_cell(oCell, cCACellTypes.directions.west, iNr, iNc - 1);
+				if (iType == cCACellTypes.neighbours.eightway) {
+					this.pr__link_cell(oCell, cCACellTypes.directions.northeast, iNr - 1, iNc + 1);
+					this.pr__link_cell(oCell, cCACellTypes.directions.southeast, iNr + 1, iNc + 1);
+					this.pr__link_cell(oCell, cCACellTypes.directions.southwest, iNr + 1, iNc - 1);
+					this.pr__link_cell(oCell, cCACellTypes.directions.northwest, iNr - 1, iNc - 1);
 				}
 			}
 		cDebug.write("completed cell linking");
 		cDebug.leave();
 	}
-	
+
 	//****************************************************************
-	pr__link_cell (poCell, piDirection, piNRow, piNCol){
+	/**
+	 * Description placeholder
+	 * @date 3/30/2023 - 5:04:52 PM
+	 *
+	 * @param {*} poCell
+	 * @param {*} piDirection
+	 * @param {*} piNRow
+	 * @param {*} piNCol
+	 */
+	pr__link_cell(poCell, piDirection, piNRow, piNCol) {
 		var iNr, iNc;
 		//wrap around neighbour row and col
-		iNr=piNRow;
-		if (iNr<1) iNr= this.rows;
-		if (iNr>this.rows) iNr=1;
-		
-		iNc=piNCol;
-		if (iNc<1) iNc= this.cols;
-		if (iNc>this.cols) iNc=1;
-		
+		iNr = piNRow;
+		if (iNr < 1) iNr = this.rows;
+		if (iNr > this.rows) iNr = 1;
+
+		iNc = piNCol;
+		if (iNc < 1) iNc = this.cols;
+		if (iNc > this.cols) iNc = 1;
+
 		//get the neighbour
-		var oNeigh = this.getCell(iNr,iNc,true); //shouldnt need to create cells, but just in case
-		poCell.setNeighbour(piDirection,oNeigh);		
+		var oNeigh = this.getCell(iNr, iNc, true); //shouldnt need to create cells, but just in case
+		poCell.setNeighbour(piDirection, oNeigh);
 	}
-	
+
 }

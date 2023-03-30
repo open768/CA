@@ -18,7 +18,21 @@ var cCaLexiconRule = function(piType, psLabel, psRule){
 	this.rule = psRule;
 }
 
+/**
+ * Description placeholder
+ * @date 3/29/2023 - 9:53:32 AM
+ *
+ * @class cCALexicon
+ * @typedef {cCALexicon}
+ */
 class cCALexicon {
+	/**
+	 * Description placeholder
+	 * @date 3/29/2023 - 9:53:32 AM
+	 *
+	 * @static
+	 * @returns {{}}
+	 */
 	static get_presets(){
 		var aPresets = [];
 		aPresets.push( this.pr__make_life_rule("2x2", "B36/S125"));
@@ -37,6 +51,15 @@ class cCALexicon {
 		return aPresets;
 	}
 	
+	/**
+	 * Description placeholder
+	 * @date 3/29/2023 - 9:53:32 AM
+	 *
+	 * @static
+	 * @param {*} psName
+	 * @param {*} psRule
+	 * @returns {cCaLexiconRule}
+	 */
 	static pr__make_life_rule(psName, psRule){
 		return new cCaLexiconRule(cCARuleTypes.rule_types.life,psName,psRule);
 	}
