@@ -10,7 +10,7 @@ For licenses that allow for commercial use please contact cluck@chickenkatsu.co.
 class cCAEvaluatedCell {
 	/**
 	 * Creates an instance of cCAEvaluatedCell.
-	 * @date 3/29/2023 - 9:25:49 AM
+	 * 
 	 *
 	 * @constructor
 	 */
@@ -27,7 +27,7 @@ class cCAEvaluatedCell {
 //###################################################################################
 /**
  * Description placeholder
- * @date 3/29/2023 - 9:25:49 AM
+ * 
  *
  * @class cCACell
  * @typedef {cCACell}
@@ -45,7 +45,7 @@ class cCACell {
 
 	/**
 	 * Creates an instance of cCACell.
-	 * @date 3/29/2023 - 9:25:49 AM
+	 * 
 	 *
 	 * @constructor
 	 */
@@ -60,7 +60,7 @@ class cCACell {
 	//****************************************************************
 	/**
 	 * Description placeholder
-	 * @date 3/29/2023 - 9:25:49 AM
+	 * 
 	 */
 	clear() {
 		this.state = 1;
@@ -74,7 +74,7 @@ class cCACell {
 	//****************************************************************
 	/**
 	 * Description placeholder
-	 * @date 3/29/2023 - 9:25:49 AM
+	 * 
 	 *
 	 * @returns {*}
 	 */
@@ -89,7 +89,7 @@ class cCACell {
 	//****************************************************************
 	/**
 	 * Description placeholder
-	 * @date 3/29/2023 - 9:25:49 AM
+	 * 
 	 */
 	promote() {
 		this.state = this.evaluated.state;
@@ -100,7 +100,7 @@ class cCACell {
 	//*****************************************************************
 	/**
 	 * Description placeholder
-	 * @date 3/29/2023 - 9:25:49 AM
+	 * 
 	 *
 	 * @param {*} piNeighbourType
 	 * @returns {*}
@@ -154,7 +154,7 @@ class cCACell {
 	//*****************************************************************
 	/**
 	 * Description placeholder
-	 * @date 3/29/2023 - 9:25:49 AM
+	 * 
 	 *
 	 * @param {*} piNeighbourType
 	 * @returns {*}
@@ -220,7 +220,7 @@ class cCACell {
 	//*****************************************************************
 	/**
 	 * Description placeholder
-	 * @date 3/29/2023 - 9:25:49 AM
+	 * 
 	 *
 	 * @param {*} piDirection
 	 * @param {*} poCell

@@ -10,14 +10,14 @@ For licenses that allow for commercial use please contact cluck@chickenkatsu.co.
 
 /**
  * Description placeholder
- * @date 3/30/2023 - 5:04:53 PM
+ * 
  *
  * @class cCAGridTypes
  * @typedef {cCAGridTypes}
  */class cCAGridTypes {
 	/**
 	 * Description placeholder
-	 * @date 3/30/2023 - 5:04:53 PM
+	 * 
 	 *
 	 * @static
 	 * @type {{ blank: { id: number; label: string; }; block: { id: number; label: string; }; checker: { id: number; label: string; }; circle: { id: number; label: string; }; cross: { id: number; label: string; }; diagonal: { id: number; label: string; }; ... 4 more ...; vert_line: { ...; }; }}
@@ -37,7 +37,7 @@ For licenses that allow for commercial use please contact cluck@chickenkatsu.co.
 	};
 	/**
 	 * Description placeholder
-	 * @date 3/30/2023 - 5:04:53 PM
+	 * 
 	 *
 	 * @static
 	 * @type {{ play: number; stop: number; step: number; }}
@@ -51,7 +51,7 @@ For licenses that allow for commercial use please contact cluck@chickenkatsu.co.
 
 /**
  * Description placeholder
- * @date 3/30/2023 - 5:04:53 PM
+ * 
  *
  * @class cCAGridRunData
  * @typedef {cCAGridRunData}
@@ -59,21 +59,21 @@ For licenses that allow for commercial use please contact cluck@chickenkatsu.co.
 class cCAGridRunData {
 	/**
 	 * Description placeholder
-	 * @date 3/30/2023 - 5:04:53 PM
+	 * 
 	 *
 	 * @type {number}
 	 */
 	active = 0;
 	/**
 	 * Description placeholder
-	 * @date 3/30/2023 - 5:04:53 PM
+	 * 
 	 *
 	 * @type {number}
 	 */
 	runs = 0;
 	/**
 	 * Description placeholder
-	 * @date 3/30/2023 - 5:04:53 PM
+	 * 
 	 *
 	 * @type {number}
 	 */
@@ -83,7 +83,7 @@ class cCAGridRunData {
 //*************************************************************************
 /**
  * Description placeholder
- * @date 3/30/2023 - 5:04:53 PM
+ * 
  *
  * @class cCAGridEvent
  * @typedef {cCAGridEvent}
@@ -91,7 +91,7 @@ class cCAGridRunData {
 class cCAGridEvent {
 	/**
 	 * Description placeholder
-	 * @date 3/30/2023 - 5:04:53 PM
+	 * 
 	 *
 	 * @static
 	 * @type {string}
@@ -99,7 +99,7 @@ class cCAGridEvent {
 	static hook = "CAGEVH";
 	/**
 	 * Description placeholder
-	 * @date 3/30/2023 - 5:04:53 PM
+	 * 
 	 *
 	 * @static
 	 * @type {{ done: string; clear: string; nochange: string; init_grid: string; }}
@@ -113,21 +113,21 @@ class cCAGridEvent {
 
 	/**
 	 * Description placeholder
-	 * @date 3/30/2023 - 5:04:53 PM
+	 * 
 	 *
 	 * @type {*}
 	 */
 	action = null;
 	/**
 	 * Description placeholder
-	 * @date 3/30/2023 - 5:04:53 PM
+	 * 
 	 *
 	 * @type {*}
 	 */
 	data = null;
 	/**
 	 * Description placeholder
-	 * @date 3/30/2023 - 5:04:53 PM
+	 * 
 	 *
 	 * @type {*}
 	 */
@@ -135,7 +135,7 @@ class cCAGridEvent {
 
 	/**
 	 * Creates an instance of cCAGridEvent.
-	 * @date 3/30/2023 - 5:04:53 PM
+	 * 
 	 *
 	 * @constructor
 	 * @param {*} psName
@@ -151,7 +151,7 @@ class cCAGridEvent {
 
 	/**
 	 * Description placeholder
-	 * @date 3/30/2023 - 5:04:53 PM
+	 * 
 	 *
 	 * @param {*} poObject
 	 */
@@ -180,7 +180,7 @@ class cCAGridInitialiser {
 
 	/**
 	 * Description placeholder
-	 * @date 3/30/2023 - 5:04:53 PM
+	 * 
 	 *
 	 * @param {*} poGrid
 	 * @param {*} piInitType
@@ -340,7 +340,7 @@ class cCAGridInitialiser {
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 /**
  * Description placeholder
- * @date 3/30/2023 - 5:04:53 PM
+ * 
  *
  * @class cCAGrid
  * @typedef {cCAGrid}
@@ -351,14 +351,14 @@ class cCAGrid {
 	//#######################################################################
 	/**
 	 * Description placeholder
-	 * @date 3/30/2023 - 5:04:53 PM
+	 * 
 	 *
 	 * @type {*}
 	 */
 	cell_data = null;
 	/**
 	 * Description placeholder
-	 * @date 3/30/2023 - 5:04:53 PM
+	 * 
 	 *
 	 * @type {*}
 	 */
@@ -366,7 +366,7 @@ class cCAGrid {
 
 	/**
 	 * Creates an instance of cCAGrid.
-	 * @date 3/30/2023 - 5:04:53 PM
+	 * 
 	 *
 	 * @constructor
 	 * @param {*} psName
@@ -392,7 +392,7 @@ class cCAGrid {
 	//#######################################################################
 	/**
 	 * Description placeholder
-	 * @date 3/30/2023 - 5:04:53 PM
+	 * 
 	 *
 	 * @param {*} piAction
 	 */
@@ -426,7 +426,7 @@ class cCAGrid {
 	//****************************************************************
 	/**
 	 * Description placeholder
-	 * @date 3/30/2023 - 5:04:53 PM
+	 * 
 	 *
 	 * @param {*} poRule
 	 */
@@ -446,7 +446,7 @@ class cCAGrid {
 	//****************************************************************
 	/**
 	 * Description placeholder
-	 * @date 3/30/2023 - 5:04:53 PM
+	 * 
 	 */
 	step() {
 		var oRule = this.rule;
@@ -495,7 +495,7 @@ class cCAGrid {
 	//****************************************************************
 	/**
 	 * Description placeholder
-	 * @date 3/30/2023 - 5:04:53 PM
+	 * 
 	 *
 	 * @param {*} piInitType
 	 */
@@ -519,7 +519,7 @@ class cCAGrid {
 	//****************************************************************
 	/**
 	 * Description placeholder
-	 * @date 3/30/2023 - 5:04:53 PM
+	 * 
 	 */
 	create_cells() {
 		cDebug.enter();
@@ -546,7 +546,7 @@ class cCAGrid {
 	//****************************************************************
 	/**
 	 * Description placeholder
-	 * @date 3/30/2023 - 5:04:52 PM
+	 * 
 	 */
 	clear_cell_rules() {
 		cDebug.enter();
@@ -562,7 +562,7 @@ class cCAGrid {
 	//****************************************************************
 	/**
 	 * Description placeholder
-	 * @date 3/30/2023 - 5:04:52 PM
+	 * 
 	 *
 	 * @param {*} piRow
 	 * @param {*} piCol
@@ -591,7 +591,7 @@ class cCAGrid {
 	//****************************************************************
 	/**
 	 * Description placeholder
-	 * @date 3/30/2023 - 5:04:52 PM
+	 * 
 	 *
 	 * @param {*} piRow
 	 * @param {*} piCol
@@ -621,7 +621,7 @@ class cCAGrid {
 	//****************************************************************
 	/**
 	 * Description placeholder
-	 * @date 3/30/2023 - 5:04:52 PM
+	 * 
 	 */
 	notifyDrawn() {
 		cDebug.enter();
@@ -639,7 +639,7 @@ class cCAGrid {
 	//#######################################################################
 	/**
 	 * Description placeholder
-	 * @date 3/30/2023 - 5:04:52 PM
+	 * 
 	 */
 	pr__link_cells() {
 		cDebug.enter();
@@ -669,7 +669,7 @@ class cCAGrid {
 	//****************************************************************
 	/**
 	 * Description placeholder
-	 * @date 3/30/2023 - 5:04:52 PM
+	 * 
 	 *
 	 * @param {*} poCell
 	 * @param {*} piDirection

@@ -15,7 +15,7 @@ import cCAGrid from "./cagrid.js"
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 /**
  * Description placeholder
- * @date 3/30/2023 - 5:04:13 PM
+ * 
  *
  * @class cCAGridExported
  * @typedef {cCAGridExported}
@@ -23,14 +23,14 @@ import cCAGrid from "./cagrid.js"
 class cCAGridExported {
 	/**
 	 * Description placeholder
-	 * @date 3/30/2023 - 5:04:13 PM
+	 * 
 	 *
 	 * @type {number}
 	 */
 	version = 1;
 	/**
 	 * Description placeholder
-	 * @date 3/30/2023 - 5:04:13 PM
+	 * 
 	 *
 	 * @type {{ rows: number; cols: number; data: any; }}
 	 */
@@ -41,7 +41,7 @@ class cCAGridExported {
 	};
 	/**
 	 * Description placeholder
-	 * @date 3/30/2023 - 5:04:13 PM
+	 * 
 	 *
 	 * @type {*}
 	 */
@@ -49,7 +49,7 @@ class cCAGridExported {
 
 	/**
 	 * Description placeholder
-	 * @date 3/30/2023 - 5:04:13 PM
+	 * 
 	 *
 	 * @static
 	 * @param {*} poObj
@@ -67,7 +67,7 @@ class cCAGridExported {
 //*************************************************************************
 /**
  * Description placeholder
- * @date 3/30/2023 - 5:04:13 PM
+ * 
  *
  * @class cCAGridJSONExporter
  * @typedef {cCAGridJSONExporter}
@@ -75,7 +75,7 @@ class cCAGridExported {
 class cCAGridJSONExporter {
 	/**
 	 * Description placeholder
-	 * @date 3/30/2023 - 5:04:13 PM
+	 * 
 	 *
 	 * @static
 	 * @param {*} poGrid
@@ -103,7 +103,7 @@ class cCAGridJSONExporter {
 	//*************************************************************************
 	/**
 	 * Description placeholder
-	 * @date 3/30/2023 - 5:04:13 PM
+	 * 
 	 *
 	 * @static
 	 * @param {*} poGrid
@@ -137,7 +137,7 @@ class cCAGridJSONExporter {
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 /**
  * Description placeholder
- * @date 3/30/2023 - 5:04:13 PM
+ * 
  *
  * @class cCAGridJSONImporter
  * @typedef {cCAGridJSONImporter}
@@ -146,7 +146,7 @@ class cCAGridJSONImporter {
 	//*********************************************
 	/**
 	 * Description placeholder
-	 * @date 3/30/2023 - 5:04:13 PM
+	 * 
 	 *
 	 * @static
 	 * @param {*} psName

@@ -10,14 +10,14 @@ For licenses that allow for commercial use please contact cluck@chickenkatsu.co.
 
 /**
  * Description placeholder
- * @date 3/29/2023 - 9:53:42 AM
+ * 
  *
  * @class cCAStateRule
  * @typedef {cCAStateRule}
  */class cCAStateRule {
 	/**
 	 * Creates an instance of cCAStateRule.
-	 * @date 3/29/2023 - 9:53:42 AM
+	 * 
 	 *
 	 * @constructor
 	 */
@@ -31,7 +31,7 @@ For licenses that allow for commercial use please contact cluck@chickenkatsu.co.
 //###############################################################################
 /**
  * Description placeholder
- * @date 3/29/2023 - 9:53:42 AM
+ * 
  *
  * @class cCARule
  * @typedef {cCARule}
@@ -44,7 +44,7 @@ class cCARule{
 
 	/**
 	 * Creates an instance of cCARule.
-	 * @date 3/29/2023 - 9:53:42 AM
+	 * 
 	 *
 	 * @constructor
 	 */
@@ -58,7 +58,7 @@ class cCARule{
 	//***************************************************************
 	/**
 	 * Description placeholder
-	 * @date 3/29/2023 - 9:53:42 AM
+	 * 
 	 *
 	 * @static
 	 * @returns {cCARule}
@@ -95,7 +95,7 @@ class cCARule{
 	//*****************************************************************
 	/**
 	 * Description placeholder
-	 * @date 3/29/2023 - 9:53:42 AM
+	 * 
 	 *
 	 * @param {*} piState
 	 * @param {*} piPattern
@@ -121,7 +121,7 @@ class cCARule{
 	//*****************************************************************
 	/**
 	 * Description placeholder
-	 * @date 3/29/2023 - 9:53:42 AM
+	 * 
 	 *
 	 * @param {*} piState
 	 * @param {*} piBitmap
@@ -143,7 +143,7 @@ class cCARule{
 	//*****************************************************************
 	/**
 	 * Description placeholder
-	 * @date 3/29/2023 - 9:53:42 AM
+	 * 
 	 *
 	 * @param {*} piState
 	 */
@@ -160,7 +160,7 @@ class cCARule{
 	//*****************************************************************
 	/**
 	 * Description placeholder
-	 * @date 3/29/2023 - 9:53:42 AM
+	 * 
 	 *
 	 * @param {*} piInState
 	 * @param {*} piPattern
@@ -176,7 +176,7 @@ class cCARule{
 	//*****************************************************************
 	/**
 	 * Description placeholder
-	 * @date 3/29/2023 - 9:53:42 AM
+	 * 
 	 *
 	 * @param {*} piInState
 	 * @param {*} piPattern
@@ -228,7 +228,7 @@ class cCARule{
 	//******************************************************************************************************* */
 	/**
 	 * Description placeholder
-	 * @date 3/30/2023 - 5:05:52 PM
+	 * 
 	 *
 	 * @static
 	 */

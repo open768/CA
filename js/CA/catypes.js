@@ -13,7 +13,7 @@ For licenses that allow for commercial use please contact cluck@chickenkatsu.co.
 class cCAEvent{
 	/**
 	 * Description placeholder
-	 * @date 3/29/2023 - 9:53:50 AM
+	 * 
 	 *
 	 * @static
 	 * @type {string}
@@ -21,7 +21,7 @@ class cCAEvent{
 	static hook = "CAEV";
 	/**
 	 * Description placeholder
-	 * @date 3/29/2023 - 9:53:50 AM
+	 * 
 	 *
 	 * @static
 	 * @type {{ canvas: string; action: string; general: string; }}
@@ -33,21 +33,21 @@ class cCAEvent{
 	};
 	/**
 	 * Description placeholder
-	 * @date 3/29/2023 - 9:53:50 AM
+	 * 
 	 *
 	 * @type {*}
 	 */
 	type=null;
 	/**
 	 * Description placeholder
-	 * @date 3/29/2023 - 9:53:50 AM
+	 * 
 	 *
 	 * @type {*}
 	 */
 	action=null;
 	/**
 	 * Description placeholder
-	 * @date 3/29/2023 - 9:53:50 AM
+	 * 
 	 *
 	 * @type {*}
 	 */
@@ -80,7 +80,7 @@ class cCAEvent{
 
 /**
  * Description placeholder
- * @date 3/29/2023 - 9:53:50 AM
+ * 
  *
  * @class cCAActionEvent
  * @typedef {cCAActionEvent}
@@ -88,7 +88,7 @@ class cCAEvent{
 class cCAActionEvent{
 	/**
 	 * Description placeholder
-	 * @date 3/29/2023 - 9:53:50 AM
+	 * 
 	 *
 	 * @static
 	 * @type {{ ready: string; grid_init: string; control: string; }}
@@ -102,7 +102,7 @@ class cCAActionEvent{
 
 /**
  * Description placeholder
- * @date 3/29/2023 - 9:53:50 AM
+ * 
  *
  * @class cCAGeneralEvent
  * @typedef {cCAGeneralEvent}
@@ -110,7 +110,7 @@ class cCAActionEvent{
 class cCAGeneralEvent{
 	/**
 	 * Description placeholder
-	 * @date 3/29/2023 - 9:53:50 AM
+	 * 
 	 *
 	 * @static
 	 * @type {{ import_grid: string; set_rule: string; }}
@@ -123,7 +123,7 @@ class cCAGeneralEvent{
 
 /**
  * Description placeholder
- * @date 3/29/2023 - 9:53:50 AM
+ * 
  *
  * @class cCARuleEvent
  * @typedef {cCARuleEvent}
@@ -131,7 +131,7 @@ class cCAGeneralEvent{
 class cCARuleEvent{
 	/**
 	 * Description placeholder
-	 * @date 3/29/2023 - 9:53:50 AM
+	 * 
 	 *
 	 * @static
 	 * @type {{ update_rule: string; }}
@@ -144,7 +144,7 @@ class cCARuleEvent{
 //###############################################################################
 /**
  * Description placeholder
- * @date 3/29/2023 - 9:53:50 AM
+ * 
  *
  * @class cCACellTypes
  * @typedef {cCACellTypes}
@@ -152,7 +152,7 @@ class cCARuleEvent{
 class cCACellTypes {
 	/**
 	 * Description placeholder
-	 * @date 3/29/2023 - 9:53:50 AM
+	 * 
 	 *
 	 * @static
 	 * @type {{ fourway: number; eightway: number; maximum: number; }}
@@ -164,7 +164,7 @@ class cCACellTypes {
 	};
 	/**
 	 * Description placeholder
-	 * @date 3/29/2023 - 9:53:50 AM
+	 * 
 	 *
 	 * @static
 	 * @type {{ northwest: number; north: number; northeast: number; west: number; centre: number; east: number; southwest: number; south: number; southeast: number; }}
@@ -182,7 +182,7 @@ class cCACellTypes {
 		};
 	/**
 	 * Description placeholder
-	 * @date 3/29/2023 - 9:53:50 AM
+	 * 
 	 *
 	 * @static
 	 * @type {number}
@@ -190,7 +190,7 @@ class cCACellTypes {
 	static default_state = 1;
 	/**
 	 * Description placeholder
-	 * @date 3/29/2023 - 9:53:50 AM
+	 * 
 	 *
 	 * @static
 	 * @type {{ same: number; up: number; down: number; reset: number; }}
@@ -203,7 +203,7 @@ class cCACellTypes {
 	};
 	/**
 	 * Description placeholder
-	 * @date 3/29/2023 - 9:53:50 AM
+	 * 
 	 *
 	 * @static
 	 * @type {{ row: string; col: string; }}
@@ -217,7 +217,7 @@ class cCACellTypes {
 //###############################################################################
 /**
  * Description placeholder
- * @date 3/29/2023 - 9:53:50 AM
+ * 
  *
  * @class cCARuleTypes
  * @typedef {cCARuleTypes}
@@ -225,7 +225,7 @@ class cCACellTypes {
 class cCARuleTypes {
 	/**
 	 * Description placeholder
-	 * @date 3/29/2023 - 9:53:50 AM
+	 * 
 	 *
 	 * @static
 	 * @type {number}
@@ -233,7 +233,7 @@ class cCARuleTypes {
 	static max_inputs =Math.pow(2,9)-1;
 	/**
 	 * Description placeholder
-	 * @date 3/29/2023 - 9:53:50 AM
+	 * 
 	 *
 	 * @static
 	 * @type {*}
@@ -241,7 +241,7 @@ class cCARuleTypes {
 	static base64_length =  Math.ceil((Math.pow(2,9)-1)/6);
 	/**
 	 * Description placeholder
-	 * @date 3/29/2023 - 9:53:50 AM
+	 * 
 	 *
 	 * @static
 	 * @type {*}
@@ -249,7 +249,7 @@ class cCARuleTypes {
 	static no_boredom= null;
 	/**
 	 * Description placeholder
-	 * @date 3/29/2023 - 9:53:50 AM
+	 * 
 	 *
 	 * @static
 	 * @type {{ life: number; binary: number; base64: number; wolfram1d: number; random: number; }}
@@ -266,7 +266,7 @@ class cCARuleTypes {
 //###############################################################################
 /**
  * Description placeholder
- * @date 3/29/2023 - 9:53:50 AM
+ * 
  *
  * @class CAException
  * @typedef {CAException}
@@ -274,7 +274,7 @@ class cCARuleTypes {
 class CAException{
 	/**
 	 * Creates an instance of CAException.
-	 * @date 3/29/2023 - 9:53:50 AM
+	 * 
 	 *
 	 * @constructor
 	 * @param {*} psMessage
@@ -289,7 +289,7 @@ class CAException{
 //###############################################################################
 /**
  * Description placeholder
- * @date 3/29/2023 - 9:53:50 AM
+ * 
  *
  * @class cCAIndexOps
  * @typedef {cCAIndexOps}
@@ -299,7 +299,7 @@ class cCAIndexOps {
 
 	/**
 	 * Description placeholder
-	 * @date 3/29/2023 - 9:53:50 AM
+	 * 
 	 *
 	 * @static
 	 * @param {*} piIndex
@@ -351,7 +351,7 @@ class cCAIndexOps {
 	//***************************************************************
 	/**
 	 * Description placeholder
-	 * @date 3/29/2023 - 9:53:50 AM
+	 * 
 	 *
 	 * @static
 	 * @param {*} piIndex
@@ -371,7 +371,7 @@ class cCAIndexOps {
 	//***************************************************************
 	/**
 	 * Description placeholder
-	 * @date 3/29/2023 - 9:53:50 AM
+	 * 
 	 *
 	 * @static
 	 * @param {*} piIndex
@@ -388,7 +388,7 @@ class cCAIndexOps {
 	//***************************************************************
 	/**
 	 * Description placeholder
-	 * @date 3/29/2023 - 9:53:50 AM
+	 * 
 	 *
 	 * @static
 	 * @param {*} piIndex
@@ -405,7 +405,7 @@ class cCAIndexOps {
 	//***************************************************************
 	/**
 	 * Description placeholder
-	 * @date 3/29/2023 - 9:53:50 AM
+	 * 
 	 *
 	 * @static
 	 * @param {*} piIndex

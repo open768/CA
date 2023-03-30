@@ -20,7 +20,7 @@ var cCaLexiconRule = function(piType, psLabel, psRule){
 
 /**
  * Description placeholder
- * @date 3/29/2023 - 9:53:32 AM
+ * 
  *
  * @class cCALexicon
  * @typedef {cCALexicon}
@@ -28,7 +28,7 @@ var cCaLexiconRule = function(piType, psLabel, psRule){
 class cCALexicon {
 	/**
 	 * Description placeholder
-	 * @date 3/29/2023 - 9:53:32 AM
+	 * 
 	 *
 	 * @static
 	 * @returns {{}}
@@ -53,7 +53,7 @@ class cCALexicon {
 	
 	/**
 	 * Description placeholder
-	 * @date 3/29/2023 - 9:53:32 AM
+	 * 
 	 *
 	 * @static
 	 * @param {*} psName
