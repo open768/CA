@@ -190,8 +190,6 @@ class cCARule{
 		return iOutState;
 	}	
 	
-
-
 	//*****************************************************************
 	/**
 	 * Description
@@ -223,18 +221,5 @@ class cCARule{
 		//set the evaluated state
 		var bHasChanged = (poCell.evaluated.value !== poCell.value);
 		return bHasChanged;
-	}
-
-	//******************************************************************************************************* */
-	/**
-	 * Description placeholder
-	 * @date 3/30/2023 - 5:05:52 PM
-	 *
-	 * @static
-	 */
-	static test_boredom(){
-        var oRule = cCARuleBase64Importer.makeRule("0yMK,2Pg,t0IQfTgQg7h02Pg,t3h0t40Qg7h0g01000IQfTgQg7h0d41Qg400g00Qg7h0g0100400g00000000") //conways 
-		var oCell = new cCACell()
-		oCell.rule = oRule
 	}
 }
