@@ -15,7 +15,7 @@ For licenses that allow for commercial use please contact cluck@chickenkatsu.co.
 class cCARuleBinaryExporter {
 	/**
 	 * Description placeholder
-	 * @date 3/29/2023 - 9:26:25 AM
+	 * 
 	 *
 	 * @static
 	 * @param {*} poRule
@@ -39,7 +39,7 @@ class cCARuleBinaryExporter {
 //###############################################################################
 /**
  * Description placeholder
- * @date 3/29/2023 - 9:26:25 AM
+ * 
  *
  * @class cCARuleBinaryImporter
  * @typedef {cCARuleBinaryImporter}
@@ -47,7 +47,7 @@ class cCARuleBinaryExporter {
 class cCARuleBinaryImporter {
 	/**
 	 * Description placeholder
-	 * @date 3/29/2023 - 9:26:25 AM
+	 * 
 	 *
 	 * @static
 	 * @param {*} psInput
@@ -76,7 +76,7 @@ class cCARuleBinaryImporter {
 	//***************************************************************
 	/**
 	 * Description placeholder
-	 * @date 3/29/2023 - 9:26:25 AM
+	 * 
 	 */
 	test() {
 		cDebug.write("Testing cCARuleBinaryImporter");
@@ -96,7 +96,7 @@ class cCARuleBinaryImporter {
 //###############################################################################
 /**
  * Description placeholder
- * @date 3/29/2023 - 9:26:25 AM
+ * 
  *
  * @class cCARuleRepeatBase64Importer
  * @typedef {cCARuleRepeatBase64Importer}
@@ -104,7 +104,7 @@ class cCARuleBinaryImporter {
 class cCARuleRepeatBase64Importer {
 	/**
 	 * Description placeholder
-	 * @date 3/29/2023 - 9:26:25 AM
+	 * 
 	 *
 	 * @static
 	 * @param {*} psShort
@@ -134,7 +134,7 @@ class cCARuleRepeatBase64Importer {
 //###############################################################################
 /**
  * Description placeholder
- * @date 3/29/2023 - 9:26:25 AM
+ * 
  *
  * @class cCARuleBase64Exporter
  * @typedef {cCARuleBase64Exporter}
@@ -143,7 +143,7 @@ class cCARuleBase64Exporter {
 	//*****************************************************************************
 	/**
 	 * Description placeholder
-	 * @date 3/29/2023 - 9:26:25 AM
+	 * 
 	 *
 	 * @static
 	 * @param {*} poRule
@@ -169,7 +169,7 @@ class cCARuleBase64Exporter {
 //###############################################################################
 /**
  * Description placeholder
- * @date 3/29/2023 - 9:26:25 AM
+ * 
  *
  * @class cCARuleBase64Importer
  * @typedef {cCARuleBase64Importer}
@@ -177,7 +177,7 @@ class cCARuleBase64Exporter {
 class cCARuleBase64Importer {
 	/**
 	 * Description placeholder
-	 * @date 3/29/2023 - 9:26:25 AM
+	 * 
 	 *
 	 * @static
 	 * @param {*} ps64
@@ -201,7 +201,7 @@ class cCARuleBase64Importer {
 //###############################################################################
 /**
  * Description placeholder
- * @date 3/29/2023 - 9:26:25 AM
+ * 
  *
  * @class cCAExportedState
  * @typedef {cCAExportedState}
@@ -209,21 +209,21 @@ class cCARuleBase64Importer {
 class cCAExportedState {
 	/**
 	 * Description placeholder
-	 * @date 3/29/2023 - 9:26:25 AM
+	 * 
 	 *
 	 * @type {*}
 	 */
 	state = null;
 	/**
 	 * Description placeholder
-	 * @date 3/29/2023 - 9:26:25 AM
+	 * 
 	 *
 	 * @type {*}
 	 */
 	rule = null;
 	/**
 	 * Description placeholder
-	 * @date 3/29/2023 - 9:26:24 AM
+	 * 
 	 *
 	 * @type {*}
 	 */
@@ -231,7 +231,7 @@ class cCAExportedState {
 
 	/**
 	 * Creates an instance of cCAExportedState.
-	 * @date 3/29/2023 - 9:26:24 AM
+	 * 
 	 *
 	 * @constructor
 	 * @param {*} piState
@@ -243,7 +243,7 @@ class cCAExportedState {
 
 /**
  * Description placeholder
- * @date 3/29/2023 - 9:26:24 AM
+ * 
  *
  * @class cCAExportedObj
  * @typedef {cCAExportedObj}
@@ -251,28 +251,28 @@ class cCAExportedState {
 class cCAExportedObj {
 	/**
 	 * Description placeholder
-	 * @date 3/29/2023 - 9:26:24 AM
+	 * 
 	 *
 	 * @type {number}
 	 */
 	version = 1.0;
 	/**
 	 * Description placeholder
-	 * @date 3/29/2023 - 9:26:24 AM
+	 * 
 	 *
 	 * @type {*}
 	 */
 	neighbour_type = null;
 	/**
 	 * Description placeholder
-	 * @date 3/29/2023 - 9:26:24 AM
+	 * 
 	 *
 	 * @type {*}
 	 */
 	boredom = null;
 	/**
 	 * Description placeholder
-	 * @date 3/29/2023 - 9:26:24 AM
+	 * 
 	 *
 	 * @type {{}}
 	 */
@@ -280,7 +280,7 @@ class cCAExportedObj {
 
 	/**
 	 * Description placeholder
-	 * @date 3/29/2023 - 9:26:24 AM
+	 * 
 	 *
 	 * @static
 	 * @param {*} poObj
@@ -299,7 +299,7 @@ class cCAExportedObj {
 
 /**
  * Description placeholder
- * @date 3/29/2023 - 9:26:24 AM
+ * 
  *
  * @class cCARuleObjExporter
  * @typedef {cCARuleObjExporter}
@@ -307,7 +307,7 @@ class cCAExportedObj {
 class cCARuleObjExporter {
 	/**
 	 * Description placeholder
-	 * @date 3/29/2023 - 9:26:24 AM
+	 * 
 	 *
 	 * @static
 	 * @param {*} poRule
@@ -334,7 +334,7 @@ class cCARuleObjExporter {
 
 /**
  * Description placeholder
- * @date 3/29/2023 - 9:26:24 AM
+ * 
  *
  * @class cCARuleObjImporter
  * @typedef {cCARuleObjImporter}
@@ -342,7 +342,7 @@ class cCARuleObjExporter {
 class cCARuleObjImporter {
 	/**
 	 * Description placeholder
-	 * @date 3/29/2023 - 9:26:24 AM
+	 * 
 	 *
 	 * @static
 	 * @param {*} poObj
@@ -366,7 +366,7 @@ class cCARuleObjImporter {
 //###############################################################################
 /**
  * Description placeholder
- * @date 3/29/2023 - 9:26:24 AM
+ * 
  *
  * @class cCaIdentityRule
  * @typedef {cCaIdentityRule}
@@ -374,7 +374,7 @@ class cCARuleObjImporter {
 class cCaIdentityRule {
 	/**
 	 * Description placeholder
-	 * @date 3/29/2023 - 9:26:24 AM
+	 * 
 	 *
 	 * @static
 	 * @returns {*}
@@ -399,7 +399,7 @@ class cCaIdentityRule {
 //***************************************************************
 /**
  * Description placeholder
- * @date 3/29/2023 - 9:26:24 AM
+ * 
  *
  * @class cCaRandomRule
  * @typedef {cCaRandomRule}
@@ -407,7 +407,7 @@ class cCaIdentityRule {
 class cCaRandomRule {
 	/**
 	 * Description placeholder
-	 * @date 3/29/2023 - 9:26:24 AM
+	 * 
 	 *
 	 * @static
 	 * @returns {*}
@@ -433,7 +433,7 @@ class cCaRandomRule {
 //###############################################################################
 /**
  * Description placeholder
- * @date 3/29/2023 - 9:26:24 AM
+ * 
  *
  * @class cCARuleWolfram1DImporter
  * @typedef {cCARuleWolfram1DImporter}
@@ -441,7 +441,7 @@ class cCaRandomRule {
 class cCARuleWolfram1DImporter {
 	/**
 	 * Description placeholder
-	 * @date 3/29/2023 - 9:26:24 AM
+	 * 
 	 *
 	 * @static
 	 * @param {*} piRule
@@ -488,7 +488,7 @@ class cCARuleWolfram1DImporter {
 //###############################################################################
 /**
  * Description placeholder
- * @date 3/29/2023 - 9:26:24 AM
+ * 
  *
  * @class cCARuleLifeImporter
  * @typedef {cCARuleLifeImporter}
@@ -497,7 +497,7 @@ class cCARuleLifeImporter {
 	//***************************************************************
 	/**
 	 * Description placeholder
-	 * @date 3/29/2023 - 9:26:24 AM
+	 * 
 	 *
 	 * @static
 	 * @param {*} psInput
@@ -569,7 +569,7 @@ class cCARuleLifeImporter {
 //###############################################################################
 /**
  * Description placeholder
- * @date 3/29/2023 - 9:26:24 AM
+ * 
  *
  * @class cCAModifierTypes
  * @typedef {cCAModifierTypes}
@@ -577,7 +577,7 @@ class cCARuleLifeImporter {
 class cCAModifierTypes {
 	/**
 	 * Description placeholder
-	 * @date 3/29/2023 - 9:26:24 AM
+	 * 
 	 *
 	 * @static
 	 * @type {{ at_least: { id: number; label: string; }; exactly: { id: number; label: string; }; at_most: { id: number; label: string; }; }}
@@ -589,7 +589,7 @@ class cCAModifierTypes {
 	};
 	/**
 	 * Description placeholder
-	 * @date 3/29/2023 - 9:26:24 AM
+	 * 
 	 *
 	 * @static
 	 * @type {{ one: { id: number; label: string; }; zero: { id: number; label: string; }; any: { id: number; label: string; }; }}
@@ -603,7 +603,7 @@ class cCAModifierTypes {
 
 /**
  * Description placeholder
- * @date 3/29/2023 - 9:26:24 AM
+ * 
  *
  * @class cCARuleModifier
  * @typedef {cCARuleModifier}
@@ -611,7 +611,7 @@ class cCAModifierTypes {
 class cCARuleModifier {
 	/**
 	 * Description placeholder
-	 * @date 3/29/2023 - 9:26:24 AM
+	 * 
 	 *
 	 * @static
 	 * @param {*} poRule

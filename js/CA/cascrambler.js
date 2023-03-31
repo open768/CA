@@ -18,7 +18,7 @@ You the consumer of this application are entirely responsible for importing this
 class cCAScramblerEvent extends cCAEvent{
 	/**
 	 * Description placeholder
-	 * @date 3/29/2023 - 9:53:46 AM
+	 * 
 	 *
 	 * @static
 	 * @type {string}
@@ -26,7 +26,7 @@ class cCAScramblerEvent extends cCAEvent{
 	static hook = "cascramev";
 	/**
 	 * Description placeholder
-	 * @date 3/29/2023 - 9:53:46 AM
+	 * 
 	 *
 	 * @static
 	 * @type {{ general: string; progress: string; }}
@@ -38,7 +38,7 @@ class cCAScramblerEvent extends cCAEvent{
 	
 	/**
 	 * Description placeholder
-	 * @date 3/29/2023 - 9:53:46 AM
+	 * 
 	 *
 	 * @static
 	 * @type {{ status: string; }}
@@ -49,7 +49,7 @@ class cCAScramblerEvent extends cCAEvent{
 
 	/**
 	 * Description placeholder
-	 * @date 3/29/2023 - 9:53:45 AM
+	 * 
 	 *
 	 * @param {*} poObject
 	 */
@@ -60,7 +60,7 @@ class cCAScramblerEvent extends cCAEvent{
 
 /**
  * Description placeholder
- * @date 3/29/2023 - 9:53:45 AM
+ * 
  *
  * @class cCAScramblerTypes
  * @typedef {cCAScramblerTypes}
@@ -68,7 +68,7 @@ class cCAScramblerEvent extends cCAEvent{
 class cCAScramblerTypes{
 	/**
 	 * Description placeholder
-	 * @date 3/29/2023 - 9:53:45 AM
+	 * 
 	 *
 	 * @static
 	 * @type {{ dormant: any; initialRuns: number; }}
@@ -127,7 +127,7 @@ class cCAScrambler{
 	//*******************************************************************************
 	/**
 	 * Description placeholder
-	 * @date 3/29/2023 - 9:53:45 AM
+	 * 
 	 *
 	 * @async
 	 * @returns {*}
