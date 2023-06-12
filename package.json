@@ -1,0 +1,17 @@
+{
+  "name": "ca",
+  "version": "1.0.0",
+  "description": "cellular automata machine for javascript\r ========================================",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "eslint": "^8.37.0"
+  }
+}

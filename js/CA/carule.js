@@ -65,7 +65,7 @@ class cCARule{
 	 */
 	static randomRule(){
 		cDebug.enter();
-		var oRule = new cCARule();
+		/** @type {cCARule}	 */ var oRule = new cCARule();
 		oRule.neighbour_type = cCACellTypes.neighbours.eightway;
 		oRule.has_state_transitions = false;
 		
@@ -94,18 +94,17 @@ class cCARule{
 	//rule State level functions
 	//*****************************************************************
 	/**
-	 * Description placeholder
-	 * 
+	 * sets the output for a particular bitmap for a state
 	 *
-	 * @param {*} piState
-	 * @param {*} piPattern
-	 * @param {*} piValue
+	 * @param {number} piState
+	 * @param {number} piBitmap
+	 * @param {number} piValue
 	 */
-	set_output(piState, piPattern, piValue){
+	set_output(piState, piBitmap, piValue){
 		if (piState <1 ) throw new CAException("invalid state");
 		if (piState > this.stateRules.length)			//create a new state if the state is unknown 
 			this.create_state(piState);
-		this.stateRules[piState-1].outputs[piPattern] = piValue;
+		this.stateRules[piState-1].outputs[piBitmap] = piValue;
 	}
 
 	//*****************************************************************
@@ -120,16 +119,15 @@ class cCARule{
 	
 	//*****************************************************************
 	/**
-	 * Description placeholder
-	 * 
+	 * returns the output for a given bitmap for a state
 	 *
-	 * @param {*} piState
-	 * @param {*} piBitmap
-	 * @returns {*}
+	 * @param {number} piState
+	 * @param {number} piBitmap
+	 * @returns {number}
 	 */
 	get_rule_output (piState, piBitmap){
 		if (piBitmap == 0) return 0;	// cells must have neighbours - 0 doesnt become 1 
-		if (piState > this.stateRules.length)	throw new CAException("invalid state requested");
+		if (piState > this.stateRules.length)	throw new CAException("invalid state requested - too big");
 		try{
 			var iOutput = this.stateRules[piState-1].outputs[piBitmap]; //TBD should be using a method
 			if (iOutput == null) iOutput = 0;
@@ -145,12 +143,12 @@ class cCARule{
 	 * Description placeholder
 	 * 
 	 *
-	 * @param {*} piState
+	 * @param {number} piState
 	 */
 	create_state(piState){
-		if (piState <= this.stateRules.length)	return; 
+		if (piState <= this.stateRules.length)	return; // dont create existing states
 		if ( (!this.has_state_transitions) && (piState !== cCACellTypes.default_state))
-			throw new CAException("state not possible");
+			throw new CAException("state not possible without state transitions enabled");
 		
 		var oStateRule = new cCAStateRule(); 
 		oStateRule.neighbour_type = this.neighbour_type;

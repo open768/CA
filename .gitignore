@@ -6,10 +6,12 @@ zipit.sh
 #VScode stuff
 CA.code-workspace
 
+#npm stuff
+node_modules/
 
 # Folder config file
 Desktop.ini
+package-lock.json
+css/jquery/
 images/vector/
 build.sh
-release.zip
-css/jquery/

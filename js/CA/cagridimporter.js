@@ -14,11 +14,9 @@ import cCAGrid from "./cagrid.js"
 //%
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 /**
- * Description placeholder
- * 
+ * produced when the cCAGrid is exported
  *
  * @class cCAGridExported
- * @typedef {cCAGridExported}
  */
 class cCAGridExported {
 	/**
@@ -39,13 +37,8 @@ class cCAGridExported {
 		cols: 0,
 		data: null
 	};
-	/**
-	 * Description placeholder
-	 * 
-	 *
-	 * @type {*}
-	 */
-	rule = null;
+	
+	/** @type {cCARule}	 */ rule = null; 				
 
 	/**
 	 * Description placeholder
@@ -66,11 +59,9 @@ class cCAGridExported {
 
 //*************************************************************************
 /**
- * Description placeholder
- * 
+ * exports a cCAGrid as  JSON
  *
  * @class cCAGridJSONExporter
- * @typedef {cCAGridJSONExporter}
  */
 class cCAGridJSONExporter {
 	/**
@@ -78,7 +69,7 @@ class cCAGridJSONExporter {
 	 * 
 	 *
 	 * @static
-	 * @param {*} poGrid
+	 * @param {cCAGrid} poGrid
 	 * @returns {cCAGridExported}
 	 */
 	static export(poGrid) {
@@ -106,15 +97,15 @@ class cCAGridJSONExporter {
 	 * 
 	 *
 	 * @static
-	 * @param {*} poGrid
-	 * @returns {*}
+	 * @param {cCAGrid} poGrid
+	 * @returns {string}
 	 */
 	static get_grid_base64(poGrid) {
 		if (!cCommon.obj_is(poGrid, "cCAGrid")) throw new CAException("param 1 is not cCAGrid")
 		if (poGrid.rule.stateRules.length > 1) throw new CAException("rules can only have 1 state")
 
 		var sBin = "";
-		var s64 = null;
+		/** @type {string}	 */var s64 = null;
 
 		for (var iRow = 1; iRow <= poGrid.rows; iRow++)
 			for (var iCol = 1; iCol <= poGrid.cols; iCol++) {
@@ -136,11 +127,7 @@ class cCAGridJSONExporter {
 //%
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 /**
- * Description placeholder
- * 
- *
- * @class cCAGridJSONImporter
- * @typedef {cCAGridJSONImporter}
+ * imports a cCAGrid from JSON
  */
 class cCAGridJSONImporter {
 	//*********************************************
@@ -149,17 +136,17 @@ class cCAGridJSONImporter {
 	 * 
 	 *
 	 * @static
-	 * @param {*} psName
-	 * @param {*} poJson
-	 * @returns {*}
+	 * @param {string} psName
+	 * @param {JSON} poJson
+	 * @returns {cCAGrid}
 	 */
 	static populate(psName, poJson) {
 		if (!cCAGridExported.is_valid_obj(poJson)) throw new CAException("invalid object")
 		//-------------------------------------------------------------------
-		var oGrid = new cCAGrid(psName, poJson.grid.rows, poJson.grid.cols);
+		/** @type {cCAGrid}	 */ var oGrid = new cCAGrid(psName, poJson.grid.rows, poJson.grid.cols);
 
 		//-------------------------------------------------------------------
-		var oRule = cCARuleObjImporter.makeRule(poJson.rule);
+		/** @type {cCARule}	 */ var oRule = cCARuleObjImporter.makeRule(poJson.rule);
 		oGrid.rule = oRule;
 
 		//-------------------------------------------------------------------
