@@ -72,13 +72,41 @@ class cCAControlsL{
 		//--rules widgets-------------------------------------------------
 		oDiv = $("<DIV>",{class:"ui-widget-header"});
 			oDiv.append("Rule");
-			sID = cJquery.child_ID(oElement, cCAControlLTypes.rules_status_ID);
-			var oSpan = $("<SPAN>",{id:sID}).html("??");
-			oDiv.append(oSpan);
-		oElement.append(oDiv);
+				sID = cJquery.child_ID(oElement, cCAControlLTypes.rules_status_ID);
+				var oSpan = $("<SPAN>",{id:sID}).html(" ??"); //STATUS div
+				oDiv.append(oSpan);
+			oElement.append(oDiv);
 
 		oDiv = $("<DIV>",{class:"ui-widget-content"});
 			//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+			oDiv.append("Random Rule: ");
+				var oButton = $("<button>",{title:"Random Rule"}).button({icon:"ui-icon-circle-arrow-e"});
+				oDiv.append(oButton);
+				oButton.click(	function(){oThis.pr_makeRandomBase64()}	);
+				
+			//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+			oDiv.append("<HR>");
+			oDiv.append("Rule Presets");
+			sID = cJquery.child_ID(oElement, cCAControlLTypes.preset_ID);
+			var oSelect = $("<SELECT>",{id:sID,width:200,title:"pick a preset rule"});
+				this.pr__populate_presets(oSelect);
+				oDiv.append(oSelect);
+				oSelect.selectmenu({
+					select(poEvent){oThis.onPresetsClick(poEvent);}
+				});
+
+			//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+			oDiv.append("<HR>");
+			sID = cJquery.child_ID(oElement, cCAControlLTypes.name_ID);
+			oDiv.append("word repeater");
+			var oInput = $("<INPUT>",{type:"text",id:sID,size:12,icon:"ui-icon-circle-arrow-e",title:"put anything in this box - eg your name"});
+				oDiv.append(oInput);
+			oButton = $("<button>",{title:"creates a rule from the word in the box"}).button({icon:"ui-icon-circle-arrow-e"});
+			oButton.click(	function(){oThis.onSetNameClick()}	);
+			oDiv.append(oButton);
+
+			//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+			oDiv.append("<HR>");
 			sID = cJquery.child_ID(oElement, cCAControlLTypes.entry_ID);
 			var oBox = $("<TEXTAREA>",{ID:sID,class:"rule", title:"enter the rule here"});
 				oBox.keyup( function(){oThis.onRuleChange()}	);
@@ -96,34 +124,6 @@ class cCAControlsL{
 
 			var oButton = $("<button>",{title:"use the rule entered in the box above"}).button({icon:"ui-icon-circle-arrow-e" });
 				oButton.click(	function(){oThis.onSetRuleClick()}	);
-			oDiv.append(oButton);
-
-			//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-			oDiv.append("<HR>");
-			oDiv.append("Rule Presets");
-			sID = cJquery.child_ID(oElement, cCAControlLTypes.preset_ID);
-			var oSelect = $("<SELECT>",{id:sID,width:200,title:"pick a preset rule"});
-				this.pr__populate_presets(oSelect);
-				oDiv.append(oSelect);
-				oSelect.selectmenu({
-					select(poEvent){oThis.onPresetsClick(poEvent);}
-				});
-
-			//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-			oDiv.append("<HR>");
-			oDiv.append("Random Rule: ");
-				var oButton = $("<button>",{title:"Random Rule"}).button({icon:"ui-icon-circle-arrow-e"});
-				oDiv.append(oButton);
-				oButton.click(	function(){oThis.pr_makeRandomBase64()}	);
-
-			//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-			oDiv.append("<HR>");
-			sID = cJquery.child_ID(oElement, cCAControlLTypes.name_ID);
-			oDiv.append("word repeater");
-			var oInput = $("<INPUT>",{type:"text",id:sID,size:12,icon:"ui-icon-circle-arrow-e",title:"put anything in this box - eg your name"});
-				oDiv.append(oInput);
-			oButton = $("<button>",{title:"creates a rule from the word in the box"}).button({icon:"ui-icon-circle-arrow-e"});
-			oButton.click(	function(){oThis.onSetNameClick()}	);
 			oDiv.append(oButton);
 
 
@@ -255,8 +255,7 @@ class cCAControlsL{
 			if ( iSelected == cCARuleTypes.rule_types.base64){
 				var sText = oTextArea.val();
 				var iDiff = cCARuleTypes.base64_length - sText.length;
-				var oSpan = $("#" +	cJquery.child_ID(oElement, cCAControlLTypes.rules_status_ID));
-				oSpan.html( iDiff +" chars remaining");
+				this.pr__set_status( iDiff +" chars remaining");
 			}
 		}
 	}
@@ -300,6 +299,11 @@ class cCAControlsL{
 	//#################################################################
 	//# privates
 	//#################################################################`
+	pr__set_status(psText){
+		var oElement = this.element;
+		var oSpan = $("#" +	cJquery.child_ID(oElement, cCAControlLTypes.rules_status_ID));
+		oSpan.html( psText);
+	}
 
 	//****************************************************************************
 	 pr_makeRandomBase64(){

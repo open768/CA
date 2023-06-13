@@ -261,7 +261,7 @@ class cCACanvas{
 			this.last_mouse_pos.row = ir;
 			this.last_mouse_pos.col = ic;
 			oRC = this.last_mouse_pos
-		}elseif (!pbChangedOnly)
+		}else if (!pbChangedOnly)
 			oRC = this.last_mouse_pos
 		return oRC;
 	}
