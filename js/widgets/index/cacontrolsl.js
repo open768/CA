@@ -11,14 +11,13 @@ class cCAControlLTypes {
 	static entry_ID="en";
 	static rules_ID="ru";
 	static rules_status_ID="rs";
-	static rule_random_ID= "rr";
 	static name_ID="na";
 	static init_ID="in";
 	static wolf_ID="wo";
 	static preset_ID="pr";
 	static boredom_ID="bo";
 
-	static random_value= "Random";
+	static random_ID= "rnd";
 }
 
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -79,18 +78,13 @@ class cCAControlsL{
 
 		oDiv = $("<DIV>",{class:"ui-widget-content"});
 			//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-			oDiv.append("Random Rule: ");
-				var oButton = $("<button>",{title:"Random Rule"}).button({icon:"ui-icon-circle-arrow-e"});
-				oDiv.append(oButton);
-				oButton.click(	function(){oThis.pr_makeRandomBase64()}	);
-				
-			//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 			oDiv.append("<HR>");
 			oDiv.append("Rule Presets");
 			sID = cJquery.child_ID(oElement, cCAControlLTypes.preset_ID);
 			var oSelect = $("<SELECT>",{id:sID,width:200,title:"pick a preset rule"});
 				this.pr__populate_presets(oSelect);
 				oDiv.append(oSelect);
+				
 				oSelect.selectmenu({
 					select(poEvent){oThis.onPresetsClick(poEvent);}
 				});
@@ -270,18 +264,23 @@ class cCAControlsL{
 		var sPreset = $(poEvent.target).val();
 		if (!sPreset) return;
 		
-		var oRuleJson = JSON.parse(sPreset);
+		if (sPreset===cCAControlLTypes.random_ID){
+			var oRule= cCaRandomRule.makeRule();
+			this.pr__set_rule(oRule);
+		}else{
+			var oRuleJson = JSON.parse(sPreset);
 
-		switch (oRuleJson.type){
-			case cCARuleTypes.rule_types.life:
-				oTextArea.val(oRuleJson.rule);
-				oRulesSelect.val(cCARuleTypes.rule_types.life);
-				oRulesSelect.selectmenu("refresh");
-				this.onSetRuleClick();
-				break;
-			default:
-				alert("unknown rule type: ", oRuleJson.type);
-				throw new CAException("not implemented");
+			switch (oRuleJson.type){
+				case cCARuleTypes.rule_types.life:
+					oTextArea.val(oRuleJson.rule);
+					oRulesSelect.val(cCARuleTypes.rule_types.life);
+					oRulesSelect.selectmenu("refresh");
+					this.onSetRuleClick();
+					break;
+				default:
+					alert("unknown rule type: ", oRuleJson.type);
+					throw new CAException("not implemented");
+			}
 		}
 	}
 
@@ -303,12 +302,6 @@ class cCAControlsL{
 		var oElement = this.element;
 		var oSpan = $("#" +	cJquery.child_ID(oElement, cCAControlLTypes.rules_status_ID));
 		oSpan.html( psText);
-	}
-
-	//****************************************************************************
-	 pr_makeRandomBase64(){
-		var oRule= cCaRandomRule.makeRule();
-		this.pr__set_rule(oRule);
 	}
 
 	//****************************************************************************
@@ -336,9 +329,13 @@ class cCAControlsL{
 
 		for (var i = 0; i < aPresets.length; i++){
 			var oPreset = aPresets[i];
-			var oOption = $("<option>",{value:JSON.stringify(oPreset)}).append(oPreset.label);
+			var oOption = $("<option>",{value:JSON.stringify(oPreset)})
+			oOption.append(oPreset.label);
 			poSelect.append(oOption);
 		}
+		var oOption = $("<option>",{value:cCAControlLTypes.random_ID})
+		oOption.append("Random");
+		poSelect.append(oOption);
 	}
 }
 
