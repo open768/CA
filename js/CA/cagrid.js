@@ -464,7 +464,7 @@ class cCAGrid {
 				cDebug.write("cell row: " + iRow + " col:" + iCol);
 				oCell = this.getCell(iRow, iCol, true);
 				if (oCell.rule == null) oCell.rule = this.rule;
-				bHasChanged = oCell.apply_rule();
+				bHasChanged = oCell.apply_rule(); //apply rule to each cell
 				if (bHasChanged) this.changed_cells.push(oCell);
 				if (oCell.value > 0) this.status.active++;
 			}

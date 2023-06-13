@@ -198,7 +198,13 @@ class cCARule{
 
 		//get the cell neighbour value
 		var iBitmap = poCell.getPattern(this.neighbour_type);
-		
+		if (iBitmap == 0){
+			poCell.evaluated.value = 0
+			poCell.evaluated.done = true;
+			poCell.evaluated.pattern = iBitmap;
+			return false;
+		}
+
 		//modify rule if cell boredom
 		/** @type Boolean */ var bBored = poCell.check_boredom(iBitmap);
 
