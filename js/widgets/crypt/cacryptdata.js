@@ -1,4 +1,4 @@
-"use strict";
+"use strict"
 /**************************************************************************
 Copyright (C) Chicken Katsu 2013-2022
 This code is protected by copyright under the terms of the 
@@ -18,8 +18,8 @@ You the consumer of this application are entirely responsible for importing this
 //###################################################################################
 //###################################################################################
 class cCACryptData{
-	/** @type Element */ element = null;
-	ca_name = null;
+	/** @type Element */ element = null
+	ca_name = null
 	
 	/**
 	 * Description
@@ -27,32 +27,32 @@ class cCACryptData{
 	 * @param {Element} poElement
 	 */
 	constructor(poOptions, poElement){
-		this.element = poElement;
-		if (!poOptions.ca_name) $.error("missing ca_name option");
-		this.ca_name = poOptions.ca_name;
+		this.element = poElement
+		if (!poOptions.ca_name) $.error("missing ca_name option")
+		this.ca_name = poOptions.ca_name
 
-		var oElement = poElement;
-		oElement.empty();
-		this.init();
+		var oElement = poElement
+		oElement.empty()
+		this.init()
 	}
 	
 	//*******************************************************************************
 	init(){
-		var oElement = this.element;
-		var oInputDiv = $("<DIV>");
-			oInputDiv.cacrypttext({id:cCACryptTypes.input_name, title:"text to encrypt", read_only:false});
-			oElement.append(oInputDiv);
-		oElement.append("<p>");
+		var oElement = this.element
+		var oInputDiv = $("<DIV>")
+			oInputDiv.cacrypttext({id:cCACryptTypes.input_name, title:"text to encrypt", read_only:false})
+			oElement.append(oInputDiv)
+		oElement.append("<p>")
 		
-		var oControlDiv = $("<DIV>");
-			oControlDiv.cacryptcontrol({ca_name:this.ca_name});
-			oElement.append(oControlDiv);
-		oElement.append("<p>");
+		var oControlDiv = $("<DIV>")
+			oControlDiv.cacryptcontrol({ca_name:this.ca_name})
+			oElement.append(oControlDiv)
+		oElement.append("<p>")
 		
-		var oOutDiv = $("<DIV>");
-			oOutDiv.cacrypttext({id:cCACryptTypes.output_name, title:"encrypted text", read_only:true});
-			oElement.append(oOutDiv);
-		oElement.append("<p>");
+		var oOutDiv = $("<DIV>")
+			oOutDiv.cacrypttext({id:cCACryptTypes.output_name, title:"encrypted text", read_only:true})
+			oElement.append(oOutDiv)
+		oElement.append("<p>")
 		
 	}
 }
@@ -65,18 +65,18 @@ class CACryptException{
 	 * @param {string} psMessage
 	 */
 	constructor (psMessage) {
-   		this.message = psMessage;
-		this.name = 'CAException';
+   		this.message = psMessage
+		this.name = 'CAException'
 	}
 }
 
 //###################################################################################
 //###################################################################################
 class cCACryptText{
-	element = null;
-	read_only = false;
-	title = "no title set";
-	id=null;
+	element = null
+	read_only = false
+	title = "no title set"
+	id=null
 	
 	/**
 	 * Description
@@ -84,39 +84,39 @@ class cCACryptText{
 	 * @param {Element} poElement
 	 */
 	constructor(poOptions, poElement){
-		this.element = poElement;
-		var oElement = poElement;
-		oElement.addClass("ui-widget");
+		this.element = poElement
+		var oElement = poElement
+		oElement.addClass("ui-widget")
 		
-		this.read_only = poOptions.read_only;
-		this.title = poOptions.title;
-		this.id = poOptions.id;
+		this.read_only = poOptions.read_only
+		this.title = poOptions.title
+		this.id = poOptions.id
 		
-		oElement.empty();
-		this.init();
+		oElement.empty()
+		this.init()
 	}
 	
 	//*******************************************************************************
 	init(){
-		var oElement = this.element;
-		var oDiv = $("<DIV>", {class:"ui-widget-header"});
-			oDiv.append(this.title);
-			oElement.append(oDiv);
-		oDiv = $("<DIV>", {class:"ui-widget-content"});
+		var oElement = this.element
+		var oDiv = $("<DIV>", {class:"ui-widget-header"})
+			oDiv.append(this.title)
+			oElement.append(oDiv)
+		oDiv = $("<DIV>", {class:"ui-widget-content"})
 			var oBox = $("<TEXTAREA>",{id:this.id,class:"json"})
 			if (this.read_only)
-				oBox.prop("readonly",true);
-			oDiv.append(oBox);
-			oElement.append(oDiv);
+				oBox.prop("readonly",true)
+			oDiv.append(oBox)
+			oElement.append(oDiv)
 	}
 }
 
 //###################################################################################
 //###################################################################################
 class cCACryptControl{
-	element = null;
-	ca_name = null;
-	grid=null;
+	element = null
+	ca_name = null
+	grid=null
 	
 	child_names={
 		crypt: "CRY",
@@ -126,52 +126,52 @@ class cCACryptControl{
 	
 	//*******************************************************************************
 	constructor(poOptions, poElement){
-		var oThis = this;
-		this.element = poElement;
-		var oElement = poElement;
+		var oThis = this
+		this.element = poElement
+		var oElement = poElement
 		
-		if (!poOptions.ca_name) $.error("missing ca_name option");
-		this.ca_name = poOptions.ca_name;
+		if (!poOptions.ca_name) $.error("missing ca_name option")
+		this.ca_name = poOptions.ca_name
 
-		oElement.uniqueId();
-		oElement.addClass("ui-widget");
-		oElement.empty();
-		this.init();
+		oElement.uniqueId()
+		oElement.addClass("ui-widget")
+		oElement.empty()
+		this.init()
 
 		//subscribe to CAEvents
-		bean.on (document, cCAEvent.hook, function(poEvent){ oThis.onCAEvent(poEvent)} );
+		bean.on (document, cCAEvent.hook, function(poEvent){ oThis.onCAEvent(poEvent)} )
 	}
 	
 	//*******************************************************************************
 	init(){
-		var oThis = this;
-		var oElement = this.element;
-		var oDiv = $("<DIV>", {class:"ui-widget-header"});
-			oDiv.append("Control");
-			oElement.append(oDiv);
-		oDiv = $("<DIV>", {class:"ui-widget-content"});
-			var sID = cJquery.child_ID(oElement, this.child_names.crypt);
-			var oButton = $("<button>", {id: sID});
-				oButton.append("<span class='material-icons'>lock</span>");
-				oButton.append("Encrypt");
-				oButton.prop("disabled",true);
-				oButton.click( function(){oThis.onEncryptClick()} );
-				oDiv.append(oButton);
+		var oThis = this
+		var oElement = this.element
+		var oDiv = $("<DIV>", {class:"ui-widget-header"})
+			oDiv.append("Control")
+			oElement.append(oDiv)
+		oDiv = $("<DIV>", {class:"ui-widget-content"})
+			var sID = cJquery.child_ID(oElement, this.child_names.crypt)
+			var oButton = $("<button>", {id: sID})
+				oButton.append("<span class='material-icons'>lock</span>")
+				oButton.append("Encrypt")
+				oButton.prop("disabled",true)
+				oButton.click( function(){oThis.onEncryptClick()} )
+				oDiv.append(oButton)
 				
-			sID = cJquery.child_ID(oElement, this.child_names.decrypt);
-			oButton = $("<button>", {id: sID});
-				oButton.append("<span class='material-icons'>lock_open</span>");
-				oButton.append("Decrypt");
-				oButton.prop("disabled",true);
-				oButton.click( function(){oThis.onDecryptClick()} );
-				oDiv.append(oButton);
+			sID = cJquery.child_ID(oElement, this.child_names.decrypt)
+			oButton = $("<button>", {id: sID})
+				oButton.append("<span class='material-icons'>lock_open</span>")
+				oButton.append("Decrypt")
+				oButton.prop("disabled",true)
+				oButton.click( function(){oThis.onDecryptClick()} )
+				oDiv.append(oButton)
 			
-			sID = cJquery.child_ID(oElement, this.child_names.inital_runs);
-				var oInput = $("<input>",{type:"text", id:sID, maxlength:3, size:5});
-				oDiv.append(" Initial runs: ");
-				oDiv.append(oInput);
+			sID = cJquery.child_ID(oElement, this.child_names.inital_runs)
+				var oInput = $("<input>",{type:"text", id:sID, maxlength:3, size:5})
+				oDiv.append(" Initial runs: ")
+				oDiv.append(oInput)
 				
-			oElement.append(oDiv);
+			oElement.append(oDiv)
 	}
 	
 	//*******************************************************************************
@@ -180,39 +180,39 @@ class cCACryptControl{
 	
 	//*******************************************************************************
 	async onEncryptClick(){
-		var oElement = this.element;
-		var oThis = this;
+		var oElement = this.element
+		var oThis = this
 
 		//check that a grid is definitely there
 		if (!this.grid) throw new CACryptException("no Grid")
 		
 		//get the control values from the UI
-		var runs_ID = cJquery.child_ID(oElement, this.child_names.inital_runs);
-		var oTxtBox = $("#" + runs_ID);
-		var iInitialruns = parseInt(oTxtBox.val());
+		var runs_ID = cJquery.child_ID(oElement, this.child_names.inital_runs)
+		var oTxtBox = $("#" + runs_ID)
+		var iInitialruns = parseInt(oTxtBox.val())
 		if (isNaN(iInitialruns)) {
-			alert("number of runs must be an integer");
-			return;
+			alert("number of runs must be an integer")
+			return
 		}
 		
 		//get plaintext to encrypt from the UI
-		var /* @type String */ sPlaintext = $("#" + cCACryptTypes.input_name).val();
+		var /* @type String */ sPlaintext = $("#" + cCACryptTypes.input_name).val()
 		if (sPlaintext.trim() === ""){
-			alert("no plaintext");
-			return;
+			alert("no plaintext")
+			return
 		}
 		
 		//disable buttons
-		var sID = cJquery.child_ID(oElement, this.child_names.decrypt);
-		cJquery.enable_element(sID,false);
-		sID = cJquery.child_ID(oElement, this.child_names.crypt);
-		cJquery.enable_element(sID,false);
+		var sID = cJquery.child_ID(oElement, this.child_names.decrypt)
+		cJquery.enable_element(sID,false)
+		sID = cJquery.child_ID(oElement, this.child_names.crypt)
+		cJquery.enable_element(sID,false)
 	
 		//start the scrambling
-		cCACryptEvent.triggerStatus("scrambling started");
-		var oScrambler = new cCAScrambler(this.grid, iInitialruns, sPlaintext);
-		bean.on( oScrambler, cCAScramblerEvent.hook, function(poEvent){oThis.onCAScramblerEvent(poEvent)} );
-		oScrambler.scramble();
+		cCACryptEvent.triggerStatus("scrambling started")
+		var oScrambler = new cCAScrambler(this.grid, iInitialruns, sPlaintext)
+		bean.on( oScrambler, cCAScramblerEvent.hook, function(poEvent){oThis.onCAScramblerEvent(poEvent)} )
+		oScrambler.scramble()
 	}
 	
 	//*******************************************************************************
@@ -222,35 +222,35 @@ class cCACryptControl{
 	
 	//*******************************************************************************
 	onCAEvent(poEvent){
-		var oElement = this.element;
-		var oThis = this;
+		var oElement = this.element
+		var oThis = this
 		
 		switch (poEvent.type){
 			case cCAEvent.types.canvas:
 				if (poEvent.action === cCACanvasEvent.actions.set_grid)
 					if (poEvent.data.grid_name === this.ca_name){
 						//remember the grid, its needed for encryption.
-						this.grid = poEvent.data.data;
-						cCACryptEvent.triggerStatus("grid initialised");
+						this.grid = poEvent.data.data
+						cCACryptEvent.triggerStatus("grid initialised")
 					}
 				
-				break;
+				break
 
 			case cCAEvent.types.general:
 				if (poEvent.action === cCAGeneralEvent.actions.import_grid)
 					if (poEvent.data.name === this.ca_name){
-						this.grid = poEvent.data;
-						cCACryptEvent.triggerStatus("grid imported - ready to rock");
+						this.grid = poEvent.data
+						cCACryptEvent.triggerStatus("grid imported - ready to rock")
 					}
-				break;
+				break
 
 			case cCAEvent.types.actions:
 				if (poEvent.action === cCARuleEvent.actions.update_rule){
 					//enable buttons when any rule is set
-					var sID = cJquery.child_ID(oElement, this.child_names.crypt);
-					$("#"+sID).prop("disabled",false);
-					var sID = cJquery.child_ID(oElement, this.child_names.decrypt);
-					$("#"+sID).prop("disabled",false);
+					var sID = cJquery.child_ID(oElement, this.child_names.crypt)
+					$("#"+sID).prop("disabled",false)
+					var sID = cJquery.child_ID(oElement, this.child_names.decrypt)
+					$("#"+sID).prop("disabled",false)
 				}
 		}
 	}
@@ -259,14 +259,14 @@ class cCACryptControl{
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 $.widget( "ck.cacryptdata",{
 	_create: function(){
-		var oWidget = new cCACryptData(this.options, this.element);
+		var oWidget = new cCACryptData(this.options, this.element)
 	}
-});
+})
 $.widget( "ck.cacryptcontrol",{
 	_create: function(){
-		var oWidget = new cCACryptControl(this.options, this.element);
+		var oWidget = new cCACryptControl(this.options, this.element)
 	}
-});
+})
 $.widget( "ck.cacrypttext",{
 	options:{
 		read_only:false,
@@ -274,7 +274,7 @@ $.widget( "ck.cacrypttext",{
 		id:null
 	},
 	_create: function(){
-		if (!this.options.id) $.error("id missing");
-		var oWidget = new cCACryptText(this.options, this.element);
+		if (!this.options.id) $.error("id missing")
+		var oWidget = new cCACryptText(this.options, this.element)
 	}
-});
+})

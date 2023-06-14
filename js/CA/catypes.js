@@ -1,4 +1,4 @@
-"use strict";
+"use strict"
 /**************************************************************************
 Copyright (C) Chicken Katsu 2013-2022
 This code is protected by copyright under the terms of the 
@@ -18,7 +18,7 @@ class cCAEvent{
 	 * @static
 	 * @type {string}
 	 */
-	static hook = "CAEV";
+	static hook = "CAEV"
 	/**
 	 * Description placeholder
 	 * 
@@ -30,28 +30,28 @@ class cCAEvent{
 		canvas: "CNV",
 		action: "ACT",
 		general: "GNR"
-	};
+	}
 	/**
 	 * Description placeholder
 	 * 
 	 *
 	 * @type {*}
 	 */
-	type=null;
+	type=null
 	/**
 	 * Description placeholder
 	 * 
 	 *
 	 * @type {*}
 	 */
-	action=null;
+	action=null
 	/**
 	 * Description placeholder
 	 * 
 	 *
 	 * @type {*}
 	 */
-	data = null;
+	data = null
 	
 	/**
 	 * Description
@@ -60,11 +60,11 @@ class cCAEvent{
 	 * @param {any} poData
 	 */
 	constructor(psType, psAction, poData){
-		if (psType === null) throw new Error("null type");	
-		if (psAction === null) throw new Error("null action");	
-		this.type = psType;
-		this.action = psAction;
-		this.data = poData;
+		if (psType === null) throw new Error("null type")	
+		if (psAction === null) throw new Error("null action")	
+		this.type = psType
+		this.action = psAction
+		this.data = poData
 	}
 
 	/**
@@ -72,9 +72,9 @@ class cCAEvent{
 	 * @param {Element} poTarget
 	 */
 	trigger(poTarget){
-		if (!poTarget) $.error("target missing");
-		var sHook = this.constructor.hook;
-		bean.fire(poTarget, sHook, this);
+		if (!poTarget) $.error("target missing")
+		var sHook = this.constructor.hook
+		bean.fire(poTarget, sHook, this)
 	}
 }
 
@@ -97,7 +97,7 @@ class cCAActionEvent{
 		ready: "AERD",
 		grid_init: "AEGI",
 		control: "AECN"
-	};
+	}
 }
 
 /**
@@ -118,7 +118,7 @@ class cCAGeneralEvent{
 	static actions = {
 		import_grid: "GEIG",
 		set_rule: "GESR"
-	};
+	}
 }
 
 /**
@@ -138,7 +138,7 @@ class cCARuleEvent{
 	 */
 	static actions = {
 		update_rule:"REUR"
-	};
+	}
 }
 
 //###############################################################################
@@ -161,7 +161,7 @@ class cCACellTypes {
 		fourway: 0,
 		eightway: 1,
 		maximum:8
-	};
+	}
 	/**
 	 * Description placeholder
 	 * 
@@ -179,7 +179,7 @@ class cCACellTypes {
 		southwest:7,
 		south:8,
 		southeast:9
-		};
+		}
 	/**
 	 * Description placeholder
 	 * 
@@ -187,7 +187,7 @@ class cCACellTypes {
 	 * @static
 	 * @type {number}
 	 */
-	static default_state = 1;
+	static default_state = 1
 	/**
 	 * Description placeholder
 	 * 
@@ -200,7 +200,7 @@ class cCACellTypes {
 		up: 1,
 		down:2,
 		reset:3
-	};
+	}
 	/**
 	 * Description placeholder
 	 * 
@@ -211,7 +211,7 @@ class cCACellTypes {
 	static hash_values={
 		row:"R",
 		col:"C"
-	};	
+	}	
 }
 
 //###############################################################################
@@ -230,7 +230,7 @@ class cCARuleTypes {
 	 * @static
 	 * @type {number}
 	 */
-	static max_inputs =Math.pow(2,9)-1;
+	static max_inputs =Math.pow(2,9)-1
 	/**
 	 * Description placeholder
 	 * 
@@ -238,7 +238,7 @@ class cCARuleTypes {
 	 * @static
 	 * @type {*}
 	 */
-	static base64_length =  Math.ceil((Math.pow(2,9)-1)/6);
+	static base64_length =  Math.ceil((Math.pow(2,9)-1)/6)
 	/**
 	 * Description placeholder
 	 * 
@@ -246,7 +246,7 @@ class cCARuleTypes {
 	 * @static
 	 * @type {*}
 	 */
-	static no_boredom= null;
+	static no_boredom= null
 	/**
 	 * Description placeholder
 	 * 
@@ -260,7 +260,7 @@ class cCARuleTypes {
 		base64:3,
 		wolfram1d:4,
 		random:5
-	};
+	}
 }
 
 //###############################################################################
@@ -280,8 +280,8 @@ class CAException{
 	 * @param {*} psMessage
 	 */
 	constructor (psMessage) {
-   		this.message = psMessage;
-		this.name = 'CAException';
+   		this.message = psMessage
+		this.name = 'CAException'
 	}
 }
 
@@ -307,45 +307,45 @@ class cCAIndexOps {
 	 * @returns {(0 | 1)}
 	 */
 	static get_value(piIndex, piDirection){
-		var iVal;
+		var iVal
 		
 		switch (piDirection){
 			case cCACellTypes.directions.northwest:
-				iVal = 256;
-				break;
+				iVal = 256
+				break
 			case cCACellTypes.directions.north:
-				iVal = 128;
-				break;
+				iVal = 128
+				break
 			case cCACellTypes.directions.northeast:
-				iVal = 64;
-				break;
+				iVal = 64
+				break
 			case cCACellTypes.directions.west:
-				iVal = 32;
-				break;
+				iVal = 32
+				break
 			case cCACellTypes.directions.centre:
-				iVal = 16;
-				break;
+				iVal = 16
+				break
 			case cCACellTypes.directions.east:
-				iVal = 8;
-				break;
+				iVal = 8
+				break
 			case cCACellTypes.directions.southwest:
-				iVal = 4;
-				break;
+				iVal = 4
+				break
 			case cCACellTypes.directions.south:
-				iVal = 2;
-				break;
+				iVal = 2
+				break
 			case cCACellTypes.directions.southeast:
-				iVal = 1;
-				break;
+				iVal = 1
+				break
 			default:
-				throw new CAException("unknown direction " + piDirection);
+				throw new CAException("unknown direction " + piDirection)
 		}
 		
-		var iAnd = piIndex & iVal;
+		var iAnd = piIndex & iVal
 		if (iAnd == iVal)
-			return 1;
+			return 1
 		else	
-			return 0;
+			return 0
 	}
 		
 	//***************************************************************
@@ -358,14 +358,14 @@ class cCAIndexOps {
 	 * @returns {number}
 	 */
 	static get_bit_count(piIndex){
-		var iTmp = piIndex;
-		var iCount = 0;
+		var iTmp = piIndex
+		var iCount = 0
 	
 		while (iTmp > 0){
-			if ((iTmp & 1) == 1) iCount ++;
-			iTmp = iTmp >>> 1;		//keep right shifting the value until nothing is left		
+			if ((iTmp & 1) == 1) iCount ++
+			iTmp = iTmp >>> 1		//keep right shifting the value until nothing is left		
 		}
-		return iCount;
+		return iCount
 	}
 	
 	//***************************************************************
@@ -378,11 +378,11 @@ class cCAIndexOps {
 	 * @returns {number}
 	 */
 	static get_north_bits(piIndex){
-		var iVal = 0;
-		iVal |= this.get_value(piIndex, cCACellTypes.directions.northwest );
-		iVal <<=1; iVal |= this.get_value(piIndex, cCACellTypes.directions.north );
-		iVal <<=1; iVal |= this.get_value(piIndex, cCACellTypes.directions.northeast );
-		return iVal;
+		var iVal = 0
+		iVal |= this.get_value(piIndex, cCACellTypes.directions.northwest )
+		iVal <<=1; iVal |= this.get_value(piIndex, cCACellTypes.directions.north )
+		iVal <<=1; iVal |= this.get_value(piIndex, cCACellTypes.directions.northeast )
+		return iVal
 	}
 	
 	//***************************************************************
@@ -395,11 +395,11 @@ class cCAIndexOps {
 	 * @returns {number}
 	 */
 	static get_centre_bits(piIndex){
-		var iVal = 0;
-		iVal |= this.get_value(piIndex, cCACellTypes.directions.west );
-		iVal <<=1; iVal |= this.get_value(piIndex, cCACellTypes.directions.centre );
-		iVal <<=1; iVal |= this.get_value(piIndex, cCACellTypes.directions.east );
-		return iVal;
+		var iVal = 0
+		iVal |= this.get_value(piIndex, cCACellTypes.directions.west )
+		iVal <<=1; iVal |= this.get_value(piIndex, cCACellTypes.directions.centre )
+		iVal <<=1; iVal |= this.get_value(piIndex, cCACellTypes.directions.east )
+		return iVal
 	}
 	
 	//***************************************************************
@@ -412,10 +412,10 @@ class cCAIndexOps {
 	 * @returns {number}
 	 */
 	static get_south_bits(piIndex){
-		var iVal = 0;
-		iVal |= this.get_value(piIndex, cCACellTypes.directions.southwest );
-		iVal <<=1; iVal |= this.get_value(piIndex, cCACellTypes.directions.south );
-		iVal <<=1; iVal |= this.get_value(piIndex, cCACellTypes.directions.southeast );
-		return iVal;
+		var iVal = 0
+		iVal |= this.get_value(piIndex, cCACellTypes.directions.southwest )
+		iVal <<=1; iVal |= this.get_value(piIndex, cCACellTypes.directions.south )
+		iVal <<=1; iVal |= this.get_value(piIndex, cCACellTypes.directions.southeast )
+		return iVal
 	}
-};
+}
