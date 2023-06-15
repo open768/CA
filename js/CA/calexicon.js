@@ -7,6 +7,9 @@ https://creativecommons.org/licenses/by/4.0/legalcode
 For licenses that allow for commercial use please contact cluck@chickenkatsu.co.uk
 // USE AT YOUR OWN RISK - NO GUARANTEES OF ANY FORM ARE EITHER EXPRESSED OR IMPLIED
 **************************************************************************/
+/* global 
+	 	cCARuleTypes
+*/
 
 
 //for more rules see: http://psoup.math.wisc.edu/mcell/ca_rules.html
@@ -25,6 +28,7 @@ var cCaLexiconRule = function(piType, psLabel, psRule){
  * @class cCALexicon
  * @typedef {cCALexicon}
  */
+/* eslint-disable-next-line no-unused-vars */
 class cCALexicon {
 	/**
 	 * Description placeholder

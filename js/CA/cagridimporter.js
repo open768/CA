@@ -7,7 +7,6 @@ https://creativecommons.org/licenses/by/4.0/legalcode
 For licenses that allow for commercial use please contact cluck@chickenkatsu.co.uk
 // USE AT YOUR OWN RISK - NO GUARANTEES OF ANY FORM ARE EITHER EXPRESSED OR IMPLIED
 **************************************************************************/
-/* global CAException,cDebug,cCommon,cCASimpleBase64, cCAGrid,cCARuleObjImporter,cCARuleObjExporter*/
 
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 //%
@@ -62,6 +61,7 @@ class cCAGridExported {
  *
  * @class cCAGridJSONExporter
  */
+/* eslint-disable-next-line no-unused-vars */
 class cCAGridJSONExporter {
 	/**
 	 * Description placeholder
@@ -116,8 +116,7 @@ class cCAGridJSONExporter {
 		if (sBin.length !== iBinLength)
 			throw new CAException("wrong binary length")
 
-		var s64 = cCASimpleBase64.toBase64(sBin)
-
+		s64 = cCASimpleBase64.toBase64(sBin)
 		return s64
 	}
 }
@@ -128,6 +127,7 @@ class cCAGridJSONExporter {
 /**
  * imports a cCAGrid from JSON
  */
+/* eslint-disable-next-line no-unused-vars */
 class cCAGridJSONImporter {
 	//*********************************************
 	/**

@@ -21,7 +21,6 @@ class cCAGridInit{
 		this.element = poElement
 		this.grid_name = poOptions.grid_name
 
-		var oThis = this
 		var oElement = this.element
 		
 		//set basic stuff
@@ -41,8 +40,6 @@ class cCAGridInit{
 	//* Events
 	//***************************************************************
 	onInitClick(poEvent){
-		var oElement = this.element
-
 		var iSelected = parseInt($(poEvent.target).val())
 		
 		//---------tell subscribers to init
@@ -94,7 +91,7 @@ $.widget(
 			var oOptions = this.options
 			if (!oOptions.grid_name) $.error("grid name not provided")
 			
-			var oControls = new cCAGridInit(oOptions ,this.element)
+			new cCAGridInit(oOptions ,this.element) //call class constructor
 		}
 	}
 )

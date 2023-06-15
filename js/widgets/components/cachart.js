@@ -25,7 +25,7 @@ class cCAChartTypes {
 		}
 	}
 	
-	static OnGoogleChartsLoaded(poEvent){
+	static OnGoogleChartsLoaded(){
 		this.is_charts_loaded = true
 	}
 }
@@ -175,7 +175,6 @@ $.widget( "ck.cachart",{
 
 	//*****************************************************************
 	_create: function(){
-		var oThis = this
 		var oOptions = this.options
 		var oElement = this.element
 		
@@ -186,7 +185,6 @@ $.widget( "ck.cachart",{
 		oElement.uniqueId()
 		oElement.addClass("ui-widget")
 		
-		var oWidget = new cCAChart(oOptions, oElement)
-
+		new cCAChart(oOptions, oElement) //call the class constructor
 	}
 })

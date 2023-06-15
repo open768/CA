@@ -12,5 +12,8 @@ module.exports = {
         "no-undef":"error",
         "semi": ["error", "never"],
         "no-extra-semi": "error"
+    },
+    "globals": {
+        "bean": "readonly"
     }
 }

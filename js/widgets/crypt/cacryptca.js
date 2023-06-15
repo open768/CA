@@ -67,6 +67,6 @@ class cCACryptCA{
 //###################################################################################
 $.widget( "ck.cacryptca",{
 	_create: function(){
-		var oWidget = new cCACryptCA(this.options, this.element)
+		new cCACryptCA(this.options, this.element)		//call widgetclass
 	}
 })

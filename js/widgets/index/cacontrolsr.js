@@ -22,7 +22,6 @@ class cCAControlsR{
 		this.element = poElement
 		this.grid_name = poOptions.grid_name
 
-		var oThis = this
 		var oElement = this.element
 		
 		//set basic stuff
@@ -48,7 +47,7 @@ class cCAControlsR{
 	//* Privates
 	//***************************************************************
 	pr__init(){
-		var oDiv, oTable, oRow, oCell
+		var oDiv
 		var oElement
 		
 		oElement = this.element
@@ -93,7 +92,7 @@ $.widget(
 			var oOptions = this.options
 			if (!oOptions.grid_name) $.error("grid name not provided")
 			
-			var oControls = new cCAControlsR(oOptions ,this.element)
+			new cCAControlsR(oOptions ,this.element) //call widgetclass
 		}
 	}
 )

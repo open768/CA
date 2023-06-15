@@ -49,8 +49,6 @@ class cCARemoteControls{
 	
 	//****************************************************************************
 	onClickControl(piAction){
-		var oThis = this
-		
 		if (!caMachineTypes.rule_set){
 			alert("set a rule first!!")
 			return
@@ -71,7 +69,6 @@ class cCARemoteControls{
 	
 	//****************************************************************************
 	onCAEvent(poEvent){
-		var oElement = this.element
 		var oThis = this
 		
 		switch (poEvent.type){
@@ -131,21 +128,22 @@ class cCARemoteControls{
 		
 		//disabled until grid and rule are set
 		oDiv = $("<DIV>",{class:"ui-widget-content"})
-			var sID = cJquery.child_ID(oElement, cCARemoteControls.buttonNames.stop)
+			var sID
+			sID = cJquery.child_ID(oElement, cCARemoteControls.buttonNames.stop)
 			oButton = $("<button>",{width:"30px",height:"30px",id:sID})
 				oButton.button({icon:"ui-icon-stop"})
 				cJquery.enable_element(oButton,false)
 				oButton.click(	function(){ oThis.onClickControl(cCAGridTypes.actions.stop)}	)
 				oDiv.append(oButton)
 
-			var sID = cJquery.child_ID(oElement, cCARemoteControls.buttonNames.play)
+			sID = cJquery.child_ID(oElement, cCARemoteControls.buttonNames.play)
 			oButton = $("<button>",{width:"30px",height:"30px",id:sID})
 				oButton.button({icon:"ui-icon-circle-triangle-e"})
 				cJquery.enable_element(oButton,false)
 				oButton.click(	function(){ oThis.onClickControl(cCAGridTypes.actions.play)}	)
 				oDiv.append(oButton)
 
-			var sID = cJquery.child_ID(oElement, cCARemoteControls.buttonNames.step)
+			sID = cJquery.child_ID(oElement, cCARemoteControls.buttonNames.step)
 			oButton = $("<button>",{width:"30px",height:"30px",title:"step",id:sID})
 				oButton.button({icon:"ui-icon-seek-end"})
 				cJquery.enable_element(oButton,false)
@@ -170,7 +168,7 @@ $.widget(
 			var oOptions = this.options
 			if (!oOptions.grid_name) $.error("grid name not provided")
 			
-			var oControls = new cCARemoteControls(oOptions ,this.element)
+			new cCARemoteControls(oOptions ,this.element)		//call class constructor
 		}
 	}
 )

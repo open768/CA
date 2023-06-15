@@ -44,7 +44,6 @@ $.widget( "ck.caeditwidget",{
 		var oElement = oThis.element
 
 		oElement.uniqueId()
-		var sID = oElement.attr("id")
 		oElement.addClass("ui-widget")
 		oElement.addClass("caindex")
 		oElement.click( function(){ oThis.onClick()} )

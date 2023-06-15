@@ -101,6 +101,7 @@ class cCARuleBinaryImporter {
  * @class cCARuleRepeatBase64Importer
  * @typedef {cCARuleRepeatBase64Importer}
  */
+/* eslint-disable-next-line no-unused-vars */
 class cCARuleRepeatBase64Importer {
 	/**
 	 * Description placeholder
@@ -304,6 +305,7 @@ class cCAExportedObj {
  * @class cCARuleObjExporter
  * @typedef {cCARuleObjExporter}
  */
+/* eslint-disable-next-line no-unused-vars */
 class cCARuleObjExporter {
 	/**
 	 * Description placeholder
@@ -339,6 +341,7 @@ class cCARuleObjExporter {
  * @class cCARuleObjImporter
  * @typedef {cCARuleObjImporter}
  */
+/* eslint-disable-next-line no-unused-vars */
 class cCARuleObjImporter {
 	/**
 	 * Description placeholder
@@ -404,6 +407,7 @@ class cCaIdentityRule {
  * @class cCaRandomRule
  * @typedef {cCaRandomRule}
  */
+/* eslint-disable-next-line no-unused-vars */
 class cCaRandomRule {
 	/**
 	 * Description placeholder
@@ -438,6 +442,7 @@ class cCaRandomRule {
  * @class cCARuleWolfram1DImporter
  * @typedef {cCARuleWolfram1DImporter}
  */
+/* eslint-disable-next-line no-unused-vars */
 class cCARuleWolfram1DImporter {
 	/**
 	 * Description placeholder
@@ -467,16 +472,16 @@ class cCARuleWolfram1DImporter {
 
 		//make wolfram changes to the rule
 		//when the middle row is empty apply the wolfram rule to the row above
-		for (var i = 1; i <= cCARuleTypes.max_inputs; i++) {
-			var iCentreBits = cCAIndexOps.get_centre_bits(i)
+		for (var iInput = 1; iInput <= cCARuleTypes.max_inputs; iInput++) {
+			var iCentreBits = cCAIndexOps.get_centre_bits(iInput)
 			if (iCentreBits == 0) {
-				var iNorthBits = cCAIndexOps.get_north_bits(i)
+				var iNorthBits = cCAIndexOps.get_north_bits(iInput)
 				var iCentre
 				if (iNorthBits == 0)
-					iCentre = cCAIndexOps.get_value(i, cCACellTypes.directions.centre)
+					iCentre = cCAIndexOps.get_value(iInput, cCACellTypes.directions.centre)
 				else
 					iCentre = aWolfram[iNorthBits]
-				oRule.set_output(cCACellTypes.default_state, i, iCentre)
+				oRule.set_output(cCACellTypes.default_state, iInput, iCentre)
 			}
 		}
 
@@ -515,7 +520,7 @@ class cCARuleLifeImporter {
 		//validate rule and extract rule components
 		var aMatches = psInput.match(/B(\d+)\/S(\d+)/i)
 		if (aMatches == null) {
-			var aMatches = psInput.match(/S(\d+)\/B(\d+)/i)
+			aMatches = psInput.match(/S(\d+)\/B(\d+)/i)
 			if (aMatches == null) throw new CAException(psInput + " is not a valid life notation - must be Bnnn/Snnn")
 			sBorn = aMatches[2]
 			sSurvive = aMatches[1]
@@ -527,15 +532,15 @@ class cCARuleLifeImporter {
 		cDebug.write(psInput + " is a valid life notation BORN:" + sBorn + " Survive:" + sSurvive)
 
 		//populate importer arrays 		
-		for (var i = 0; i < sBorn.length; i++) {
-			var iPos = parseInt(sBorn.charAt(i))
-			if (iPos < 1 || iPos > cCACellTypes.neighbours.maximum) throw new CAException(iPos + " is not a valid born count")
-			aBorn[iPos] = 1
+		for (var iBorn = 0; iBorn < sBorn.length; iBorn++) {
+			var iBornPos = parseInt(sBorn.charAt(iBorn))
+			if (iBornPos < 1 || iBornPos > cCACellTypes.neighbours.maximum) throw new CAException(iBornPos + " is not a valid born count")
+			aBorn[iBornPos] = 1
 		}
-		for (var i = 0; i < sSurvive.length; i++) {
-			if (iPos < 0 || iPos > cCACellTypes.neighbours.maximum) throw new CAException(iPos + " is not a valid survivor count")
-			var iPos = parseInt(sSurvive.charAt(i))
-			aSurvive[iPos] = 1
+		for (var iSurvive = 0; iSurvive < sSurvive.length; iSurvive++) {
+			var iSurvivePos = parseInt(sSurvive.charAt(iSurvive))
+			if (iSurvivePos < 0 || iSurvivePos > cCACellTypes.neighbours.maximum) throw new CAException(iSurvivePos + " is not a valid survivor count")
+			aSurvive[iSurvivePos] = 1
 		}
 
 		//create  the rule 
@@ -608,6 +613,7 @@ class cCAModifierTypes {
  * @class cCARuleModifier
  * @typedef {cCARuleModifier}
  */
+/* eslint-disable-next-line no-unused-vars */
 class cCARuleModifier {
 	/**
 	 * Description placeholder
@@ -645,7 +651,7 @@ class cCARuleModifier {
 
 			//---------------------------------------------------------------
 			var iCount = cCAIndexOps.get_bit_count(i) - iCentre
-			var bMatches = false
+			bMatches = false
 
 			switch (piVerb) {
 				case cCAModifierTypes.verbs.at_least.id:

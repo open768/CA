@@ -124,7 +124,7 @@ $.widget(
 			var oOptions = this.options
 			if (!oOptions.grid_name) $.error("grid name not provided")
 			
-			var oControls = new cCAStatus(oOptions ,this.element)
+			new cCAStatus(oOptions ,this.element)		//call widget cnstructor
 		}
 	}
 )

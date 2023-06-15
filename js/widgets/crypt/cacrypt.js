@@ -158,11 +158,11 @@ class cCACrypt {
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 $.widget( "ck.cacrypt",{
 	_create: function(){
-		var oWidget = new cCACrypt(cCACryptTypes.name, this.element)
+		new cCACrypt(cCACryptTypes.name, this.element) //call widgetclass
 	}
 })
 $.widget( "ck.cacryptstatus",{
 	_create: function(){
-		var oWidget = new cCACryptStatus(this.element)
+		new cCACryptStatus(this.element) //call widgetclass
 	}
 })

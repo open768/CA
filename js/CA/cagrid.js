@@ -7,7 +7,6 @@ https://creativecommons.org/licenses/by/4.0/legalcode
 For licenses that allow for commercial use please contact cluck@chickenkatsu.co.uk
 // USE AT YOUR OWN RISK - NO GUARANTEES OF ANY FORM ARE EITHER EXPRESSED OR IMPLIED
 **************************************************************************/
-/* global $,bean,cDebug,CAException,cSparseArray,cCACell,cCACellTypes */
 
 /**
  * Description placeholder
@@ -275,8 +274,8 @@ class cCAGridInitialiser {
 				var iMidCol = Math.floor(poGrid.cols / 2)
 				var iMidRow = Math.floor(poGrid.rows / 2)
 
-				for (var i = 10; i >= 0; i--) {
-					var dx = i
+				for (var iStep = 10; iStep >= 0; iStep--) { //10 point on each diamond side
+					var dx = iStep
 					var dy = 10 - dx
 
 					poGrid.setCellValue(iMidRow - dy, iMidCol - dx, 1)
