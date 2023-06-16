@@ -43,18 +43,19 @@ $.widget( "ck.camachine",{
 		//machine has 3 child widgets: control panel and machine canvas, status
 		//widgets will subscribe and publish events themselves
 		oElement.empty()
+		var oCell, oRow
 		var oTable = $("<table>")
 			//----------------------------------------------------------------------------------
-			var oRow = $("<TR>")
+			oRow = $("<TR>")
 				//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-				var oCell = $("<TD>", {width:350,valign:"top"})
+				oCell = $("<TD>", {width:350,valign:"top"})
 					var oLeftCtrlDiv = $("<DIV>",{width:350,id:"leftControl", canvas_id:"canvas"})
 					oLeftCtrlDiv.cacontrolsl({grid_name:caMachineTypes.grid_name})
 						oCell.append(oLeftCtrlDiv)
 					oRow.append(oCell)
 				
 				//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-				var oCell = $("<TD>")
+				oCell = $("<TD>")
 					var oCanvasDiv = $("<SPAN>",{title:"this is where the magic happens", id:"canvas"})
 					oCanvasDiv.cacanvas({
 						cols:oOptions.cols,
@@ -66,7 +67,7 @@ $.widget( "ck.camachine",{
 				oRow.append(oCell)
 				
 				//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-				var oCell = $("<TD>", {width:240,valign:"top",canvas_id:"canvas"})
+				oCell = $("<TD>", {width:240,valign:"top",canvas_id:"canvas"})
 					var oRightCtrlDiv = $("<DIV>", {width:240})
 					oRightCtrlDiv.cacontrolsr({grid_name:caMachineTypes.grid_name})
 					oCell.append(oRightCtrlDiv)
@@ -74,8 +75,8 @@ $.widget( "ck.camachine",{
 			oTable.append(oRow)
 			
 			//----------------------------------------------------------------------------------
-			var oRow = $("<TR>")
-				var oCell = $("<TD>", {valign:"top",colspan:3})
+			oRow = $("<TR>")
+				oCell = $("<TD>", {valign:"top",colspan:3})
 					var oJsonDiv = $("<DIV>", {title:"json will appear here"})
 						oJsonDiv.cajson({grid_name:caMachineTypes.grid_name})
 						oCell.append(oJsonDiv)

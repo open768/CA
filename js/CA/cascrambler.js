@@ -82,6 +82,7 @@ class cCAScramblerTypes{
 //#
 //###################################################################################
 /** class that performs data scrambling */
+/* eslint-disable-next-line no-unused-vars */
 class cCAScrambler{
 	/** @type cCAGrid */ grid=null
 	/** @type number  */ inital_runs = -1

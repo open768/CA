@@ -10,7 +10,8 @@ For licenses that allow for commercial use please contact cluck@chickenkatsu.co.
 
 //###############################################################################
 /** cCAEvent class */
-class cCAEvent{
+/* eslint-disable-next-line no-unused-vars */
+class cCAEvent {
 	/**
 	 * Description placeholder
 	 * 
@@ -37,14 +38,14 @@ class cCAEvent{
 	 *
 	 * @type {*}
 	 */
-	type=null
+	type = null
 	/**
 	 * Description placeholder
 	 * 
 	 *
 	 * @type {*}
 	 */
-	action=null
+	action = null
 	/**
 	 * Description placeholder
 	 * 
@@ -52,16 +53,16 @@ class cCAEvent{
 	 * @type {*}
 	 */
 	data = null
-	
+
 	/**
 	 * Description
 	 * @param {string} psType
 	 * @param {string} psAction
 	 * @param {any} poData
 	 */
-	constructor(psType, psAction, poData){
-		if (psType === null) throw new Error("null type")	
-		if (psAction === null) throw new Error("null action")	
+	constructor(psType, psAction, poData) {
+		if (psType === null) throw new Error("null type")
+		if (psAction === null) throw new Error("null action")
 		this.type = psType
 		this.action = psAction
 		this.data = poData
@@ -71,7 +72,7 @@ class cCAEvent{
 	 * Description
 	 * @param {Element} poTarget
 	 */
-	trigger(poTarget){
+	trigger(poTarget) {
 		if (!poTarget) $.error("target missing")
 		var sHook = this.constructor.hook
 		bean.fire(poTarget, sHook, this)
@@ -85,7 +86,8 @@ class cCAEvent{
  * @class cCAActionEvent
  * @typedef {cCAActionEvent}
  */
-class cCAActionEvent{
+/* eslint-disable-next-line no-unused-vars */
+class cCAActionEvent {
 	/**
 	 * Description placeholder
 	 * 
@@ -107,7 +109,8 @@ class cCAActionEvent{
  * @class cCAGeneralEvent
  * @typedef {cCAGeneralEvent}
  */
-class cCAGeneralEvent{
+/* eslint-disable-next-line no-unused-vars */
+class cCAGeneralEvent {
 	/**
 	 * Description placeholder
 	 * 
@@ -128,7 +131,8 @@ class cCAGeneralEvent{
  * @class cCARuleEvent
  * @typedef {cCARuleEvent}
  */
-class cCARuleEvent{
+/* eslint-disable-next-line no-unused-vars */
+class cCARuleEvent {
 	/**
 	 * Description placeholder
 	 * 
@@ -137,7 +141,7 @@ class cCARuleEvent{
 	 * @type {{ update_rule: string; }}
 	 */
 	static actions = {
-		update_rule:"REUR"
+		update_rule: "REUR"
 	}
 }
 
@@ -157,10 +161,10 @@ class cCACellTypes {
 	 * @static
 	 * @type {{ fourway: number; eightway: number; maximum: number; }}
 	 */
-	static neighbours={
+	static neighbours = {
 		fourway: 0,
 		eightway: 1,
-		maximum:8
+		maximum: 8
 	}
 	/**
 	 * Description placeholder
@@ -169,17 +173,17 @@ class cCACellTypes {
 	 * @static
 	 * @type {{ northwest: number; north: number; northeast: number; west: number; centre: number; east: number; southwest: number; south: number; southeast: number; }}
 	 */
-	static directions={	
-		northwest:1,
-		north:2,
-		northeast:3,
-		west:4,
-		centre:5,
-		east:6,
-		southwest:7,
-		south:8,
-		southeast:9
-		}
+	static directions = {
+		northwest: 1,
+		north: 2,
+		northeast: 3,
+		west: 4,
+		centre: 5,
+		east: 6,
+		southwest: 7,
+		south: 8,
+		southeast: 9
+	}
 	/**
 	 * Description placeholder
 	 * 
@@ -195,11 +199,11 @@ class cCACellTypes {
 	 * @static
 	 * @type {{ same: number; up: number; down: number; reset: number; }}
 	 */
-	static states={
+	static states = {
 		same: 0,
 		up: 1,
-		down:2,
-		reset:3
+		down: 2,
+		reset: 3
 	}
 	/**
 	 * Description placeholder
@@ -208,10 +212,10 @@ class cCACellTypes {
 	 * @static
 	 * @type {{ row: string; col: string; }}
 	 */
-	static hash_values={
-		row:"R",
-		col:"C"
-	}	
+	static hash_values = {
+		row: "R",
+		col: "C"
+	}
 }
 
 //###############################################################################
@@ -222,6 +226,7 @@ class cCACellTypes {
  * @class cCARuleTypes
  * @typedef {cCARuleTypes}
  */
+/* eslint-disable-next-line no-unused-vars */
 class cCARuleTypes {
 	/**
 	 * Description placeholder
@@ -230,7 +235,7 @@ class cCARuleTypes {
 	 * @static
 	 * @type {number}
 	 */
-	static max_inputs =Math.pow(2,9)-1
+	static max_inputs = Math.pow(2, 9) - 1
 	/**
 	 * Description placeholder
 	 * 
@@ -238,7 +243,7 @@ class cCARuleTypes {
 	 * @static
 	 * @type {*}
 	 */
-	static base64_length =  Math.ceil((Math.pow(2,9)-1)/6)
+	static base64_length = Math.ceil((Math.pow(2, 9) - 1) / 6)
 	/**
 	 * Description placeholder
 	 * 
@@ -246,7 +251,7 @@ class cCARuleTypes {
 	 * @static
 	 * @type {*}
 	 */
-	static no_boredom= null
+	static no_boredom = null
 	/**
 	 * Description placeholder
 	 * 
@@ -254,12 +259,12 @@ class cCARuleTypes {
 	 * @static
 	 * @type {{ life: number; binary: number; base64: number; wolfram1d: number; random: number; }}
 	 */
-	static rule_types={
-		life:1,
-		binary:2,
-		base64:3,
-		wolfram1d:4,
-		random:5
+	static rule_types = {
+		life: 1,
+		binary: 2,
+		base64: 3,
+		wolfram1d: 4,
+		random: 5
 	}
 }
 
@@ -271,7 +276,7 @@ class cCARuleTypes {
  * @class CAException
  * @typedef {CAException}
  */
-class CAException{
+class CAException {
 	/**
 	 * Creates an instance of CAException.
 	 * 
@@ -279,8 +284,8 @@ class CAException{
 	 * @constructor
 	 * @param {*} psMessage
 	 */
-	constructor (psMessage) {
-   		this.message = psMessage
+	constructor(psMessage) {
+		this.message = psMessage
 		this.name = 'CAException'
 	}
 }
@@ -294,6 +299,7 @@ class CAException{
  * @class cCAIndexOps
  * @typedef {cCAIndexOps}
  */
+/* eslint-disable-next-line no-unused-vars */
 class cCAIndexOps {
 	//bits are created 	nw,n,ne,w,c,e,sw,s,se
 
@@ -306,10 +312,10 @@ class cCAIndexOps {
 	 * @param {*} piDirection
 	 * @returns {(0 | 1)}
 	 */
-	static get_value(piIndex, piDirection){
+	static get_value(piIndex, piDirection) {
 		var iVal
-		
-		switch (piDirection){
+
+		switch (piDirection) {
 			case cCACellTypes.directions.northwest:
 				iVal = 256
 				break
@@ -340,14 +346,14 @@ class cCAIndexOps {
 			default:
 				throw new CAException("unknown direction " + piDirection)
 		}
-		
+
 		var iAnd = piIndex & iVal
 		if (iAnd == iVal)
 			return 1
-		else	
+		else
 			return 0
 	}
-		
+
 	//***************************************************************
 	/**
 	 * Description placeholder
@@ -357,17 +363,17 @@ class cCAIndexOps {
 	 * @param {*} piIndex
 	 * @returns {number}
 	 */
-	static get_bit_count(piIndex){
+	static get_bit_count(piIndex) {
 		var iTmp = piIndex
 		var iCount = 0
-	
-		while (iTmp > 0){
-			if ((iTmp & 1) == 1) iCount ++
+
+		while (iTmp > 0) {
+			if ((iTmp & 1) == 1) iCount++
 			iTmp = iTmp >>> 1		//keep right shifting the value until nothing is left		
 		}
 		return iCount
 	}
-	
+
 	//***************************************************************
 	/**
 	 * Description placeholder
@@ -377,14 +383,14 @@ class cCAIndexOps {
 	 * @param {*} piIndex
 	 * @returns {number}
 	 */
-	static get_north_bits(piIndex){
+	static get_north_bits(piIndex) {
 		var iVal = 0
-		iVal |= this.get_value(piIndex, cCACellTypes.directions.northwest )
-		iVal <<=1; iVal |= this.get_value(piIndex, cCACellTypes.directions.north )
-		iVal <<=1; iVal |= this.get_value(piIndex, cCACellTypes.directions.northeast )
+		iVal |= this.get_value(piIndex, cCACellTypes.directions.northwest)
+		iVal <<= 1; iVal |= this.get_value(piIndex, cCACellTypes.directions.north)
+		iVal <<= 1; iVal |= this.get_value(piIndex, cCACellTypes.directions.northeast)
 		return iVal
 	}
-	
+
 	//***************************************************************
 	/**
 	 * Description placeholder
@@ -394,14 +400,14 @@ class cCAIndexOps {
 	 * @param {*} piIndex
 	 * @returns {number}
 	 */
-	static get_centre_bits(piIndex){
+	static get_centre_bits(piIndex) {
 		var iVal = 0
-		iVal |= this.get_value(piIndex, cCACellTypes.directions.west )
-		iVal <<=1; iVal |= this.get_value(piIndex, cCACellTypes.directions.centre )
-		iVal <<=1; iVal |= this.get_value(piIndex, cCACellTypes.directions.east )
+		iVal |= this.get_value(piIndex, cCACellTypes.directions.west)
+		iVal <<= 1; iVal |= this.get_value(piIndex, cCACellTypes.directions.centre)
+		iVal <<= 1; iVal |= this.get_value(piIndex, cCACellTypes.directions.east)
 		return iVal
 	}
-	
+
 	//***************************************************************
 	/**
 	 * Description placeholder
@@ -411,11 +417,11 @@ class cCAIndexOps {
 	 * @param {*} piIndex
 	 * @returns {number}
 	 */
-	static get_south_bits(piIndex){
+	static get_south_bits(piIndex) {
 		var iVal = 0
-		iVal |= this.get_value(piIndex, cCACellTypes.directions.southwest )
-		iVal <<=1; iVal |= this.get_value(piIndex, cCACellTypes.directions.south )
-		iVal <<=1; iVal |= this.get_value(piIndex, cCACellTypes.directions.southeast )
+		iVal |= this.get_value(piIndex, cCACellTypes.directions.southwest)
+		iVal <<= 1; iVal |= this.get_value(piIndex, cCACellTypes.directions.south)
+		iVal <<= 1; iVal |= this.get_value(piIndex, cCACellTypes.directions.southeast)
 		return iVal
 	}
 }
