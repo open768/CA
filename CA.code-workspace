@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"name": "CA",
+			"path": "."
+		},
+		{
+			"name": "jsinc",
+			"path": "../jsinc"
+		}
+	],
+	"settings": {}
+}
