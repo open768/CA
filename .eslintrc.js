@@ -28,6 +28,7 @@ module.exports = {
         "cCAGeneralEvent": "readonly",
         "cCAGrid": "readonly",
         "cCAGridEvent": "readonly",
+        "cCAGridInitialiser": "readonly",
         "cCAGridJSONExporter": "readonly",
         "cCAGridJSONImporter": "readonly",
         "cCAGridTypes": "readonly",
