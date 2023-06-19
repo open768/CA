@@ -54,29 +54,42 @@ class cCAGridEvent {
 
 	action = null
 	data = null
-	name = null
+	grid = null
 
-	constructor(psName, psAction, poData) {
-		if (psName == null || psAction == null) $.error("missing params")
-		this.name = psName
+	/**
+	 * Description
+	 * @param {cCAGrid} poGrid
+	 * @param {psAction} psAction
+	 * @param {any} poData
+	 */
+	constructor(poGrid, psAction, poData) {
+		if (poGrid == null || psAction == null) $.error("missing params")
+		this.grid = poGrid
 		this.action = psAction
 		this.data = poData
 	}
 
-	trigger(poObject) {
-		bean.fire(poObject, cCAGridEvent.hook_name(this.name), this)
+	trigger() {
+		var sEventName = cCAGridEvent.hook_name(this.grid)
+		bean.fire(this.grid, sEventName, this)
 	}
+
 
 	/**
 	 * Description
-	 * @param {cCAGrid|string} pvGrid
-	 * @returns {any}
-	 */
-	static hook_name(pvGrid) {
-		if (typeof pvGrid == "string")
-			return (this.hook + pvGrid)
-		else
-			return (this.hook + pvGrid.name)
+	 * @param {cCAGrid} poGrid	CA grid to receive/send events
+	 */	
+	static hook_name(poGrid) {
+		return (this.hook + poGrid.name)
+	}
+
+	/**
+	 * helper function
+	 * @param {cCAGrid} poGrid	CA grid to send events
+	 * @param {function} pfn	callback
+	 */	
+	static subscribe_to_events(poGrid, pfn){
+		bean.on(poGrid, cCAGridEvent.hook_name(poGrid), pfn)
 	}
 }
 
@@ -184,8 +197,8 @@ class cCAGrid {
 		this.status.changed = iChangedLen
 		if (iChangedLen == 0) {
 			this.running = false
-			oEvent = new cCAGridEvent(this.name, cCAGridEvent.actions.nochange)
-			oEvent.trigger(this)
+			oEvent = new cCAGridEvent(this, cCAGridEvent.actions.nochange)
+			oEvent.trigger()
 			return
 		}
 
@@ -198,8 +211,8 @@ class cCAGrid {
 			else
 				this.status.active++
 		}
-		oEvent = new cCAGridEvent(this.name, cCAGridEvent.actions.done, this.status)
-		oEvent.trigger(this)
+		oEvent = new cCAGridEvent(this, cCAGridEvent.actions.done, this.status)
+		oEvent.trigger()
 	}
 
 	//****************************************************************
@@ -213,8 +226,8 @@ class cCAGrid {
 		oInitialiser.init(this, piInitType)
 		cDebug.write("done init grid: " + piInitType)
 
-		var oEvent = new cCAGridEvent(this.name, cCAGridEvent.actions.done, this.status)
-		oEvent.trigger(this)
+		var oEvent = new cCAGridEvent(this, cCAGridEvent.actions.done, this.status)
+		oEvent.trigger()
 
 		cDebug.leave()
 	}
@@ -237,8 +250,8 @@ class cCAGrid {
 		//link if there is a rule
 		if (this.rule) this.pr__link_cells()
 
-		var oEvent = new cCAGridEvent(this.name, cCAGridEvent.actions.clear)
-		oEvent.trigger(this)
+		var oEvent = new cCAGridEvent(this, cCAGridEvent.actions.clear)
+		oEvent.trigger()
 		cDebug.leave()
 	}
 
@@ -287,13 +300,6 @@ class cCAGrid {
 	//#######################################################################
 	//# events
 	//#######################################################################
-	/**
-	 * Description
-	 * @param {Function} pFn
-	 */
-	on_event(pFn) {
-		bean.on(this, cCAGridEvent.hook_name(this), pFn)
-	}
 
 	//****************************************************************
 	notifyDrawn() {

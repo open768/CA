@@ -110,7 +110,9 @@ class cCAScrambler{
 		this.status = cCAScramblerTypes.status.dormant
 
 		var oThis = this
-		this.grid.on_event((poEvent)=>{oThis.onGridEvent(poEvent)} )
+
+		//subscribe to grid events
+		cCAGridEvent.subscribe_to_events(this.grid, (poEvent)=>{oThis.onCAGridEvent(poEvent)})
 	}
 	
 	//*******************************************************************************
@@ -145,7 +147,7 @@ class cCAScrambler{
 	 * Description
 	 * @param {cCAGridEvent} poEvent
 	 */
-	onGridEvent(poEvent){
+	onCAGridEvent(poEvent){
 		cDebug.write(poEvent)
 		if (poEvent.action == cCAGridEvent.actions.done)
 			if (this.status == cCAScramblerTypes.status.initialRuns){
