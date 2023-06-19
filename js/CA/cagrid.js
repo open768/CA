@@ -8,20 +8,7 @@ For licenses that allow for commercial use please contact cluck@chickenkatsu.co.
 // USE AT YOUR OWN RISK - NO GUARANTEES OF ANY FORM ARE EITHER EXPRESSED OR IMPLIED
 **************************************************************************/
 
-/**
- * Description placeholder
- * 
- *
- * @class cCAGridTypes
- * @typedef {cCAGridTypes}
- */class cCAGridTypes {
-	/**
-	 * Description placeholder
-	 * 
-	 *
-	 * @static
-	 * @type {{ blank: { id: number; label: string; }; block: { id: number; label: string; }; checker: { id: number; label: string; }; circle: { id: number; label: string; }; cross: { id: number; label: string; }; diagonal: { id: number; label: string; }; ... 4 more ...; vert_line: { ...; }; }}
-	 */
+class cCAGridTypes {
 	static init = {
 		blank: { id: 0, label: "Blank" },
 		block: { id: 1, label: "Block" },
@@ -35,13 +22,6 @@ For licenses that allow for commercial use please contact cluck@chickenkatsu.co.
 		random: { id: 9, label: "Random" },
 		vert_line: { id: 10, label: "V-Line" }
 	}
-	/**
-	 * Description placeholder
-	 * 
-	 *
-	 * @static
-	 * @type {{ play: number; stop: number; step: number; }}
-	 */
 	static actions = {
 		play: 1,
 		stop: 2,
@@ -49,34 +29,9 @@ For licenses that allow for commercial use please contact cluck@chickenkatsu.co.
 	}
 }
 
-/**
- * Description placeholder
- * 
- *
- * @class cCAGridRunData
- * @typedef {cCAGridRunData}
- */
 class cCAGridRunData {
-	/**
-	 * Description placeholder
-	 * 
-	 *
-	 * @type {number}
-	 */
 	active = 0
-	/**
-	 * Description placeholder
-	 * 
-	 *
-	 * @type {number}
-	 */
 	runs = 0
-	/**
-	 * Description placeholder
-	 * 
-	 *
-	 * @type {number}
-	 */
 	changed = 0
 }
 
@@ -89,21 +44,7 @@ class cCAGridRunData {
  * @typedef {cCAGridEvent}
  */
 class cCAGridEvent {
-	/**
-	 * Description placeholder
-	 * 
-	 *
-	 * @static
-	 * @type {string}
-	 */
 	static hook = "CAGEVH"
-	/**
-	 * Description placeholder
-	 * 
-	 *
-	 * @static
-	 * @type {{ done: string; clear: string; nochange: string; init_grid: string; }}
-	 */
 	static actions = {
 		done: "GDN",
 		clear: "GCL",
@@ -111,37 +52,10 @@ class cCAGridEvent {
 		init_grid: "GID"
 	}
 
-	/**
-	 * Description placeholder
-	 * 
-	 *
-	 * @type {*}
-	 */
 	action = null
-	/**
-	 * Description placeholder
-	 * 
-	 *
-	 * @type {*}
-	 */
 	data = null
-	/**
-	 * Description placeholder
-	 * 
-	 *
-	 * @type {*}
-	 */
 	name = null
 
-	/**
-	 * Creates an instance of cCAGridEvent.
-	 * 
-	 *
-	 * @constructor
-	 * @param {*} psName
-	 * @param {*} psAction
-	 * @param {*} poData
-	 */
 	constructor(psName, psAction, poData) {
 		if (psName == null || psAction == null) $.error("missing params")
 		this.name = psName
@@ -149,12 +63,6 @@ class cCAGridEvent {
 		this.data = poData
 	}
 
-	/**
-	 * Description placeholder
-	 * 
-	 *
-	 * @param {*} poObject
-	 */
 	trigger(poObject) {
 		bean.fire(poObject, cCAGridEvent.hook_name(this.name), this)
 	}
@@ -177,14 +85,6 @@ class cCAGridEvent {
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 /** initialises the grid */
 class cCAGridInitialiser {
-
-	/**
-	 * Description placeholder
-	 * 
-	 *
-	 * @param {*} poGrid
-	 * @param {*} piInitType
-	 */
 	init(poGrid, piInitType) {
 		cDebug.enter()
 		cDebug.write("init_type:" + piInitType)
@@ -338,41 +238,21 @@ class cCAGridInitialiser {
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 //%
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-/**
- * Description placeholder
- * 
- *
- * @class cCAGrid
- * @typedef {cCAGrid}
- */
 /* eslint-disable-next-line no-unused-vars */
 class cCAGrid {
 	//#######################################################################
 	//# instance variables
 	//#######################################################################
-	/**
-	 * Description placeholder
-	 * 
-	 *
-	 * @type {*}
-	 */
 	cell_data = null
-	/**
-	 * Description placeholder
-	 * 
-	 *
-	 * @type {*}
-	 */
 	name = null
 
 	/**
 	 * Creates an instance of cCAGrid.
-	 * 
 	 *
 	 * @constructor
-	 * @param {*} psName
-	 * @param {*} piRows
-	 * @param {*} piCols
+	 * @param {string} psName
+	 * @param {number} piRows
+	 * @param {number} piCols
 	 */
 	constructor(psName, piRows, piCols) {
 		if (!psName) throw new CAException("no grid name")
@@ -390,12 +270,6 @@ class cCAGrid {
 	//#######################################################################
 	//# methods
 	//#######################################################################
-	/**
-	 * Description placeholder
-	 * 
-	 *
-	 * @param {*} piAction
-	 */
 	action(piAction) {
 		cDebug.enter()
 		if (this.rule == null) throw new CAException("no rule set")
@@ -424,12 +298,6 @@ class cCAGrid {
 	}
 
 	//****************************************************************
-	/**
-	 * Description placeholder
-	 * 
-	 *
-	 * @param {*} poRule
-	 */
 	set_rule(poRule) {
 		cDebug.enter()
 		//clear rules from all cells
@@ -444,10 +312,6 @@ class cCAGrid {
 
 
 	//****************************************************************
-	/**
-	 * Description placeholder
-	 * 
-	 */
 	step() {
 		//TODO shouldnt be able to step until changed_cells are consumed
 
@@ -493,12 +357,6 @@ class cCAGrid {
 	}
 
 	//****************************************************************
-	/**
-	 * Description placeholder
-	 * 
-	 *
-	 * @param {*} piInitType
-	 */
 	init(piInitType) {
 		cDebug.enter()
 		if (this.running) throw new CAException("cant init when running")
@@ -516,10 +374,6 @@ class cCAGrid {
 	}
 
 	//****************************************************************
-	/**
-	 * Description placeholder
-	 * 
-	 */
 	create_cells() {
 		cDebug.enter()
 
@@ -543,10 +397,6 @@ class cCAGrid {
 	}
 
 	//****************************************************************
-	/**
-	 * Description placeholder
-	 * 
-	 */
 	clear_cell_rules() {
 		cDebug.enter()
 		var oCell
@@ -559,15 +409,6 @@ class cCAGrid {
 	}
 
 	//****************************************************************
-	/**
-	 * Description placeholder
-	 * 
-	 *
-	 * @param {*} piRow
-	 * @param {*} piCol
-	 * @param {*} iValue
-	 * @returns {*}
-	 */
 	setCellValue(piRow, piCol, iValue) {
 		if (this.cell_data == null)
 			throw new CAException("grid not initialised")
@@ -588,15 +429,6 @@ class cCAGrid {
 	}
 
 	//****************************************************************
-	/**
-	 * Description placeholder
-	 * 
-	 *
-	 * @param {*} piRow
-	 * @param {*} piCol
-	 * @param {boolean} [pbCreate=false]
-	 * @returns {*}
-	 */
 	getCell(piRow, piCol, pbCreate = false) {
 		if (this.cell_data == null) return null
 		var oCell = this.cell_data.get(piRow, piCol)
@@ -618,10 +450,6 @@ class cCAGrid {
 	}
 
 	//****************************************************************
-	/**
-	 * Description placeholder
-	 * 
-	 */
 	notifyDrawn() {
 		cDebug.enter()
 		var oThis = this
@@ -636,10 +464,6 @@ class cCAGrid {
 	//#######################################################################
 	//# privates
 	//#######################################################################
-	/**
-	 * Description placeholder
-	 * 
-	 */
 	pr__link_cells() {
 		cDebug.enter()
 		if (!this.rule) throw new Error("no rule set")
@@ -666,15 +490,6 @@ class cCAGrid {
 	}
 
 	//****************************************************************
-	/**
-	 * Description placeholder
-	 * 
-	 *
-	 * @param {*} poCell
-	 * @param {*} piDirection
-	 * @param {*} piNRow
-	 * @param {*} piNCol
-	 */
 	pr__link_cell(poCell, piDirection, piNRow, piNCol) {
 		var iNr, iNc
 		//wrap around neighbour row and col
