@@ -126,6 +126,7 @@ class cCAGridEvent {
 }
 
 //###############################################################################
+/* eslint-disable-next-line no-unused-vars */
 class cCACanvasEventData {
 	grid_name = null
 	data = null
