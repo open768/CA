@@ -308,7 +308,7 @@ class cCACanvas {
 		this.grid = poGrid
 
 		//subscribe to grid events
-		cCAGridEvent.subscribe_to_events(this.grid, (poEvent)=>{oThis.onCAGridEvent(poEvent)})
+		cCAEventHelper.subscribe_to_grid_events(this.grid, (poEvent)=>{oThis.onCAGridEvent(poEvent)})
 
 		// publish grid details to anyone interested - eg to export grid data, or start/stop the grid
 		var oEvent = new cCACanvasEvent(this.grid_name, cCACanvasEvent.actions.set_grid, poGrid)

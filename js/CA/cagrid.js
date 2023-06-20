@@ -35,63 +35,6 @@ class cCAGridRunData {
 	changed = 0
 }
 
-//*************************************************************************
-/**
- * Description placeholder
- * 
- *
- * @class cCAGridEvent
- * @typedef {cCAGridEvent}
- */
-class cCAGridEvent {
-	static hook = "CAGEVH"
-	static actions = {
-		done: "GDN",
-		clear: "GCL",
-		nochange: "GNO",
-		init_grid: "GID"
-	}
-
-	action = null
-	data = null
-	grid = null
-
-	/**
-	 * Description
-	 * @param {cCAGrid} poGrid
-	 * @param {psAction} psAction
-	 * @param {any} poData
-	 */
-	constructor(poGrid, psAction, poData) {
-		if (poGrid == null || psAction == null) $.error("missing params")
-		this.grid = poGrid
-		this.action = psAction
-		this.data = poData
-	}
-
-	trigger() {
-		var sEventName = cCAGridEvent.hook_name(this.grid)
-		bean.fire(this.grid, sEventName, this)
-	}
-
-
-	/**
-	 * Description
-	 * @param {cCAGrid} poGrid	CA grid to receive/send events
-	 */	
-	static hook_name(poGrid) {
-		return (this.hook + poGrid.name)
-	}
-
-	/**
-	 * helper function
-	 * @param {cCAGrid} poGrid	CA grid to send events
-	 * @param {function} pfn	callback
-	 */	
-	static subscribe_to_events(poGrid, pfn){
-		bean.on(poGrid, cCAGridEvent.hook_name(poGrid), pfn)
-	}
-}
 
 
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

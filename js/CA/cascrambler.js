@@ -112,7 +112,7 @@ class cCAScrambler{
 		var oThis = this
 
 		//subscribe to grid events
-		cCAGridEvent.subscribe_to_events(this.grid, (poEvent)=>{oThis.onCAGridEvent(poEvent)})
+		cCAEventHelper.subscribe_to_grid_events(this.grid, (poEvent)=>{oThis.onCAGridEvent(poEvent)})
 	}
 	
 	//*******************************************************************************

@@ -25,6 +25,7 @@ module.exports = {
         "cCACryptEvent": "readonly",
         "cCACryptTypes": "readonly",
         "cCAEvent": "readonly",
+		"cCAEventHelper": "readonly",
         "cCAGeneralEvent": "readonly",
         "cCAGrid": "readonly",
         "cCAGridEvent": "readonly",
