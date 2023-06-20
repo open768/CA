@@ -14,17 +14,6 @@ class cCACanvasTypes {
 	static black_image = "images/blackbox.png"
 }
 
-class cCACanvasEventData {
-	grid_name = null
-	data = null
-
-	constructor(psGridName, poData) {
-		this.grid_name = psGridName
-		this.data = poData
-	}
-}
-
-
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 class cCACanvas {

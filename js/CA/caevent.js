@@ -84,7 +84,7 @@ class cCARuleEvent {
 //###############################################################################
 /* eslint-disable-next-line no-unused-vars */
 class cCAGridEvent {
-	static hook = "CAGEVH"
+	static hook = "CAGRIDEV"
 	static actions = {
 		done: "GDN",
 		clear: "GCL",
@@ -125,8 +125,20 @@ class cCAGridEvent {
 
 }
 
+//###############################################################################
+class cCACanvasEventData {
+	grid_name = null
+	data = null
+
+	constructor(psGridName, poData) {
+		this.grid_name = psGridName
+		this.data = poData
+	}
+}
+
 /* eslint-disable-next-line no-unused-vars */
 class cCACanvasEvent {
+	static hook = "CACANVASEV"
 	static actions = {
 		nochange: "CENC",
 		grid_status: "CEGS",
@@ -151,6 +163,7 @@ class cCACanvasEvent {
 	}
 }
 
+//###############################################################################
 /* eslint-disable-next-line no-unused-vars */
 class cCAEventHelper {
 	/**
