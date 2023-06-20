@@ -139,7 +139,7 @@ class cCACryptControl {
 		this.init()
 
 		//subscribe to CAEvents
-		bean.on(document, cCAEvent.hook, function (poEvent) { oThis.onCAEvent(poEvent) })
+		cCAEventHelper.subscribe_to_ca_events( (poEvent) => { oThis.onCAEvent(poEvent) })
 	}
 
 	//*******************************************************************************

@@ -174,4 +174,8 @@ class cCAEventHelper {
 	static subscribe_to_grid_events(poGrid, pfn){
 		bean.on(poGrid, cCAGridEvent.hook_name(poGrid), pfn)
 	}
+
+	static subscribe_to_ca_events(pfn){
+		bean.on(document, cCAEvent.hook, pfn)
+	}
 }

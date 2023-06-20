@@ -38,7 +38,7 @@ class cCARemoteControls{
 		oElement.addClass("ui-widget")
 
 		//subscribe to CAEvents
-		bean.on (document, cCAEvent.hook, function(poEvent){ oThis.onCAEvent(poEvent)} )
+		cCAEventHelper.subscribe_to_ca_events( (poEvent) => { oThis.onCAEvent(poEvent) })
 		
 		//put something in the widget
 		oElement.empty()

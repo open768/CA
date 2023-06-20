@@ -65,7 +65,7 @@ class cCAChart{
 		this.pr__clear_chart()
 
 		//subscribe to CAEvents
-		bean.on (document, cCAEvent.hook, function(poEvent){ oThis.onCAEvent(poEvent)} )
+		cCAEventHelper.subscribe_to_ca_events( (poEvent) => { oThis.onCAEvent(poEvent) })
 	}
 	
 	//*****************************************************************

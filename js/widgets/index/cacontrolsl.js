@@ -54,7 +54,7 @@ class cCAControlsL {
 		this.pr__init()
 
 		//subscribe to CA Events
-		bean.on(document, cCAEvent.hook, function (poEvent) { oThis.onCAEvent(poEvent) })
+		cCAEventHelper.subscribe_to_ca_events( (poEvent) => { oThis.onCAEvent(poEvent) })
 	}
 
 	//#################################################################
