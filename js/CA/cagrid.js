@@ -8,34 +8,11 @@ For licenses that allow for commercial use please contact cluck@chickenkatsu.co.
 // USE AT YOUR OWN RISK - NO GUARANTEES OF ANY FORM ARE EITHER EXPRESSED OR IMPLIED
 **************************************************************************/
 
-class cCAGridTypes {
-	static init = {
-		blank: { id: 0, label: "Blank" },
-		block: { id: 1, label: "Block" },
-		checker: { id: 2, label: "Checker" },
-		circle: { id: 3, label: "Circle" },
-		cross: { id: 4, label: "Cross" },
-		diagonal: { id: 5, label: "Diagonal" },
-		diamond: { id: 6, label: "Diamond" },
-		horiz_line: { id: 7, label: "H-Line" },
-		sine: { id: 8, label: "Sine" },
-		random: { id: 9, label: "Random" },
-		vert_line: { id: 10, label: "V-Line" }
-	}
-	static actions = {
-		play: 1,
-		stop: 2,
-		step: 3
-	}
-}
-
 class cCAGridRunData {
 	active = 0
 	runs = 0
 	changed = 0
 }
-
-
 
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 //%
@@ -110,8 +87,6 @@ class cCAGrid {
 		this.pr__link_cells()
 		cDebug.leave()
 	}
-
-
 
 	//****************************************************************
 	step() {

@@ -24,30 +24,6 @@ class cCACanvasEventData {
 	}
 }
 
-class cCACanvasEvent {
-	static actions = {
-		nochange: "CENC",
-		grid_status: "CEGS",
-		set_grid: "CESG"
-	}
-
-	action = null
-	data = null
-	grid_name = null
-
-	constructor(psGridName, psAction, poData) {
-		if (!psGridName || !psAction) $.error("incorrect number of arguments")
-		this.grid_name = psGridName
-		this.action = psAction
-		this.data = poData
-	}
-
-	trigger(poSubject) {
-		var oData = new cCACanvasEventData(this.grid_name, this.data)
-		var oEvent = new cCAEvent(cCAEvent.types.canvas, this.action, oData)
-		oEvent.trigger(poSubject)
-	}
-}
 
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
