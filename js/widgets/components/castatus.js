@@ -37,7 +37,7 @@ class cCAStatus{
 		if (!bean ) $.error("bean is missing , chack includes")
 		
 		//subscribe to CAEvents
-		cCAEventHelper.subscribe_to_ca_events( (poEvent) => { oThis.onCAEvent(poEvent) })
+		cCAEventHelper.subscribe_to_canvas_events(this.grid_name, (poEvent) => { oThis.onCACanvasEvent(poEvent) })
 		
 		//put something in the widget
 		oElement.empty()
@@ -46,26 +46,21 @@ class cCAStatus{
 	}
 	
 	//****************************************************************************
-	onCAEvent(poEvent){
-		var oElement
+	onCACanvasEvent(poEvent){
+		var oElement = this.element
 		var oTarget
 		
-		oElement = this.element
-
-		if (poEvent.type === cCAEvent.types.canvas)
-			if (poEvent.data.grid_name === this.grid_name)			
-				switch(poEvent.action){
-					case cCACanvasEvent.actions.grid_status:
-						if (!poEvent.data) return
-						
-						oTarget = $("#"+cJquery.child_ID(oElement, cCAStatusTypes.ACTIVE_ID))
-						oTarget.html(poEvent.data.data.active)
-						oTarget = $("#"+cJquery.child_ID(oElement, cCAStatusTypes.CHANGED_ID))
-						oTarget.html(poEvent.data.data.changed)
-						oTarget = $("#"+cJquery.child_ID(oElement, cCAStatusTypes.RUNS_ID))
-						oTarget.html(poEvent.data.data.runs)
-						break
-				}
+		switch(poEvent.action){
+			case cCACanvasEvent.actions.grid_status:
+				if (!poEvent.data) return
+				
+				oTarget = $("#"+cJquery.child_ID(oElement, cCAStatusTypes.ACTIVE_ID))
+				oTarget.html(poEvent.data.data.active)
+				oTarget = $("#"+cJquery.child_ID(oElement, cCAStatusTypes.CHANGED_ID))
+				oTarget.html(poEvent.data.data.changed)
+				oTarget = $("#"+cJquery.child_ID(oElement, cCAStatusTypes.RUNS_ID))
+				oTarget.html(poEvent.data.data.runs)
+		}
 	}
 	
 	//***************************************************************

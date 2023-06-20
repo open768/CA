@@ -156,10 +156,13 @@ class cCACanvasEvent {
 		this.data = poData
 	}
 
-	trigger(poSubject) {
-		var oData = new cCACanvasEventData(this.grid_name, this.data)
-		var oEvent = new cCAEvent(cCAEvent.types.canvas, this.action, oData)
-		oEvent.trigger(poSubject)
+	trigger() {
+		var sEventName = cCACanvasEvent.hook_name(this.grid_name)
+		bean.fire(document, sEventName, this)
+	}
+
+	static hook_name(psName){
+		return (this.hook + psName)
 	}
 }
 
@@ -177,5 +180,9 @@ class cCAEventHelper {
 
 	static subscribe_to_ca_events(pfn){
 		bean.on(document, cCAEvent.hook, pfn)
+	}
+
+	static subscribe_to_canvas_events(psName, pfn){
+		bean.on(document, cCACanvasEvent.hook_name(psName), pfn)
 	}
 }

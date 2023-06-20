@@ -239,7 +239,7 @@ class cCACanvas {
 		cDebug.write("no change")
 
 		var oEvent = new cCACanvasEvent(this.grid_name, cCACanvasEvent.actions.nochange, null)
-		oEvent.trigger(document)
+		oEvent.trigger()
 
 		cDebug.leave()
 	}
@@ -250,7 +250,7 @@ class cCACanvas {
 
 		this.pr__drawGrid()
 		var oEvent = new cCACanvasEvent(this.grid_name, cCACanvasEvent.actions.grid_status, poData)
-		oEvent.trigger(document)
+		oEvent.trigger()
 
 		cDebug.leave()
 	}
@@ -277,7 +277,7 @@ class cCACanvas {
 
 		// publish grid details to anyone interested - eg to export grid data, or start/stop the grid
 		var oEvent = new cCACanvasEvent(this.grid_name, cCACanvasEvent.actions.set_grid, poGrid)
-		oEvent.trigger(document)
+		oEvent.trigger()
 	}
 
 	//****************************************************************

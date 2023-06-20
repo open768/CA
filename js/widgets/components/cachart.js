@@ -66,6 +66,7 @@ class cCAChart{
 
 		//subscribe to CAEvents
 		cCAEventHelper.subscribe_to_ca_events( (poEvent) => { oThis.onCAEvent(poEvent) })
+		cCAEventHelper.subscribe_to_canvas_events(this.grid_name, (poEvent) => { oThis.onCACanvasEvent(poEvent) })
 	}
 	
 	//*****************************************************************
@@ -97,38 +98,38 @@ class cCAChart{
 	//*****************************************************************
 	//# events
 	//*****************************************************************
+	onCACanvasEvent(poEvent) {
+		cDebug.enter()
+		switch (poEvent.action) {
+			case cCACanvasEvent.actions.grid_status:
+				//add the data to the data structure and draw
+				cDebug.write("status action")
+				if (!cCAChartTypes.is_charts_loaded){
+					cDebug.extra_debug("still waiting for google charts")
+					cDebug.leave()
+					return
+				}
+				var oData = poEvent.data.data
+				if (!oData){
+					cDebug.extra_debug("no data")
+					return
+				}
+				
+				this.pr__create_data()
+				this.vis_data.addRow([this.runs, oData.changed, oData.active, "Run: " + this.runs])
+				this.chart.draw(this.vis_data)
+				
+				this.runs ++
+				break
+		}
+		cDebug.leave()
+	}
+	
+	//*****************************************************************
 	onCAEvent(poEvent){
 		cDebug.enter()
 		
 		switch (poEvent.type){
-			//----------------------------------------------------------------------
-			case cCAEvent.types.canvas:
-				cDebug.write("canvas event")
-				if (poEvent.data.grid_name === this.grid_name)
-					switch (poEvent.action){
-						case cCACanvasEvent.actions.grid_status:
-							//add the data to the data structure and draw
-							cDebug.write("status action")
-							if (!cCAChartTypes.is_charts_loaded){
-								cDebug.extra_debug("still waiting for google charts")
-								cDebug.leave()
-								return
-							}
-							var oData = poEvent.data.data
-							if (!oData){
-								cDebug.extra_debug("no data")
-								return
-							}
-							
-							this.pr__create_data()
-							this.vis_data.addRow([this.runs, oData.changed, oData.active, "Run: " + this.runs])
-							this.chart.draw(this.vis_data)
-							
-							this.runs ++
-							break
-					}
-				break
-				
 			//----------------------------------------------------------------------
 			case cCAEvent.types.rule:
 				cDebug.write("rule event")

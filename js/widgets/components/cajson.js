@@ -45,7 +45,7 @@ class cCAJson {
 		this.pr__init()
 
 		//subscribe to CA Events
-		cCAEventHelper.subscribe_to_ca_events( (poEvent) => { oThis.onCAEvent(poEvent) })
+		cCAEventHelper.subscribe_to_canvas_events(this.grid_name, (poEvent) => { oThis.onCACanvasEvent(poEvent) })
 		cDebug.leave()
 	}
 
@@ -128,14 +128,12 @@ class cCAJson {
 
 
 	//*****************************************************************
-	onCAEvent(poEvent) {
+	onCACanvasEvent(poEvent) {
 		cDebug.enter()
-		if (poEvent.type === cCAEvent.types.canvas)
-			if (poEvent.action === cCACanvasEvent.actions.set_grid)
-				if (poEvent.data.grid_name === this.grid_name) {
-					cDebug.write("set_grid")
-					this.grid = poEvent.data.data
-				}
+		if (poEvent.type === cCAEvent.types.canvas){
+			cDebug.write("set_grid")
+			this.grid = poEvent.data.data
+		}
 		cDebug.leave()
 	}
 

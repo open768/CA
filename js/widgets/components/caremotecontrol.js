@@ -39,6 +39,7 @@ class cCARemoteControls{
 
 		//subscribe to CAEvents
 		cCAEventHelper.subscribe_to_ca_events( (poEvent) => { oThis.onCAEvent(poEvent) })
+		cCAEventHelper.subscribe_to_canvas_events(this.grid_name, (poEvent) => { oThis.onCACanvasEvent(poEvent) })
 		
 		//put something in the widget
 		oElement.empty()
@@ -68,29 +69,29 @@ class cCARemoteControls{
 	
 	
 	//****************************************************************************
-	onCAEvent(poEvent){
+	onCACanvasEvent(poEvent) {
 		var oThis = this
-		
-		switch (poEvent.type){
-			case cCAEvent.types.canvas:
-				if (poEvent.data.grid_name === this.grid_name)			
-					switch(poEvent.action){
-						case cCACanvasEvent.actions.set_grid:
-							this.grid_set = true
-							this.pr__enable_buttons()
-							break
-						case cCACanvasEvent.actions.nochange:
-							setTimeout( function(){	oThis.pr__set_controls(false)}, 100) //stop
-					}
+		cDebug.enter()
+		switch (poEvent.action) {
+			case cCACanvasEvent.actions.set_grid:
+				this.grid_set = true
+				this.pr__enable_buttons()
 				break
-				
+			case cCACanvasEvent.actions.nochange:
+				setTimeout( function(){	oThis.pr__set_controls(false)}, 100) //stop
+		}
+	}
+
+	//****************************************************************************
+	onCAEvent(poEvent){
+		switch (poEvent.type){
 			case cCAEvent.types.general:
 				if (poEvent.action === cCAGeneralEvent.actions.set_rule){
 					this.rule_set = true
 					this.pr__enable_buttons()
 				}
 		}
-}
+	}
 	
 	//***************************************************************
 	//* Privates

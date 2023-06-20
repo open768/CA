@@ -55,6 +55,7 @@ class cCAControlsL {
 
 		//subscribe to CA Events
 		cCAEventHelper.subscribe_to_ca_events( (poEvent) => { oThis.onCAEvent(poEvent) })
+		cCAEventHelper.subscribe_to_canvas_events(this.grid_name, (poEvent) => { oThis.onCACanvasEvent(poEvent) })
 	}
 
 	//#################################################################
@@ -140,6 +141,17 @@ class cCAControlsL {
 	//#################################################################
 	//# EVENTS
 	//#################################################################`
+	onCACanvasEvent(poEvent) {
+		cDebug.enter()
+		switch (poEvent.action) {
+			case cCACanvasEvent.actions.set_grid:
+				cDebug.write("set_grid")
+				this.grid = poEvent.data.data
+		}
+		cDebug.leave()
+	}
+
+	//*****************************************************************************
 	onCAEvent(poEvent) {
 		cDebug.enter()
 
@@ -151,16 +163,6 @@ class cCAControlsL {
 						var oRule = poEvent.data
 						this.pr__set_rule(oRule)
 						break
-				}
-				break
-
-			case cCAActionEvent.types.canvas:
-				switch (poEvent.action) {
-					case cCACanvasEvent.actions.set_grid:
-						if (poEvent.data.grid_name == this.grid_name) {
-							cDebug.write("set_grid")
-							this.grid = poEvent.data.data
-						}
 				}
 		}
 		cDebug.leave()

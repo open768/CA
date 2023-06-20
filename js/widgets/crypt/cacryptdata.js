@@ -140,6 +140,7 @@ class cCACryptControl {
 
 		//subscribe to CAEvents
 		cCAEventHelper.subscribe_to_ca_events( (poEvent) => { oThis.onCAEvent(poEvent) })
+		cCAEventHelper.subscribe_to_canvas_events(this.ca_name, (poEvent) => { oThis.onCACanvasEvent(poEvent) })
 	}
 
 	//*******************************************************************************
@@ -222,20 +223,22 @@ class cCACryptControl {
 	}
 
 	//*******************************************************************************
+	onCACanvasEvent(poEvent) {
+		cDebug.enter()
+		if (poEvent.action === cCACanvasEvent.actions.set_grid)
+			if (poEvent.data.grid_name === this.ca_name) {
+				//remember the grid, its needed for encryption.
+				this.grid = poEvent.data.data
+				cCACryptEvent.triggerStatus("grid initialised")
+			}
+		cDebug.leave()
+	}
+
+	//*******************************************************************************
 	onCAEvent(poEvent) {
 		var oElement = this.element
 
 		switch (poEvent.type) {
-			case cCAEvent.types.canvas:
-				if (poEvent.action === cCACanvasEvent.actions.set_grid)
-					if (poEvent.data.grid_name === this.ca_name) {
-						//remember the grid, its needed for encryption.
-						this.grid = poEvent.data.data
-						cCACryptEvent.triggerStatus("grid initialised")
-					}
-
-				break
-
 			case cCAEvent.types.general:
 				if (poEvent.action === cCAGeneralEvent.actions.import_grid)
 					if (poEvent.data.name === this.ca_name) {
