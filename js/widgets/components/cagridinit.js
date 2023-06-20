@@ -28,7 +28,7 @@ class cCAGridInit{
 		oElement.addClass("ui-widget")
 
 		//check dependencies
-		if (!bean ) $.error("bean is missing , chack includes")
+		if (!bean ) $.error("bean is missing , check includes")
 		
 		//put something in the widget
 		oElement.empty()
