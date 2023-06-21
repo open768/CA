@@ -43,7 +43,7 @@ class cCAGridInit{
 		var iSelected = parseInt($(poEvent.target).val())
 		
 		//---------tell subscribers to init
-		var oEvent = new cCAEvent( cCAEvent.types.action, cCAActionEvent.actions.grid_init, iSelected)
+		var oEvent = new cCAEvent( this.grid_name, cCAEvent.types.action, cCAActionEvent.actions.grid_init, iSelected)
 		oEvent.trigger(document)
 	}
 	

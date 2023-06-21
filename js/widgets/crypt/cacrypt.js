@@ -148,7 +148,7 @@ class cCACrypt {
 		//---------------informs subscribers that UI is ready -------------------------------
 		var sTxt = "the quick brown fox jumped over the lazy dog".repeat(10)
 		$("#"+cCACryptTypes.input_name).val(sTxt)
-		var oEvent = new cCAEvent( cCAEvent.types.action, cCAActionEvent.actions.ready,null)
+		var oEvent = new cCAEvent( this.ca_name, cCAEvent.types.action, cCAActionEvent.actions.ready,null)
 		oEvent.trigger(document)
 
 		cCACryptEvent.triggerStatus("UI is ready")

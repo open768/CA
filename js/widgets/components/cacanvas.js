@@ -63,7 +63,7 @@ class cCACanvas {
 
 		//subscribe to CAEvents
 		var oThis = this
-		cCAEventHelper.subscribe_to_ca_events( (poEvent) => { oThis.onCAEvent(poEvent) })
+		cCAEventHelper.subscribe_to_ca_events( this.grid_name, (poEvent) => { oThis.onCAEvent(poEvent) })
 	}
 
 	//#################################################################
@@ -132,16 +132,14 @@ class cCACanvas {
 					case cCAGeneralEvent.actions.import_grid:
 						cDebug.write("action: import grid")
 						oGrid = poEvent.data
-						if (oGrid.name === this.grid_name) {
-							this.pr__set_grid(oGrid)
-							//draw the grid
-							this.pr__grid_clear()
-							this.pr__drawGrid()
+						this.pr__set_grid(oGrid)
+						//draw the grid
+						this.pr__grid_clear()
+						this.pr__drawGrid()
 
-							//rule has been set
-							var oEvent = new cCAEvent(cCAEvent.types.rule, cCARuleEvent.actions.update_rule, oGrid.rule)
-							oEvent.trigger(document)
-						}
+						//rule has been set
+						var oEvent = new cCAEvent(this.grid_name, cCAEvent.types.rule, cCARuleEvent.actions.update_rule, oGrid.rule)
+						oEvent.trigger(document)
 						break
 
 					//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 

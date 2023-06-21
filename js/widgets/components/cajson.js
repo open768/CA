@@ -87,10 +87,14 @@ class cCAJson {
 	//#################################################################`
 	onClickExport() {
 		cDebug.enter()
-		if (this.grid == null)
-			alert("no grid set")
-		else if (!this.grid.rule)
+		if (this.grid == null){
+			alert("cant create json - grid is not set")
+			throw new Error("cant create json - grid is not set")
+		}
+		else if (!this.grid.rule){
 			alert("no rule set")
+			throw new Error("cant create json - rule is not set")
+		}
 		else
 			this.pr__create_json()
 		cDebug.leave()
@@ -121,7 +125,7 @@ class cCAJson {
 		var oGrid = cCAGridJSONImporter.populate(this.grid_name, oJson)
 
 		//fire events to tell other controls there is a new rule and grid in town
-		var oEvent = new cCAEvent(cCAEvent.types.general, cCAGeneralEvent.actions.import_grid, oGrid)
+		var oEvent = new cCAEvent(this.grid_name, cCAEvent.types.general, cCAGeneralEvent.actions.import_grid, oGrid)
 		oEvent.trigger(document)
 		cDebug.leave()
 	}
@@ -130,9 +134,9 @@ class cCAJson {
 	//*****************************************************************
 	onCACanvasEvent(poEvent) {
 		cDebug.enter()
-		if (poEvent.type === cCAEvent.types.canvas){
+		if (poEvent.action === cCACanvasEvent.actions.set_grid){
 			cDebug.write("set_grid")
-			this.grid = poEvent.data.data
+			this.grid = poEvent.data
 		}
 		cDebug.leave()
 	}

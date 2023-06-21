@@ -139,7 +139,7 @@ class cCACryptControl {
 		this.init()
 
 		//subscribe to CAEvents
-		cCAEventHelper.subscribe_to_ca_events( (poEvent) => { oThis.onCAEvent(poEvent) })
+		cCAEventHelper.subscribe_to_ca_events( this.ca_name, (poEvent) => { oThis.onCAEvent(poEvent) })
 		cCAEventHelper.subscribe_to_canvas_events(this.ca_name, (poEvent) => { oThis.onCACanvasEvent(poEvent) })
 	}
 

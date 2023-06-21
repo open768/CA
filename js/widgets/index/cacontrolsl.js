@@ -54,7 +54,7 @@ class cCAControlsL {
 		this.pr__init()
 
 		//subscribe to CA Events
-		cCAEventHelper.subscribe_to_ca_events( (poEvent) => { oThis.onCAEvent(poEvent) })
+		cCAEventHelper.subscribe_to_ca_events( this.grid_name, (poEvent) => { oThis.onCAEvent(poEvent) })
 		cCAEventHelper.subscribe_to_canvas_events(this.grid_name, (poEvent) => { oThis.onCACanvasEvent(poEvent) })
 	}
 
@@ -221,7 +221,7 @@ class cCAControlsL {
 					if (!isNaN(oBoredomList.val())) oRule.boredom = oBoredomList.val()
 
 					//inform subscribers
-					var oEvent = new cCAEvent(cCAEvent.types.general, cCAGeneralEvent.actions.set_rule, oRule)
+					var oEvent = new cCAEvent(this.grid_name, cCAEvent.types.general, cCAGeneralEvent.actions.set_rule, oRule)
 					oEvent.trigger(document)
 					caMachineTypes.rule_set = true
 					break

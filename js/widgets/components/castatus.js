@@ -55,11 +55,11 @@ class cCAStatus{
 				if (!poEvent.data) return
 				
 				oTarget = $("#"+cJquery.child_ID(oElement, cCAStatusTypes.ACTIVE_ID))
-				oTarget.html(poEvent.data.data.active)
+				oTarget.html(poEvent.data.active)
 				oTarget = $("#"+cJquery.child_ID(oElement, cCAStatusTypes.CHANGED_ID))
-				oTarget.html(poEvent.data.data.changed)
+				oTarget.html(poEvent.data.changed)
 				oTarget = $("#"+cJquery.child_ID(oElement, cCAStatusTypes.RUNS_ID))
-				oTarget.html(poEvent.data.data.runs)
+				oTarget.html(poEvent.data. 	runs)
 		}
 	}
 	

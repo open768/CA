@@ -19,12 +19,13 @@ class CAException {
 /** cCAEvent class */
 /* eslint-disable-next-line no-unused-vars */
 class cCAEvent {
-	static hook = "CAEV"
+	static hook = "CAEVENT"
 	static types = {
 		canvas: "CNV",
 		action: "ACT",
 		general: "GNR"
 	}
+	name=null
 	type = null
 	action = null
 	data = null
@@ -35,12 +36,18 @@ class cCAEvent {
 	 * @param {string} psAction
 	 * @param {any} poData
 	 */
-	constructor(psType, psAction, poData) {
+	constructor(psName, psType, psAction, poData) {
 		if (psType === null) throw new Error("null type")
 		if (psAction === null) throw new Error("null action")
+		if (psName === null) throw new Error("null name")
 		this.type = psType
 		this.action = psAction
 		this.data = poData
+		this.name = psName
+	}
+
+	static hook_name(psName) {
+		return (this.hook + psName)
 	}
 
 	/**
@@ -48,8 +55,8 @@ class cCAEvent {
 	 * @param {Element} poTarget
 	 */
 	trigger(poTarget) {
-		if (!poTarget) $.error("target missing")
-		var sHook = this.constructor.hook
+		if (!poTarget) throw new Error("target missing")
+		var sHook = cCAEvent.hook_name(this.name)
 		bean.fire(poTarget, sHook, this)
 	}
 }
@@ -179,8 +186,8 @@ class cCAEventHelper {
 		bean.on(poGrid, cCAGridEvent.hook_name(poGrid), pfn)
 	}
 
-	static subscribe_to_ca_events(pfn){
-		bean.on(document, cCAEvent.hook, pfn)
+	static subscribe_to_ca_events(psName, pfn){
+		bean.on(document, cCAEvent.hook_name(psName), pfn)
 	}
 
 	static subscribe_to_canvas_events(psName, pfn){
