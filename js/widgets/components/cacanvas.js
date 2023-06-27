@@ -26,8 +26,8 @@ class cCACanvas {
 	grid_name = null
 	canvas = null
 	drawing = false
-	image_count = 0
-	images_done = 0
+	cells_to_draw = 0
+	cells_drawn = 0
 	interactive = false
 	mouse = {
 		X: 0,
@@ -61,7 +61,7 @@ class cCACanvas {
 		poElement.addClass("ui-widget")
 		poElement.addClass("CACanvas")
 
-		//subscribe to CAEvents
+		//subscribe to CAEvents (see pr__set_grid for subscribing to grid events)
 		var oThis = this
 		cCAEventHelper.subscribe_to_ca_events( this.grid_name, (poEvent) => { oThis.onCAEvent(poEvent) })
 	}
@@ -72,13 +72,13 @@ class cCACanvas {
 	onCAGridEvent(poEvent) {
 		switch (poEvent.action) {
 			case cCAGridEvent.actions.done:
-				this.pr__grid_done(poEvent.data)
+				this.pr__on_grid_done(poEvent.data)
 				break
 			case cCAGridEvent.actions.clear:
-				this.pr__grid_clear()
+				this.pr__on_grid_clear()
 				break
 			case cCAGridEvent.actions.nochange:
-				this.pr__grid_nochange()
+				this.pr__on_grid_nochange()
 				break
 		}
 	}
@@ -134,7 +134,7 @@ class cCACanvas {
 						oGrid = poEvent.data
 						this.pr__set_grid(oGrid)
 						//draw the grid
-						this.pr__grid_clear()
+						this.pr__on_grid_clear()
 						this.pr__drawGrid()
 
 						//rule has been set
@@ -155,16 +155,17 @@ class cCACanvas {
 	}
 
 	//****************************************************************
-	onImageLoad() {
-		this.images_done++
+	onCellDrawn() {
+		//update the count of cells drawn
+		this.cells_drawn++
 
-		if (this.images_done >= this.image_count) {
+		if (this.cells_drawn >= this.cells_to_draw) {
 			//let the grid know that the canvas completed drawing
 			cDebug.write("finished drawing")
 			this.drawing = false
-			var oGrid = this.grid
 
-			setTimeout(function () { oGrid.notifyDrawn() }, 50) //async
+			var oEvent = new cCAGridEvent(this.grid, cCAGridEvent.actions.notifyDrawn);
+			oEvent.trigger()
 		}
 	}
 
@@ -231,7 +232,7 @@ class cCACanvas {
 	}
 
 	//****************************************************************
-	pr__grid_nochange() {
+	pr__on_grid_nochange() {
 		cDebug.enter()
 
 		cDebug.write("no change")
@@ -243,7 +244,7 @@ class cCACanvas {
 	}
 
 	//****************************************************************
-	pr__grid_done(poData) {
+	pr__on_grid_done(poData) {
 		cDebug.enter()
 
 		this.pr__drawGrid()
@@ -254,7 +255,7 @@ class cCACanvas {
 	}
 
 	//****************************************************************
-	pr__grid_clear() {
+	pr__on_grid_clear() {
 		cDebug.enter()
 
 		if (this.canvas) {
@@ -302,8 +303,8 @@ class cCACanvas {
 		cDebug.enter()
 		var oGrid = this.grid
 
-		this.image_count = oGrid.changed_cells.length
-		this.images_done = 0
+		this.cells_to_draw = oGrid.changed_cells.length
+		this.cells_drawn = 0
 		this.drawing = true
 
 		var oCell
@@ -324,8 +325,8 @@ class cCACanvas {
 		cDebug.enter()
 		var oGrid = this.grid
 
-		this.image_count = oGrid.rows * oGrid.cols
-		this.images_done = 0
+		this.cells_to_draw = oGrid.rows * oGrid.cols
+		this.cells_drawn = 0
 		this.drawing = true
 
 		for (var ir = 1; ir <= oGrid.rows; ir++) {
@@ -356,7 +357,7 @@ class cCACanvas {
 		//its faster to blit images than it is to draw vectors
 		oCanvas.drawImage({
 			source: sImg, x: ix, y: iy,
-			fromCenter: false, load() { oThis.onImageLoad() }
+			fromCenter: false, load() { oThis.onCellDrawn() }
 		})
 	}
 

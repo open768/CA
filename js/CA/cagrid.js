@@ -24,6 +24,7 @@ class cCAGrid {
 	//#######################################################################
 	cell_data = null
 	name = null
+	STEP_DELAY = 50 //more for 
 
 	/**
 	 * Creates an instance of cCAGrid.
@@ -44,6 +45,25 @@ class cCAGrid {
 		this.changed_cells = null
 		this.running = false
 		this.status = new cCAGridRunData()
+
+		var oThis = this
+		cCAEventHelper.subscribe_to_grid_events(this, (poEvent)=>{oThis.onCAGridEvent(poEvent)})
+	}
+
+	//#######################################################################
+	//# event handlers
+	//#######################################################################
+	onCAGridEvent(poEvent){
+		var oThis = this
+		switch(poEvent.action){
+			case cCAGridEvent.actions.step_grid:
+				setTimeout(function () { oThis.step() }, this.STEP_DELAY)	//needs to yield
+				break
+			case cCAGridEvent.actions.notifyDrawn:
+				this.onNotifyDrawn()
+				break
+		}
+
 	}
 
 	//#######################################################################
@@ -51,6 +71,7 @@ class cCAGrid {
 	//#######################################################################
 	action(piAction) {
 		cDebug.enter()
+		var oThis = this
 		if (this.rule == null) throw new CAException("no rule set")
 
 		cDebug.write("running action: " + piAction)
@@ -67,7 +88,7 @@ class cCAGrid {
 				this.running = false
 				break
 			case cCAGridTypes.actions.step:
-				this.step()
+				setTimeout(function () { oThis.step() }, this.STEP_DELAY)	//needs to yield
 				break
 			default:
 				throw new CAException("action not recognised: " + piAction)
@@ -90,12 +111,14 @@ class cCAGrid {
 
 	//****************************************************************
 	step() {
-		//TODO shouldnt be able to step until changed_cells are consumed
+		//cant step until changed_cells are consumed
+		if (this.changed_cells)
+			throw new CAException("changed cells must be consumed before stepping")
 
+		//reset counters
 		this.changed_cells = []
 		this.status.changed = 0
 		this.status.active = 0
-
 		cDebug.write("stepping")
 
 		//apply rules
@@ -106,7 +129,7 @@ class cCAGrid {
 				oCell = this.getCell(iRow, iCol, true)
 				if (oCell.rule == null) oCell.rule = this.rule
 				bHasChanged = oCell.apply_rule() //apply rule to each cell
-				if (bHasChanged) this.changed_cells.push(oCell)
+				if (bHasChanged) this.changed_cells.push(oCell) //if the cell has changed remember it
 				if (oCell.value > 0) this.status.active++
 			}
 
@@ -129,6 +152,8 @@ class cCAGrid {
 			else
 				this.status.active++
 		}
+
+		//inform consumers that grid has executed
 		oEvent = new cCAGridEvent(this, cCAGridEvent.actions.done, this.status)
 		oEvent.trigger()
 	}
@@ -219,14 +244,16 @@ class cCAGrid {
 	//# events
 	//#######################################################################
 
-	//****************************************************************
-	notifyDrawn() {
+	onNotifyDrawn() {
 		cDebug.enter()
 		var oThis = this
+		this.changed_cells = null
+		
 		if (this.running) {
 			cDebug.write("running again")
 			this.status.runs++
-			setTimeout(function () { oThis.step() }, 50) //delay is needed to yield
+			var oEvent = new cCAGridEvent(this, cCAGridEvent.actions.step_grid);
+			oEvent.trigger()
 		}
 		cDebug.leave()
 	}
