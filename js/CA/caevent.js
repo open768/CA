@@ -93,10 +93,12 @@ class cCARuleEvent {
 class cCAGridEvent {
 	static hook = "CAGRIDEV"
 	static actions = {
-		done: "GDN",
-		clear: "GCL",
-		nochange: "GNO",
-		init_grid: "GID"
+		done: "GDun",
+		clear: "Gclr",
+		nochange: "Gunch",
+		init_grid: "Ginit",
+		step_grid: "Gstep",
+		notifyDrawn: "Gdrawn"
 	}
 
 	action = null
@@ -109,7 +111,7 @@ class cCAGridEvent {
 	 * @param {psAction} psAction
 	 * @param {any} poData
 	 */
-	constructor(poGrid, psAction, poData) {
+	constructor(poGrid, psAction, poData=null) {
 		if (poGrid == null || psAction == null) $.error("missing params")
 		this.grid = poGrid
 		this.action = psAction
