@@ -98,7 +98,7 @@ class cCAGridEvent {
 		nochange: "Gunch",
 		init_grid: "Ginit",
 		step_grid: "Gstep",
-		notifyDrawn: "Gdrawn"
+		notifyChangedCellsConsumed: "Gcons"
 	}
 
 	action = null

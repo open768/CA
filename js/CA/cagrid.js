@@ -24,7 +24,6 @@ class cCAGrid {
 	//#######################################################################
 	cell_data = null
 	name = null
-	STEP_DELAY = 50 //more for 
 
 	/**
 	 * Creates an instance of cCAGrid.
@@ -54,13 +53,12 @@ class cCAGrid {
 	//# event handlers
 	//#######################################################################
 	onCAGridEvent(poEvent){
-		var oThis = this
 		switch(poEvent.action){
 			case cCAGridEvent.actions.step_grid:
-				setTimeout(function () { oThis.step() }, this.STEP_DELAY)	//needs to yield
+				this.step()
 				break
-			case cCAGridEvent.actions.notifyDrawn:
-				this.onNotifyDrawn()
+			case cCAGridEvent.actions.notifyChangedCellsConsumed:
+				this.onNotifyCellsConsumed()
 				break
 		}
 
@@ -71,7 +69,6 @@ class cCAGrid {
 	//#######################################################################
 	action(piAction) {
 		cDebug.enter()
-		var oThis = this
 		if (this.rule == null) throw new CAException("no rule set")
 
 		cDebug.write("running action: " + piAction)
@@ -88,7 +85,7 @@ class cCAGrid {
 				this.running = false
 				break
 			case cCAGridTypes.actions.step:
-				setTimeout(function () { oThis.step() }, this.STEP_DELAY)	//needs to yield
+				this.step()
 				break
 			default:
 				throw new CAException("action not recognised: " + piAction)
@@ -110,7 +107,7 @@ class cCAGrid {
 	}
 
 	//****************************************************************
-	step() {
+	step(){
 		//cant step until changed_cells are consumed
 		if (this.changed_cells)
 			throw new CAException("changed cells must be consumed before stepping")
@@ -244,10 +241,9 @@ class cCAGrid {
 	//# events
 	//#######################################################################
 
-	onNotifyDrawn() {
+	onNotifyCellsConsumed() {
 		cDebug.enter()
-		var oThis = this
-		this.changed_cells = null
+		this.changed_cells = null		//always clean out the changed cells
 		
 		if (this.running) {
 			cDebug.write("running again")

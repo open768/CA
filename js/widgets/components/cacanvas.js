@@ -40,6 +40,7 @@ class cCACanvas {
 		col: -1
 	}
 	has_mouseup = false
+	GRID_STEP_DELAY = 30 //more for 
 
 	//#################################################################
 	//# Constructor
@@ -163,9 +164,15 @@ class cCACanvas {
 			//let the grid know that the canvas completed drawing
 			cDebug.write("finished drawing")
 			this.drawing = false
+			var oGrid = this.grid
 
-			var oEvent = new cCAGridEvent(this.grid, cCAGridEvent.actions.notifyDrawn);
-			oEvent.trigger()
+			setTimeout(				//canvas needs to yield
+				function () { 
+					var oEvent = new cCAGridEvent(oGrid, cCAGridEvent.actions.notifyChangedCellsConsumed);
+					oEvent.trigger()
+				}, 
+				this.GRID_STEP_DELAY
+			)	
 		}
 	}
 
