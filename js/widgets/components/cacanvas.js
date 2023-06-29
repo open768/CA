@@ -70,6 +70,9 @@ class cCACanvas {
 	//#################################################################
 	//# events
 	//#################################################################`
+	/**
+	 * @param {cCAGridEvent} poEvent
+	 */
 	onCAGridEvent(poEvent) {
 		switch (poEvent.action) {
 			case cCAGridEvent.actions.done:
@@ -188,12 +191,10 @@ class cCACanvas {
 	//****************************************************************
 	onMouseMove(poEvent) {
 		if (!this.interactive) return
-
-		this.pr__get_cell_rc_from_event(poEvent, false)
-
-		if (this.grid && this.mouse.is_down) {
-			this.pr__set_one_cell(poEvent)
-		}
+		if (!this.grid) return
+		if (!this.mouse.is_down) return
+		
+		this.pr__set_one_cell(poEvent)
 	}
 
 	//****************************************************************
@@ -209,9 +210,9 @@ class cCACanvas {
 
 		var oRC = this.pr__get_cell_rc_from_event(poEvent, true)
 		if (oRC) {
-			this.grid.changed_cells = []
-			this.grid.setCellValue(oRC.row, oRC.col, 1)
-			this.pr__drawGrid()
+			var oChangedCell = new cCAGridCell(oRC.row, oRC.col, 1)
+			var oEvent = new cCAGridEvent(this.grid, cCAGridEvent.actions.set_cell, oChangedCell)
+			oEvent.trigger()
 		}
 	}
 
@@ -251,10 +252,17 @@ class cCACanvas {
 	}
 
 	//****************************************************************
+	/**
+	 * Description
+	 * @param {cCAGridRunData} poData
+	 * @returns {any}
+	 */
 	pr__on_grid_done(poData) {
 		cDebug.enter()
 
-		this.pr__drawGrid()
+		this.pr__drawGrid(poData.changed_cells)
+
+		//tell consumers about status
 		var oEvent = new cCACanvasEvent(this.grid_name, cCACanvasEvent.actions.grid_status, poData)
 		oEvent.trigger()
 
@@ -306,22 +314,24 @@ class cCACanvas {
 	}
 
 	//****************************************************************
-	pr__drawGrid() {
+	/**
+	 * draws the grid
+	 * @param {array} paChangedCells
+	 */
+	pr__drawGrid(paChangedCells) {
 		cDebug.enter()
-		var oGrid = this.grid
 
-		this.cells_to_draw = oGrid.changed_cells.length
 		this.cells_drawn = 0
 		this.drawing = true
 
 		var oCell
-		if (oGrid.changed_cells.length == 0) {
+		if (paChangedCells.length == 0) {
 			cDebug.warn("no changed cells - nothing to draw")
 			return
 		}
 
-		for (var i = 0; i < oGrid.changed_cells.length; i++) {
-			oCell = oGrid.changed_cells[i]
+		for (var i = 0; i < paChangedCells.length; i++) {
+			oCell = paChangedCells[i]
 			this.pr__draw_cell(oCell)
 		}
 		cDebug.leave()

@@ -33,6 +33,7 @@ module.exports = {
         "cCAGridJSONExporter": "readonly",
         "cCAGridJSONImporter": "readonly",
         "cCAGridTypes": "readonly",
+        "cCAGridCell": "readonly",
         "cCALexicon": "readonly",
         "cCaIdentityRule": "readonly",
         "cCAIndexOps": "readonly",

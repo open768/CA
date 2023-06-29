@@ -12,6 +12,20 @@ class cCAGridRunData {
 	active = 0
 	runs = 0
 	changed = 0
+	changed_cells = null
+}
+
+/* eslint-disable-next-line no-unused-vars */
+class cCAGridCell {
+	row = null
+	col=null
+	value=null
+	
+	constructor (piRow, piCol, piValue){
+		this.row = piRow
+		this.col = piCol
+		this.value = piValue
+	}
 }
 
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -43,7 +57,7 @@ class cCAGrid {
 		this.rule = null
 		this.changed_cells = null
 		this.running = false
-		this.status = new cCAGridRunData()
+		this.runData = new cCAGridRunData()
 
 		var oThis = this
 		cCAEventHelper.subscribe_to_grid_events(this, (poEvent)=>{oThis.onCAGridEvent(poEvent)})
@@ -52,6 +66,10 @@ class cCAGrid {
 	//#######################################################################
 	//# event handlers
 	//#######################################################################
+	/**
+	 * Description
+	 * @param {cCAGridEvent} poEvent
+	 */
 	onCAGridEvent(poEvent){
 		switch(poEvent.action){
 			case cCAGridEvent.actions.step_grid:
@@ -60,8 +78,10 @@ class cCAGrid {
 			case cCAGridEvent.actions.notifyChangedCellsConsumed:
 				this.onNotifyCellsConsumed()
 				break
+			case cCAGridEvent.actions.set_cell:
+				this.onSetCell(poEvent.data)
+				break
 		}
-
 	}
 
 	//#######################################################################
@@ -77,7 +97,7 @@ class cCAGrid {
 				if (this.running) throw new CAException("CA is allready running")
 				this.running = true
 				this.step()
-				this.status.runs = 1
+				this.runData.runs = 1
 				break
 			case cCAGridTypes.actions.stop:
 				if (!this.running)
@@ -95,6 +115,10 @@ class cCAGrid {
 	}
 
 	//****************************************************************
+	/**
+	 * Description
+	 * @param {cCARule} poRule
+	 */
 	set_rule(poRule) {
 		cDebug.enter()
 		//clear rules from all cells
@@ -114,8 +138,8 @@ class cCAGrid {
 
 		//reset counters
 		this.changed_cells = []
-		this.status.changed = 0
-		this.status.active = 0
+		this.runData.changed = 0
+		this.runData.active = 0
 		cDebug.write("stepping")
 
 		//apply rules
@@ -127,12 +151,12 @@ class cCAGrid {
 				if (oCell.rule == null) oCell.rule = this.rule
 				bHasChanged = oCell.apply_rule() //apply rule to each cell
 				if (bHasChanged) this.changed_cells.push(oCell) //if the cell has changed remember it
-				if (oCell.value > 0) this.status.active++
+				if (oCell.value > 0) this.runData.active++
 			}
 
 		//check how many cells changed
 		var iChangedLen = this.changed_cells.length
-		this.status.changed = iChangedLen
+		this.runData.changed = iChangedLen
 		if (iChangedLen == 0) {
 			this.running = false
 			oEvent = new cCAGridEvent(this, cCAGridEvent.actions.nochange)
@@ -145,14 +169,12 @@ class cCAGrid {
 			oCell = this.changed_cells[iIndex]
 			oCell.promote()
 			if (oCell.value == 0)
-				this.status.active--
+				this.runData.active--
 			else
-				this.status.active++
+				this.runData.active++
 		}
 
-		//inform consumers that grid has executed
-		oEvent = new cCAGridEvent(this, cCAGridEvent.actions.done, this.status)
-		oEvent.trigger()
+		this.informGridDone()
 	}
 
 	//****************************************************************
@@ -166,9 +188,7 @@ class cCAGrid {
 		oInitialiser.init(this, piInitType)
 		cDebug.write("done init grid: " + piInitType)
 
-		var oEvent = new cCAGridEvent(this, cCAGridEvent.actions.done, this.status)
-		oEvent.trigger()
-
+		this.informGridDone()
 		cDebug.leave()
 	}
 
@@ -208,6 +228,12 @@ class cCAGrid {
 	}
 
 	//****************************************************************
+	/**
+	 * @param {number} piRow
+	 * @param {number} piCol
+	 * @param {number} iValue
+	 * @returns {cCACell}
+	 */
 	setCellValue(piRow, piCol, iValue) {
 		if (this.cell_data == null)
 			throw new CAException("grid not initialised")
@@ -228,6 +254,12 @@ class cCAGrid {
 	}
 
 	//****************************************************************
+	/**
+	 * @param {number} piRow
+	 * @param {number} piCol
+	 * @param {boolean} pbCreate
+	 * @returns {cCACell}
+	 */
 	getCell(piRow, piCol, pbCreate = false) {
 		if (this.cell_data == null) return null
 		var oCell = this.cell_data.get(piRow, piCol)
@@ -240,14 +272,34 @@ class cCAGrid {
 	//#######################################################################
 	//# events
 	//#######################################################################
+	informGridDone(){
+		//inform consumers that grid has executed
+		this.runData.changed_cells = this.changed_cells
+		this.changed_cells = []
+		var oEvent = new cCAGridEvent(this, cCAGridEvent.actions.done, this.runData)
+		oEvent.trigger()
+	}
 
+	/**
+	 * Sets a single cell
+	 * @param {cCAGridCell} poCell
+	 */
+	onSetCell(poCell){
+		this.changed_cells = []
+		this.setCellValue(poCell.row, poCell.col, poCell.value)
+		this.informGridDone()
+	}
+
+	/**
+	 * Description
+	 */
 	onNotifyCellsConsumed() {
 		cDebug.enter()
 		this.changed_cells = null		//always clean out the changed cells
 		
 		if (this.running) {
 			cDebug.write("running again")
-			this.status.runs++
+			this.runData.runs++
 			var oEvent = new cCAGridEvent(this, cCAGridEvent.actions.step_grid);
 			oEvent.trigger()
 		}
