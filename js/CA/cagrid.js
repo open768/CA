@@ -38,6 +38,7 @@ class cCAGrid {
 	//#######################################################################
 	cell_data = null
 	name = null
+	#running = false
 
 	/**
 	 * Creates an instance of cCAGrid.
@@ -56,7 +57,7 @@ class cCAGrid {
 		this.name = psName
 		this.rule = null
 		this.changed_cells = null
-		this.running = false
+		this.#running = false
 		this.runData = new cCAGridRunData()
 
 		var oThis = this
@@ -97,6 +98,11 @@ class cCAGrid {
 	//#######################################################################
 	//# methods
 	//#######################################################################
+	is_running(){
+		return this.#running
+	}
+
+	//****************************************************************
 	action(piAction) {
 		cDebug.enter()
 		if (this.rule == null) throw new CAException("no rule set")
@@ -104,15 +110,15 @@ class cCAGrid {
 		cDebug.write("running action: " + piAction)
 		switch (piAction) {
 			case cCAGridTypes.actions.play:
-				if (this.running) throw new CAException("CA is allready running")
-				this.running = true
+				if (this.#running) throw new CAException("CA is allready running")
+				this.#running = true
 				this.step()
 				this.runData.runs = 1
 				break
 			case cCAGridTypes.actions.stop:
-				if (!this.running)
+				if (!this.#running)
 					throw new CAException("CA is not running")
-				this.running = false
+				this.#running = false
 				break
 			case cCAGridTypes.actions.step:
 				this.step()
@@ -168,7 +174,7 @@ class cCAGrid {
 		var iChangedLen = this.changed_cells.length
 		this.runData.changed = iChangedLen
 		if (iChangedLen == 0) {
-			this.running = false
+			this.#running = false
 			oEvent = new cCAGridEvent(this, cCAGridEvent.notify.nochange)
 			oEvent.trigger()
 			return
@@ -190,7 +196,7 @@ class cCAGrid {
 	//****************************************************************
 	init(piInitType) {
 		cDebug.enter()
-		if (this.running) throw new CAException("cant init when running")
+		if (this.#running) throw new CAException("cant init when running")
 
 		this.changed_cells = []
 		cDebug.write("initialising grid:" + piInitType)
@@ -307,7 +313,7 @@ class cCAGrid {
 		cDebug.enter()
 		this.changed_cells = null		//always clean out the changed cells
 		
-		if (this.running) {
+		if (this.#running) {
 			cDebug.write("running again")
 			this.runData.runs++
 			var oEvent = new cCAGridEvent(this, cCAGridEvent.actions.step_grid);

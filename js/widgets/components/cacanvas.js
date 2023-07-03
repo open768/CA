@@ -209,7 +209,7 @@ class cCACanvas {
 	//# privates
 	//#################################################################`
 	pr__set_one_cell(poEvent) {
-		if (this.grid.running) return
+		if (this.grid.is_running()) return
 
 		var oRC = this.pr__get_cell_rc_from_event(poEvent, true)
 		if (oRC) {
