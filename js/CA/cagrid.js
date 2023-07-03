@@ -75,11 +75,14 @@ class cCAGrid {
 			case cCAGridEvent.actions.step_grid:
 				this.step()
 				break
-			case cCAGridEvent.actions.notifyChangedCellsConsumed:
+			case cCAGridEvent.notify.changedCellsConsumed:
 				this.onNotifyCellsConsumed()
 				break
 			case cCAGridEvent.actions.set_cell:
 				this.onSetCell(poEvent.data)
+				break
+			case cCAGridEvent.actions.init_grid:
+				this.init(poEvent.data)
 				break
 		}
 	}
@@ -159,7 +162,7 @@ class cCAGrid {
 		this.runData.changed = iChangedLen
 		if (iChangedLen == 0) {
 			this.running = false
-			oEvent = new cCAGridEvent(this, cCAGridEvent.actions.nochange)
+			oEvent = new cCAGridEvent(this, cCAGridEvent.notify.nochange)
 			oEvent.trigger()
 			return
 		}
@@ -210,7 +213,7 @@ class cCAGrid {
 		//link if there is a rule
 		if (this.rule) this.pr__link_cells()
 
-		var oEvent = new cCAGridEvent(this, cCAGridEvent.actions.clear)
+		var oEvent = new cCAGridEvent(this, cCAGridEvent.notify.clear)
 		oEvent.trigger()
 		cDebug.leave()
 	}
@@ -276,7 +279,7 @@ class cCAGrid {
 		//inform consumers that grid has executed
 		this.runData.changed_cells = this.changed_cells
 		this.changed_cells = []
-		var oEvent = new cCAGridEvent(this, cCAGridEvent.actions.done, this.runData)
+		var oEvent = new cCAGridEvent(this, cCAGridEvent.notify.done, this.runData)
 		oEvent.trigger()
 	}
 

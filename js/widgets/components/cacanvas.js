@@ -75,13 +75,13 @@ class cCACanvas {
 	 */
 	onCAGridEvent(poEvent) {
 		switch (poEvent.action) {
-			case cCAGridEvent.actions.done:
+			case cCAGridEvent.notify.done:
 				this.pr__on_grid_done(poEvent.data)
 				break
-			case cCAGridEvent.actions.clear:
+			case cCAGridEvent.notify.clear:
 				this.pr__on_grid_clear()
 				break
-			case cCAGridEvent.actions.nochange:
+			case cCAGridEvent.notify.nochange:
 				this.pr__on_grid_nochange()
 				break
 		}
@@ -171,7 +171,7 @@ class cCACanvas {
 
 			setTimeout(				//canvas needs to yield
 				function () { 
-					var oEvent = new cCAGridEvent(oGrid, cCAGridEvent.actions.notifyChangedCellsConsumed);
+					var oEvent = new cCAGridEvent(oGrid, cCAGridEvent.notify.changedCellsConsumed);
 					oEvent.trigger()
 				}, 
 				this.GRID_STEP_DELAY
@@ -309,7 +309,8 @@ class cCACanvas {
 		this.canvas = oCanvas
 
 		//initialise the grid
-		this.grid.init(cCAGridTypes.init.block.id)
+		var oEvent = new cCAGridEvent(this.grid, cCAGridEvent.actions.init_grid, cCAGridTypes.init.block.id)
+		oEvent.trigger()
 		cDebug.leave()
 	}
 

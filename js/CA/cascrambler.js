@@ -149,7 +149,7 @@ class cCAScrambler{
 	 */
 	onCAGridEvent(poEvent){
 		cDebug.write(poEvent)
-		if (poEvent.action == cCAGridEvent.actions.done)
+		if (poEvent.action == cCAGridEvent.notify.done)
 			if (this.status == cCAScramblerTypes.status.initialRuns){
 				this.initial_runs_completed++
 				this.perform_inital_runs()

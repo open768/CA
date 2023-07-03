@@ -93,13 +93,15 @@ class cCARuleEvent {
 class cCAGridEvent {
 	static hook = "CAGRIDEV"
 	static actions = {
-		done: "GD",
-		clear: "Gc",
-		nochange: "Gnch",
-		init_grid: "Gini",
-		step_grid: "Gstp",
-		notifyChangedCellsConsumed: "Gnccc",
-		set_cell: "GSC"
+		init_grid: "GAini",
+		step_grid: "GAstep",
+		set_cell: "GASet"
+	}
+	static notify = {
+		clear: "GNclear",
+		done: "GNDone",
+		changedCellsConsumed: "GNccc",
+		nochange: "GNnochg",
 	}
 
 	action = null
