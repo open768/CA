@@ -91,7 +91,7 @@ class cCACanvas {
 	onCAEvent(poEvent) {
 		var oElement = this.element
 		var oThis = this
-		var oGrid
+		var oGrid,oEvent
 
 		cDebug.enter()
 
@@ -119,14 +119,14 @@ class cCACanvas {
 					case cCAActionEvent.actions.grid_init:
 						cDebug.write("event: initialise")
 						var iInitType = poEvent.data
-						var oEvent = new cCAGridEvent(this.grid, cCAGridEvent.actions.init_grid, iInitType)
+						oEvent = new cCAGridEvent(this.grid, cCAGridEvent.actions.init_grid, iInitType)
 						oEvent.trigger()
 						break
 
 					//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 					case cCAActionEvent.actions.control:
 						cDebug.write("event: action")
-						var oEvent = new cCAGridEvent(this.grid, cCAGridEvent.actions.control, poEvent.data)
+						oEvent = new cCAGridEvent(this.grid, cCAGridEvent.actions.control, poEvent.data)
 						oEvent.trigger()
 						break
 				}
@@ -144,14 +144,15 @@ class cCACanvas {
 						this.pr__drawGrid()
 
 						//rule has been set
-						var oEvent = new cCAEvent(this.grid_name, cCAEvent.types.rule, cCARuleEvent.actions.update_rule, oGrid.rule)
+						oEvent = new cCAEvent(this.grid_name, cCAEvent.types.rule, cCARuleEvent.actions.update_rule, oGrid.rule)
 						oEvent.trigger(document)
 						break
 
 					//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 					case cCAGeneralEvent.actions.set_rule:
 						cDebug.write("action: set rule")
-						this.grid.set_rule(poEvent.data)
+						oEvent = new cCAGridEvent(this.grid, cCAGridEvent.actions.set_rule, poEvent.data)
+						oEvent.trigger()
 						break
 				}
 				break

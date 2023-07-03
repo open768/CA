@@ -87,6 +87,10 @@ class cCAGrid {
 			case cCAGridEvent.actions.init_grid:
 				this.init(poEvent.data)
 				break
+			case cCAGridEvent.actions.set_rule:
+				this.set_rule(poEvent.data)
+				break
+
 		}
 	}
 
