@@ -119,13 +119,15 @@ class cCACanvas {
 					case cCAActionEvent.actions.grid_init:
 						cDebug.write("event: initialise")
 						var iInitType = poEvent.data
-						this.grid.init(iInitType)
+						var oEvent = new cCAGridEvent(this.grid, cCAGridEvent.actions.init_grid, iInitType)
+						oEvent.trigger()
 						break
 
 					//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 					case cCAActionEvent.actions.control:
 						cDebug.write("event: action")
-						this.grid.action(poEvent.data)
+						var oEvent = new cCAGridEvent(this.grid, cCAGridEvent.actions.control, poEvent.data)
+						oEvent.trigger()
 						break
 				}
 				break

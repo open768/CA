@@ -95,7 +95,8 @@ class cCAGridEvent {
 	static actions = {
 		init_grid: "GAini",
 		step_grid: "GAstep",
-		set_cell: "GASet"
+		set_cell: "GASet",
+		control: "GAControl"
 	}
 	static notify = {
 		clear: "GNclear",

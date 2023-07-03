@@ -72,6 +72,9 @@ class cCAGrid {
 	 */
 	onCAGridEvent(poEvent){
 		switch(poEvent.action){
+			case cCAGridEvent.actions.control:
+				this.action(poEvent.data)
+				break
 			case cCAGridEvent.actions.step_grid:
 				this.step()
 				break
