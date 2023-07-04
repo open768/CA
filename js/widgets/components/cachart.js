@@ -42,6 +42,11 @@ class cCAChart{
 	#grid_name = null
 	
 	constructor(poOptions, poElement){
+		
+		//checks
+		if (!poOptions.grid_name) $.error("grid name not provided")
+
+		//store the element
 		this.#element = poElement
 		this.#grid_name = poOptions.grid_name
 		
@@ -176,16 +181,6 @@ $.widget( "ck.cachart",{
 
 	//*****************************************************************
 	_create: function(){
-		var oOptions = this.options
-		var oElement = this.element
-		
-		//checks
-		if (!oOptions.grid_name) $.error("grid name not provided")
-		
-		//set basic stuff
-		oElement.uniqueId()
-		oElement.addClass("ui-widget")
-		
-		new cCAChart(oOptions, oElement) //call the class constructor
+		new cCAChart(this.options, this.element) //call the class constructor
 	}
 })
