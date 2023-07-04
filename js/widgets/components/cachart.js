@@ -114,7 +114,7 @@ class cCAChart{
 					cDebug.leave()
 					return
 				}
-				var oData = poEvent.data.data
+				var oData = poEvent.data
 				if (!oData){
 					cDebug.extra_debug("no data")
 					return
