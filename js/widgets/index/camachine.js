@@ -41,50 +41,48 @@ $.widget( "ck.camachine",{
 		//machine has 3 child widgets: control panel and machine canvas, status
 		//widgets will subscribe and publish events themselves
 		oElement.empty()
-		var oCell, oRow
-		var oTable = $("<table>")
+		var oCell
+		var oContainer = $("<div>")
 			//----------------------------------------------------------------------------------
-			oRow = $("<TR>")
-				//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-				//left controls - rule configuration 
-				oCell = $("<TD>", {width:350,valign:"top",})
-					var oLeftCtrlDiv = $("<DIV>",{width:350,id:"leftControl"})
-					oLeftCtrlDiv.cacontrolsl({grid_name:sCaName})
-						oCell.append(oLeftCtrlDiv)
-					oRow.append(oCell)
-				
-				//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-				oCell = $("<TD>")
-					var oCanvasDiv = $("<SPAN>",{title:"this is where the magic happens", id:"canvas"})
-					oCanvasDiv.cacanvas({
-						cols:oOptions.cols,
-						rows:oOptions.rows,
-						cell_size:oOptions.cell_size,
-						grid_name: sCaName
-					})
-					oCell.append(oCanvasDiv)
-				oRow.append(oCell)
-				
-				//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-				//right panel - grid initialisation, status and run controls
-				oCell = $("<TD>", {width:240,valign:"top"})
-					var oRightCtrlDiv = $("<DIV>", {width:240, id:"rightControl"})
-					oRightCtrlDiv.cacontrolsr({grid_name:sCaName})
-					oCell.append(oRightCtrlDiv)
-				oRow.append(oCell)
-			oTable.append(oRow)
+			//left controls - rule configuration 
+			oCell = $("<div>", {class:"w3-cell w3-cell-top w3-container"})
+				var oLeftCtrlDiv = $("<DIV>",{width:350,id:"leftControl"})
+				oLeftCtrlDiv.cacontrolsl({grid_name:sCaName})
+					oCell.append(oLeftCtrlDiv)
+				oContainer.append(oCell)
+			
+			//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+			oCell = $("<div>", {class:"w3-cell w3-cell-top w3-container"})
+				var oCanvasDiv = $("<SPAN>",{title:"this is where the magic happens", id:"canvas"})
+				oCanvasDiv.cacanvas({
+					cols:oOptions.cols,
+					rows:oOptions.rows,
+					cell_size:oOptions.cell_size,
+					grid_name: sCaName
+				})
+				oCell.append(oCanvasDiv)
+			oContainer.append(oCell)
+			
+			//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+			//right panel - grid initialisation, status and run controls
+			oCell = $("<div>", {class:"w3-cell w3-cell-top w3-container"})
+				var oRightCtrlDiv = $("<DIV>", {width:240, id:"rightControl"})
+				oRightCtrlDiv.cacontrolsr({grid_name:sCaName})
+				oCell.append(oRightCtrlDiv)
+				oContainer.append(oCell)
+			oContainer.append(oCell)
+		oElement.append(oContainer)
 			
 			//----------------------------------------------------------------------------------
+		oContainer = $("<div>", {class:"w3-cell-row"})
 			//JSON panel
-			oRow = $("<TR>")
-				oCell = $("<TD>", {valign:"top",colspan:3})
-					var oJsonDiv = $("<DIV>", {title:"json will appear here",id:"JsonPanel"})
-						oJsonDiv.cajson({grid_name:sCaName})
-						oCell.append(oJsonDiv)
-				oRow.append(oCell)
-			oTable.append(oRow)
-		oElement.append(oTable)
-		
+			oCell = $("<div>", {class:"w3-cell"})
+				var oJsonDiv = $("<DIV>", {title:"json will appear here",id:"JsonPanel"})
+					oJsonDiv.cajson({grid_name:sCaName})
+					oCell.append(oJsonDiv)
+			oContainer.append(oCell)
+		oElement.append(oContainer)
+						
 		//check clipboard
 		cBrowser.get_clipboard_permissions(true)
 		
