@@ -35,17 +35,17 @@ class cCAChartTypes {
 //# Options
 //#################################################################
 class cCAChart{
-	runs =0
-	vis_data= null
-	chart= null
-	element = null
-	grid_name = null
+	#runs =0
+	#vis_data= null
+	#chart= null
+	#element = null
+	#grid_name = null
 	
 	constructor(poOptions, poElement){
-		this.element = poElement
-		this.grid_name = poOptions.grid_name
+		this.#element = poElement
+		this.#grid_name = poOptions.grid_name
 		
-		var oElement = this.element
+		var oElement = this.#element
 		var oThis = this
 		
 		//basic stuff
@@ -62,11 +62,11 @@ class cCAChart{
 			oDiv.width(poOptions.width)
 			oDiv.height(poOptions.height)
 			oElement.append(oDiv)
-		this.pr__clear_chart()
+		this.#clear_chart()
 
 		//subscribe to CAEvents
-		cCAEventHelper.subscribe_to_ca_events( this.grid_name, (poEvent) => { oThis.onCAEvent(poEvent) })
-		cCAEventHelper.subscribe_to_canvas_events(this.grid_name, (poEvent) => { oThis.onCACanvasEvent(poEvent) })
+		cCAEventHelper.subscribe_to_ca_events( this.#grid_name, (poEvent) => { oThis.onCAEvent(poEvent) })
+		cCAEventHelper.subscribe_to_canvas_events(this.#grid_name, (poEvent) => { oThis.onCACanvasEvent(poEvent) })
 	}
 	
 	//*****************************************************************
@@ -74,17 +74,17 @@ class cCAChart{
 	//*****************************************************************
 	
 	//*****************************************************************
-	pr__create_data(){
-		var oElement = this.element
+	#create_data(){
+		var oElement = this.#element
 		
 		//check if the data has been previously created
-		if (this.vis_data) return
+		if (this.#vis_data) return
 		if (!google.visualization)  $.error("google.visualization class is missing! check includes")	
-		this.pr__clear_chart()
+		this.#clear_chart()
 
 		//create the google data
 		var oData = new google.visualization.DataTable()
-		this.vis_data = oData
+		this.#vis_data = oData
 		oData.addColumn('number', 'Run')
 		oData.addColumn('number', 'changed')		
 		oData.addColumn('number', 'active')		
@@ -92,7 +92,7 @@ class cCAChart{
 
 		//create the chart
 		var oChartElement = $("#"+cJquery.child_ID(oElement, "chart"))
-		this.chart = new google.visualization.LineChart( oChartElement[0] )
+		this.#chart = new google.visualization.LineChart( oChartElement[0] )
 	}
 	
 	//*****************************************************************
@@ -115,11 +115,11 @@ class cCAChart{
 					return
 				}
 				
-				this.pr__create_data()
-				this.vis_data.addRow([this.runs, oData.changed, oData.active, "Run: " + this.runs])
-				this.chart.draw(this.vis_data)
+				this.#create_data()
+				this.#vis_data.addRow([this.#runs, oData.changed, oData.active, "Run: " + this.#runs])
+				this.#chart.draw(this.#vis_data)
 				
-				this.runs ++
+				this.#runs ++
 				break
 		}
 		cDebug.leave()
@@ -136,7 +136,7 @@ class cCAChart{
 				switch (poEvent.action){
 					case cCARuleEvent.actions.set_rule:
 						cDebug.write("set_rule action")
-						this.pr__clear_chart()
+						this.#clear_chart()
 				}
 				break
 			//----------------------------------------------------------------------
@@ -145,19 +145,19 @@ class cCAChart{
 				switch (poEvent.action){
 					case cCAActionEvent.actions.grid_init:
 						cDebug.write("grid_init action")
-						this.pr__clear_chart()
+						this.#clear_chart()
 				}
 				break
 		}
 		cDebug.leave()
 	}
 	
-	pr__clear_chart(){
-		var oElement = this.element
+	#clear_chart(){
+		var oElement = this.#element
 		var oChartElement = $("#"+cJquery.child_ID(oElement, "chart"))
-		this.vis_data = null
-		this.chart = null
-		this.runs = 0
+		this.#vis_data = null
+		this.#chart = null
+		this.#runs = 0
 		oChartElement.empty()
 		oChartElement.append("Waiting for Data ...")
 	}
