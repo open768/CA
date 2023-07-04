@@ -61,6 +61,7 @@ module.exports = {
         "cHttpQueueItem": "readonly",
         "cJquery": "readonly",
         "cSparseArray": "readonly",
-        "google": "readonly"
+        "google": "readonly",
+        "md5": "readonly"
     }
 }

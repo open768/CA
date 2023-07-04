@@ -77,7 +77,7 @@ class cCARemoteControls{
 				this.grid_set = true
 				this.pr__enable_buttons()
 				break
-			case cCACanvasEvent.actions.nochange:
+			case cCACanvasEvent.notify.nochange:
 				setTimeout( function(){	oThis.pr__set_controls(false)}, 100) //stop
 		}
 	}

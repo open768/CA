@@ -105,6 +105,7 @@ class cCAGridEvent {
 		done: "GNDone",
 		changedCellsConsumed: "GNccc",
 		nochange: "GNnochg",
+		repeatPattern: "GNPattern"
 	}
 
 	action = null
@@ -156,9 +157,11 @@ class cCACanvasEventData {
 class cCACanvasEvent {
 	static hook = "CACANVASEV"
 	static actions = {
-		nochange: "CENC",
-		grid_status: "CEGS",
-		set_grid: "CESG"
+		grid_status: "CAstatus",
+		set_grid: "CASetgrid"
+	}
+	static notify = {
+		nochange: "CNnochange"
 	}
 
 	action = null
