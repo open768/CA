@@ -23,7 +23,7 @@ class cCACanvas {
 	//#################################################################
 	//# Definition
 	//#################################################################
-	GRID_STEP_DELAY = 30 //more for 
+	GRID_STEP_DELAY = 50 //fudge factor
 	rows = 100
 	cols = 100
 	interactive = false
@@ -174,7 +174,11 @@ class cCACanvas {
 	}
 
 	//****************************************************************
-	#onCellDrawn() {
+	/**
+	 * fires when image from cell is loaded
+	 * not ideal, as want an event after image is drawn, which is done asynchronously
+	 */
+	#onCellImageLoaded() {
 		//update the count of cells drawn
 		this.#cells_drawn++
 
@@ -183,12 +187,12 @@ class cCACanvas {
 			cDebug.write("finished drawing")
 			var oGrid = this.#grid
 
-			setTimeout(				//canvas needs to yield
+			setTimeout(				//canvas needs to yield to allow image to be drawn
 				function () { 
 					var oEvent = new cCAGridEvent(oGrid, cCAGridEvent.notify.changedCellsConsumed);
 					oEvent.trigger()
-				}, 
-				this.GRID_STEP_DELAY
+				}, 	
+				this.GRID_STEP_DELAY		//wait for fudge factor
 			)	
 		}
 	}
@@ -379,7 +383,7 @@ class cCACanvas {
 				x: ix, 
 				y: iy,
 				fromCenter: false, 
-				load: () => { oThis.#onCellDrawn() }
+				load: () => { oThis.#onCellImageLoaded() }
 			})
 		else{
 			$.error("not implemented")
