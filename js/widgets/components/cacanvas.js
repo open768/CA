@@ -8,6 +8,9 @@ contact: https://github.com/open768/
 For licenses that allow for commercial use please contact cluck@chickenkatsu.co.uk
 
 USE AT YOUR OWN RISK - NO GUARANTEES OF ANY FORM ARE EITHER EXPRESSED OR IMPLIED
+
+uses Jcanvas https://github.com/caleb531/jcanvas/ https://projects.calebevans.me/jcanvas/docs/
+
 **************************************************************************/
 class cCACanvasTypes {
 	static white_image = "images/whitebox.png"
@@ -371,15 +374,15 @@ class cCACanvas {
 		//------------------draw
 		//its faster to blit images than it is to draw vectors
 		if (this.draw_images)
-			oCanvas.drawImage({
+			oCanvas.drawImage({				//uses jcanvas
 				source: sImg, 
 				x: ix, 
 				y: iy,
 				fromCenter: false, 
-				load() { oThis.#onCellDrawn() }
+				load: () => { oThis.#onCellDrawn() }
 			})
 		else{
-
+			$.error("not implemented")
 		}
 	}
 }
