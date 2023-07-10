@@ -139,8 +139,9 @@ class cCACryptControl {
 		this.init()
 
 		//subscribe to CAEvents
-		cCAEventHelper.subscribe_to_ca_events( this.ca_name, (poEvent) => { oThis.onCAEvent(poEvent) })
-		cCAEventHelper.subscribe_to_canvas_events(this.ca_name, (poEvent) => { oThis.onCACanvasEvent(poEvent) })
+		cCAEventHelper.subscribe_to_ca_events( this.ca_name, poEvent => { oThis.onCAEvent(poEvent) })
+		cCAEventHelper.subscribe_to_rule_events( this.ca_name, poEvent => { oThis.onCARuleEvent(poEvent) })
+		cCAEventHelper.subscribe_to_canvas_events(this.ca_name, poEvent => { oThis.onCACanvasEvent(poEvent) })
 	}
 
 	//*******************************************************************************
@@ -235,9 +236,19 @@ class cCACryptControl {
 	}
 
 	//*******************************************************************************
-	onCAEvent(poEvent) {
-		var oElement = this.element
+	onCARuleEvent(poEvent) {
+		if (poEvent.action === cCARuleEvent.actions.update_rule) {
+			var oElement = this.element
+			//enable buttons when any rule is set
+			var sID = cJquery.child_ID(oElement, this.child_names.crypt)
+			$("#" + sID).prop("disabled", false)
+			sID = cJquery.child_ID(oElement, this.child_names.decrypt)
+			$("#" + sID).prop("disabled", false)
+		}
+	}
 
+	//*******************************************************************************
+	onCAEvent(poEvent) {
 		switch (poEvent.type) {
 			case cCAEvent.types.general:
 				if (poEvent.action === cCAGeneralEvent.actions.import_grid)
@@ -246,15 +257,6 @@ class cCACryptControl {
 						cCACryptEvent.triggerStatus("grid imported - ready to rock")
 					}
 				break
-
-			case cCAEvent.types.actions:
-				if (poEvent.action === cCARuleEvent.actions.update_rule) {
-					//enable buttons when any rule is set
-					var sID = cJquery.child_ID(oElement, this.child_names.crypt)
-					$("#" + sID).prop("disabled", false)
-					sID = cJquery.child_ID(oElement, this.child_names.decrypt)
-					$("#" + sID).prop("disabled", false)
-				}
 		}
 	}
 }

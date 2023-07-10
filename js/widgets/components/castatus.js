@@ -37,7 +37,7 @@ class cCAStatus{
 		if (!bean ) $.error("bean is missing , chack includes")
 		
 		//subscribe to CAEvents
-		cCAEventHelper.subscribe_to_canvas_events(this.grid_name, (poEvent) => { oThis.onCACanvasEvent(poEvent) })
+		cCAEventHelper.subscribe_to_canvas_events(this.grid_name, poEvent => { oThis.onCACanvasEvent(poEvent) })
 		
 		//put something in the widget
 		oElement.empty()

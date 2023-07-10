@@ -23,7 +23,7 @@ class cCACanvas {
 	//#################################################################
 	//# Definition
 	//#################################################################
-	GRID_STEP_DELAY = 50 //fudge factor
+	CELL_LOAD_DELAY = 50 //fudge factor
 	rows = 100
 	cols = 100
 	interactive = false
@@ -68,7 +68,7 @@ class cCACanvas {
 
 		//subscribe to CAEvents (see #set_grid for subscribing to grid events)
 		var oThis = this
-		cCAEventHelper.subscribe_to_ca_events( this.#grid_name, (poEvent) => { oThis.#onCAEvent(poEvent) })
+		cCAEventHelper.subscribe_to_ca_events( this.#grid_name, poEvent => { oThis.#onCAEvent(poEvent) })
 	}
 
 	//#################################################################
@@ -156,7 +156,7 @@ class cCACanvas {
 						this.#drawGrid()
 
 						//rule has been set
-						oEvent = new cCAEvent(this.#grid_name, cCAEvent.types.rule, cCARuleEvent.actions.update_rule, oGrid.rule)
+						oEvent = new cCARuleEvent(this.#grid_name, cCARuleEvent.actions.update_rule, oGrid.rule)
 						oEvent.trigger(document)
 						break
 
@@ -182,6 +182,7 @@ class cCACanvas {
 		//update the count of cells drawn
 		this.#cells_drawn++
 
+		// when all cells have been drawn, let the grid know that the cells have been consumed
 		if (this.#cells_drawn >= this.#cells_to_draw) {
 			//let the grid know that the canvas completed #drawing
 			cDebug.write("finished drawing")
@@ -192,7 +193,7 @@ class cCACanvas {
 					var oEvent = new cCAGridEvent(oGrid, cCAGridEvent.notify.changedCellsConsumed);
 					oEvent.trigger()
 				}, 	
-				this.GRID_STEP_DELAY		//wait for fudge factor
+				this.CELL_LOAD_DELAY		//fudge factor to delay next grid cycle
 			)	
 		}
 	}
@@ -266,7 +267,7 @@ class cCACanvas {
 	#on_grid_done(poData) {
 		cDebug.enter()
 
-		this.#drawGrid(poData.changed_cells)
+		this.#drawGrid(poData.changed_cells)	//draw the changed cells
 
 		//tell consumers about status
 		var oEvent = new cCACanvasEvent(this.#grid_name, cCACanvasEvent.actions.grid_status, poData)

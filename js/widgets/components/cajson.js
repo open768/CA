@@ -45,7 +45,7 @@ class cCAJson {
 		this.pr__init()
 
 		//subscribe to CA Events
-		cCAEventHelper.subscribe_to_canvas_events(this.grid_name, (poEvent) => { oThis.onCACanvasEvent(poEvent) })
+		cCAEventHelper.subscribe_to_canvas_events(this.grid_name, poEvent => { oThis.onCACanvasEvent(poEvent) })
 		cDebug.leave()
 	}
 

@@ -83,10 +83,31 @@ class cCAGeneralEvent {
 //###############################################################################
 /* eslint-disable-next-line no-unused-vars */
 class cCARuleEvent {
+	static hook = "CARULEEV"
 	static actions = {
 		update_rule: "REUR"
 	}
+	grid_name = null
+	action = null
+	data = null
+
+	constructor(psGridName, psAction, poData) {
+		if (!psGridName || !psAction) $.error("incorrect number of arguments")
+		this.grid_name = psGridName
+		this.action = psAction
+		this.data = poData
+	}
+
+	trigger() {
+		var sEventName = cCARuleEvent.hook_name(this.grid_name)
+		bean.fire(document, sEventName, this)
+	}
+
+	static hook_name(psName){
+		return (this.hook + psName)
+	}
 }
+
 
 //###############################################################################
 /* eslint-disable-next-line no-unused-vars */
@@ -203,5 +224,9 @@ class cCAEventHelper {
 
 	static subscribe_to_canvas_events(psName, pfn){
 		bean.on(document, cCACanvasEvent.hook_name(psName), pfn)
+	}
+	
+	static subscribe_to_rule_events(psName, pfn){
+		bean.on(document, cCARuleEvent.hook_name(psName), pfn)
 	}
 }
