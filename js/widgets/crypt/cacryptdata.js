@@ -139,7 +139,7 @@ class cCACryptControl {
 		this.init()
 
 		//subscribe to CAEvents
-		cCAEventHelper.subscribe_to_general_events( this.ca_name, poEvent => { oThis.onCAGeneralEvent(poEvent) })
+		cCAEventHelper.subscribe_to_grid_events( this.ca_name, poEvent => { oThis.onCAGridEvent(poEvent) })
 		cCAEventHelper.subscribe_to_rule_events( this.ca_name, poEvent => { oThis.onCARuleEvent(poEvent) })
 		cCAEventHelper.subscribe_to_canvas_events(this.ca_name, poEvent => { oThis.onCACanvasEvent(poEvent) })
 	}
@@ -248,8 +248,8 @@ class cCACryptControl {
 	}
 
 	//*******************************************************************************
-	onCAGeneralEvent(poEvent) {
-		if (poEvent.action === cCAGeneralEvent.actions.import_grid){
+	onCAGridEvent(poEvent) {
+		if (poEvent.action === cCAGridEvent.actions.import_grid){
 			this.grid = poEvent.data
 			cCACryptEvent.triggerStatus("grid imported - ready to rock")
 		}

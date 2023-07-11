@@ -65,7 +65,7 @@ class cCACanvas {
 		var oThis = this
 		cCAEventHelper.subscribe_to_rule_events( this.#grid_name, poEvent => { oThis.#onCARuleEvent(poEvent) })
 		cCAEventHelper.subscribe_to_action_events( this.#grid_name, poEvent => { oThis.#onCAActionEvent(poEvent) })
-		cCAEventHelper.subscribe_to_general_events( this.#grid_name, poEvent => { oThis.#onCAGeneralEvent(poEvent) })
+		cCAEventHelper.subscribe_to_grid_events( this.#grid_name, poEvent => { oThis.#onCAGridEvent(poEvent) })
 	}
 
 	//#################################################################
@@ -91,6 +91,18 @@ class cCACanvas {
 			case cCAGridEvent.notify.repeatPattern:
 				alert("repeat pattern seen")
 				oEvent = new cCACanvasEvent(this.#grid_name, cCACanvasEvent.notify.nochange, null)
+				oEvent.trigger()
+				break
+			case cCAGridEvent.actions.import_grid:
+				cDebug.write("action: import grid")
+				var oGrid = poEvent.data
+				this.#set_grid(oGrid)
+				//draw the grid
+				this.#on_grid_clear()
+				this.#drawGrid()
+
+				//rule has been set
+				oEvent = new cCARuleEvent(this.#grid_name, cCARuleEvent.actions.update_rule, oGrid.rule)
 				oEvent.trigger()
 				break
 		}
@@ -147,27 +159,6 @@ class cCACanvas {
 				oEvent.trigger()
 				break
 		}
-	}
-	//****************************************************************
-	#onCAGeneralEvent(poEvent) {
-		var oEvent
-
-		cDebug.enter()
-		switch (poEvent.action) {
-			case cCAGeneralEvent.actions.import_grid:
-				cDebug.write("action: import grid")
-				var oGrid = poEvent.data
-				this.#set_grid(oGrid)
-				//draw the grid
-				this.#on_grid_clear()
-				this.#drawGrid()
-
-				//rule has been set
-				oEvent = new cCARuleEvent(this.#grid_name, cCARuleEvent.actions.update_rule, oGrid.rule)
-				oEvent.trigger()
-				break
-		}
-		cDebug.leave()
 	}
 
 	//****************************************************************
@@ -283,11 +274,7 @@ class cCACanvas {
 
 	//****************************************************************
 	#set_grid(poGrid) {
-		var oThis = this
 		this.#grid = poGrid
-
-		//subscribe to grid events
-		cCAEventHelper.subscribe_to_grid_events(this.#grid_name, (poEvent)=>{oThis.#onCAGridEvent(poEvent)})
 
 		// publish grid details to anyone interested - eg to export grid data, or start/stop the grid
 		var oEvent = new cCACanvasEvent(this.#grid_name, cCACanvasEvent.actions.set_grid, poGrid)

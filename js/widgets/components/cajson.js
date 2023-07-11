@@ -125,7 +125,7 @@ class cCAJson {
 		var oGrid = cCAGridJSONImporter.populate(this.grid_name, oJson)
 
 		//fire events to tell other controls there is a new rule and grid in town
-		var oEvent = new cCAGeneralEvent(this.grid_name, cCAGeneralEvent.actions.import_grid, oGrid)
+		var oEvent = new cCAGridEvent(this.grid_name, cCAGridEvent.actions.import_grid, oGrid)
 		oEvent.trigger()
 		cDebug.leave()
 	}

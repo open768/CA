@@ -49,14 +49,6 @@ class cCAActionEvent extends cCABaseEvent{
 	}
 }
 
-//***************************************************************************
-/* eslint-disable-next-line no-unused-vars */
-class cCAGeneralEvent extends cCABaseEvent{
-	hook = "CAGENEV"
-	static actions = {
-		import_grid: "GEIG"
-	}
-}
 
 //***************************************************************************
 /* eslint-disable-next-line no-unused-vars */
@@ -78,8 +70,8 @@ class cCAGridEvent extends cCABaseEvent{
 		step_grid: "GAstep",
 		set_cell: "GASet",
 		control: "GAControl",
-		set_rule: "GASetRule"
-
+		set_rule: "GASetRule",
+		import_grid: "GEIG"
 	}
 	static notify = {
 		clear: "GNclear",
@@ -116,11 +108,6 @@ class cCAEventHelper {
 		this.#do_subscribe(oDummyEvent.hook_name(), pfn)
 	}
 	
-	static subscribe_to_general_events(psName, pfn){
-		var oDummyEvent = new cCAGeneralEvent(psName,"dummy")
-		this.#do_subscribe(oDummyEvent.hook_name(), pfn)
-	}
-
 	static subscribe_to_grid_events(psName, pfn){
 		var oDummyEvent = new cCAGridEvent(psName,"dummy")
 		this.#do_subscribe(oDummyEvent.hook_name(), pfn)
