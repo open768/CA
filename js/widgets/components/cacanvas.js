@@ -12,10 +12,6 @@ USE AT YOUR OWN RISK - NO GUARANTEES OF ANY FORM ARE EITHER EXPRESSED OR IMPLIED
 uses Jcanvas https://github.com/caleb531/jcanvas/ https://projects.calebevans.me/jcanvas/docs/
 
 **************************************************************************/
-class cCACanvasTypes {
-	static white_image = "images/whitebox.png"
-	static black_image = "images/blackbox.png"
-}
 
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -27,7 +23,6 @@ class cCACanvas {
 	rows = 100
 	cols = 100
 	interactive = false
-	draw_images = true
 
 	#grid = null
 	#grid_name = null
@@ -170,11 +165,7 @@ class cCACanvas {
 	}
 
 	//****************************************************************
-	/**
-	 * fires when image from cell is loaded
-	 * not ideal, as want an event after image is drawn, which is done asynchronously
-	 */
-	#onCellImageLoaded() {
+	#count_drawn_cells(){
 		//update the count of cells drawn
 		this.#cells_drawn++
 		var oThis = this
@@ -359,11 +350,8 @@ class cCACanvas {
 
 	//****************************************************************
 	#draw_cell(poCell) {
-		var oThis = this
 		var oCanvas = this.#canvas
 
-		//-----------------what img to use
-		var sImg = (poCell.value == 0 ? cCACanvasTypes.white_image : cCACanvasTypes.black_image)
 
 		//-----------------coords of cell
 		var iRow, iCol
@@ -373,18 +361,14 @@ class cCACanvas {
 		var ix = (iCol - 1) * this.cell_size
 
 		//------------------draw
-		//its faster to blit images than it is to draw vectors
-		if (this.draw_images)
-			oCanvas.drawImage({				//uses jcanvas
-				source: sImg, 
-				x: ix, 
-				y: iy,
-				fromCenter: false, 
-				load: () => { oThis.#onCellImageLoaded() }
-			})
-		else{
-			$.error("not implemented")
-		}
+		var sFill = (poCell.value == 0 ? '#fff'  : '#000')
+		oCanvas.drawRect({
+			fillStyle: sFill,
+			x: ix, y: iy,
+			width: this.cell_size,
+			height: this.cell_size				
+		})
+		this.#count_drawn_cells()
 	}
 }
 
