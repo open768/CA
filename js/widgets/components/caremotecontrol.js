@@ -38,7 +38,7 @@ class cCARemoteControls{
 		oElement.addClass("ui-widget")
 
 		//subscribe to CAEvents
-		cCAEventHelper.subscribe_to_general_events( this.grid_name, poEvent => { oThis.onCAGeneralEvent(poEvent) })
+		cCAEventHelper.subscribe_to_rule_events( this.grid_name, poEvent => { oThis.onCARuleEvent(poEvent) })
 		cCAEventHelper.subscribe_to_canvas_events(this.grid_name, poEvent => { oThis.onCACanvasEvent(poEvent) })
 		
 		//put something in the widget
@@ -83,8 +83,8 @@ class cCARemoteControls{
 	}
 
 	//****************************************************************************
-	onCAGeneralEvent(poEvent){
-		if (poEvent.action === cCAGeneralEvent.actions.set_rule){
+	onCARuleEvent(poEvent){
+		if (poEvent.action === cCARuleEvent.actions.set_rule){
 			this.rule_set = true
 			this.pr__enable_buttons()
 		}

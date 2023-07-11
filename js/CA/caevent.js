@@ -54,8 +54,7 @@ class cCAActionEvent extends cCABaseEvent{
 class cCAGeneralEvent extends cCABaseEvent{
 	hook = "CAGENEV"
 	static actions = {
-		import_grid: "GEIG",
-		set_rule: "GESR"
+		import_grid: "GEIG"
 	}
 }
 
@@ -64,7 +63,8 @@ class cCAGeneralEvent extends cCABaseEvent{
 class cCARuleEvent extends cCABaseEvent{
 	hook = "CARULEEV"
 	static actions = {
-		update_rule: "REUR"
+		update_rule: "REUR",
+		set_rule: "GESR"
 	}
 }
 

@@ -63,6 +63,7 @@ class cCACanvas {
 
 		//subscribe to CAEvents (see #set_grid for subscribing to grid events)
 		var oThis = this
+		cCAEventHelper.subscribe_to_rule_events( this.#grid_name, poEvent => { oThis.#onCARuleEvent(poEvent) })
 		cCAEventHelper.subscribe_to_action_events( this.#grid_name, poEvent => { oThis.#onCAActionEvent(poEvent) })
 		cCAEventHelper.subscribe_to_general_events( this.#grid_name, poEvent => { oThis.#onCAGeneralEvent(poEvent) })
 	}
@@ -136,6 +137,18 @@ class cCACanvas {
 		cDebug.leave()
 	}
 	//****************************************************************
+	#onCARuleEvent(poEvent) {
+		var oEvent
+		switch (poEvent.action) {
+			//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+			case cCARuleEvent.actions.set_rule:
+				cDebug.write("action: set rule")
+				oEvent = new cCAGridEvent(this.#grid_name, cCAGridEvent.actions.set_rule, poEvent.data)
+				oEvent.trigger()
+				break
+		}
+	}
+	//****************************************************************
 	#onCAGeneralEvent(poEvent) {
 		var oEvent
 
@@ -151,13 +164,6 @@ class cCACanvas {
 
 				//rule has been set
 				oEvent = new cCARuleEvent(this.#grid_name, cCARuleEvent.actions.update_rule, oGrid.rule)
-				oEvent.trigger()
-				break
-
-			//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-			case cCAGeneralEvent.actions.set_rule:
-				cDebug.write("action: set rule")
-				oEvent = new cCAGridEvent(this.#grid_name, cCAGridEvent.actions.set_rule, poEvent.data)
 				oEvent.trigger()
 				break
 		}
@@ -366,7 +372,8 @@ class cCACanvas {
 			fillStyle: sFill,
 			x: ix, y: iy,
 			width: this.cell_size,
-			height: this.cell_size				
+			height: this.cell_size,
+			strokeStyle: "transparent"				
 		})
 		this.#count_drawn_cells()
 	}
