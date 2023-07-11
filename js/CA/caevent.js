@@ -61,32 +61,8 @@ class cCAEvent {
 	}
 }
 
-//###############################################################################
-/* eslint-disable-next-line no-unused-vars */
-class cCAActionEvent {
-	static actions = {
-		ready: "AERD",
-		grid_init: "AEGI",
-		control: "AECN"
-	}
-}
+class cCABaseEvent{
 
-//###############################################################################
-/* eslint-disable-next-line no-unused-vars */
-class cCAGeneralEvent {
-	static actions = {
-		import_grid: "GEIG",
-		set_rule: "GESR"
-	}
-}
-
-//###############################################################################
-/* eslint-disable-next-line no-unused-vars */
-class cCARuleEvent {
-	static hook = "CARULEEV"
-	static actions = {
-		update_rule: "REUR"
-	}
 	grid_name = null
 	action = null
 	data = null
@@ -96,6 +72,35 @@ class cCARuleEvent {
 		this.grid_name = psGridName
 		this.action = psAction
 		this.data = poData
+	}
+
+}
+
+/***************************************************************************
+/* eslint-disable-next-line no-unused-vars */
+class cCAActionEvent extends cCABaseEvent{
+	static actions = {
+		ready: "AERD",
+		grid_init: "AEGI",
+		control: "AECN"
+	}
+}
+
+/***************************************************************************
+/* eslint-disable-next-line no-unused-vars */
+class cCAGeneralEvent extends cCABaseEvent{
+	static actions = {
+		import_grid: "GEIG",
+		set_rule: "GESR"
+	}
+}
+
+/***************************************************************************
+/* eslint-disable-next-line no-unused-vars */
+class cCARuleEvent extends cCABaseEvent{
+	static hook = "CARULEEV"
+	static actions = {
+		update_rule: "REUR"
 	}
 
 	trigger() {
@@ -162,20 +167,9 @@ class cCAGridEvent {
 
 }
 
-//###############################################################################
-/* eslint-disable-next-line no-unused-vars */
-class cCACanvasEventData {
-	grid_name = null
-	data = null
-
-	constructor(psGridName, poData) {
-		this.grid_name = psGridName
-		this.data = poData
-	}
-}
 
 /* eslint-disable-next-line no-unused-vars */
-class cCACanvasEvent {
+class cCACanvasEvent extends cCABaseEvent{
 	static hook = "CACANVASEV"
 	static actions = {
 		grid_status: "CAstatus",
@@ -183,17 +177,6 @@ class cCACanvasEvent {
 	}
 	static notify = {
 		nochange: "CNnochange"
-	}
-
-	action = null
-	data = null
-	grid_name = null
-
-	constructor(psGridName, psAction, poData) {
-		if (!psGridName || !psAction) $.error("incorrect number of arguments")
-		this.grid_name = psGridName
-		this.action = psAction
-		this.data = poData
 	}
 
 	trigger() {
