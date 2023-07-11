@@ -217,8 +217,8 @@ class cCAControlsL {
 					if (!isNaN(oBoredomList.val())) oRule.boredom = oBoredomList.val()
 
 					//inform subscribers
-					var oEvent = new cCAEvent(this.grid_name, cCAEvent.types.general, cCAGeneralEvent.actions.set_rule, oRule)
-					oEvent.trigger(document)
+					var oEvent = new cCAGeneralEvent(this.grid_name, cCAGeneralEvent.actions.set_rule, oRule)
+					oEvent.trigger()
 					caMachineTypes.rule_set = true
 					break
 				default:

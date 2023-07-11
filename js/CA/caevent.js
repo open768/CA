@@ -14,52 +14,6 @@ class CAException {
 	}
 }
 
-
-//###############################################################################
-/** cCAEvent class */
-/* eslint-disable-next-line no-unused-vars */
-class cCAEvent {
-	static hook = "CAEVENT"
-	static types = {
-		action: "ACT",
-		general: "GNR"
-	}
-	name=null
-	type = null
-	action = null
-	data = null
-
-	/**
-	 * Description
-	 * @param {string} psType
-	 * @param {string} psAction
-	 * @param {any} poData
-	 */
-	constructor(psName, psType, psAction, poData) {
-		if (psType === null) throw new Error("null type")
-		if (psAction === null) throw new Error("null action")
-		if (psName === null) throw new Error("null name")
-		this.type = psType
-		this.action = psAction
-		this.data = poData
-		this.name = psName
-	}
-
-	static hook_name(psName) {
-		return (this.hook + psName)
-	}
-
-	/**
-	 * Description
-	 * @param {Element} poTarget
-	 */
-	trigger(poTarget) {
-		if (!poTarget) throw new Error("target missing")
-		var sHook = cCAEvent.hook_name(this.name)
-		bean.fire(poTarget, sHook, this)
-	}
-}
-
 //***************************************************************************
 class cCABaseEvent{
 	grid_name = null
@@ -152,18 +106,9 @@ class cCACanvasEvent extends cCABaseEvent{
 //###############################################################################
 /* eslint-disable-next-line no-unused-vars */
 class cCAEventHelper {
-	/**
-	 * helper function
-	 * @param {cCAGrid} poGrid	CA grid to send events
-	 * @param {function} pfn	callback
-	 */	
-	static subscribe_to_grid_events(psName, pfn){
-		var oDummyEvent = new cCAGridEvent(psName,"dummy")
+	static subscribe_to_action_events(psName, pfn){
+		var oDummyEvent = new cCAActionEvent(psName,"dummy")
 		this.#do_subscribe(oDummyEvent.hook_name(), pfn)
-	}
-
-	static subscribe_to_ca_events(psName, pfn){
-		bean.on(document, cCAEvent.hook_name(psName), pfn)
 	}
 
 	static subscribe_to_canvas_events(psName, pfn){
@@ -171,11 +116,22 @@ class cCAEventHelper {
 		this.#do_subscribe(oDummyEvent.hook_name(), pfn)
 	}
 	
+	static subscribe_to_general_events(psName, pfn){
+		var oDummyEvent = new cCAGeneralEvent(psName,"dummy")
+		this.#do_subscribe(oDummyEvent.hook_name(), pfn)
+	}
+
+	static subscribe_to_grid_events(psName, pfn){
+		var oDummyEvent = new cCAGridEvent(psName,"dummy")
+		this.#do_subscribe(oDummyEvent.hook_name(), pfn)
+	}
+
 	static subscribe_to_rule_events(psName, pfn){
 		var oDummyEvent = new cCARuleEvent(psName,"dummy")
 		this.#do_subscribe(oDummyEvent.hook_name(), pfn)
 	}
 
+	//***************************************************************
 	static #do_subscribe(psHookName, pfn){
 		if (pfn == null ) $.error("callback missing")
 		bean.on(document, psHookName, pfn)

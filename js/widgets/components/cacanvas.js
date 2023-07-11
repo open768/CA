@@ -68,7 +68,8 @@ class cCACanvas {
 
 		//subscribe to CAEvents (see #set_grid for subscribing to grid events)
 		var oThis = this
-		cCAEventHelper.subscribe_to_ca_events( this.#grid_name, poEvent => { oThis.#onCAEvent(poEvent) })
+		cCAEventHelper.subscribe_to_action_events( this.#grid_name, poEvent => { oThis.#onCAActionEvent(poEvent) })
+		cCAEventHelper.subscribe_to_general_events( this.#grid_name, poEvent => { oThis.#onCAGeneralEvent(poEvent) })
 	}
 
 	//#################################################################
@@ -100,75 +101,70 @@ class cCACanvas {
 	}
 
 	//****************************************************************
-	#onCAEvent(poEvent) {
+	#onCAActionEvent(poEvent) {
 		var oElement = this.element
 		var oThis = this
 		var oGrid,oEvent
 
 		cDebug.enter()
+		switch (poEvent.action) {
+			case cCAActionEvent.actions.ready:
+				cDebug.write("action: ready")
+				//associate a CA grid with the widget
+				oGrid = new cCAGrid(this.#grid_name, this.rows, this.cols)
+				this.#set_grid(oGrid)
+				//put something in the widget
+				this.#initCanvas()
+				if (!this.#has_mouseup) { //only set #mouse event handler once
+					oElement.mouseup(function () { oThis.#onMouseUp() })
+					oElement.mousemove(function (poEvent) { oThis.#onMouseMove(poEvent) })
+					oElement.mousedown(function (poEvent) { oThis.#onMouseDown(poEvent) })
+					this.#has_mouseup = true
+				}
+				break
 
-		switch (poEvent.type) {
-			//----------------------------------------------------------------------
-			case cCAEvent.types.action:
+			//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+			case cCAActionEvent.actions.grid_init:
+				cDebug.write("event: initialise")
+				var iInitType = poEvent.data
+				oEvent = new cCAGridEvent(this.#grid_name, cCAGridEvent.actions.init_grid, iInitType)
+				oEvent.trigger()
+				break
+
+			//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+			case cCAActionEvent.actions.control:
 				cDebug.write("event: action")
-				switch (poEvent.action) {
-					case cCAActionEvent.actions.ready:
-						cDebug.write("action: ready")
-						//associate a CA grid with the widget
-						oGrid = new cCAGrid(this.#grid_name, this.rows, this.cols)
-						this.#set_grid(oGrid)
-						//put something in the widget
-						this.#initCanvas()
-						if (!this.#has_mouseup) { //only set #mouse event handler once
-							oElement.mouseup(function () { oThis.#onMouseUp() })
-							oElement.mousemove(function (poEvent) { oThis.#onMouseMove(poEvent) })
-							oElement.mousedown(function (poEvent) { oThis.#onMouseDown(poEvent) })
-							this.#has_mouseup = true
-						}
-						break
-
-					//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-					case cCAActionEvent.actions.grid_init:
-						cDebug.write("event: initialise")
-						var iInitType = poEvent.data
-						oEvent = new cCAGridEvent(this.#grid_name, cCAGridEvent.actions.init_grid, iInitType)
-						oEvent.trigger()
-						break
-
-					//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-					case cCAActionEvent.actions.control:
-						cDebug.write("event: action")
-						oEvent = new cCAGridEvent(this.#grid_name, cCAGridEvent.actions.control, poEvent.data)
-						oEvent.trigger()
-						break
-				}
+				oEvent = new cCAGridEvent(this.#grid_name, cCAGridEvent.actions.control, poEvent.data)
+				oEvent.trigger()
 				break
-			//----------------------------------------------------------------------
-			case cCAEvent.types.general:
-				cDebug.write("event: general")
-				switch (poEvent.action) {
-					case cCAGeneralEvent.actions.import_grid:
-						cDebug.write("action: import grid")
-						oGrid = poEvent.data
-						this.#set_grid(oGrid)
-						//draw the grid
-						this.#on_grid_clear()
-						this.#drawGrid()
+		}
+		cDebug.leave()
+	}
+	//****************************************************************
+	#onCAGeneralEvent(poEvent) {
+		var oEvent
 
-						//rule has been set
-						oEvent = new cCARuleEvent(this.#grid_name, cCARuleEvent.actions.update_rule, oGrid.rule)
-						oEvent.trigger(document)
-						break
+		cDebug.enter()
+		switch (poEvent.action) {
+			case cCAGeneralEvent.actions.import_grid:
+				cDebug.write("action: import grid")
+				var oGrid = poEvent.data
+				this.#set_grid(oGrid)
+				//draw the grid
+				this.#on_grid_clear()
+				this.#drawGrid()
 
-					//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-					case cCAGeneralEvent.actions.set_rule:
-						cDebug.write("action: set rule")
-						oEvent = new cCAGridEvent(this.#grid_name, cCAGridEvent.actions.set_rule, poEvent.data)
-						oEvent.trigger()
-						break
-				}
+				//rule has been set
+				oEvent = new cCARuleEvent(this.#grid_name, cCARuleEvent.actions.update_rule, oGrid.rule)
+				oEvent.trigger()
 				break
 
+			//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+			case cCAGeneralEvent.actions.set_rule:
+				cDebug.write("action: set rule")
+				oEvent = new cCAGridEvent(this.#grid_name, cCAGridEvent.actions.set_rule, poEvent.data)
+				oEvent.trigger()
+				break
 		}
 		cDebug.leave()
 	}

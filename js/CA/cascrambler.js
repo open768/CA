@@ -138,7 +138,7 @@ class cCAScrambler{
 	 */
 	async scramble(){ 
 		var oEvent = new cCAScramblerEvent( cCAScramblerEvent.types.general, cCAScramblerEvent.actions.status, "Started scrambler")
-		oEvent.trigger(this)
+		oEvent.trigger()
 
 		this.initial_runs_completed = 0
 		this.perform_inital_runs()

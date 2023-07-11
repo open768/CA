@@ -70,7 +70,7 @@ class cCAChart{
 		this.#clear_chart()
 
 		//subscribe to CAEvents
-		cCAEventHelper.subscribe_to_ca_events( this.#grid_name, poEvent => { oThis.onCAEvent(poEvent) })
+		cCAEventHelper.subscribe_to_action_events( this.#grid_name, poEvent => { oThis.onCAActionEvent(poEvent) })
 		cCAEventHelper.subscribe_to_rule_events( this.#grid_name, poEvent => { oThis.onCARuleEvent(poEvent) })
 		cCAEventHelper.subscribe_to_canvas_events(this.#grid_name, poEvent => { oThis.onCACanvasEvent(poEvent) })
 	}
@@ -143,19 +143,12 @@ class cCAChart{
 	}
 
 	//*****************************************************************
-	onCAEvent(poEvent){
+	onCAActionEvent(poEvent){
 		cDebug.enter()
-		
-		switch (poEvent.type){
-			//----------------------------------------------------------------------
-			case cCAEvent.types.action:
-				cDebug.write("action event")
-				switch (poEvent.action){
-					case cCAActionEvent.actions.grid_init:
-						cDebug.write("grid_init action")
-						this.#clear_chart()
-				}
-				break
+		switch (poEvent.action){
+			case cCAActionEvent.actions.grid_init:
+				cDebug.write("grid_init action")
+				this.#clear_chart()
 		}
 		cDebug.leave()
 	}

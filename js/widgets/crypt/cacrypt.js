@@ -43,7 +43,7 @@ class cCACryptEvent extends cCAEvent{
 	 */
 	static triggerStatus( psMessage){
 		var oEvent = new cCACryptEvent(this.types.general, this.actions.status, psMessage)
-		oEvent.trigger(document)
+		oEvent.trigger()
 	}
 }
 
@@ -148,8 +148,8 @@ class cCACrypt {
 		//---------------informs subscribers that UI is ready -------------------------------
 		var sTxt = "the quick brown fox jumped over the lazy dog".repeat(10)
 		$("#"+cCACryptTypes.input_name).val(sTxt)
-		var oEvent = new cCAEvent( this.ca_name, cCAEvent.types.action, cCAActionEvent.actions.ready,null)
-		oEvent.trigger(document)
+		var oEvent = new cCAActionEvent( this.ca_name, cCAActionEvent.actions.ready,null)
+		oEvent.trigger()
 
 		cCACryptEvent.triggerStatus("UI is ready")
 	}
