@@ -75,11 +75,20 @@ class cCABaseEvent{
 		this.data = poData
 	}
 
+	hook_name(){
+		return (this.hook + this.grid_name)
+	}
+
+	trigger() {
+		var sEventName = this.hook_name()
+		bean.fire(document, sEventName, this)
+	}
 }
 
 //***************************************************************************
 /* eslint-disable-next-line no-unused-vars */
 class cCAActionEvent extends cCABaseEvent{
+	hook = "CAACTEV"
 	static actions = {
 		ready: "AERD",
 		grid_init: "AEGI",
@@ -90,6 +99,7 @@ class cCAActionEvent extends cCABaseEvent{
 //***************************************************************************
 /* eslint-disable-next-line no-unused-vars */
 class cCAGeneralEvent extends cCABaseEvent{
+	hook = "CAGENEV"
 	static actions = {
 		import_grid: "GEIG",
 		set_rule: "GESR"
@@ -99,18 +109,9 @@ class cCAGeneralEvent extends cCABaseEvent{
 //***************************************************************************
 /* eslint-disable-next-line no-unused-vars */
 class cCARuleEvent extends cCABaseEvent{
-	static hook = "CARULEEV"
+	hook = "CARULEEV"
 	static actions = {
 		update_rule: "REUR"
-	}
-
-	trigger() {
-		var sEventName = cCARuleEvent.hook_name(this.grid_name)
-		bean.fire(document, sEventName, this)
-	}
-
-	static hook_name(psName){
-		return (this.hook + psName)
 	}
 }
 
@@ -118,7 +119,7 @@ class cCARuleEvent extends cCABaseEvent{
 //###############################################################################
 /* eslint-disable-next-line no-unused-vars */
 class cCAGridEvent extends cCABaseEvent{
-	static hook = "CAGRIDEV"
+	hook = "CAGRIDEV"
 	static actions = {
 		init_grid: "GAini",
 		step_grid: "GAstep",
@@ -134,42 +135,18 @@ class cCAGridEvent extends cCABaseEvent{
 		nochange: "GNnochg",
 		repeatPattern: "GNPattern"
 	}
-
-	trigger() {
-		var sEventName = cCAGridEvent.hook_name(this.grid_name)
-		bean.fire(this.grid_name, sEventName, this)
-	}
-
-
-	/**
-	 * Description
-	 * @param {cCAGrid} poGrid	CA grid to receive/send events
-	 */	
-	static hook_name(psGridName) {
-		return (this.hook + psGridName)
-	}
-
 }
 
 
 /* eslint-disable-next-line no-unused-vars */
 class cCACanvasEvent extends cCABaseEvent{
-	static hook = "CACANVASEV"
+	hook = "CACANVASEV"
 	static actions = {
 		grid_status: "CAstatus",
 		set_grid: "CASetgrid"
 	}
 	static notify = {
 		nochange: "CNnochange"
-	}
-
-	trigger() {
-		var sEventName = cCACanvasEvent.hook_name(this.grid_name)
-		bean.fire(document, sEventName, this)
-	}
-
-	static hook_name(psName){
-		return (this.hook + psName)
 	}
 }
 
@@ -181,8 +158,9 @@ class cCAEventHelper {
 	 * @param {cCAGrid} poGrid	CA grid to send events
 	 * @param {function} pfn	callback
 	 */	
-	static subscribe_to_grid_events(poGrid, pfn){
-		bean.on(poGrid, cCAGridEvent.hook_name(poGrid), pfn)
+	static subscribe_to_grid_events(psName, pfn){
+		var oDummyEvent = new cCAGridEvent(psName,"dummy")
+		bean.on(document, oDummyEvent.hook_name(), pfn)
 	}
 
 	static subscribe_to_ca_events(psName, pfn){
@@ -190,10 +168,12 @@ class cCAEventHelper {
 	}
 
 	static subscribe_to_canvas_events(psName, pfn){
-		bean.on(document, cCACanvasEvent.hook_name(psName), pfn)
+		var oDummyEvent = new cCACanvasEvent(psName,"dummy")
+		bean.on(document, oDummyEvent.hook_name(), pfn)
 	}
 	
 	static subscribe_to_rule_events(psName, pfn){
-		bean.on(document, cCARuleEvent.hook_name(psName), pfn)
+		var oDummyEvent = new cCARuleEvent(psName,"dummy")
+		bean.on(document, oDummyEvent.hook_name(), pfn)
 	}
 }
