@@ -21,7 +21,6 @@ class CAException {
 class cCAEvent {
 	static hook = "CAEVENT"
 	static types = {
-		canvas: "CNV",
 		action: "ACT",
 		general: "GNR"
 	}
@@ -160,7 +159,7 @@ class cCAEventHelper {
 	 */	
 	static subscribe_to_grid_events(psName, pfn){
 		var oDummyEvent = new cCAGridEvent(psName,"dummy")
-		bean.on(document, oDummyEvent.hook_name(), pfn)
+		this.#do_subscribe(oDummyEvent.hook_name(), pfn)
 	}
 
 	static subscribe_to_ca_events(psName, pfn){
@@ -169,11 +168,16 @@ class cCAEventHelper {
 
 	static subscribe_to_canvas_events(psName, pfn){
 		var oDummyEvent = new cCACanvasEvent(psName,"dummy")
-		bean.on(document, oDummyEvent.hook_name(), pfn)
+		this.#do_subscribe(oDummyEvent.hook_name(), pfn)
 	}
 	
 	static subscribe_to_rule_events(psName, pfn){
 		var oDummyEvent = new cCARuleEvent(psName,"dummy")
-		bean.on(document, oDummyEvent.hook_name(), pfn)
+		this.#do_subscribe(oDummyEvent.hook_name(), pfn)
+	}
+
+	static #do_subscribe(psHookName, pfn){
+		if (pfn == null ) $.error("callback missing")
+		bean.on(document, psHookName, pfn)
 	}
 }
