@@ -112,7 +112,7 @@ class cCAScrambler{
 		var oThis = this
 
 		//subscribe to grid events
-		cCAEventHelper.subscribe_to_grid_events(this.grid, (poEvent)=>{oThis.onCAGridEvent(poEvent)})
+		cCAEventHelper.subscribe_to_grid_events(this.grid.name, (poEvent)=>{oThis.onCAGridEvent(poEvent)})
 	}
 	
 	//*******************************************************************************
@@ -122,7 +122,7 @@ class cCAScrambler{
 	async perform_inital_runs(){
 		if (this.initial_runs_completed < this.inital_runs){
 			this.status = cCAScramblerTypes.status.initialRuns
-			var oEvent = new cCAGridEvent(this.grid, cCAGridTypes.actions.step_grid, null)
+			var oEvent = new cCAGridEvent(this.grid.name, cCAGridTypes.actions.step_grid)
 			oEvent.trigger()
 		}else
 			throw new Error("not implemented")

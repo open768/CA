@@ -61,13 +61,14 @@ class cCAEvent {
 	}
 }
 
+//***************************************************************************
 class cCABaseEvent{
-
 	grid_name = null
 	action = null
 	data = null
+	hook = "***NOT SET***"
 
-	constructor(psGridName, psAction, poData) {
+	constructor(psGridName, psAction, poData = null) {
 		if (!psGridName || !psAction) $.error("incorrect number of arguments")
 		this.grid_name = psGridName
 		this.action = psAction
@@ -76,7 +77,7 @@ class cCABaseEvent{
 
 }
 
-/***************************************************************************
+//***************************************************************************
 /* eslint-disable-next-line no-unused-vars */
 class cCAActionEvent extends cCABaseEvent{
 	static actions = {
@@ -86,7 +87,7 @@ class cCAActionEvent extends cCABaseEvent{
 	}
 }
 
-/***************************************************************************
+//***************************************************************************
 /* eslint-disable-next-line no-unused-vars */
 class cCAGeneralEvent extends cCABaseEvent{
 	static actions = {
@@ -95,7 +96,7 @@ class cCAGeneralEvent extends cCABaseEvent{
 	}
 }
 
-/***************************************************************************
+//***************************************************************************
 /* eslint-disable-next-line no-unused-vars */
 class cCARuleEvent extends cCABaseEvent{
 	static hook = "CARULEEV"
@@ -116,7 +117,7 @@ class cCARuleEvent extends cCABaseEvent{
 
 //###############################################################################
 /* eslint-disable-next-line no-unused-vars */
-class cCAGridEvent {
+class cCAGridEvent extends cCABaseEvent{
 	static hook = "CAGRIDEV"
 	static actions = {
 		init_grid: "GAini",
@@ -134,26 +135,9 @@ class cCAGridEvent {
 		repeatPattern: "GNPattern"
 	}
 
-	action = null
-	data = null
-	grid = null
-
-	/**
-	 * Description
-	 * @param {cCAGrid} poGrid
-	 * @param {psAction} psAction
-	 * @param {any} poData
-	 */
-	constructor(poGrid, psAction, poData=null) {
-		if (poGrid == null || psAction == null) $.error("missing params")
-		this.grid = poGrid
-		this.action = psAction
-		this.data = poData
-	}
-
 	trigger() {
-		var sEventName = cCAGridEvent.hook_name(this.grid)
-		bean.fire(this.grid, sEventName, this)
+		var sEventName = cCAGridEvent.hook_name(this.grid_name)
+		bean.fire(this.grid_name, sEventName, this)
 	}
 
 
@@ -161,8 +145,8 @@ class cCAGridEvent {
 	 * Description
 	 * @param {cCAGrid} poGrid	CA grid to receive/send events
 	 */	
-	static hook_name(poGrid) {
-		return (this.hook + poGrid.name)
+	static hook_name(psGridName) {
+		return (this.hook + psGridName)
 	}
 
 }

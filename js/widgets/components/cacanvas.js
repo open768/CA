@@ -131,14 +131,14 @@ class cCACanvas {
 					case cCAActionEvent.actions.grid_init:
 						cDebug.write("event: initialise")
 						var iInitType = poEvent.data
-						oEvent = new cCAGridEvent(this.#grid, cCAGridEvent.actions.init_grid, iInitType)
+						oEvent = new cCAGridEvent(this.#grid_name, cCAGridEvent.actions.init_grid, iInitType)
 						oEvent.trigger()
 						break
 
 					//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 					case cCAActionEvent.actions.control:
 						cDebug.write("event: action")
-						oEvent = new cCAGridEvent(this.#grid, cCAGridEvent.actions.control, poEvent.data)
+						oEvent = new cCAGridEvent(this.#grid_name, cCAGridEvent.actions.control, poEvent.data)
 						oEvent.trigger()
 						break
 				}
@@ -163,7 +163,7 @@ class cCACanvas {
 					//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 					case cCAGeneralEvent.actions.set_rule:
 						cDebug.write("action: set rule")
-						oEvent = new cCAGridEvent(this.#grid, cCAGridEvent.actions.set_rule, poEvent.data)
+						oEvent = new cCAGridEvent(this.#grid_name, cCAGridEvent.actions.set_rule, poEvent.data)
 						oEvent.trigger()
 						break
 				}
@@ -181,16 +181,16 @@ class cCACanvas {
 	#onCellImageLoaded() {
 		//update the count of cells drawn
 		this.#cells_drawn++
+		var oThis = this
 
 		// when all cells have been drawn, let the grid know that the cells have been consumed
 		if (this.#cells_drawn >= this.#cells_to_draw) {
 			//let the grid know that the canvas completed #drawing
 			cDebug.write("finished drawing")
-			var oGrid = this.#grid
 
 			setTimeout(				//canvas needs to yield to allow image to be drawn
 				function () { 
-					var oEvent = new cCAGridEvent(oGrid, cCAGridEvent.notify.changedCellsConsumed);
+					var oEvent = new cCAGridEvent(oThis.#grid_name, cCAGridEvent.notify.changedCellsConsumed);
 					oEvent.trigger()
 				}, 	
 				this.CELL_LOAD_DELAY		//fudge factor to delay next grid cycle
@@ -230,7 +230,7 @@ class cCACanvas {
 		var oRC = this.#get_cell_rc_from_event(poEvent, true)
 		if (oRC) {
 			var oChangedCell = new cCAGridCell(oRC.row, oRC.col, 1)
-			var oEvent = new cCAGridEvent(this.#grid, cCAGridEvent.actions.set_cell, oChangedCell)
+			var oEvent = new cCAGridEvent(this.#grid_name, cCAGridEvent.actions.set_cell, oChangedCell)
 			oEvent.trigger()
 		}
 	}
@@ -294,7 +294,7 @@ class cCACanvas {
 		this.#grid = poGrid
 
 		//subscribe to grid events
-		cCAEventHelper.subscribe_to_grid_events(this.#grid, (poEvent)=>{oThis.#onCAGridEvent(poEvent)})
+		cCAEventHelper.subscribe_to_grid_events(this.#grid_name, (poEvent)=>{oThis.#onCAGridEvent(poEvent)})
 
 		// publish grid details to anyone interested - eg to export grid data, or start/stop the grid
 		var oEvent = new cCACanvasEvent(this.#grid_name, cCACanvasEvent.actions.set_grid, poGrid)
@@ -316,7 +316,7 @@ class cCACanvas {
 		this.#canvas = oCanvas
 
 		//initialise the grid
-		var oEvent = new cCAGridEvent(this.#grid, cCAGridEvent.actions.init_grid, cCAGridTypes.init.block.id)
+		var oEvent = new cCAGridEvent(this.#grid_name, cCAGridEvent.actions.init_grid, cCAGridTypes.init.block.id)
 		oEvent.trigger()
 		cDebug.leave()
 	}
