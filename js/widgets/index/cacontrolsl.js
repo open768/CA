@@ -55,7 +55,6 @@ class cCAControlsL {
 
 		//subscribe to CA Events
 		cCAEventHelper.subscribe_to_rule_events( this.grid_name, poEvent => { oThis.#onCARuleEvent(poEvent) })
-		cCAEventHelper.subscribe_to_canvas_events(this.grid_name, poEvent => { oThis.#onCACanvasEvent(poEvent) })
 	}
 
 	//#################################################################
@@ -63,93 +62,84 @@ class cCAControlsL {
 	//#################################################################`
 	#init() {
 		var oThis, oElement
-		var oDiv, sID
+		var oHeader, oContent, sID
 
 		oElement = this.element
 		oThis = this
 
 
 		//--rules widgets-------------------------------------------------
-		oDiv = $("<DIV>", { class: "ui-widget-header" })
-		oDiv.append("Rule")
-		sID = cJquery.child_ID(oElement, cCAControlLTypes.rules_status_ID)
-		var oSpan = $("<SPAN>", { id: sID }).html(" ??") //STATUS div
-		oDiv.append(oSpan)
-		oElement.append(oDiv)
-
-		oDiv = $("<DIV>", { class: "ui-widget-content" })
-		//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-		oDiv.append("<HR>")
-		oDiv.append("Rule Presets")
-		sID = cJquery.child_ID(oElement, cCAControlLTypes.preset_ID)
-		var oSelect = $("<SELECT>", { id: sID, width: 200, title: "pick a preset rule" })
-		this.#populate_presets(oSelect)
-		oDiv.append(oSelect)
-
-		oSelect.selectmenu({
-			select(poEvent) { oThis.#onPresetsClick(poEvent) }
-		})
+		oHeader= $("<DIV>", { class: "ui-widget-header" })
+			oHeader.append("Rule")
+			sID = cJquery.child_ID(oElement, cCAControlLTypes.rules_status_ID)
+			var oSpan = $("<SPAN>", { id: sID }).html(" ??") //STATUS div
+			oHeader.append(oSpan)
+		oElement.append(oHeader)
 
 		//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-		oDiv.append("<HR>")
-		sID = cJquery.child_ID(oElement, cCAControlLTypes.name_ID)
-		oDiv.append("word repeater")
-		var oInput = $("<INPUT>", { type: "text", id: sID, size: 12, icon: "ui-icon-circle-arrow-e", title: "put anything in this box - eg your name" })
-		oDiv.append(oInput)
-		oButton = $("<button>", { title: "creates a rule from the word in the box" }).button({ icon: "ui-icon-circle-arrow-e" })
-		oButton.click(function () { oThis.#onSetNameClick() })
-		oDiv.append(oButton)
+		oContent = $("<DIV>", { class: "ui-widget-content" })
+			oContent.append("Rule Presets")
+			sID = cJquery.child_ID(oElement, cCAControlLTypes.preset_ID)
+			var oSelect = $("<SELECT>", { id: sID, width: 200, title: "pick a preset rule" })
+				this.#populate_presets(oSelect)
+			oContent.append(oSelect)
 
-		//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-		oDiv.append("<HR>")
-		sID = cJquery.child_ID(oElement, cCAControlLTypes.entry_ID)
-		var oBox = $("<TEXTAREA>", { ID: sID, class: "rule", title: "enter the rule here" })
-		oBox.keyup(function () { oThis.#onRuleChange() })
-		oDiv.append(oBox)
+			oSelect.selectmenu({
+				select(poEvent) { oThis.#onPresetsClick(poEvent) }
+			})
 
-		//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-		sID = cJquery.child_ID(oElement, cCAControlLTypes.rules_ID)
-		oSelect = $("<SELECT>", { id: sID, width: 200, title: "choose the rule type to enter in the box above" })
-		oSelect.append($("<option>", { selected: 1, disabled: 1, value: -1 }).append("Rule Type"))
-		oSelect.append($("<option>", { value: cCARuleTypes.rule_types.base64 }).append("base64"))
-		oSelect.append($("<option>", { value: cCARuleTypes.rule_types.life }).append("life"))
-		oSelect.append($("<option>", { value: cCARuleTypes.rule_types.wolfram1d }).append("wolfram"))
-		oDiv.append(oSelect)
-		oSelect.selectmenu()
+			//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+			oContent.append("<HR>")
+			sID = cJquery.child_ID(oElement, cCAControlLTypes.name_ID)
+			oContent.append("word repeater")
 
-		var oButton = $("<button>", { title: "use the rule entered in the box above" }).button({ icon: "ui-icon-circle-arrow-e" })
-		oButton.click(function () { oThis.#onSetRuleClick() })
-		oDiv.append(oButton)
+			var oInput = $("<INPUT>", { type: "text", id: sID, size: 12, icon: "ui-icon-circle-arrow-e", title: "put anything in this box - eg your name" })
+			oContent.append(oInput)
 
+			var oButton = $("<button>", { title: "creates a rule from the word in the box" }).button({ icon: "ui-icon-circle-arrow-e" })
+				oButton.click(function () { oThis.#onSetNameClick() })
+			oContent.append(oButton)
 
-		//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-		oDiv.append("<HR>Boredom")
-		sID = cJquery.child_ID(oElement, cCAControlLTypes.boredom_ID)
-		oSelect = $("<SELECT>", { id: sID, width: 50, title: "how many times will a cell see a pattern before it gets bored" })
-		oSelect.append($("<option>", { selected: 1, disabled: 1 }).append("Select"))
-		oSelect.append($("<option>", { value: cCARuleTypes.no_boredom }).append("Never"))
-		for (var i = 2; i <= 10; i++) {
-			oSelect.append($("<option>", { value: i }).append(i + " times"))
-		}
-		oDiv.append(oSelect)
-		oSelect.selectmenu({
-			select(poEvent) { oThis.#onBoredomClick(poEvent) }
-		})
-		oElement.append(oDiv)
+			//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+			oContent.append("<HR>")
+			sID = cJquery.child_ID(oElement, cCAControlLTypes.entry_ID)
+			var oBox = $("<TEXTAREA>", { ID: sID, class: "rule", title: "enter the rule here" })
+			oBox.keyup(function () { oThis.#onRuleChange() })
+			oContent.append(oBox)
+
+			//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+			sID = cJquery.child_ID(oElement, cCAControlLTypes.rules_ID)
+			oSelect = $("<SELECT>", { id: sID, width: 200, title: "choose the rule type to enter in the box above" })
+				oSelect.append($("<option>", { selected: 1, disabled: 1, value: -1 }).append("Rule Type"))
+				oSelect.append($("<option>", { value: cCARuleTypes.rule_types.base64 }).append("base64"))
+				oSelect.append($("<option>", { value: cCARuleTypes.rule_types.life }).append("life"))
+				oSelect.append($("<option>", { value: cCARuleTypes.rule_types.wolfram1d }).append("wolfram"))
+			oContent.append(oSelect)
+			oSelect.selectmenu()
+
+			oButton = $("<button>", { title: "use the rule entered in the box above" }).button({ icon: "ui-icon-circle-arrow-e" })
+				oButton.click(function () { oThis.#onSetRuleClick() })
+			oContent.append(oButton)
+
+			//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+			oContent.append("<HR>Boredom")
+			sID = cJquery.child_ID(oElement, cCAControlLTypes.boredom_ID)
+			oSelect = $("<SELECT>", { id: sID, width: 50, title: "how many times will a cell see a pattern before it gets bored" })
+				oSelect.append($("<option>", { selected: 1, disabled: 1 }).append("Select"))
+				oSelect.append($("<option>", { value: cCARuleTypes.no_boredom }).append("Never"))
+				for (var i = 2; i <= 10; i++) {
+					oSelect.append($("<option>", { value: i }).append(i + " times"))
+				}
+			oContent.append(oSelect)
+			oSelect.selectmenu({
+				select(poEvent) { oThis.#onBoredomClick(poEvent) }
+			})
+		oElement.append(oContent)
 	}
 
 	//#################################################################
 	//# EVENTS
 	//#################################################################`
-	#onCACanvasEvent(poEvent) {
-		cDebug.enter()
-		switch (poEvent.action) {
-			case cCACanvasEvent.actions.set_grid:
-				cDebug.write("set_grid")
-				this.grid = poEvent.data.data
-		}
-		cDebug.leave()
-	}
 
 	//*****************************************************************************
 	#onCARuleEvent(poEvent) {
