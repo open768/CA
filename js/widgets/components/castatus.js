@@ -41,7 +41,7 @@ class cCAStatus{
 		
 		//put something in the widget
 		oElement.empty()
-		this.pr__init()
+		this.#init()
 
 	}
 	
@@ -66,7 +66,7 @@ class cCAStatus{
 	//***************************************************************
 	//* Privates
 	//***************************************************************
-	pr__init(){
+	#init(){
 		var oDiv, oTable, oRow, oCell
 		var oElement
 		

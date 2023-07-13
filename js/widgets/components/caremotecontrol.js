@@ -43,7 +43,7 @@ class cCARemoteControls{
 		
 		//put something in the widget
 		oElement.empty()
-		this.pr__init()
+		this.#init()
 
 	}
 	
@@ -57,10 +57,10 @@ class cCARemoteControls{
 	
 		switch (piAction){
 			case cCAGridTypes.actions.stop:
-				this.pr__set_controls(false)
+				this.#set_controls(false)
 				break
 			case cCAGridTypes.actions.play:
-				this.pr__set_controls(true)
+				this.#set_controls(true)
 				break
 		}
 		var oEvent = new cCAActionEvent( this.grid_name, cCAActionEvent.actions.control, parseInt(piAction))
@@ -75,10 +75,10 @@ class cCARemoteControls{
 		switch (poEvent.action) {
 			case cCACanvasEvent.actions.set_grid:
 				this.grid_set = true
-				this.pr__enable_buttons()
+				this.#enable_buttons()
 				break
 			case cCACanvasEvent.notify.nochange:
-				setTimeout( function(){	oThis.pr__set_controls(false)}, 100) //stop
+				setTimeout( function(){	oThis.#set_controls(false)}, 100) //stop
 		}
 	}
 
@@ -86,23 +86,23 @@ class cCARemoteControls{
 	onCARuleEvent(poEvent){
 		if (poEvent.action === cCARuleEvent.actions.set_rule){
 			this.rule_set = true
-			this.pr__enable_buttons()
+			this.#enable_buttons()
 		}
 	}
 	
 	//***************************************************************
 	//* Privates
 	//***************************************************************
-	pr__enable_buttons(){
+	#enable_buttons(){
 		if (this.grid_set && this.rule_set )
-			this.pr__set_controls(false)
+			this.#set_controls(false)
 	}
 
 	/**
 	 * Description
 	 * @param {boolean} pbRunning
 	 */
-	pr__set_controls(pbRunning){
+	#set_controls(pbRunning){
 		var oElement = this.element
 		var sID = cJquery.child_ID(oElement,cCARemoteControls.buttonNames.play)
 		cJquery.enable_element(sID, !pbRunning)
@@ -114,7 +114,7 @@ class cCARemoteControls{
 		cJquery.enable_element(sID, pbRunning)
 	}
 	
-	pr__init(){
+	#init(){
 		var oDiv, oButton
 		var oElement = this.element
 		var oThis = this

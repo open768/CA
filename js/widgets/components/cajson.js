@@ -42,7 +42,7 @@ class cCAJson {
 
 		//put something in the widget
 		oElement.empty()
-		this.pr__init()
+		this.#init()
 
 		//subscribe to CA Events
 		cCAEventHelper.subscribe_to_canvas_events(this.grid_name, poEvent => { oThis.onCACanvasEvent(poEvent) })
@@ -52,7 +52,7 @@ class cCAJson {
 	//#################################################################
 	//# Initialise
 	//#################################################################`
-	pr__init() {
+	#init() {
 		var oThis, oElement
 		var oDiv, sID, oButton
 
@@ -96,7 +96,7 @@ class cCAJson {
 			throw new Error("cant create json - rule is not set")
 		}
 		else
-			this.pr__create_json()
+			this.#create_json()
 		cDebug.leave()
 	}
 
@@ -144,7 +144,7 @@ class cCAJson {
 	//#################################################################
 	//# EVENTS
 	//#################################################################`
-	pr__create_json() {
+	#create_json() {
 		cDebug.enter()
 		var oElement = this.element
 

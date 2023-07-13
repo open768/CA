@@ -38,7 +38,7 @@ $.widget("ck.caeditwidget", {
 	//*****************************************************************
 	//# Constructor
 	//*****************************************************************
-	_create: function () {
+	_create: function() {
 		var oThis = this
 		var oOptions = oThis.options
 		var oElement = oThis.element
@@ -71,7 +71,7 @@ $.widget("ck.caeditwidget", {
 	//*****************************************************************
 	//# privates
 	//*****************************************************************
-	_drawGrid: function (oCanvas) {
+	_drawGrid: function(oCanvas) {
 		var oThis = this
 		var oOptions = oThis.options
 
@@ -95,7 +95,7 @@ $.widget("ck.caeditwidget", {
 	},
 
 	//******************************************************************
-	_drawNeighbourhood: function (oCanvas) {
+	_drawNeighbourhood: function(oCanvas) {
 		var oThis = this
 		var oOptions = oThis.options
 
@@ -128,7 +128,7 @@ $.widget("ck.caeditwidget", {
 	},
 
 	//******************************************************************
-	_set_value: function (piValue) {
+	_set_value: function(piValue) {
 		var oThis = this
 		var oElement = oThis.element
 		var oOptions = oThis.options
@@ -145,7 +145,7 @@ $.widget("ck.caeditwidget", {
 	//*****************************************************************
 	//# Events
 	//*****************************************************************
-	onClick: function () {
+	onClick: function() {
 		var oThis = this
 
 		var oOptions = oThis.options
@@ -161,48 +161,43 @@ $.widget("ck.caeditwidget", {
 //#######################################################################
 //#
 //#######################################################################
-$.widget("ck.caeditor", {
-	//****************************************************************
-	//# Options
-	//****************************************************************
-	rule: null,
+class cCAEditorWidget {
+	options = null
+	element = null
+	rule = null
 
-	options: {
-		cell_size: 10
-	},
 
-	//*****************************************************************
-	//# Constructor
-	//*****************************************************************
-	_create: function () {
-		var oThis = this
-		var oElement = this.element
+	//****************************************************************
+    constructor(poOptions, poElement){
+		this.options = poOptions
+		this.element = poElement
 
 		//set basic stuff
-		oElement.uniqueId()
+		poElement.uniqueId()
+		var oThis = this
 
-		this.pr_render()
+		//-------------------------------------------------------------------
+		this.#render()
 
 		//-------------------------------------------------------------------
 		//get the contents of the clipboard
 		//async fetch from clipboard, will display a warning to user
 		cBrowser.get_clipboard_permissions()
-		this.pr_set_status("waiting for clipboard")
+		this.#set_status("waiting for clipboard")
 		try {
 			cBrowser.paste_from_clipboard(function (psText) { oThis.onGotClipText(psText) })
 		} catch (e) {
 			cBrowser.writeConsoleWarning(e.message)
-			this.pr_set_identity_rule()
+			this.#set_identity_rule()
 		}
 
 		//add event listener
 		bean.on(document, cCAWidgetTypes.click_event, function (poOptions) { oThis.onEditWidgetClick(poOptions) })
-	},
-
+	}
 	//*****************************************************************
 	//# privates
 	//*****************************************************************
-	pr_render: function () {
+	#render() {
 		var oThis = this
 		var oElement = this.element
 
@@ -303,17 +298,17 @@ $.widget("ck.caeditor", {
 		oDiv.append(oButton)
 		oButton.click(function () { oThis.onNeighbourRuleClick() })
 		oElement.append(oDiv)
-	},
+	}
 
 	//*****************************************************************
-	pr_set_status: function (psText) {
+	#set_status(psText) {
 		var oElement = this.element
 		var sID = cJquery.child_ID(oElement, cCAWidgetTypes.IDs.STATUS)
 		$("#" + sID).html(psText)
-	},
+	}
 
 	//*************************************************************
-	pr_add_edit_widgets: function () {
+	#add_edit_widgets() {
 		var oThis = this
 		var oOptions = oThis.options
 		var oElement = oThis.element
@@ -340,75 +335,75 @@ $.widget("ck.caeditor", {
 			})
 			oDiv.append(oSpan)
 		}
-	},
+	}
 
 	//*************************************************************
-	pr_set_identity_rule: function () {
+	#set_identity_rule() {
 		var oRule = cCaIdentityRule.makeRule()
 		var s64 = cCARuleBase64Exporter.export(oRule, cCACellTypes.default_state)
-		this.pr_set_base64Rule(s64)
-		this.pr_set_status("Identity Rule")
+		this.#set_base64Rule(s64)
+		this.#set_status("Identity Rule")
 		this.onSetRuleClick()
-	},
+	}
 
 	//*************************************************************
-	pr_set_base64Rule: function (ps64) {
+	#set_base64Rule(ps64) {
 		var oElement = this.element
 		var sID = cJquery.child_ID(oElement, cCAWidgetTypes.IDs.RULE)
 		$("#" + sID).val(ps64)
-	},
+	}
 
 	//*****************************************************************
 	//# Events
 	//*****************************************************************
-	onGotClipText: function (psText) {
+	onGotClipText(psText) {
 		if (psText === "") {
 			cBrowser.writeConsoleWarning("nothing in clipboard!")
-			this.pr_set_identity_rule()
+			this.#set_identity_rule()
 			return
 		}
 
 		try {
 			this.rule = cCARuleBase64Importer.makeRule(psText)
-			this.pr_set_base64Rule(psText)
+			this.#set_base64Rule(psText)
 			this.onSetRuleClick()
-			this.pr_set_status("rule loaded from clipboard")
+			this.#set_status("rule loaded from clipboard")
 		} catch (e) {
 			cBrowser.writeConsoleWarning("not a valid rule in clipboard!")
-			this.pr_set_identity_rule()
+			this.#set_identity_rule()
 		}
-	},
+	}
 
 	//*************************************************************
-	onSetRuleClick: function () {
+	onSetRuleClick() {
 		var oElement = this.element
 		var sID = cJquery.child_ID(oElement, cCAWidgetTypes.IDs.RULE)
 		var oTextArea = $("#" + sID)
 
 		try {
 			this.rule = cCARuleBase64Importer.makeRule(oTextArea.val())
-			this.pr_add_edit_widgets()
+			this.#add_edit_widgets()
 		} catch (e) {
 			alert("Whoops - something went wrong!\n\n" + e.message)
 		}
 
-	},
+	}
 
 	//*************************************************************
-	onEditWidgetClick: function (poData) {
+	onEditWidgetClick(poData) {
 		var oRule = this.rule
 
 		try {
 			oRule.set_output(cCACellTypes.default_state, poData.index, poData.value)
 			var s64 = cCARuleBase64Exporter.export(oRule, cCACellTypes.default_state)
-			this.pr_set_base64Rule(s64)
+			this.#set_base64Rule(s64)
 		} catch (e) {
 			alert("Whoops - something went wrong!\n\n" + e.message)
 		}
-	},
+	}
 
 	//*************************************************************
-	onRuleInputKeyUp: function () {
+	onRuleInputKeyUp() {
 		var oThis = this
 		var oElement = oThis.element
 		var sID = cJquery.child_ID(oElement, cCAWidgetTypes.IDs.RULE)
@@ -416,11 +411,11 @@ $.widget("ck.caeditor", {
 		var sText = oTextArea.val()
 		var iDiff = cCARuleTypes.base64_length - sText.length
 
-		this.pr_set_status(iDiff + " chars remaining")
-	},
+		this.#set_status(iDiff + " chars remaining")
+	}
 
 	//*************************************************************
-	onNeighbourRuleClick: function () {
+	onNeighbourRuleClick() {
 		var oElement = this.element
 		var oRule = this.rule
 
@@ -435,7 +430,24 @@ $.widget("ck.caeditor", {
 
 		cCARuleModifier.modify_neighbours(oRule, iInEnum, iVerb, iCount, iValue)
 		var s64 = cCARuleBase64Exporter.export(oRule, cCACellTypes.default_state)
-		this.pr_set_base64Rule(s64)
+		this.#set_base64Rule(s64)
 		this.onSetRuleClick()
 	}
+}
+
+$.widget("ck.caeditor", {
+	//****************************************************************
+	//# Options
+	//****************************************************************
+	options: {
+		cell_size: 10
+	},
+
+	//*****************************************************************
+	//# Constructor
+	//*****************************************************************
+	_create:function() {
+		new cCAEditorWidget(this.options, this.element)
+	}
+
 })

@@ -32,7 +32,7 @@ class cCAGridInit{
 		
 		//put something in the widget
 		oElement.empty()
-		this.pr__init()
+		this.#init()
 
 	}
 	
@@ -52,7 +52,7 @@ class cCAGridInit{
 	//***************************************************************
 	//* Privates
 	//***************************************************************
-	pr__init(){
+	#init(){
 		var oElement = this.element
 		var oThis = this
 		

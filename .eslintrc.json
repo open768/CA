@@ -1,17 +1,22 @@
-module.exports = {
+{
+    "root": true,
+    "overrides": [
+        {
+            "files": [
+                "./**/*.js"
+            ]
+        }
+    ],
     "env": {
         "browser": true,
         "commonjs": true,
         "es2021": true
     },
     "extends": "eslint:recommended",
-    "overrides": [
-    ],
     "parserOptions": {
         "ecmaVersion": "latest"
     },
-    "rules": {
-    },
+    "rules": {},
     "globals": {
         "$": "readonly",
         "bean": "readonly",
@@ -25,7 +30,7 @@ module.exports = {
         "cCACryptEvent": "readonly",
         "cCACryptTypes": "readonly",
         "cCAEvent": "readonly",
-		"cCAEventHelper": "readonly",
+        "cCAEventHelper": "readonly",
         "cCAGeneralEvent": "readonly",
         "cCAGrid": "readonly",
         "cCAGridEvent": "readonly",
