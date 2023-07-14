@@ -45,7 +45,7 @@ class cCAJson {
 		this.#init()
 
 		//subscribe to CA Events
-		cCAEventHelper.subscribe_to_canvas_events(this.grid_name, poEvent => { oThis.onCACanvasEvent(poEvent) })
+		cCAEventHelper.subscribe_to_canvas_events(this.grid_name, poEvent => { oThis.#onCACanvasEvent(poEvent) })
 		cDebug.leave()
 	}
 
@@ -61,22 +61,26 @@ class cCAJson {
 		oThis = this
 
 		oDiv = $("<DIV>", { class: "ui-widget-header" })
-		oDiv.append("Json")
-		oElement.append(oDiv)
+			oDiv.append("Json")
+			oElement.append(oDiv)
 
 		oDiv = $("<DIV>", { class: "ui-widget-content" })
-		sID = cJquery.child_ID(oElement, cCAJsonTypes.textarea_id)
-		var oBox = $("<TEXTAREA>", { ID: sID, class: "json", title: "Json goes here" })
-		oDiv.append(oBox)
-		if (this.create_button) {
-			oButton = $("<button>").append("Create")
-			oButton.click(function () { oThis.onClickExport() })
-			oDiv.append(oButton)
-		}
+			//---------textbox
+			sID = cJquery.child_ID(oElement, cCAJsonTypes.textarea_id)
+			var oBox = $("<TEXTAREA>", { ID: sID, class: "json", title: "Json goes here" })
+			oDiv.append(oBox)
 
-		oButton = $("<button>").append("import")
-		oButton.click(function () { oThis.onClickImport() })
-		oDiv.append(oButton)
+			//---------buttons
+			if (this.create_button) {
+				oButton = $("<button>").append("Create")
+				oButton.click(function () { oThis.#onClickExport() })
+				oDiv.append(oButton)
+			}
+
+			oButton = $("<button>").append("import")
+			oButton.click(function () { oThis.#onClickImport() })
+			oDiv.append(oButton)
+
 		oElement.append(oDiv)
 
 		cDebug.leave()
@@ -85,13 +89,13 @@ class cCAJson {
 	//#################################################################
 	//# EVENTS
 	//#################################################################`
-	onClickExport() {
+	#onClickExport() {
 		cDebug.enter()
 		if (this.grid == null){
 			alert("cant create json - grid is not set")
 			throw new Error("cant create json - grid is not set")
 		}
-		else if (!this.grid.rule){
+		else if (!this.grid.get_rule()){
 			alert("no rule set")
 			throw new Error("cant create json - rule is not set")
 		}
@@ -101,7 +105,7 @@ class cCAJson {
 	}
 
 	//*****************************************************************
-	onClickImport() {
+	#onClickImport() {
 		cDebug.enter()
 
 		var oElement = this.element
@@ -132,7 +136,7 @@ class cCAJson {
 
 
 	//*****************************************************************
-	onCACanvasEvent(poEvent) {
+	#onCACanvasEvent(poEvent) {
 		cDebug.enter()
 		if (poEvent.action === cCACanvasEvent.actions.set_grid){
 			cDebug.write("set_grid")

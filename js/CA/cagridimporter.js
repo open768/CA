@@ -74,11 +74,13 @@ class cCAGridJSONExporter {
 	static export(poGrid) {
 		cDebug.enter()
 		if (!cCommon.obj_is(poGrid, "cCAGrid")) throw new CAException("param 1 is not cCAGrid")
-		if (!poGrid.rule) throw new CAException("no rule set!")
+		var oRule = poGrid.get_rule()
+
+		if (!oRule) throw new CAException("no rule set!")
 
 		var oObj = new cCAGridExported
 		//get the rule from the grid
-		oObj.rule = cCARuleObjExporter.export(poGrid.rule)
+		oObj.rule = cCARuleObjExporter.export(oRule)
 
 		//get the status of the cells from the grid
 		oObj.grid.rows = poGrid.rows
@@ -101,7 +103,8 @@ class cCAGridJSONExporter {
 	 */
 	static get_grid_base64(poGrid) {
 		if (!cCommon.obj_is(poGrid, "cCAGrid")) throw new CAException("param 1 is not cCAGrid")
-		if (poGrid.rule.stateRules.length > 1) throw new CAException("rules can only have 1 state")
+		var oRule = poGrid.get_rule()
+		if (oRule.stateRules.length > 1) throw new CAException("rules can only have 1 state")
 
 		var sBin = ""
 		/** @type {string}	 */var s64 = null
@@ -146,7 +149,7 @@ class cCAGridJSONImporter {
 
 		//-------------------------------------------------------------------
 		/** @type {cCARule}	 */ var oRule = cCARuleObjImporter.makeRule(poJson.rule)
-		oGrid.rule = oRule
+		oGrid.set_rule(oRule)
 
 		//-------------------------------------------------------------------
 		oGrid.create_cells()

@@ -97,7 +97,7 @@ class cCAGrid {
 				this.#init(poEvent.data)
 				break
 			case cCAGridEvent.actions.set_rule:
-				this.#set_rule(poEvent.data)
+				this.set_rule(poEvent.data)
 				break
 
 		}
@@ -143,7 +143,7 @@ class cCAGrid {
 	 * Description
 	 * @param {cCARule} poRule
 	 */
-	#set_rule(poRule) {
+	set_rule(poRule) {
 		cDebug.enter()
 		//clear rules from all cells
 		this.#clear_cell_rules()
@@ -152,6 +152,10 @@ class cCAGrid {
 		this.#rule = poRule
 		this.#link_cells()
 		cDebug.leave()
+	}
+	
+	get_rule(){
+		return this.#rule
 	}
 
 	//****************************************************************
