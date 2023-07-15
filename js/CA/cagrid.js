@@ -111,6 +111,103 @@ class cCAGrid {
 	}
 
 	//****************************************************************
+	/**
+	 * @param {cCARule} poRule
+	 */
+	set_rule(poRule, pbLinkCells = true) {
+		cDebug.enter()
+		//clear rules from all cells
+		this.#clear_cell_rules()
+
+		//set the rule for the grid
+		this.#rule = poRule
+		if (pbLinkCells) this.#link_cells()
+		cDebug.leave()
+	}
+	
+	//****************************************************************
+	get_rule(){
+		return this.#rule
+	}
+
+	//****************************************************************
+	//****************************************************************
+	create_cells() {
+		cDebug.enter()
+
+		//clear out existing cells
+		this.#cell_data = new cSparseArray(this.rows, this.cols)
+		this.#changed_cells = []
+
+		//create blank cells
+		for (var iNr = 1; iNr <= this.rows; iNr++)
+			for (var iNc = 1; iNc <= this.cols; iNc++)
+				this.setCellValue(iNr, iNc, 0)
+
+		//reset instance state
+		this.#changed_cells = null
+		this.#history = []
+
+		//link if there is a rule
+		if (this.#rule) this.#link_cells()
+
+		var oEvent = new cCAGridEvent(this.#name, cCAGridEvent.notify.clear)
+		oEvent.trigger()
+		cDebug.leave()
+	}
+
+	//****************************************************************
+	/**
+	 * @param {number} piRow
+	 * @param {number} piCol
+	 * @param {number} iValue
+	 * @returns {cCACell}
+	 */
+	setCellValue(piRow, piCol, iValue) {
+		if (this.#cell_data == null)
+			throw new CAException("grid not initialised")
+
+		var oCell = this.getCell(piRow, piCol, false)
+		if (oCell == null) {
+			oCell = new cCACell
+			oCell.data.set(cCACellTypes.hash_values.row, piRow)
+			oCell.data.set(cCACellTypes.hash_values.col, piCol)
+			this.#cell_data.set(piRow, piCol, oCell)
+		}
+
+		if (iValue !== oCell.value) {
+			oCell.value = iValue
+			if (this.#changed_cells == null) this.#changed_cells = []
+			this.#changed_cells.push(oCell)
+		}
+		return oCell
+	}
+
+	//****************************************************************
+	/**
+	 * @param {number} piRow
+	 * @param {number} piCol
+	 * @param {boolean} pbCreate
+	 * @returns {cCACell}
+	 */
+	getCell(piRow, piCol, pbCreate = false) {
+		if (this.#cell_data == null) return null
+		var oCell = this.#cell_data.get(piRow, piCol)
+		if (pbCreate && oCell == null)
+			oCell = this.setCellValue(piRow, piCol, 0)
+
+		return oCell
+	}
+
+	//****************************************************************
+	//****************************************************************
+	get_changed_cells(){
+		return this.#changed_cells
+	}
+
+	//#######################################################################
+	//Privates
+	//#######################################################################
 	#action(piAction) {
 		cDebug.enter()
 		if (this.#rule == null) throw new CAException("no rule set")
@@ -136,26 +233,6 @@ class cCAGrid {
 		}
 		cDebug.write("done action: " + piAction)
 		cDebug.leave()
-	}
-
-	//****************************************************************
-	/**
-	 * Description
-	 * @param {cCARule} poRule
-	 */
-	set_rule(poRule) {
-		cDebug.enter()
-		//clear rules from all cells
-		this.#clear_cell_rules()
-
-		//set the rule for the grid
-		this.#rule = poRule
-		this.#link_cells()
-		cDebug.leave()
-	}
-	
-	get_rule(){
-		return this.#rule
 	}
 
 	//****************************************************************
@@ -226,31 +303,6 @@ class cCAGrid {
 	}
 
 	//****************************************************************
-	create_cells() {
-		cDebug.enter()
-
-		//clear out existing cells
-		this.#cell_data = new cSparseArray(this.rows, this.cols)
-		this.#changed_cells = []
-
-		//create blank cells
-		for (var iNr = 1; iNr <= this.rows; iNr++)
-			for (var iNc = 1; iNc <= this.cols; iNc++)
-				this.setCellValue(iNr, iNc, 0)
-
-		//reset instance state
-		this.#changed_cells = null
-		this.#history = []
-
-		//link if there is a rule
-		if (this.#rule) this.#link_cells()
-
-		var oEvent = new cCAGridEvent(this.#name, cCAGridEvent.notify.clear)
-		oEvent.trigger()
-		cDebug.leave()
-	}
-
-	//****************************************************************
 	#clear_cell_rules() {
 		cDebug.enter()
 		var oCell
@@ -260,49 +312,6 @@ class cCAGrid {
 				if (oCell !== null) oCell.rule = null
 			}
 		cDebug.leave()
-	}
-
-	//****************************************************************
-	/**
-	 * @param {number} piRow
-	 * @param {number} piCol
-	 * @param {number} iValue
-	 * @returns {cCACell}
-	 */
-	setCellValue(piRow, piCol, iValue) {
-		if (this.#cell_data == null)
-			throw new CAException("grid not initialised")
-
-		var oCell = this.getCell(piRow, piCol, false)
-		if (oCell == null) {
-			oCell = new cCACell
-			oCell.data.set(cCACellTypes.hash_values.row, piRow)
-			oCell.data.set(cCACellTypes.hash_values.col, piCol)
-			this.#cell_data.set(piRow, piCol, oCell)
-		}
-
-		if (iValue !== oCell.value) {
-			oCell.value = iValue
-			if (this.#changed_cells == null) this.#changed_cells = []
-			this.#changed_cells.push(oCell)
-		}
-		return oCell
-	}
-
-	//****************************************************************
-	/**
-	 * @param {number} piRow
-	 * @param {number} piCol
-	 * @param {boolean} pbCreate
-	 * @returns {cCACell}
-	 */
-	getCell(piRow, piCol, pbCreate = false) {
-		if (this.#cell_data == null) return null
-		var oCell = this.#cell_data.get(piRow, piCol)
-		if (pbCreate && oCell == null)
-			oCell = this.setCellValue(piRow, piCol, 0)
-
-		return oCell
 	}
 
 	//#######################################################################

@@ -99,7 +99,7 @@ class cCACanvas {
 				this.#set_grid(oGrid)
 				//draw the grid
 				this.#on_grid_clear()
-				this.#drawGrid()
+				this.#drawGrid(oGrid.get_changed_cells())
 
 				//rule has been set
 				oEvent = new cCARuleEvent(this.#grid_name, cCARuleEvent.actions.update_rule, oGrid.rule)
@@ -312,6 +312,7 @@ class cCACanvas {
 		this.#cells_drawn = 0
 
 		var oCell
+		if (!paChangedCells) $.error("null changed cells")
 		if (paChangedCells.length == 0) {
 			cDebug.warn("no changed cells - nothing to draw")
 			return

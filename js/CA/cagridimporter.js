@@ -149,13 +149,13 @@ class cCAGridJSONImporter {
 
 		//-------------------------------------------------------------------
 		/** @type {cCARule}	 */ var oRule = cCARuleObjImporter.makeRule(poJson.rule)
-		oGrid.set_rule(oRule)
+		oGrid.set_rule(oRule, false)
 
 		//-------------------------------------------------------------------
 		oGrid.create_cells()
-		var s64 = poJson.grid.data
 		var iBinLength = oGrid.rows * oGrid.cols
-		var sBin = cCASimpleBase64.toBinary(s64, iBinLength) //have to set expected bin length
+		var s64 = poJson.grid.data
+		var sBin = cCASimpleBase64.toBinary(s64, iBinLength) //convert base64 to binary - have to set expected bin length
 		var iIndex = 0
 
 		for (var iRow = 1; iRow <= oGrid.rows; iRow++)
