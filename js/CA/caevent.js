@@ -32,7 +32,7 @@ class cCABaseEvent{
 		return (this.hook + this.grid_name)
 	}
 
-	trigger() {
+	async trigger() {
 		var sEventName = this.hook_name()
 		bean.fire(document, sEventName, this)
 	}

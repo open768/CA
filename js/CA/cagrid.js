@@ -360,14 +360,8 @@ class cCAGrid {
 		while (aHistory.length > cCAGrid.HISTORY_LEN)
 			aHistory.shift()
 
-		//create a hash code
-		var sBinary = ""
-		
-		this.#changed_cells.forEach(poCell => {
-			sBinary = sBinary + poCell.row + poCell.col + poCell.value
-		})
 
-		var sHash = md5(sBinary)
+		var sHash = this.#changed_cells_hash()
 		if (aHistory.includes(sHash)){
 			this.#running = false
 			cDebug.warn("repeat pattern seen")
@@ -376,6 +370,21 @@ class cCAGrid {
 			return
 		}
 		aHistory.push(sHash)
+	}
+
+	#changed_cells_hash(){
+		//create a hash code
+		var sBinary = ""
+		var iCountOnes = 0
+		
+		this.#changed_cells.forEach(poCell => {
+			sBinary += poCell.value
+			if (poCell.value !== 0) iCountOnes ++;
+		})
+
+		var sHash = md5(sBinary) + iCountOnes
+
+		return sHash
 	}
 
 	//****************************************************************
