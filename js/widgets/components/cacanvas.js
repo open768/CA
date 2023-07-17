@@ -102,7 +102,7 @@ class cCACanvas {
 				this.#drawGrid(oGrid.get_changed_cells())
 
 				//rule has been set
-				oEvent = new cCARuleEvent(this.#grid_name, cCARuleEvent.actions.update_rule, oGrid.rule)
+				oEvent = new cCARuleEvent(this.#grid_name, cCARuleEvent.actions.update_rule, oGrid.get_rule())
 				oEvent.trigger()
 				break
 		}
