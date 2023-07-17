@@ -376,13 +376,17 @@ class cCAGrid {
 		//create a hash code
 		var sBinary = ""
 		var iCountOnes = 0
+		var iCountZeros = 0
 		
 		this.#changed_cells.forEach(poCell => {
 			sBinary += poCell.value
-			if (poCell.value !== 0) iCountOnes ++;
+			if (poCell.value !== 0) 
+				iCountOnes ++;
+			else
+				iCountZeros ++;
 		})
 
-		var sHash = md5(sBinary) + iCountOnes
+		var sHash = md5(sBinary) + "_"+iCountOnes+","+ iCountZeros
 
 		return sHash
 	}
