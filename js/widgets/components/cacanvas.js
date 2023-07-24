@@ -63,7 +63,6 @@ class cCACanvas {
 
 		//subscribe to CAEvents (see #set_grid for subscribing to grid events)
 		var oThis = this
-		cCAEventHelper.subscribe_to_rule_events( this.#grid_name, poEvent => { oThis.#onCARuleEvent(poEvent) })
 		cCAEventHelper.subscribe_to_action_events( this.#grid_name, poEvent => { oThis.#onCAActionEvent(poEvent) })
 		cCAEventHelper.subscribe_to_grid_events( this.#grid_name, poEvent => { oThis.#onCAGridEvent(poEvent) })
 	}
@@ -112,7 +111,7 @@ class cCACanvas {
 	#onCAActionEvent(poEvent) {
 		var oElement = this.element
 		var oThis = this
-		var oGrid,oEvent
+		var oGrid
 
 		cDebug.enter()
 		switch (poEvent.action) {
@@ -130,35 +129,8 @@ class cCACanvas {
 					this.#has_mouseup = true
 				}
 				break
-
-			//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-			case cCAActionEvent.actions.grid_init:
-				cDebug.write("event: initialise")
-				var iInitType = poEvent.data
-				oEvent = new cCAGridEvent(this.#grid_name, cCAGridEvent.actions.init_grid, iInitType)
-				oEvent.trigger()
-				break
-
-			//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-			case cCAActionEvent.actions.control:
-				cDebug.write("event: action")
-				oEvent = new cCAGridEvent(this.#grid_name, cCAGridEvent.actions.control, poEvent.data)
-				oEvent.trigger()
-				break
 		}
 		cDebug.leave()
-	}
-	//****************************************************************
-	#onCARuleEvent(poEvent) {
-		var oEvent
-		switch (poEvent.action) {
-			//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-			case cCARuleEvent.actions.set_rule:
-				cDebug.write("action: set rule")
-				oEvent = new cCAGridEvent(this.#grid_name, cCAGridEvent.actions.set_rule, poEvent.data)
-				oEvent.trigger()
-				break
-		}
 	}
 
 	//****************************************************************
@@ -296,7 +268,7 @@ class cCACanvas {
 		this.#canvas = oCanvas
 
 		//initialise the grid
-		var oEvent = new cCAGridEvent(this.#grid_name, cCAGridEvent.actions.init_grid, cCAGridTypes.init.block.id)
+		var oEvent = new cCAActionEvent(this.#grid_name, cCAActionEvent.actions.grid_init, cCAGridTypes.init.block.id)
 		oEvent.trigger()
 		cDebug.leave()
 	}

@@ -70,36 +70,42 @@ class cCAGrid {
 
 		var oThis = this
 		cCAEventHelper.subscribe_to_grid_events(this.#name, (poEvent)=>{oThis.onCAGridEvent(poEvent)})
+		cCAEventHelper.subscribe_to_action_events(this.#name, (poEvent)=>{oThis.onCAActionEvent(poEvent)})
+		cCAEventHelper.subscribe_to_rule_events(this.#name, (poEvent)=>{oThis.onCARuleEvent(poEvent)})
 	}
 
 	//#######################################################################
 	//# event handlers
 	//#######################################################################
-	/**
-	 * Description
+	onCARuleEvent(poEvent){
+		switch(poEvent.action){
+			case cCARuleEvent.actions.set_rule:
+				this.set_rule(poEvent.data)
+		}
+	}
+
+	onCAActionEvent(poEvent){
+		switch(poEvent.action){
+			case cCAActionEvent.actions.grid_init:
+				this.#init(poEvent.data)
+				break
+			case cCAActionEvent.actions.control:
+				this.#action(poEvent.data)
+				break
+		}
+	}
+
+		/**
 	 * @param {cCAGridEvent} poEvent
 	 */
 	onCAGridEvent(poEvent){
 		switch(poEvent.action){
-			case cCAGridEvent.actions.control:
-				this.#action(poEvent.data)
-				break
-			case cCAGridEvent.actions.step_grid:
-				this.#step()
-				break
 			case cCAGridEvent.notify.changedCellsConsumed:
 				this.#onNotifyCellsConsumed()
 				break
 			case cCAGridEvent.actions.set_cell:
 				this.#onSetOneCellOnly(poEvent.data)
 				break
-			case cCAGridEvent.actions.init_grid:
-				this.#init(poEvent.data)
-				break
-			case cCAGridEvent.actions.set_rule:
-				this.set_rule(poEvent.data)
-				break
-
 		}
 	}
 
@@ -345,7 +351,7 @@ class cCAGrid {
 		if (this.#running) {
 			cDebug.write("running again")
 			this.#runData.runs++
-			var oEvent = new cCAGridEvent(this.#name, cCAGridEvent.actions.step_grid);
+			var oEvent = new cCAActionEvent(this.#name,  cCAActionEvent.actions.control, cCAGridTypes.actions.step);
 			oEvent.trigger()
 		}
 		cDebug.leave()

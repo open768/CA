@@ -67,10 +67,7 @@ class cCAGridEvent extends cCABaseEvent{
 	hook = "CAGRIDEV"
 	static actions = {
 		init_grid: "GAini",
-		step_grid: "GAstep",
 		set_cell: "GASet",
-		control: "GAControl",
-		set_rule: "GASetRule",
 		import_grid: "GEIG"
 	}
 	static notify = {
