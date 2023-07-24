@@ -50,7 +50,7 @@ class cCARemoteControls{
 	
 	//****************************************************************************
 	onClickControl(piAction){
-		if (!caMachineTypes.rule_set){
+		if (!this.rule_set){
 			alert("set a rule first!!")
 			return
 		}

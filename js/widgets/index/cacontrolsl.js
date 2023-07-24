@@ -8,16 +8,14 @@ For licenses that allow for commercial use please contact cluck@chickenkatsu.co.
 // USE AT YOUR OWN RISK - NO GUARANTEES OF ANY FORM ARE EITHER EXPRESSED OR IMPLIED
 **************************************************************************/
 class cCAControlLTypes {
-	static entry_ID = "en"
-	static rules_ID = "ru"
-	static rules_status_ID = "rs"
-	static name_ID = "na"
-	static init_ID = "in"
-	static wolf_ID = "wo"
-	static preset_ID = "pr"
-	static boredom_ID = "bo"
+	static rule_text_ID = "text"
+	static rule_type_id = "type"
+	static status_ID = "status"
+	static repeater_ID = "repeat"
+	static preset_ID = "presets"
+	static boredom_ID = "bored"
 
-	static random_ID = "rnd"
+	static random_ID = "random"
 }
 
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -71,7 +69,7 @@ class cCAControlsL {
 		//--rules widgets-------------------------------------------------
 		oHeader= $("<DIV>", { class: "ui-widget-header" })
 			oHeader.append("Rule")
-			sID = cJquery.child_ID(oElement, cCAControlLTypes.rules_status_ID)
+			sID = cJquery.child_ID(oElement, cCAControlLTypes.status_ID)
 			var oSpan = $("<SPAN>", { id: sID }).html(" ??") //STATUS div
 			oHeader.append(oSpan)
 		oElement.append(oHeader)
@@ -90,7 +88,7 @@ class cCAControlsL {
 
 			//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 			oContent.append("<HR>")
-			sID = cJquery.child_ID(oElement, cCAControlLTypes.name_ID)
+			sID = cJquery.child_ID(oElement, cCAControlLTypes.repeater_ID)
 			oContent.append("word repeater")
 
 			var oInput = $("<INPUT>", { type: "text", id: sID, size: 12, icon: "ui-icon-circle-arrow-e", title: "put anything in this box - eg your name" })
@@ -102,13 +100,13 @@ class cCAControlsL {
 
 			//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 			oContent.append("<HR>")
-			sID = cJquery.child_ID(oElement, cCAControlLTypes.entry_ID)
+			sID = cJquery.child_ID(oElement, cCAControlLTypes.rule_text_ID)
 			var oBox = $("<TEXTAREA>", { ID: sID, class: "rule", title: "enter the rule here" })
 			oBox.keyup(function () { oThis.#onRuleChange() })
 			oContent.append(oBox)
 
 			//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-			sID = cJquery.child_ID(oElement, cCAControlLTypes.rules_ID)
+			sID = cJquery.child_ID(oElement, cCAControlLTypes.rule_type_id)
 			oSelect = $("<SELECT>", { id: sID, width: 200, title: "choose the rule type to enter in the box above" })
 				oSelect.append($("<option>", { selected: 1, disabled: 1, value: -1 }).append("Rule Type"))
 				oSelect.append($("<option>", { value: cCARuleTypes.rule_types.base64 }).append("base64"))
@@ -158,7 +156,7 @@ class cCAControlsL {
 	#onSetNameClick() {
 		var oElement = this.element
 
-		var sID = cJquery.child_ID(oElement, cCAControlLTypes.name_ID)
+		var sID = cJquery.child_ID(oElement, cCAControlLTypes.repeater_ID)
 		var oInput = $("#" + sID)
 		var sInput = oInput.val().trim()
 		if (sInput === "") {
@@ -178,8 +176,8 @@ class cCAControlsL {
 	#onSetRuleClick() {
 		var oElement = this.element
 
-		var oTextArea = $("#" + cJquery.child_ID(oElement, cCAControlLTypes.entry_ID))
-		var oSelect = $("#" + cJquery.child_ID(oElement, cCAControlLTypes.rules_ID))
+		var oTextArea = $("#" + cJquery.child_ID(oElement, cCAControlLTypes.rule_text_ID))
+		var oSelect = $("#" + cJquery.child_ID(oElement, cCAControlLTypes.rule_type_id))
 
 		if (!oSelect.val()) {
 			alert("choose a rule type to import")
@@ -200,7 +198,6 @@ class cCAControlsL {
 					break
 				case cCARuleTypes.rule_types.base64:
 					oRule = cCARuleBase64Importer.makeRule(oTextArea.val())
-					caMachineTypes.rule = oRule
 
 					//set the boredom if chosen
 					var oBoredomList = $("#" + cJquery.child_ID(oElement, cCAControlLTypes.boredom_ID))
@@ -209,7 +206,6 @@ class cCAControlsL {
 					//inform subscribers
 					var oEvent = new cCARuleEvent(this.grid_name, cCARuleEvent.actions.set_rule, oRule)
 					oEvent.trigger()
-					caMachineTypes.rule_set = true
 					break
 				default:
 					throw new CAException("unknown rule type")
@@ -229,8 +225,8 @@ class cCAControlsL {
 	#onRuleChange() {
 		var oElement = this.element
 
-		var oTextArea = $("#" + cJquery.child_ID(oElement, cCAControlLTypes.entry_ID))
-		var oSelect = $("#" + cJquery.child_ID(oElement, cCAControlLTypes.rules_ID))
+		var oTextArea = $("#" + cJquery.child_ID(oElement, cCAControlLTypes.rule_text_ID))
+		var oSelect = $("#" + cJquery.child_ID(oElement, cCAControlLTypes.rule_type_id))
 		var sSelected = oSelect.val()
 		if (sSelected) {
 			var iSelected = parseInt(sSelected)
@@ -246,8 +242,8 @@ class cCAControlsL {
 	#onPresetsClick(poEvent) {
 		var oElement = this.element
 
-		var oTextArea = $("#" + cJquery.child_ID(oElement, cCAControlLTypes.entry_ID))
-		var oRulesSelect = $("#" + cJquery.child_ID(oElement, cCAControlLTypes.rules_ID))
+		var oTextArea = $("#" + cJquery.child_ID(oElement, cCAControlLTypes.rule_text_ID))
+		var oRulesSelect = $("#" + cJquery.child_ID(oElement, cCAControlLTypes.rule_type_id))
 
 		var sPreset = $(poEvent.target).val()
 		if (!sPreset) return
@@ -275,12 +271,12 @@ class cCAControlsL {
 	//****************************************************************************
 	#onBoredomClick(poEvent) {
 
-		if (!caMachineTypes.rule_set) {
+		if (!this.rule) {
 			alert("set a rule first")
 			return
 		}
 		var iBoredem = parseInt($(poEvent.target).val())
-		caMachineTypes.rule.set_boredom(iBoredem)
+		this.rule.set_boredom(iBoredem)
 	}
 
 	//#################################################################
@@ -288,7 +284,7 @@ class cCAControlsL {
 	//#################################################################`
 	#set_status(psText) {
 		var oElement = this.element
-		var oSpan = $("#" + cJquery.child_ID(oElement, cCAControlLTypes.rules_status_ID))
+		var oSpan = $("#" + cJquery.child_ID(oElement, cCAControlLTypes.status_ID))
 		oSpan.html(psText)
 	}
 
@@ -299,11 +295,11 @@ class cCAControlsL {
 		var s64 = cCARuleBase64Exporter.export(poRule, cCACellTypes.default_state)
 		this.rule = poRule
 
-		var oTextArea = $("#" + cJquery.child_ID(oElement, cCAControlLTypes.entry_ID))
+		var oTextArea = $("#" + cJquery.child_ID(oElement, cCAControlLTypes.rule_text_ID))
 		oTextArea.val(s64)
 		cBrowser.copy_to_clipboard(s64)
 
-		var oSelect = $("#" + cJquery.child_ID(oElement, cCAControlLTypes.rules_ID))
+		var oSelect = $("#" + cJquery.child_ID(oElement, cCAControlLTypes.rule_type_id))
 		oSelect.val(cCARuleTypes.rule_types.base64)
 		oSelect.selectmenu("refresh")
 		this.#onSetRuleClick()

@@ -45,11 +45,6 @@ class cCACellTypes {
 	}
 }
 
-/* eslint-disable-next-line no-unused-vars */
-class caMachineTypes{
-	static rule_set = false
-	static rule = null
-}
 
 //###############################################################################
 /**

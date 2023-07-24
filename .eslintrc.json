@@ -21,7 +21,6 @@
         "$": "readonly",
         "bean": "readonly",
         "CAException": "readonly",
-        "caMachineTypes": "readonly",
         "cBrowser": "readonly",
         "cCAActionEvent": "readonly",
         "cCACanvasEvent": "readonly",
