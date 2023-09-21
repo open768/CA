@@ -102,7 +102,7 @@ class cCAControlsL {
 			oContent.append("<HR>")
 			sID = cJquery.child_ID(oElement, cCAControlLTypes.rule_text_ID)
 			var oBox = $("<TEXTAREA>", { ID: sID, class: "rule", title: "enter the rule here" })
-			oBox.keyup(function () { oThis.#onRuleChange() })
+			oBox.keyup(function () { oThis.#onTextareaChange() })
 			oContent.append(oBox)
 
 			//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -222,7 +222,7 @@ class cCAControlsL {
 
 
 	//****************************************************************************
-	#onRuleChange() {
+	#onTextareaChange() {
 		var oElement = this.element
 
 		var oTextArea = $("#" + cJquery.child_ID(oElement, cCAControlLTypes.rule_text_ID))
