@@ -7,11 +7,6 @@ https://creativecommons.org/licenses/by/4.0/legalcode
 For licenses that allow for commercial use please contact cluck@chickenkatsu.co.uk
 // USE AT YOUR OWN RISK - NO GUARANTEES OF ANY FORM ARE EITHER EXPRESSED OR IMPLIED
 **************************************************************************/
-<<<<<<< HEAD
-//import cCAGrid from "./cagrid.js"
-
-=======
->>>>>>> 201630a137d9de5b21beae7d4abc84b54da0a967
 
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 //%
