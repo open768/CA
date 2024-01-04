@@ -19,7 +19,7 @@ class cCABaseEvent{
 	grid_name = null
 	action = null
 	data = null
-	hook = "***NOT SET***"
+	hook = "***NOT SET***"				//hook must be unique to the application, 
 
 	constructor(psGridName, psAction, poData = null) {
 		if (!psGridName || !psAction) $.error("incorrect number of arguments")
