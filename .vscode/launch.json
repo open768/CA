@@ -11,7 +11,7 @@
             "file": "crypt.html",
             "runtimeArgs": [
                 "--user-data-dir=${env:LOCALAPPDATA}\\Google\\Chrome\\User Data",
-                "--profile-directory=Profile 1"
+                "--profile-directory=Default"
               ]
         },
         {
@@ -19,10 +19,6 @@
             "request": "launch",
             "name": "index",
             "file": "index.html",
-            "runtimeArgs": [
-                "--user-data-dir=${env:LOCALAPPDATA}\\Google\\Chrome\\User Data",
-                "--profile-directory=Profile 1"
-              ]
         },
         {
             "type": "chrome",

@@ -1,15 +1,15 @@
-# Windows image file caches
-Thumbs.db
-ehthumbs.db
-zipit.sh
-
-#VScode stuff
-CA.code-workspace
-
-
-# Folder config file
+#windows
 Desktop.ini
-images/vector/
-build.sh
-release.zip
+
+#npm stuff
+node_modules/
+
+# node
+package-lock.json
+
+#jquery
 css/jquery/
+
+#design stuff
+*.afdesign
+*.ldb

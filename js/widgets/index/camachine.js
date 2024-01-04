@@ -1,4 +1,4 @@
-"use strict";
+"use strict"
 /**************************************************************************
 Copyright (C) Chicken Katsu 2013-2024
 This code is protected by copyright under the terms of the 
@@ -7,11 +7,6 @@ https://creativecommons.org/licenses/by/4.0/legalcode
 For licenses that allow for commercial use please contact cluck@chickenkatsu.co.uk
 // USE AT YOUR OWN RISK - NO GUARANTEES OF ANY FORM ARE EITHER EXPRESSED OR IMPLIED
 **************************************************************************/
-class caMachineTypes{
-	static rule_set = false;
-	static rule = null;
-	static grid_name = "agridname";
-}
 
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 $.widget( "ck.camachine",{
@@ -22,73 +17,78 @@ $.widget( "ck.camachine",{
 		cols:100,
 		rows:100,
 		cell_size:5,
+		name: null
 	},
 
 	//#################################################################
 	//# Constructor
 	//#################################################################`
 	_create: function(){
-		var oOptions, oElement;
+		var oOptions, oElement
 		
-		oOptions = this.options;
-		oElement = this.element;
+		oOptions = this.options
+		oElement = this.element
 		
 		//check for classes
-		if (typeof cCARule !== 'function') { $.error("missing cCARule class");}
-		if (!bean ) { $.error("missing bean class");}
+		if (typeof cCARule !== 'function') { $.error("missing cCARule class")}
+		if (!bean ) { $.error("missing bean class")}
+		if (!oOptions.name) { $.error("missing name")}
+		var sCaName = oOptions.name
 		
 		//set basic stuff
-		oElement.uniqueId();
+		oElement.uniqueId()
 		
 		//machine has 3 child widgets: control panel and machine canvas, status
 		//widgets will subscribe and publish events themselves
-		oElement.empty();
-		var oTable = $("<table>");
+		oElement.empty()
+		var oCell
+		var oContainer = $("<div>")
 			//----------------------------------------------------------------------------------
-			var oRow = $("<TR>");
-				//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-				var oCell = $("<TD>", {width:350,valign:"top"});
-					var oLeftCtrlDiv = $("<DIV>",{width:350,id:"leftControl", canvas_id:"canvas"});
-					oLeftCtrlDiv.cacontrolsl({grid_name:caMachineTypes.grid_name});
-						oCell.append(oLeftCtrlDiv);
-					oRow.append(oCell);
-				
-				//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-				var oCell = $("<TD>");
-					var oCanvasDiv = $("<SPAN>",{title:"this is where the magic happens", id:"canvas"});
-					oCanvasDiv.cacanvas({
-						cols:oOptions.cols,
-						rows:oOptions.rows,
-						cell_size:oOptions.cell_size,
-						grid_name: caMachineTypes.grid_name
-					});
-					oCell.append(oCanvasDiv);
-				oRow.append(oCell);
-				
-				//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-				var oCell = $("<TD>", {width:240,valign:"top",canvas_id:"canvas"});
-					var oRightCtrlDiv = $("<DIV>", {width:240});
-					oRightCtrlDiv.cacontrolsr({grid_name:caMachineTypes.grid_name});
-					oCell.append(oRightCtrlDiv);
-				oRow.append(oCell);
-			oTable.append(oRow);
+			//left controls - rule configuration 
+			oCell = $("<div>", {class:"w3-cell w3-cell-top w3-container"})
+				var oLeftCtrlDiv = $("<DIV>",{width:350,id:"leftControl"})
+				oLeftCtrlDiv.cacontrolsl({grid_name:sCaName})
+					oCell.append(oLeftCtrlDiv)
+				oContainer.append(oCell)
+			
+			//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+			oCell = $("<div>", {class:"w3-cell w3-cell-top w3-container"})
+				var oCanvasDiv = $("<SPAN>",{title:"this is where the magic happens", id:"canvas"})
+				oCanvasDiv.cacanvas({
+					cols:oOptions.cols,
+					rows:oOptions.rows,
+					cell_size:oOptions.cell_size,
+					grid_name: sCaName
+				})
+				oCell.append(oCanvasDiv)
+			oContainer.append(oCell)
+			
+			//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+			//right panel - grid initialisation, status and run controls
+			oCell = $("<div>", {class:"w3-cell w3-cell-top w3-container"})
+				var oRightCtrlDiv = $("<DIV>", {width:240, id:"rightControl"})
+				oRightCtrlDiv.cacontrolsr({grid_name:sCaName})
+				oCell.append(oRightCtrlDiv)
+				oContainer.append(oCell)
+			oContainer.append(oCell)
+		oElement.append(oContainer)
 			
 			//----------------------------------------------------------------------------------
-			var oRow = $("<TR>");
-				var oCell = $("<TD>", {valign:"top",colspan:3});
-					var oJsonDiv = $("<DIV>", {title:"json will appear here"});
-						oJsonDiv.cajson({grid_name:caMachineTypes.grid_name});
-						oCell.append(oJsonDiv);
-				oRow.append(oCell);
-			oTable.append(oRow);
-		oElement.append(oTable);
-		
+		oContainer = $("<div>", {class:"w3-cell-row"})
+			//JSON panel
+			oCell = $("<div>", {class:"w3-cell"})
+				var oJsonDiv = $("<DIV>", {title:"json will appear here",id:"JsonPanel"})
+					oJsonDiv.cajson({grid_name:sCaName})
+					oCell.append(oJsonDiv)
+			oContainer.append(oCell)
+		oElement.append(oContainer)
+						
 		//check clipboard
-		cBrowser.get_clipboard_permissions(true);
+		cBrowser.get_clipboard_permissions(true)
 		
 		//---------------informs subscribers that UI is ready -------------------------------
-		var oEvent = new cCAEvent( cCAEvent.types.action, cCAActionEvent.actions.ready,null);
-		oEvent.trigger(document);
+		var oEvent = new cCAActionEvent( oOptions.name, cCAActionEvent.actions.ready,null)
+		oEvent.trigger()
 
 	},
-});
+})

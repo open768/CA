@@ -1,4 +1,4 @@
-"use strict";
+"use strict"
 /**************************************************************************
 Cellular Automata Simulator © 2013 by open768 
 is licensed under Attribution-NonCommercial-ShareAlike 4.0 International. 
@@ -8,409 +8,349 @@ contact: https://github.com/open768/
 For licenses that allow for commercial use please contact cluck@chickenkatsu.co.uk
 
 USE AT YOUR OWN RISK - NO GUARANTEES OF ANY FORM ARE EITHER EXPRESSED OR IMPLIED
+
+uses Jcanvas https://github.com/caleb531/jcanvas/ https://projects.calebevans.me/jcanvas/docs/
+
 **************************************************************************/
-class cCACanvasTypes{
-	static white_image = "images/whitebox.png";
-	static black_image = "images/blackbox.png";
-}
-
-class cCACanvasEventData{
-	grid_name=null;
-	data=null;
-	
-	constructor(psGridName, poData){
-		this.grid_name = psGridName;
-		this.data = poData;
-	}
-}
-
-class cCACanvasEvent{
-	static actions = {
-		nochange:"CENC",
-		grid_status:"CEGS",
-		set_grid:"CESG"
-	};
-
-	action=null;
-	data=null;
-	grid_name = null;
-
-	constructor(psGridName, psAction, poData){
-		if (!psGridName || !psAction) $.error("incorrect number of arguments");
-		this.grid_name = psGridName;
-		this.action = psAction;
-		this.data = poData;
-	}
-	
-	trigger(poSubject){
-		var oData = new cCACanvasEventData(this.grid_name,this.data); 
-		var oEvent = new cCAEvent(cCAEvent.types.canvas, this.action, oData);
-		oEvent.trigger(poSubject);
-	}
-}
 
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-class cCACanvas{
+class cCACanvas {
 	//#################################################################
 	//# Definition
 	//#################################################################
-	grid =  null;
-	rows = 100;
-	cols=100;
-	grid_name=null;
-	canvas = null;
-	drawing =false;
-	image_count = 0;
-	images_done = 0;
-	interactive = false;
-	mouse={
-		X : 0,
-		Y : 0,
-		has_events : false,
-		is_down : false
-	};
-	last_mouse_pos ={
-		row : -1,
-		col : -1
-	};
-	has_mouseup = false;
-	
+	CELL_LOAD_DELAY = 50 //fudge factor
+	rows = 100
+	cols = 100
+	interactive = false
+
+	#grid = null
+	#grid_name = null
+	#canvas = null
+	#cells_to_draw = 0
+	#cells_drawn = 0
+	#mouse = {
+		X: 0,
+		Y: 0,
+		has_events: false,
+		is_down: false
+	}
+	#last_mouse_pos = {
+		row: -1,
+		col: -1
+	}
+	#has_mouseup = false
+
 	//#################################################################
 	//# Constructor
 	//#################################################################`
-	 constructor(poOptions, poElement){
+	constructor(poOptions, poElement) {
 		//check dependencies
-		if (!bean ) 	$.error("bean class is missing! check includes");	
-		if (!poOptions.grid_name) $.error("name must be provided");	
-		this.interactive = poOptions.interactive;
-		
-		this.element = poElement;
-		this.rows = poOptions.rows;
-		this.cols = poOptions.cols;
-		this.grid_name = poOptions.grid_name;
-		this.cell_size = poOptions.cell_size;
-		
+		if (!bean) $.error("bean class is missing! check includes")
+		if (!poOptions.grid_name) $.error("name must be provided")
+		this.interactive = poOptions.interactive
+
+		this.element = poElement
+		this.rows = poOptions.rows
+		this.cols = poOptions.cols
+		this.#grid_name = poOptions.grid_name
+		this.cell_size = poOptions.cell_size
+
 		//set basic stuff
-		poElement.uniqueId();
-		poElement.addClass("ui-widget");
-		poElement.addClass("CACanvas");
-		
-		//subscribe to CAEvents
-		var oThis = this;
-		bean.on (document, cCAEvent.hook, function(poEvent){ oThis.onCAEvent(poEvent)} );
-	 }
-	
+		poElement.uniqueId()
+		poElement.addClass("ui-widget")
+		poElement.addClass("CACanvas")
+
+		//subscribe to CAEvents (see #set_grid for subscribing to grid events)
+		var oThis = this
+		cCAEventHelper.subscribe_to_action_events( this.#grid_name, poEvent => { oThis.#onCAActionEvent(poEvent) })
+		cCAEventHelper.subscribe_to_grid_events( this.#grid_name, poEvent => { oThis.#onCAGridEvent(poEvent) })
+	}
+
 	//#################################################################
 	//# events
 	//#################################################################`
-	onCAGridEvent(poEvent){
-		switch (poEvent.action){
-			case cCAGridEvent.actions.done:
-				this.pr__grid_done(poEvent.data);
-				break;
-			case cCAGridEvent.actions.clear:
-				this.pr__grid_clear();
-				break;
-			case cCAGridEvent.actions.nochange:
-				this.pr__grid_nochange();
-				break;
-		}
-	}
-		
-	//****************************************************************
-	onCAEvent( poEvent){
-		var oElement = this.element;
-		var oThis = this;
-		
-		cDebug.enter();
-		
-		switch (poEvent.type){
-			//----------------------------------------------------------------------
-			case cCAEvent.types.action:
-				cDebug.write("event: action");
-				switch(poEvent.action){
-					case cCAActionEvent.actions.ready:
-						cDebug.write("action: ready");
-						//associate a CA grid with the widget
-						var oGrid = new cCAGrid(this.grid_name, this.rows, this.cols);
-						this.pr__set_grid(oGrid);
-						//put something in the widget
-						this.pr__initCanvas();
-						if (!this.has_mouseup){ //only set mouse event handler once
-							oElement.mouseup( function(){ oThis.onMouseUp(); } );
-							oElement.mousemove( function(poEvent){ oThis.onMouseMove(poEvent); } );
-							oElement.mousedown( function(poEvent){ oThis.onMouseDown(poEvent); } );
-							this.has_mouseup = true;
-						}
-						break;
-						
-					//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-					case cCAActionEvent.actions.grid_init:
-						cDebug.write("event: initialise");
-						var iInitType = poEvent.data;
-						this.grid.init(iInitType);
-						break;
-						
-					//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-					case cCAActionEvent.actions.control:
-						cDebug.write("event: action");
-						this.grid.action(poEvent.data);
-						break;
-				}
-				break;
-			//----------------------------------------------------------------------
-			case cCAEvent.types.general:
-				cDebug.write("event: general");
-				switch (poEvent.action){
-					case cCAGeneralEvent.actions.import_grid:
-						cDebug.write("action: import grid");
-						var oGrid = poEvent.data;
-						if (oGrid.name === this.grid_name){
-							this.pr__set_grid(oGrid);
-							//draw the grid
-							this.pr__grid_clear();
-							this.pr__drawGrid();
-							
-							//rule has been set
-							var oEvent = new cCAEvent( cCAEvent.types.rule, cCARuleEvent.actions.update_rule, oGrid.rule);
-							oEvent.trigger(document);
-						}
-						break;
-						
-					//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-					case cCAGeneralEvent.actions.set_rule:
-						cDebug.write("action: set rule");
-						this.grid.set_rule(poEvent.data);
-						break;
-				}
-				break;
-				
-		}
-		cDebug.leave();
-	}
-	
-	//****************************************************************
-	 onImageLoad(){
-		this.images_done ++;
-		
-		if (this.images_done >= this.image_count){
-			//let the grid know that the canvas completed drawing
-			cDebug.write("finished drawing");
-			this.drawing = false;
-			var oGrid = this.grid;
-			
-			setTimeout( function(){ oGrid.notifyDrawn();}, 50); //async
-		}
-	}
-	
-	//****************************************************************
-	onMouseDown(poEvent){
-		if (!this.grid) return;
-		if (!this.interactive) return;
-		
-		this.mouse.is_down = true;
-		this.pr__set_one_cell(poEvent);
-	}
-	
-	//****************************************************************
-	onMouseMove(poEvent){
-		if (!this.interactive) return;
+	/**
+	 * @param {cCAGridEvent} poEvent
+	 */
+	#onCAGridEvent(poEvent) {
+		var oEvent
+		switch (poEvent.action) {
+			case cCAGridEvent.notify.done:
+				this.#on_grid_done(poEvent.data)
+				break
+			case cCAGridEvent.notify.clear:
+				this.#on_grid_clear()
+				break
+			case cCAGridEvent.notify.nochange:
+				alert("no change detected in grid")
+				oEvent = new cCACanvasEvent(this.#grid_name, cCACanvasEvent.notify.nochange, null)
+				oEvent.trigger()
+				break
+			case cCAGridEvent.notify.repeatPattern:
+				alert("repeat pattern seen")
+				oEvent = new cCACanvasEvent(this.#grid_name, cCACanvasEvent.notify.nochange, null)
+				oEvent.trigger()
+				break
+			case cCAGridEvent.actions.import_grid:
+				cDebug.write("action: import grid")
+				var oGrid = poEvent.data
+				this.#set_grid(oGrid)
+				//draw the grid
+				this.#on_grid_clear()
+				this.#drawGrid(oGrid.get_changed_cells())
 
-		var oRC = this.pr__get_cell_rc_from_event(poEvent, false);
-
-		if (this.grid && this.mouse.is_down){
-			this.pr__set_one_cell(poEvent);
+				//rule has been set
+				oEvent = new cCARuleEvent(this.#grid_name, cCARuleEvent.actions.update_rule, oGrid.get_rule())
+				oEvent.trigger()
+				break
 		}
 	}
-	
+
 	//****************************************************************
-	onMouseUp(){
-		this.mouse.is_down = false;
+	#onCAActionEvent(poEvent) {
+		var oElement = this.element
+		var oThis = this
+		var oGrid
+
+		cDebug.enter()
+		switch (poEvent.action) {
+			case cCAActionEvent.actions.ready:
+				cDebug.write("action: ready")
+				//associate a CA grid with the widget
+				oGrid = new cCAGrid(this.#grid_name, this.rows, this.cols)
+				this.#set_grid(oGrid)
+				//put something in the widget
+				this.#initCanvas()
+				if (!this.#has_mouseup) { //only set #mouse event handler once
+					oElement.mouseup(function () { oThis.#onMouseUp() })
+					oElement.mousemove(function (poEvent) { oThis.#onMouseMove(poEvent) })
+					oElement.mousedown(function (poEvent) { oThis.#onMouseDown(poEvent) })
+					this.#has_mouseup = true
+				}
+				break
+		}
+		cDebug.leave()
 	}
-	
+
+	//****************************************************************
+	#count_drawn_cells(){
+		//update the count of cells drawn
+		this.#cells_drawn++
+		var oThis = this
+
+		// when all cells have been drawn, let the grid know that the cells have been consumed
+		if (this.#cells_drawn >= this.#cells_to_draw) {
+			//let the grid know that the canvas completed #drawing
+			cDebug.write("finished drawing")
+
+			setTimeout(				//canvas needs to yield to allow image to be drawn
+				function () { 
+					var oEvent = new cCAGridEvent(oThis.#grid_name, cCAGridEvent.notify.changedCellsConsumed);
+					oEvent.trigger()
+				}, 	
+				this.CELL_LOAD_DELAY		//fudge factor to delay next grid cycle
+			)	
+		}
+	}
+
+	//****************************************************************
+	#onMouseDown(poEvent) {
+		if (!this.#grid) return
+		if (!this.interactive) return
+
+		this.#mouse.is_down = true
+		this.#set_one_cell(poEvent)
+	}
+
+	//****************************************************************
+	#onMouseMove(poEvent) {
+		if (!this.interactive) return
+		if (!this.#grid) return
+		if (!this.#mouse.is_down) return
+		
+		this.#set_one_cell(poEvent)
+	}
+
+	//****************************************************************
+	#onMouseUp() {
+		this.#mouse.is_down = false
+	}
+
 	//#################################################################
 	//# privates
 	//#################################################################`
-	pr__set_one_cell(poEvent){
-		if (this.grid.running) return;
-		
-		var oRC = this.pr__get_cell_rc_from_event(poEvent, true);
-		if (oRC){
-			this.grid.changed_cells = [];
-			this.grid.setCellValue(oRC.row, oRC.col, 1);
-			this.pr__drawGrid();
+	#set_one_cell(poEvent) {
+		if (this.#grid.is_running()) return
+
+		var oRC = this.#get_cell_rc_from_event(poEvent, true)
+		if (oRC) {
+			var oChangedCell = new cCAGridCell(oRC.row, oRC.col, 1)
+			var oEvent = new cCAGridEvent(this.#grid_name, cCAGridEvent.actions.set_cell, oChangedCell)
+			oEvent.trigger()
 		}
-	}
-	
-	//****************************************************************
-	pr__get_cell_rc_from_event(poEvent, pbChangedOnly){
-		var oElement = this.element;
-		var X = poEvent.offsetX - cJquery.get_padding_width(oElement) + this.cell_size;
-		var Y = poEvent.offsetY - cJquery.get_padding_height(oElement)+ this.cell_size;
-		var ir = Math.trunc(Y / this.cell_size) +1;
-		var ic = Math.trunc(X / this.cell_size) +1;
-		
-		if (ir<1) ir = 1;
-		if (ir > this.rows) ir=this.rows;
-		if (ic<1) ic = 1;
-		if (ic > this.cols) ir=this.cols;
-		
-		var oRC = null;
-		if (ir != this.last_mouse_pos.row || ic != this.last_mouse_pos.col){
-			this.last_mouse_pos.row = ir;
-			this.last_mouse_pos.col = ic;
-			oRC = this.last_mouse_pos
-		}elseif (!pbChangedOnly)
-			oRC = this.last_mouse_pos
-		return oRC;
-	}
-	
-	//****************************************************************
-	 pr__grid_nochange(){
-		cDebug.enter();
-		
-		cDebug.write("no change");
-		
-		var oEvent = new cCACanvasEvent( this.grid_name, cCACanvasEvent.actions.nochange, null);
-		oEvent.trigger(document);
-		
-		cDebug.leave();
-	}
-	
-	//****************************************************************
-	 pr__grid_done(poData){
-		cDebug.enter();
-		
-		this.pr__drawGrid();
-		var oEvent = new cCACanvasEvent( this.grid_name, cCACanvasEvent.actions.grid_status, poData);
-		oEvent.trigger(document);
-		
-		cDebug.leave();
 	}
 
 	//****************************************************************
-	 pr__grid_clear(){
-		cDebug.enter();
-		
-		if (this.canvas){
-			cDebug.write("Clearing canvas");
-			this.canvas.clearCanvas();
-		}
-		
-		cDebug.leave();
+	#get_cell_rc_from_event(poEvent, pbChangedOnly) {
+		var oElement = this.element
+		var X = poEvent.offsetX - cJquery.get_padding_width(oElement) + this.cell_size
+		var Y = poEvent.offsetY - cJquery.get_padding_height(oElement) + this.cell_size
+		var ir = Math.trunc(Y / this.cell_size) + 1
+		var ic = Math.trunc(X / this.cell_size) + 1
+
+		if (ir < 1) ir = 1
+		if (ir > this.rows) ir = this.rows
+		if (ic < 1) ic = 1
+		if (ic > this.cols) ir = this.cols
+
+		var oRC = null
+		if (ir != this.#last_mouse_pos.row || ic != this.#last_mouse_pos.col) {
+			this.#last_mouse_pos.row = ir
+			this.#last_mouse_pos.col = ic
+			oRC = this.#last_mouse_pos
+		} else if (!pbChangedOnly)
+			oRC = this.#last_mouse_pos
+		return oRC
 	}
-	
-	pr__set_grid(poGrid){
-		var oThis = this;
-		this.grid = poGrid;
-		
-		this.grid.on_event((poEvent)=>{oThis.onCAGridEvent(poEvent)} );
-		
+
+	//****************************************************************
+	/**
+	 * Description
+	 * @param {cCAGridRunData} poData
+	 * @returns {any}
+	 */
+	#on_grid_done(poData) {
+		cDebug.enter()
+
+		this.#drawGrid(poData.changed_cells)	//draw the changed cells
+
+		//tell consumers about status
+		var oEvent = new cCACanvasEvent(this.#grid_name, cCACanvasEvent.actions.grid_status, poData)
+		oEvent.trigger()
+
+		cDebug.leave()
+	}
+
+	//****************************************************************
+	#on_grid_clear() {
+		cDebug.enter()
+
+		if (this.#canvas) {
+			cDebug.write("Clearing canvas")
+			this.#canvas.clearCanvas()
+		}
+
+		cDebug.leave()
+	}
+
+	//****************************************************************
+	#set_grid(poGrid) {
+		this.#grid = poGrid
+
 		// publish grid details to anyone interested - eg to export grid data, or start/stop the grid
-		var oEvent = new cCACanvasEvent( this.grid_name, cCACanvasEvent.actions.set_grid, poGrid);
-		oEvent.trigger(document);
+		var oEvent = new cCACanvasEvent(this.#grid_name, cCACanvasEvent.actions.set_grid, poGrid)
+		oEvent.trigger()
 	}
-	
-	//****************************************************************
-	 pr__initCanvas(){
-		cDebug.enter();
-		var oElement = this.element;
 
-		
+	//****************************************************************
+	#initCanvas() {
+		cDebug.enter()
+		var oElement = this.element
+
+
 		//create the html5 canvas to draw on
-		oElement.empty();
-		var oCanvas = $("<canvas>");
-			oCanvas.attr("width",this.cols*this.cell_size);
-			oCanvas.attr("height",this.rows*this.cell_size);
-			oElement.append(oCanvas);
-			this.canvas = oCanvas;
-				
-		//initialise the grid
-		this.grid.init(cCAGridTypes.init.block.id);
-		cDebug.leave();
-	}
-		
-	//****************************************************************
-	 pr__drawGrid(){
-		cDebug.enter();
-		var oGrid = this.grid;
+		oElement.empty()
+		var oCanvas = $("<canvas>")
+		oCanvas.attr("width", this.cols * this.cell_size)
+		oCanvas.attr("height", this.rows * this.cell_size)
+		oElement.append(oCanvas)
+		this.#canvas = oCanvas
 
-		this.image_count = oGrid.changed_cells.length;
-		this.images_done = 0;		
-		this.drawing = true;
-		
-		var x,y,oCell;
-		if (oGrid.changed_cells.length == 0){
-			cDebug.warn ("no changed cells - nothing to draw");
-			return;
-		}
-		
-		for ( var i=0; i< oGrid.changed_cells.length; i++){
-			oCell = oGrid.changed_cells[i];
-			this.pr__draw_cell(oCell);
-		}
-		cDebug.leave();
+		//initialise the grid
+		var oEvent = new cCAActionEvent(this.#grid_name, cCAActionEvent.actions.grid_init, cCAGridTypes.init.block.id)
+		oEvent.trigger()
+		cDebug.leave()
 	}
-	
+
 	//****************************************************************
-	 pr__drawFullGrid(){
-		cDebug.enter();
-		var oGrid = this.grid;
-		
-		this.image_count = oGrid.rows * oGrid.cols;
-		this.images_done = 0;		
-		this.drawing = true;
-		
-		for (var ir=1; ir<= oGrid.rows; ir++){
-			for (var ic=1; ic<= oGrid.cols; ic++){
-				var oCell = oGrid.getCell(ir,ic);
-				this.pr__draw_cell(oCell);
+	/**
+	 * draws the grid
+	 * @param {array} paChangedCells
+	 */
+	#drawGrid(paChangedCells) {
+		cDebug.enter()
+
+		this.#cells_drawn = 0
+
+		var oCell
+		if (!paChangedCells) $.error("null changed cells")
+		if (paChangedCells.length == 0) {
+			cDebug.warn("no changed cells - nothing to draw")
+			return
+		}
+
+		for (var i = 0; i < paChangedCells.length; i++) {
+			oCell = paChangedCells[i]
+			this.#draw_cell(oCell)
+		}
+		cDebug.leave()
+	}
+
+	//****************************************************************
+	#drawFullGrid() {
+		cDebug.enter()
+		var oGrid = this.#grid
+
+		this.#cells_to_draw = oGrid.rows * oGrid.cols
+		this.#cells_drawn = 0
+
+		for (var ir = 1; ir <= oGrid.rows; ir++) {
+			for (var ic = 1; ic <= oGrid.cols; ic++) {
+				var oCell = oGrid.getCell(ir, ic)
+				this.#draw_cell(oCell)
 			}
 		}
-		cDebug.leave();
-	}	
-	
-	//****************************************************************
-	 pr__draw_cell(poCell){
-		var oThis = this;
-		var oCanvas = this.canvas;
-		
-		//-----------------what img to use
-		var sImg = (poCell.value==0?cCACanvasTypes.white_image:cCACanvasTypes.black_image);
-		
-		//-----------------coords of cell
-		var iRow, iCol;
-		iRow = poCell.data.get(cCACellTypes.hash_values.row);
-		iCol = poCell.data.get(cCACellTypes.hash_values.col);
-		var iy = (iRow -1) * this.cell_size;
-		var ix = (iCol-1) * this.cell_size;
-		
-		//------------------draw
-		//its faster to blit images than it is to draw vectors
-		oCanvas.drawImage({
-			source: sImg, x: ix, y: iy,
-			fromCenter:false, load(){	oThis.onImageLoad();}
-		});
+		cDebug.leave()
 	}
-	
+
+	//****************************************************************
+	#draw_cell(poCell) {
+		var oCanvas = this.#canvas
+
+
+		//-----------------coords of cell
+		var iRow, iCol
+		iRow = poCell.data.get(cCACellTypes.hash_values.row)
+		iCol = poCell.data.get(cCACellTypes.hash_values.col)
+		var iy = (iRow - 1) * this.cell_size
+		var ix = (iCol - 1) * this.cell_size
+
+		//------------------draw
+		var sFill = (poCell.value == 0 ? '#fff'  : '#000')
+		oCanvas.drawRect({
+			fillStyle: sFill,
+			x: ix, y: iy,
+			width: this.cell_size,
+			height: this.cell_size,
+			strokeStyle: "transparent"				
+		})
+		this.#count_drawn_cells()
+	}
 }
 
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-$.widget( "ck.cacanvas",{
-	options:{
-		cols:100,
-		rows:100,
-		cell_size:5,
-		grid_name:null,
-		interactive:true
+$.widget("ck.cacanvas", {
+	options: {
+		cols: 100,
+		rows: 100,
+		cell_size: 5,
+		grid_name: null,
+		interactive: true
 	},
-	
-	_create:function(){
-		var oOptions = this.options;
-		if (!oOptions.grid_name) $.error("grid name not provided");
-		
-		var oControl = new cCACanvas(this.options, this.element );
+
+	_create: function () {
+		new cCACanvas(this.options, this.element)		//call the constructor of the class
 	}
-});
+})

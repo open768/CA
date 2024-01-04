@@ -1,4 +1,4 @@
-"use strict";
+"use strict"
 /**************************************************************************
 Copyright (C) Chicken Katsu 2013-2024
 This code is protected by copyright under the terms of the 
@@ -19,38 +19,38 @@ You the consumer of this application are entirely responsible for importing this
 //###################################################################################
 //###################################################################################
 class cCACryptCA{
-	element = null;
-	rows = 100;
-	cols = 100;
+	element = null
+	rows = 100
+	cols = 100
 	
 	constructor(poOptions, poElement){
-		if (!bean ) 				$.error("bean class is missing! check includes");	
-		if (!poOptions.rows ) 		$.error("rows option missing");	
-		if (!poOptions.cols ) 		$.error("cols option missing");	
-		if (!poOptions.ca_name ) 	$.error("caname option missing");	
+		if (!bean ) 				$.error("bean class is missing! check includes")	
+		if (!poOptions.rows ) 		$.error("rows option missing")	
+		if (!poOptions.cols ) 		$.error("cols option missing")	
+		if (!poOptions.ca_name ) 	$.error("caname option missing")	
 		
-		this.element = poElement;
-		this.ca_name = poOptions.ca_name;
+		this.element = poElement
+		this.ca_name = poOptions.ca_name
 		this.rows = poOptions.rows
 		this.cols = poOptions.cols
 		
-		var oElement = poElement;
-		oElement.uniqueId();
-		oElement.addClass("ui-widget");
-		oElement.empty();
-		this.init();
+		var oElement = poElement
+		oElement.uniqueId()
+		oElement.addClass("ui-widget")
+		oElement.empty()
+		this.init()
 	}
 	
 	//*******************************************************************************
 	init(){
-		var oElement = this.element;
-		oElement.append("<DIV class='ui-widget-header'>Cellular Automata</DIV>");
-		var oBody = $("<DIV>", {class:"ui-widget-content"});
-			var oJson = $("<DIV>").append("please wait loading JSON control");
-				oJson.cajson({grid_name:this.ca_name,create_button:false});
-				oBody.append(oJson);
+		var oElement = this.element
+		oElement.append("<DIV class='ui-widget-header'>Cellular Automata</DIV>")
+		var oBody = $("<DIV>", {class:"ui-widget-content"})
+			var oJson = $("<DIV>").append("please wait loading JSON control")
+				oJson.cajson({grid_name:this.ca_name,create_button:false})
+				oBody.append(oJson)
 			
-			var oCA =  $("<DIV>").append("please wait loading grid control");
+			var oCA =  $("<DIV>").append("please wait loading grid control")
 				oCA.cacanvas({
 					cols:this.cols,
 					rows:this.rows,
@@ -58,15 +58,15 @@ class cCACryptCA{
 					grid_name: this.ca_name,
 					interactive:false
 					
-				});
-				oBody.append(oCA);
-			oElement.append(oBody);
+				})
+				oBody.append(oCA)
+			oElement.append(oBody)
 	}
 }
 //###################################################################################
 //###################################################################################
 $.widget( "ck.cacryptca",{
 	_create: function(){
-		var oWidget = new cCACryptCA(this.options, this.element);
+		new cCACryptCA(this.options, this.element)		//call widgetclass
 	}
-});
+})

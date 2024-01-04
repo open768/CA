@@ -1,4 +1,4 @@
-"use strict";
+"use strict"
 /**************************************************************************
 Copyright (C) Chicken Katsu 2013-2024
 This code is protected by copyright under the terms of the 
@@ -13,32 +13,31 @@ For licenses that allow for commercial use please contact cluck@chickenkatsu.co.
 //#
 //###################################################################
 class cCAControlsR{
-	grid = null;
-	element = null;
-	grid_name = null;
+	grid = null
+	element = null
+	grid_name = null
 	
 	//***************************************************************
 	constructor(poOptions, poElement){
-		this.element = poElement;
-		this.grid_name = poOptions.grid_name;
+		this.element = poElement
+		this.grid_name = poOptions.grid_name
 
-		var oThis = this;
-		var oElement = this.element;
+		var oElement = this.element
 		
 		//set basic stuff
-		oElement.uniqueId();
-		oElement.addClass("ui-widget");
+		oElement.uniqueId()
+		oElement.addClass("ui-widget")
 
 		//check dependencies
-		if (!bean ) $.error("bean is missing , chack includes");
-		if (!oElement.cagridinit) $.error("cainit is missing , chack includes");
-		if (!oElement.castatus) $.error("castatus is missing , chack includes");
-		if (!oElement.cachart) $.error("caChart is missing , chack includes");
-		if (!oElement.caremotecontrols) $.error("caremotecontrols is missing , chack includes");
+		if (!bean ) $.error("bean is missing , chack includes")
+		if (!oElement.cagridinit) $.error("cainit is missing , chack includes")
+		if (!oElement.castatus) $.error("castatus is missing , chack includes")
+		if (!oElement.cachart) $.error("caChart is missing , chack includes")
+		if (!oElement.caremotecontrols) $.error("caremotecontrols is missing , chack includes")
 		
 		//put something in the widget
-		oElement.empty();
-		this.pr__init();
+		oElement.empty()
+		this.#init()
 
 	}
 	
@@ -47,34 +46,34 @@ class cCAControlsR{
 	//***************************************************************
 	//* Privates
 	//***************************************************************
-	pr__init(){
-		var oDiv, oTable, oRow, oCell;
-		var oElement;
+	#init(){
+		var oDiv
+		var oElement
 		
-		oElement = this.element;
+		oElement = this.element
 		
 		//--input-------------------------------------------------
-		oDiv = $("<DIV>");
-			oDiv.castatus({grid_name:this.grid_name});
-			oElement.append(oDiv);
-		oElement.append("<P>");
+		oDiv = $("<DIV>")
+			oDiv.castatus({grid_name:this.grid_name})
+			oElement.append(oDiv)
+		oElement.append("<P>")
 		
 		//-------------------------------------------------------------
-		oDiv = $("<DIV>");
-			oDiv.cachart({grid_name:this.grid_name});
-			oElement.append(oDiv);
-		oElement.append("<P>");
+		oDiv = $("<DIV>")
+			oDiv.cachart({grid_name:this.grid_name})
+			oElement.append(oDiv)
+		oElement.append("<P>")
 		
 		//--initialise------------------------------------------------		
-		oDiv = $("<DIV>");
-			oDiv.cagridinit({grid_name:this.grid_name});
-			oElement.append(oDiv);
-		oElement.append("<P>");
+		oDiv = $("<DIV>")
+			oDiv.cagridinit({grid_name:this.grid_name})
+			oElement.append(oDiv)
+		oElement.append("<P>")
 		
 		//--controls------------------------------------------------		
-		oDiv = $("<DIV>",{class:"ui-widget-header"});
-			oDiv.caremotecontrols({grid_name:this.grid_name});
-		oElement.append(oDiv);
+		oDiv = $("<DIV>",{class:"ui-widget-header"})
+			oDiv.caremotecontrols({grid_name:this.grid_name})
+		oElement.append(oDiv)
 	}
 	
 }
@@ -90,10 +89,10 @@ $.widget(
 		},
 		_create: function(){
 			//checks
-			var oOptions = this.options;
-			if (!oOptions.grid_name) $.error("grid name not provided");
+			var oOptions = this.options
+			if (!oOptions.grid_name) $.error("grid name not provided")
 			
-			var oControls = new cCAControlsR(oOptions ,this.element);
+			new cCAControlsR(oOptions ,this.element) //call widgetclass
 		}
 	}
-);
+)

@@ -11,6 +11,9 @@
 
 	USE AT YOUR OWN RISK - NO GUARANTEES OF ANY FORM ARE EITHER EXPRESSED OR IMPLIED
 	**************************************************************************-->
+	<!-- 3rd party libraries (w3c) -->
+	<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+	
 	<!-- 3rd party libraries (bean) -->
 	<script  src="../jsinc/extra/bean/bean.js"></script>
 	
@@ -19,6 +22,7 @@
 	<script  src="../jsinc/extra/jquery-ui/jquery-ui.min.js"></script>
 	<script  src="../jsinc/extra/jquery-cookie/jquery.cookie.js"></script>
 	<script  src="../jsinc/extra/jquery-canvas/jcanvas.min.js"></script>
+	<script  src="../jsinc/extra/js-md5/md5.min.js"></script>
 	<script  src="https://www.gstatic.com/charts/loader.js"></script>
 	
 	<!-- stylesheets -->
@@ -34,9 +38,12 @@
 	<!-- cellular automata classes -->
 	<script src="js/CA/caevents.js"></script>
 	<script src="js/CA/catypes.js"></script>
+	<script src="js/CA/caevent.js"></script>
 	<script src="js/CA/cacell.js"></script>
 	<script src="js/CA/carule.js"></script>
+	<script src="js/CA/caindex.js"></script>
 	<script src="js/CA/cagrid.js"></script>
+	<script src="js/CA/cagridinit.js"></script>
 	<script src="js/CA/cagridimporter.js"></script>
 	<script src="js/CA/caimporter.js"></script>
 	<script src="js/CA/calexicon.js"></script>
@@ -68,14 +75,14 @@
 
 	<script >
 	function onJqueryLoad(){
-		$("#machine").camachine();
+		$("#machine").camachine({name:"caexplore"});
 	}
 	$(onJqueryLoad);
 	</script>
 
 	<ul>
 	<li>for the editor, copy the rule into the clipboard and <a target=editor href="editor.html">Click here</a>
-	<li>for documentation see <a href="https://docs.google.com/document/d/1Rw_CsPg5KUKUC3DDpbSPLkvWDMxqy7L_8Z0UfjmEHSg/edit?usp=sharing" target="_new">this document</a>
+	<li>for documentation see <a href="https://docs.google.com/document/d/1Cfn2wzHjWAyRCol7YzSSda7y-o4xKYcIUZwRrdAyHtc/edit?usp=sharing" target="_new">this document</a>
 	<li>we're on <a href="https://github.com/open768/CA">Github</a>
 	<li>for more CA rules see <a target="mcell" href="http://psoup.math.wisc.edu/mcell/ca_rules.html">http://psoup.math.wisc.edu/mcell/ca_rules.html</a>
 	</ul>

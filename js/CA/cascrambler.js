@@ -1,4 +1,4 @@
-"use strict";
+"use strict"
 /**************************************************************************
 Copyright (C) Chicken Katsu 2013-2024
 This code is protected by copyright under the terms of the 
@@ -23,7 +23,7 @@ class cCAScramblerEvent extends cCAEvent{
 	 * @static
 	 * @type {string}
 	 */
-	static hook = "cascramev";
+	static hook = "cascramev"
 	/**
 	 * Description placeholder
 	 * 
@@ -34,7 +34,7 @@ class cCAScramblerEvent extends cCAEvent{
 	static types = {
 		general: "G",
 		progress: "P"
-	};
+	}
 	
 	/**
 	 * Description placeholder
@@ -54,7 +54,7 @@ class cCAScramblerEvent extends cCAEvent{
 	 * @param {*} poObject
 	 */
 	trigger(poObject){
-		bean.fire( poObject, this.constructor.hook, this);
+		bean.fire( poObject, this.constructor.hook, this)
 	}
 }
 
@@ -82,12 +82,13 @@ class cCAScramblerTypes{
 //#
 //###################################################################################
 /** class that performs data scrambling */
+/* eslint-disable-next-line no-unused-vars */
 class cCAScrambler{
-	/** @type cCAGrid */ grid=null;
-	/** @type number  */ inital_runs = -1;
-	/** @type string  */ plaintext = null;
-	/** @type number  */ initial_runs_completed = 0;
-	/** @type enum */ status = null;
+	/** @type cCAGrid */ grid=null
+	/** @type number  */ inital_runs = -1
+	/** @type string  */ plaintext = null
+	/** @type number  */ initial_runs_completed = 0
+	/** @type enum */ status = null
 
 	
 	/**
@@ -97,19 +98,21 @@ class cCAScrambler{
 	 * @param {string} psPlainTxt	the plaintext to scramble
 	 */
 	constructor(poGrid, piInitialRuns, psPlainTxt){
-		if (!poGrid) $.error("Grid param, missing");
-		if (!poGrid.rule) $.error("no rule in the grid");
-		if (piInitialRuns<5) $.error("initial runs invalid - must be at least 5");
-		if (!psPlainTxt) $.error("plaintext missing");
+		if (!poGrid) $.error("Grid param, missing")
+		if (!poGrid.rule) $.error("no rule in the grid")
+		if (piInitialRuns<5) $.error("initial runs invalid - must be at least 5")
+		if (!psPlainTxt) $.error("plaintext missing")
 
-		this.grid = poGrid;
-		this.plaintext = psPlainTxt;
-		this.inital_runs = piInitialRuns;
-		this.initial_runs_completed = 0;
-		this.status = cCAScramblerTypes.status.dormant;
+		this.grid = poGrid
+		this.plaintext = psPlainTxt
+		this.inital_runs = piInitialRuns
+		this.initial_runs_completed = 0
+		this.status = cCAScramblerTypes.status.dormant
 
-		var oThis = this;
-		this.grid.on_event((poEvent)=>{oThis.onGridEvent(poEvent)} );
+		var oThis = this
+
+		//subscribe to grid events
+		cCAEventHelper.subscribe_to_grid_events(this.grid.name, (poEvent)=>{oThis.onCAGridEvent(poEvent)})
 	}
 	
 	//*******************************************************************************
@@ -118,10 +121,11 @@ class cCAScrambler{
 	 */
 	async perform_inital_runs(){
 		if (this.initial_runs_completed < this.inital_runs){
-			this.status = cCAScramblerTypes.status.initialRuns;
-			this.grid.action(cCAGridTypes.actions.step);
+			this.status = cCAScramblerTypes.status.initialRuns
+			var oEvent = new cCAActionEvent(this.grid.name, cCAGridTypes.actions.step)
+			oEvent.trigger()
 		}else
-			throw new Error("not implemented");
+			throw new Error("not implemented")
 	}
 	
 	//*******************************************************************************
@@ -133,23 +137,23 @@ class cCAScrambler{
 	 * @returns {*}
 	 */
 	async scramble(){ 
-		var oEvent = new cCAScramblerEvent( cCAScramblerEvent.types.general, cCAScramblerEvent.actions.status, "Started scrambler");
-		oEvent.trigger(this);
+		var oEvent = new cCAScramblerEvent( cCAScramblerEvent.types.general, cCAScramblerEvent.actions.status, "Started scrambler")
+		oEvent.trigger()
 
-		this.initial_runs_completed = 0;
-		this.perform_inital_runs();
+		this.initial_runs_completed = 0
+		this.perform_inital_runs()
 	}
 
 	/**
 	 * Description
 	 * @param {cCAGridEvent} poEvent
 	 */
-	onGridEvent(poEvent){
-		cDebug.write(poEvent);
-		if (poEvent.action == cCAGridEvent.actions.done)
+	onCAGridEvent(poEvent){
+		cDebug.write(poEvent)
+		if (poEvent.action == cCAGridEvent.notify.done)
 			if (this.status == cCAScramblerTypes.status.initialRuns){
-				this.initial_runs_completed++;
-				this.perform_inital_runs();
+				this.initial_runs_completed++
+				this.perform_inital_runs()
 			}
 	}
 }
