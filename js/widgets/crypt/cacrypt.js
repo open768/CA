@@ -17,38 +17,6 @@ You the consumer of this application are entirely responsible for importing this
 
 //###################################################################################
 //###################################################################################
-class cCACryptTypes{
-	static name =  "cacryptgrid"
-	static rows = 100
-	static cols = 100
-	static cell_size = 5
-	static input_name = "CRinput"	
-	static output_name = "CROutput"
-}
-
-//###############################################################################
-class cCACryptEvent extends cCAEvent{
-	static hook = "CACRYEV"
-	static types = {
-		general: "GNR"
-	}
-	static actions = {
-		status: "STA"
-	}
-	
-	/**
-	 * Description
-	 * @param {string} psMessage
-	 * @returns {null}
-	 */
-	static triggerStatus( psMessage){
-		var oEvent = new cCACryptEvent(this.types.general, this.actions.status, psMessage)
-		oEvent.trigger()
-	}
-}
-
-//###################################################################################
-//###################################################################################
 class cCACryptStatus{
 	/** @type Element */ element = null
 	/** @type boolean */ first_message = true
