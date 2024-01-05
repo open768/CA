@@ -16,10 +16,10 @@ class CAException {
 
 //***************************************************************************
 class cCABaseEvent{
-	grid_name = null
+	grid_name = null					//grid name is used
 	action = null
 	data = null
-	hook = "***NOT SET***"				//hook must be unique to the application, 
+	event_type_id = "***NOT SET***"				//this is an abstract property
 
 	constructor(psGridName, psAction, poData = null) {
 		if (!psGridName || !psAction) $.error("incorrect number of arguments")
@@ -28,8 +28,12 @@ class cCABaseEvent{
 		this.data = poData
 	}
 
+	/**
+	 * @return {*} 
+	 * @memberof cCABaseEvent
+	 */
 	hook_name(){
-		return (this.hook + this.grid_name)
+		return (this.event_type_id + this.grid_name) //creates a unique hook that the 
 	}
 
 	async trigger() {
@@ -41,7 +45,7 @@ class cCABaseEvent{
 //***************************************************************************
 /* eslint-disable-next-line no-unused-vars */
 class cCAActionEvent extends cCABaseEvent{
-	hook = "CAACTEV"
+	event_type_id = "CAACTEV"
 	static actions = {
 		ready: "AERD",
 		grid_init: "AEGI",
@@ -53,7 +57,7 @@ class cCAActionEvent extends cCABaseEvent{
 //***************************************************************************
 /* eslint-disable-next-line no-unused-vars */
 class cCARuleEvent extends cCABaseEvent{
-	hook = "CARULEEV"
+	event_type_id = "CARULEEV"
 	static actions = {
 		update_rule: "REUR",
 		set_rule: "GESR"
@@ -64,7 +68,7 @@ class cCARuleEvent extends cCABaseEvent{
 //###############################################################################
 /* eslint-disable-next-line no-unused-vars */
 class cCAGridEvent extends cCABaseEvent{
-	hook = "CAGRIDEV"
+	event_type_id = "CAGRIDEV"
 	static actions = {
 		init_grid: "GAini",
 		set_cell: "GASet",
@@ -82,7 +86,7 @@ class cCAGridEvent extends cCABaseEvent{
 
 /* eslint-disable-next-line no-unused-vars */
 class cCACanvasEvent extends cCABaseEvent{
-	hook = "CACANVASEV"
+	event_type_id = "CACANVASEV"
 	static actions = {
 		grid_status: "CAstatus",
 		set_grid: "CASetgrid"
@@ -95,29 +99,31 @@ class cCACanvasEvent extends cCABaseEvent{
 //###############################################################################
 /* eslint-disable-next-line no-unused-vars */
 class cCAEventHelper {
-	static subscribe_to_action_events(psName, pfn){
-		var oDummyEvent = new cCAActionEvent(psName,"dummy")
-		this.#do_subscribe(oDummyEvent.hook_name(), pfn)
+	static #dummy_action = "dummy"
+
+	static subscribe_to_action_events(psGridName, pfnCallback){
+		var oEvent = new cCAActionEvent(psGridName, this.#dummy_action) //create an event to get the hook
+		this.#do_subscribe(oEvent.hook_name(), pfnCallback)
 	}
 
-	static subscribe_to_canvas_events(psName, pfn){
-		var oDummyEvent = new cCACanvasEvent(psName,"dummy")
-		this.#do_subscribe(oDummyEvent.hook_name(), pfn)
+	static subscribe_to_canvas_events(psGridName, pfnCallback){
+		var oEvent = new cCACanvasEvent(psGridName,this.#dummy_action)
+		this.#do_subscribe(oEvent.hook_name(), pfnCallback)
 	}
 	
-	static subscribe_to_grid_events(psName, pfn){
-		var oDummyEvent = new cCAGridEvent(psName,"dummy")
-		this.#do_subscribe(oDummyEvent.hook_name(), pfn)
+	static subscribe_to_grid_events(psGridName, pfnCallback){
+		var oEvent = new cCAGridEvent(psGridName,this.#dummy_action)
+		this.#do_subscribe(oEvent.hook_name(), pfnCallback)
 	}
 
-	static subscribe_to_rule_events(psName, pfn){
-		var oDummyEvent = new cCARuleEvent(psName,"dummy")
-		this.#do_subscribe(oDummyEvent.hook_name(), pfn)
+	static subscribe_to_rule_events(psGridName, pfnCallback){
+		var oEvent = new cCARuleEvent(psGridName,this.#dummy_action)
+		this.#do_subscribe(oEvent.hook_name(), pfnCallback)
 	}
 
 	//***************************************************************
-	static #do_subscribe(psHookName, pfn){
-		if (pfn == null ) $.error("callback missing")
-		bean.on(document, psHookName, pfn)
+	static #do_subscribe(psHookName, pfnCallback){
+		if (pfnCallback == null ) $.error("callback missing")
+		bean.on(document, psHookName, pfnCallback)
 	}
 }

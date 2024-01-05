@@ -62,7 +62,7 @@ class cCAGrid {
 
 		this.rows = piRows
 		this.cols = piCols
-		this.#name = psName
+		this.#name = psName //gridname
 		this.#rule = null
 		this.#changed_cells = null
 		this.#running = false
