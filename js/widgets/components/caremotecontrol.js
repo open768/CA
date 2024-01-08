@@ -80,6 +80,7 @@ class cCARemoteControls{
 			case cCACanvasEvent.notify.nochange:
 				setTimeout( function(){	oThis.#set_controls(false)}, 100) //stop
 		}
+		cDebug.leave()
 	}
 
 	//****************************************************************************
