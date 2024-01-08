@@ -21,6 +21,7 @@ class cCAStatusTypes {
 class cCAStatus{
 	element = null
 	grid_name = null
+	HEAP_INTERVAL = 100
 	
 	//***************************************************************
 	constructor(poOptions, poElement){
@@ -43,7 +44,7 @@ class cCAStatus{
 		//put something in the widget
 		oElement.empty()
 		this.#init()
-
+		setTimeout( () => { oThis.onHeapTimer()}, this.HEAP_INTERVAL)
 	}
 	
 	//****************************************************************************
@@ -62,6 +63,20 @@ class cCAStatus{
 				oTarget = $("#"+cJquery.child_ID(oElement, cCAStatusTypes.RUNS_ID))
 				oTarget.html(poEvent.data.runs)
 		}
+	}
+
+	async onHeapTimer(){
+		var oElement = this.element
+		var oThis = this
+
+		//display the heap used
+		cDebug.write("Heap Timer")
+		var oTarget = $("#"+cJquery.child_ID(oElement, cCAStatusTypes.HEAP_ID))
+		var iHeap = await cBrowser.getHeapMemoryUsed()
+		oTarget.html( iHeap)
+
+		//next heap timer
+		setTimeout( () => { oThis.onHeapTimer()}, this.HEAP_INTERVAL)
 	}
 	
 	//***************************************************************
@@ -101,7 +116,6 @@ class cCAStatus{
 		//tbc
 
 	}
-	
 }
 
 //###################################################################

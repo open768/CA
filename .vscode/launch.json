@@ -17,6 +17,12 @@
         {
             "type": "chrome",
             "request": "launch",
+            "name": "index debug",
+            "file": "index.html?debug",
+        },
+        {
+            "type": "chrome",
+            "request": "launch",
             "name": "index",
             "file": "index.html",
         },
