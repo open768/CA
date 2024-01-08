@@ -12,6 +12,7 @@ class cCAStatusTypes {
 	static ACTIVE_ID ="A"
 	static CHANGED_ID ="C"
 	static RUNS_ID ="R"
+	static HEAP_ID ="H"
 }
 
 //###################################################################
@@ -59,48 +60,46 @@ class cCAStatus{
 				oTarget = $("#"+cJquery.child_ID(oElement, cCAStatusTypes.CHANGED_ID))
 				oTarget.html(poEvent.data.changed)
 				oTarget = $("#"+cJquery.child_ID(oElement, cCAStatusTypes.RUNS_ID))
-				oTarget.html(poEvent.data. 	runs)
+				oTarget.html(poEvent.data.runs)
 		}
 	}
 	
 	//***************************************************************
 	//* Privates
 	//***************************************************************
+	#add_row(poTable, psID, psLabel){
+		var oElement = this.element
+		var oCell, oRow
+
+		oRow = $("<tr>")
+		oCell = $("<td>", {align:"right"}).append(psLabel)
+		oRow.append(oCell)
+		oCell = $("<td>",{id:cJquery.child_ID(oElement, psID)})
+			oCell.append("??")
+		oRow.append(oCell)
+		poTable.append(oRow)
+	}
+
 	#init(){
-		var oDiv, oTable, oRow, oCell
-		var oElement
+		var oDiv, oTable
+		var oElement = this.element
 		
-		oElement = this.element
-		
-		//--input-------------------------------------------------
+		//--create the UI-------------------------------------------------
 		oDiv = $("<DIV>",{class:"ui-widget-header"}).append("Status")
 		oElement.append(oDiv)
 		
 		oDiv = $("<DIV>",{class:"ui-widget-content"})
 			oTable = $("<Table>",{cellpadding:2})
-				oRow = $("<tr>")
-					oCell = $("<td>", {align:"right"}).append("Active")
-					oRow.append(oCell)
-					oCell = $("<td>",{id:cJquery.child_ID(oElement, cCAStatusTypes.ACTIVE_ID)})
-						oCell.append("??")
-					oRow.append(oCell)
-					oTable.append(oRow)
-				oRow = $("<tr>")
-					oCell = $("<td>", {align:"right"}).append("Changed")
-					oRow.append(oCell)
-					oCell = $("<td>",{id:cJquery.child_ID(oElement, cCAStatusTypes.CHANGED_ID)})
-						oCell.append("??")
-					oRow.append(oCell)
-					oTable.append(oRow)
-				oRow = $("<tr>")
-					oCell = $("<td>", {align:"right"}).append("Runs")
-					oRow.append(oCell)
-					oCell = $("<td>",{id:cJquery.child_ID(oElement, cCAStatusTypes.RUNS_ID)})
-						oCell.append("??")
-					oRow.append(oCell)
-					oTable.append(oRow)
-				oDiv.append(oTable)
-			oElement.append(oDiv)
+				this.#add_row(oTable,cCAStatusTypes.ACTIVE_ID, "Active")
+				this.#add_row(oTable,cCAStatusTypes.CHANGED_ID, "Changed")
+				this.#add_row(oTable,cCAStatusTypes.RUNS_ID, "Runs")
+				this.#add_row(oTable,cCAStatusTypes.HEAP_ID, "Heap")
+			oDiv.append(oTable)
+		oElement.append(oDiv)
+
+		//--start the timer to report on heap memory--------------------------
+		//tbc
+
 	}
 	
 }
@@ -119,7 +118,7 @@ $.widget(
 			var oOptions = this.options
 			if (!oOptions.grid_name) $.error("grid name not provided")
 			
-			new cCAStatus(oOptions ,this.element)		//call widget cnstructor
+			new cCAStatus(oOptions ,this.element)		//call widget constructor
 		}
 	}
 )
