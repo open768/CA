@@ -73,10 +73,11 @@
 	<div id="machine">Loading Machine</div>
 
 	<script >
-	function onJqueryLoad(){
-		$("#machine").camachine({name:"caexplore"});
-	}
-	$(onJqueryLoad);
+		cDebug.on(cDebugTypes.levels.extra)		//turn on debugging
+		function onJqueryLoad(){
+			$("#machine").camachine({name:"caexplore"});
+		}
+		$(onJqueryLoad);
 	</script>
 
 	<ul>
