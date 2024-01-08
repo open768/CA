@@ -32,12 +32,12 @@ class cCABaseEvent{
 	 * @return {*} 
 	 * @memberof cCABaseEvent
 	 */
-	hook_name(){
-		return (this.event_type_id + this.grid_name) //creates a unique hook that the 
+	channel_id(){
+		return (this.event_type_id + this.grid_name) //creates a unique ID for a specific grid
 	}
 
 	async trigger() {
-		var sEventName = this.hook_name()
+		var sEventName = this.channel_id()
 		bean.fire(document, sEventName, this)
 	}
 }
@@ -102,28 +102,28 @@ class cCAEventHelper {
 	static #dummy_action = "dummy"
 
 	static subscribe_to_action_events(psGridName, pfnCallback){
-		var oEvent = new cCAActionEvent(psGridName, this.#dummy_action) //create an event to get the hook
-		this.#do_subscribe(oEvent.hook_name(), pfnCallback)
+		var oEvent = new cCAActionEvent(psGridName, this.#dummy_action) //create an event to get the channel ID
+		this.#do_subscribe(oEvent.channel_id(), pfnCallback)
 	}
 
 	static subscribe_to_canvas_events(psGridName, pfnCallback){
 		var oEvent = new cCACanvasEvent(psGridName,this.#dummy_action)
-		this.#do_subscribe(oEvent.hook_name(), pfnCallback)
+		this.#do_subscribe(oEvent.channel_id(), pfnCallback)
 	}
 	
 	static subscribe_to_grid_events(psGridName, pfnCallback){
 		var oEvent = new cCAGridEvent(psGridName,this.#dummy_action)
-		this.#do_subscribe(oEvent.hook_name(), pfnCallback)
+		this.#do_subscribe(oEvent.channel_id(), pfnCallback)
 	}
 
 	static subscribe_to_rule_events(psGridName, pfnCallback){
 		var oEvent = new cCARuleEvent(psGridName,this.#dummy_action)
-		this.#do_subscribe(oEvent.hook_name(), pfnCallback)
+		this.#do_subscribe(oEvent.channel_id(), pfnCallback)
 	}
 
 	//***************************************************************
-	static #do_subscribe(psHookName, pfnCallback){
+	static #do_subscribe(psChannelID, pfnCallback){
 		if (pfnCallback == null ) $.error("callback missing")
-		bean.on(document, psHookName, pfnCallback)
+		bean.on(document, psChannelID, pfnCallback)
 	}
 }
