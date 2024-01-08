@@ -257,7 +257,7 @@ class cCAGrid {
 		var bHasChanged, oCell, oEvent
 		for (var iRow = 1; iRow <= this.rows; iRow++)
 			for (var iCol = 1; iCol <= this.cols; iCol++) {
-				cDebug.write("cell row: " + iRow + " col:" + iCol)
+				//cDebug.extended_debug("cell row: " + iRow + " col:" + iCol)
 				oCell = this.getCell(iRow, iCol, true)
 				if (oCell.rule == null) oCell.rule = this.#rule
 				bHasChanged = oCell.apply_rule() //apply rule to each cell
