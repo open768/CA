@@ -19,6 +19,7 @@ class cCAControlLTypes {
 }
 
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+//* this could be broken down into smaller widgets
 class cCAControlsL {
 	grid = null
 	rule = null
@@ -76,6 +77,8 @@ class cCAControlsL {
 
 		//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 		oContent = $("<DIV>", { class: "ui-widget-content" })
+
+			//- - PRESETS- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 			oContent.append("Rule Presets")
 			sID = cJquery.child_ID(oElement, cCAControlLTypes.preset_ID)
 			var oSelect = $("<SELECT>", { id: sID, width: 200, title: "pick a preset rule" })
@@ -86,7 +89,7 @@ class cCAControlsL {
 				select(poEvent) { oThis.#onPresetsClick(poEvent) }
 			})
 
-			//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+			//- - WORD REPEATER- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 			oContent.append("<HR>")
 			sID = cJquery.child_ID(oElement, cCAControlLTypes.repeater_ID)
 			oContent.append("word repeater")
@@ -98,7 +101,7 @@ class cCAControlsL {
 				oButton.click(function () { oThis.#onSetNameClick() })
 			oContent.append(oButton)
 
-			//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+			// RULE ENTRY - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 			oContent.append("<HR>")
 			sID = cJquery.child_ID(oElement, cCAControlLTypes.rule_text_ID)
 			var oBox = $("<TEXTAREA>", { ID: sID, class: "rule", title: "enter the rule here" })
@@ -119,7 +122,7 @@ class cCAControlsL {
 				oButton.click(function () { oThis.#onSetRuleClick() })
 			oContent.append(oButton)
 
-			//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+			//- BOREDOM- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 			oContent.append("<HR>Boredom")
 			sID = cJquery.child_ID(oElement, cCAControlLTypes.boredom_ID)
 			oSelect = $("<SELECT>", { id: sID, width: 50, title: "how many times will a cell see a pattern before it gets bored" })
