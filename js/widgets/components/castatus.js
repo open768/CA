@@ -22,6 +22,7 @@ class cCAStatus{
 	element = null
 	grid_name = null
 	HEAP_INTERVAL = 100
+	#heap_timer_running = false
 	
 	//***************************************************************
 	constructor(poOptions, poElement){
@@ -40,13 +41,62 @@ class cCAStatus{
 		
 		//subscribe to CAEvents
 		cCAEventHelper.subscribe_to_canvas_events(this.grid_name, poEvent => { oThis.onCACanvasEvent(poEvent) })
+		cCAEventHelper.subscribe_to_action_events(this.grid_name, poEvent => { oThis.onCAActionEvent(poEvent) })
 		
 		//put something in the widget
 		oElement.empty()
 		this.#init()
-		setTimeout( () => { oThis.onHeapTimer()}, this.HEAP_INTERVAL)
 	}
 	
+	//****************************************************************************
+	//*
+	//****************************************************************************
+	#run_heap_timer(){
+		var oThis = this
+		if (!this.#heap_timer_running){
+			setTimeout( () => { oThis.onHeapTimer()}, this.HEAP_INTERVAL)
+			this.#heap_timer_running = true
+		}
+	}
+
+	//****************************************************************************
+	#stop_heap_timer(){
+		this.#heap_timer_running = false
+	}
+
+	//****************************************************************************
+	async onHeapTimer(){
+		var oElement = this.element
+		var oThis = this
+
+		//display the heap used
+		var oTarget = $("#"+cJquery.child_ID(oElement, cCAStatusTypes.HEAP_ID))
+		var iHeapBytes = await cBrowser.getHeapMemoryUsed()
+		var iHeapMBytes = Math.floor(iHeapBytes/(1024*1024))
+		oTarget.html( "" + iHeapMBytes + " MB")
+
+		//next heap timer
+		if (this.#heap_timer_running)
+			setTimeout( () => { oThis.onHeapTimer()}, this.HEAP_INTERVAL)
+	}
+
+	//****************************************************************************
+	//*
+	//****************************************************************************
+	onCAActionEvent(poEvent){
+		if (poEvent.action == cCAActionEvent.actions.control){
+			var iAction = poEvent.data
+			switch(iAction){
+				case cCAGridTypes.actions.play:
+					this.#run_heap_timer()
+					break
+				case cCAGridTypes.actions.stop:
+					this.#stop_heap_timer()
+			}
+		}
+				
+	}
+
 	//****************************************************************************
 	onCACanvasEvent(poEvent){
 		var oElement = this.element
@@ -63,20 +113,6 @@ class cCAStatus{
 				oTarget = $("#"+cJquery.child_ID(oElement, cCAStatusTypes.RUNS_ID))
 				oTarget.html(poEvent.data.runs)
 		}
-	}
-
-	async onHeapTimer(){
-		var oElement = this.element
-		var oThis = this
-
-		//display the heap used
-		cDebug.write("Heap Timer")
-		var oTarget = $("#"+cJquery.child_ID(oElement, cCAStatusTypes.HEAP_ID))
-		var iHeap = await cBrowser.getHeapMemoryUsed()
-		oTarget.html( iHeap)
-
-		//next heap timer
-		setTimeout( () => { oThis.onHeapTimer()}, this.HEAP_INTERVAL)
 	}
 	
 	//***************************************************************
