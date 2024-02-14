@@ -75,16 +75,22 @@
 	<script >
 		//cDebug.on(cDebugTypes.levels.extra)		//turn on debugging
 		function onJqueryLoad(){
+			if ( !$.widget) {
+				document.write("<font color='red' size=20>JQuery UI is missing - check includes</font>")
+				return
+			}
+			$("#infopanel").show()
 			$("#machine").camachine({name:"caexplore"});
 		}
+		if ( $) document.write("<font color='red' size=20>JQuery is missing - check includes</font>")
 		$(onJqueryLoad);
 	</script>
 
-	<ul>
-	<li>for the editor, copy the rule into the clipboard and <a target=editor href="editor.html">Click here</a>
-	<li>for documentation see <a href="https://docs.google.com/document/d/1Cfn2wzHjWAyRCol7YzSSda7y-o4xKYcIUZwRrdAyHtc/edit?usp=sharing" target="_new">this document</a>
-	<li>we're on <a href="https://github.com/open768/CA">Github</a>
-	<li>for more CA rules see <a target="mcell" href="http://psoup.math.wisc.edu/mcell/ca_rules.html">http://psoup.math.wisc.edu/mcell/ca_rules.html</a>
-	</ul>
+	<DIV id="infopanel" style="display:none"><ul>
+		<li>for the editor, copy the rule into the clipboard and <a target=editor href="editor.html">Click here</a>
+		<li>for documentation see <a href="https://docs.google.com/document/d/1Cfn2wzHjWAyRCol7YzSSda7y-o4xKYcIUZwRrdAyHtc/edit?usp=sharing" target="_new">this document</a>
+		<li>we're on <a href="https://github.com/open768/CA">Github</a>
+		<li>for more CA rules see <a target="mcell" href="http://psoup.math.wisc.edu/mcell/ca_rules.html">http://psoup.math.wisc.edu/mcell/ca_rules.html</a>
+	</ul></DIV>
 </body>
 </html>
