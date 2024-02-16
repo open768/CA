@@ -18,8 +18,9 @@
 	<script  src="../jsinc/extra/bean/bean.js"></script>
 	
 	<!-- 3rd party libraries (jquery) -->
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
-	<script  src="../jsinc/extra/jquery-ui/jquery-ui.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+	<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"
+		integrity="sha256-lSjKY0/srUM9BE3dPm+c4fBo1dky2v27Gdjm2uoZaL0=" crossorigin="anonymous"></script>
 	<script  src="../jsinc/extra/jquery-cookie/jquery.cookie.js"></script>
 	<script  src="../jsinc/extra/jquery-canvas/jcanvas.min.js"></script>
 	<script  src="../jsinc/extra/js-md5/md5.min.js"></script>
@@ -82,8 +83,10 @@
 			$("#infopanel").show()
 			$("#machine").camachine({name:"caexplore"});
 		}
-		if ( $) document.write("<font color='red' size=20>JQuery is missing - check includes</font>")
-		$(onJqueryLoad);
+		if ( !$) 
+			document.write("<font color='red' size=20>JQuery is missing - check includes</font>")
+		else
+			$(onJqueryLoad);
 	</script>
 
 	<DIV id="infopanel" style="display:none"><ul>
