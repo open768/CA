@@ -60,8 +60,7 @@ class cCAStatus{
 		//display the heap used
 		var oTarget = $("#"+cJquery.child_ID(oElement, cCAStatusTypes.HEAP_ID))
 		var iHeapBytes = await cBrowser.getHeapMemoryUsed()
-		var iHeapMBytes = Math.floor(iHeapBytes/(1024*1024))
-		oTarget.html( "" + iHeapMBytes + " MB")
+		oTarget.html( cCommon.bytesToSize(iHeapBytes))
 
 		//next heap timer
 		if ( !this.#stop_heap_timer ){
