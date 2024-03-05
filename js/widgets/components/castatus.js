@@ -57,18 +57,22 @@ class cCAStatus{
 		var oThis = this
 
 		cDebug.write("heap timer running")
+
 		//display the heap used
 		var oTarget = $("#"+cJquery.child_ID(oElement, cCAStatusTypes.HEAP_ID))
 		var iHeapBytes = await cBrowser.getHeapMemoryUsed()
-		oTarget.html( cCommon.bytesToSize(iHeapBytes))
+		var sHeapValue = cCommon.bytesToSize(iHeapBytes)
+		oTarget.html( sHeapValue)
+		cDebug.write("heap: " + sHeapValue)
 
 		//next heap timer
-		if ( !this.#stop_heap_timer ){
-			setTimeout( function(){ oThis.onHeapTimer()}, oThis.HEAP_INTERVAL)
-			this.#heap_timer_running = true
-		}else{
+		if ( this.#stop_heap_timer ){
 			this.#heap_timer_running = false
 			this.#stop_heap_timer = false
+		}else{
+			//next timer
+			setTimeout( function(){ oThis.onHeapTimer()}, oThis.HEAP_INTERVAL)
+			this.#heap_timer_running = true
 		}
 	}
 
