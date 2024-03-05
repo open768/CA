@@ -18,8 +18,9 @@
 	<script  src="../jsinc/extra/bean/bean.js"></script>
 	
 	<!-- 3rd party libraries (jquery) -->
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
-	<script  src="../jsinc/extra/jquery-ui/jquery-ui.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+	<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"
+		integrity="sha256-lSjKY0/srUM9BE3dPm+c4fBo1dky2v27Gdjm2uoZaL0=" crossorigin="anonymous"></script>
 	<script  src="../jsinc/extra/jquery-cookie/jquery.cookie.js"></script>
 	<script  src="../jsinc/extra/jquery-canvas/jcanvas.min.js"></script>
 	<script  src="../jsinc/extra/js-md5/md5.min.js"></script>
@@ -75,16 +76,24 @@
 	<script >
 		//cDebug.on(cDebugTypes.levels.extra)		//turn on debugging
 		function onJqueryLoad(){
+			if ( !$.widget) {
+				document.write("<font color='red' size=20>JQuery UI is missing - check includes</font>")
+				return
+			}
+			$("#infopanel").show()
 			$("#machine").camachine({name:"caexplore"});
 		}
-		$(onJqueryLoad);
+		if ( !$) 
+			document.write("<font color='red' size=20>JQuery is missing - check includes</font>")
+		else
+			$(onJqueryLoad);
 	</script>
 
-	<ul>
-	<li>for the editor, copy the rule into the clipboard and <a target=editor href="editor.html">Click here</a>
-	<li>for documentation see <a href="https://docs.google.com/document/d/1Cfn2wzHjWAyRCol7YzSSda7y-o4xKYcIUZwRrdAyHtc/edit?usp=sharing" target="_new">this document</a>
-	<li>we're on <a href="https://github.com/open768/CA">Github</a>
-	<li>for more CA rules see <a target="mcell" href="http://psoup.math.wisc.edu/mcell/ca_rules.html">http://psoup.math.wisc.edu/mcell/ca_rules.html</a>
-	</ul>
+	<DIV id="infopanel" style="display:none"><ul>
+		<li>for the editor, copy the rule into the clipboard and <a target=editor href="editor.html">Click here</a>
+		<li>for documentation see <a href="https://docs.google.com/document/d/1Cfn2wzHjWAyRCol7YzSSda7y-o4xKYcIUZwRrdAyHtc/edit?usp=sharing" target="_new">this document</a>
+		<li>we're on <a href="https://github.com/open768/CA">Github</a>
+		<li>for more CA rules see <a target="mcell" href="http://psoup.math.wisc.edu/mcell/ca_rules.html">http://psoup.math.wisc.edu/mcell/ca_rules.html</a>
+	</ul></DIV>
 </body>
 </html>
