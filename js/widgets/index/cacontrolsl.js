@@ -149,7 +149,7 @@ class cCAControlsL {
 			case cCARuleEvent.actions.update_rule:
 				cDebug.write("update_rule")
 				var oRule = poEvent.data
-				this.#set_rule(oRule)
+				this.#convert_rule_to_base64(oRule)
 				break
 		}
 		cDebug.leave()
@@ -168,7 +168,7 @@ class cCAControlsL {
 		}
 		try {
 			var oRule = cCARuleRepeatBase64Importer.makeRule(sInput)
-			this.#set_rule(oRule)
+			this.#convert_rule_to_base64(oRule)
 		}
 		catch (e) {
 			alert("something went wrong:\n" + e.message)
@@ -193,11 +193,11 @@ class cCAControlsL {
 			switch (iSelected) {
 				case cCARuleTypes.rule_types.life:
 					oRule = cCARuleLifeImporter.makeRule(oTextArea.val())
-					this.#set_rule(oRule)
+					this.#convert_rule_to_base64(oRule)
 					break
 				case cCARuleTypes.rule_types.wolfram1d:
 					oRule = cCARuleWolfram1DImporter.makeRule(oTextArea.val())
-					this.#set_rule(oRule)
+					this.#convert_rule_to_base64(oRule)
 					break
 				case cCARuleTypes.rule_types.base64:
 					oRule = cCARuleBase64Importer.makeRule(oTextArea.val())
@@ -253,7 +253,7 @@ class cCAControlsL {
 
 		if (sPreset === cCAControlLTypes.random_ID) {
 			var oRule = cCaRandomRule.makeRule()
-			this.#set_rule(oRule)
+			this.#convert_rule_to_base64(oRule)
 		} else {
 			var oRuleJson = JSON.parse(sPreset)
 
@@ -292,7 +292,7 @@ class cCAControlsL {
 	}
 
 	//****************************************************************************
-	#set_rule(poRule) {
+	#convert_rule_to_base64(poRule) {
 		var oElement = this.element
 
 		var s64 = cCARuleBase64Exporter.export(poRule, cCACellTypes.default_state)
