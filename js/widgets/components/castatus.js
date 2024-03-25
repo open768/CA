@@ -23,6 +23,7 @@ class cCAStatus{
 	grid_name = null
 	HEAP_INTERVAL = 100
 	#heap_timer_running = false
+	#stop_heap_timer = false
 	
 	//***************************************************************
 	constructor(poOptions, poElement){
@@ -51,33 +52,28 @@ class cCAStatus{
 	//****************************************************************************
 	//*
 	//****************************************************************************
-	#run_heap_timer(){
-		var oThis = this
-		if (!this.#heap_timer_running){
-			setTimeout( () => { oThis.onHeapTimer()}, this.HEAP_INTERVAL)
-			this.#heap_timer_running = true
-		}
-	}
-
-	//****************************************************************************
-	#stop_heap_timer(){
-		this.#heap_timer_running = false
-	}
-
-	//****************************************************************************
 	async onHeapTimer(){
 		var oElement = this.element
 		var oThis = this
 
+		cDebug.write("heap timer running")
+
 		//display the heap used
 		var oTarget = $("#"+cJquery.child_ID(oElement, cCAStatusTypes.HEAP_ID))
 		var iHeapBytes = await cBrowser.getHeapMemoryUsed()
-		var iHeapMBytes = Math.floor(iHeapBytes/(1024*1024))
-		oTarget.html( "" + iHeapMBytes + " MB")
+		var sHeapValue = cCommon.bytesToSize(iHeapBytes)
+		oTarget.html( sHeapValue)
+		cDebug.write("heap: " + sHeapValue)
 
 		//next heap timer
-		if (this.#heap_timer_running)
-			setTimeout( () => { oThis.onHeapTimer()}, this.HEAP_INTERVAL)
+		if ( this.#stop_heap_timer ){
+			this.#heap_timer_running = false
+			this.#stop_heap_timer = false
+		}else{
+			//next timer
+			setTimeout( function(){ oThis.onHeapTimer()}, oThis.HEAP_INTERVAL)
+			this.#heap_timer_running = true
+		}
 	}
 
 	//****************************************************************************
@@ -87,11 +83,16 @@ class cCAStatus{
 		if (poEvent.action == cCAActionEvent.actions.control){
 			var iAction = poEvent.data
 			switch(iAction){
-				case cCAGridTypes.actions.play:
-					this.#run_heap_timer()
+				case cCAGridTypes.actions.play:   //start watching the heap when CA is played
+					if (this.#heap_timer_running)
+						cDebug.warn("heap timer allready running")
+					else{
+						var oThis = this
+						setTimeout( function(){ oThis.onHeapTimer()}, oThis.HEAP_INTERVAL)
+					}
 					break
 				case cCAGridTypes.actions.stop:
-					this.#stop_heap_timer()
+					this.#stop_heap_timer = true	//stop watching heap when stop pressed, or CA stops
 			}
 		}
 				
@@ -147,10 +148,6 @@ class cCAStatus{
 				this.#add_row(oTable,cCAStatusTypes.HEAP_ID, "Heap")
 			oDiv.append(oTable)
 		oElement.append(oDiv)
-
-		//--start the timer to report on heap memory--------------------------
-		//tbc
-
 	}
 }
 

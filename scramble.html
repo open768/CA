@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<!--**************************************************************************
+	Copyright (C) Chicken Katsu 2013-2024
+	This code is protected by copyright under the terms of the 
+	Creative Commons Attribution 4.0 International License
+	https://creativecommons.org/licenses/by/4.0/legalcode
+	contact cluck@chickenkatsu.co.uk
+	// USE AT YOUR OWN RISK - NO GUARANTEES OF ANY FORM ARE EITHER EXPRESSED OR IMPLIED
+
+	Cryptography code demonstrated in this application is covered by the UK Govt 
+	Open General Export License for Cryptographic development 
+	(see https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/1101784/open-general-export-licence-cryptographic-development.pdf) 
+	and is not intended for dual use as defined by this license. 
+	You the consumer of this application are entirely responsible for importing 
+	this code into your own country. if you disagree please close this page.
+
+	**************************************************************************-->
+
+	<title>Cellular Automata Encryption</title>
+	<!-- 3rd party libraries (bean) -->
+	<script  src="../jsinc/extra/bean/bean.js"></script>
+	
+	<!-- 3rd party libraries (jquery) -->
+	<script  src="../jsinc/extra/jquery/jquery-3.2.1.min.js"></script>
+	<script  src="../jsinc/extra/jquery-ui/jquery-ui.min.js"></script>
+	<script  src="../jsinc/extra/jquery-cookie/jquery.cookie.js"></script>
+	<script  src="../jsinc/extra/jquery-canvas/jcanvas.min.js"></script>
+	<script  src="https://www.gstatic.com/charts/loader.js"></script>
+	
+	<!-- stylesheets -->
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">	
+	<link rel="stylesheet" href="css/CA.css">
+	<link rel="stylesheet" href="css/jquery/jquery-ui.css">
+
+	<!-- my useful functions -->
+	<script src="../jsinc/ck-inc/common.js"></script>
+	<script src="../jsinc/ck-inc/debug.js"></script>
+	<script src="../jsinc/ck-inc/converter.js"></script>
+	<script src="../jsinc/ck-inc/sparse.js"></script>
+
+	<!-- cellular automata classes -->
+	<script src="js/CA/catypes.js"></script>
+	<script src="js/CA/caevent.js"></script>
+	<script src="js/CA/cacell.js"></script>
+	<script src="js/CA/carule.js"></script>
+	<script src="js/CA/caindex.js"></script>
+	<script src="js/CA/cagrid.js"></script>
+	<script src="js/CA/cagridinit.js"></script>
+	<script src="js/CA/cagridimporter.js"></script>
+	<script src="js/CA/caimporter.js"></script>
+	<script src="js/CA/cascrambler.js"></script>
+	
+	<!-- widgets for page -->
+	<script src="js/widgets/components/cacanvas.js"></script>
+	<script src="js/widgets/components/cajson.js"></script>
+</head>
+
+<body>
+	<h2>Cellular Automata scrambler</h2>
+	<div id="crypt"></div>
+
+	<script language="javascript">
+	function onJqueryLoad(){
+		if ( !$.widget) {
+				document.write("<font color='red' size=20>JQuery UI is missing - check includes</font>")
+				return
+		}
+		$("#infopanel").show()
+		$("#scrambler").cascrambler({name:"cascramble"});
+	}
+	$(onJqueryLoad);
+	</script>
+	<p>
+	<div class="ui-widget" id="infopanel" style="display:none">
+		<div class="ui-widget-header">Notice</div>
+		<div class="ui-widget-content">
+			<p>
+				This page is to test the scrambler function that uses a CA to read its instructions from.
+				please copy a CA into the clipboard before proceeding 
+			</p>
+		</div>
+	</div>
+	<DIV ID="scrambler">
+		scrambler will go here
+	</DIV>
+</body>
+</html>
