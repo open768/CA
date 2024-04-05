@@ -44,7 +44,6 @@ $.widget( "ck.caeditwidget",{
 		var oElement = oThis.element;
 
 		oElement.uniqueId();
-		var sID = oElement.attr("id");
 		oElement.addClass("ui-widget");
 		oElement.addClass("caindex");
 		oElement.click( function(){ oThis.onClick()} );
@@ -122,7 +121,7 @@ $.widget( "ck.caeditwidget",{
 			iCount++;
 			if (iCount >3){
 				iCount = 1;
-				x = oOptions.cell_size /2;;
+				x = oOptions.cell_size /2;
 				y += (oOptions.cell_size + 1);
 			}
 		}
@@ -148,7 +147,6 @@ $.widget( "ck.caeditwidget",{
 	//*****************************************************************
 	onClick: function(){
 		var oThis = this;
-		var oElement = oThis.element;
 		
 		var oOptions = oThis.options;
 		if (oOptions.value == 0)
@@ -207,26 +205,27 @@ $.widget( "ck.caeditor",{
 	pr_render: function(){
 		var oThis = this;
 		var oElement = this.element;
+		var sID, oDiv, oButton, oOption, sProp
 		
 		oElement.empty();
 		oElement.addClass("ui-widget");
 		
 		//-------------------------------------------------------------------
 		//status window
-		var sID = cJquery.child_ID(oElement, cCAWidgetTypes.IDs.STATUS);
-		var oDiv = $("<DIV>", {class:"ui-widget-header",id:sID});
+		sID = cJquery.child_ID(oElement, cCAWidgetTypes.IDs.STATUS);
+		oDiv = $("<DIV>", {class:"ui-widget-header",id:sID});
 			oDiv.append("??");
 		oElement.append(oDiv);
 		
 		//-------------------------------------------------------------------
 		//rule box
 		oDiv = $("<DIV>", {class:"ui-widget-content"});
-			var sID = cJquery.child_ID(oElement, cCAWidgetTypes.IDs.RULE);
+			sID = cJquery.child_ID(oElement, cCAWidgetTypes.IDs.RULE);
 			var oBox = $("<TEXTAREA>",{ID:sID,rows:5,cols:80 ,class:"rule rule_wide", title:"enter the base64 rule here"});				
 			oBox.keyup( function(){oThis.onRuleInputKeyUp()}	);
 			oDiv.append(oBox);
 			
-			var oButton = $("<button>",{title:"use the rule entered in the box above"}).button({icon:"ui-icon-circle-arrow-e" });
+			oButton = $("<button>",{title:"use the rule entered in the box above"}).button({icon:"ui-icon-circle-arrow-e" });
 			oButton.click(	function(){oThis.onSetRuleClick()}	);		
 			oDiv.append(oButton);
 		oElement.append(oDiv);
@@ -236,7 +235,7 @@ $.widget( "ck.caeditor",{
 		//-------------------------------------------------------------------
 		//panel for description
 		
-		var oDiv = $("<DIV>", {class:"ui-widget-header"});
+		oDiv = $("<DIV>", {class:"ui-widget-header"});
 			oDiv.append("Rule Widgets");
 		oElement.append(oDiv);
 		
@@ -246,59 +245,59 @@ $.widget( "ck.caeditor",{
 		
 		//-------------------------------------------------------------------
 		//individual widgets that can be clicked
-		var sID = cJquery.child_ID(oElement, cCAWidgetTypes.IDs.CELL_CONTAINER);
+		sID = cJquery.child_ID(oElement, cCAWidgetTypes.IDs.CELL_CONTAINER);
 		oDiv = $("<DIV>", {class:"ui-widget-content",id:sID});
 		oElement.append(oDiv);
 		oElement.append("<hr>");
 		
 		//-------------------------------------------------------------------
 		//rule controls
-		var oDiv = $("<DIV>", {class:"ui-widget-header"});
+		oDiv = $("<DIV>", {class:"ui-widget-header"});
 			oDiv.append("Rule Controls");
 		oElement.append(oDiv);
 		
-		var oDiv = $("<DIV>", {class:"ui-widget-content"});
+		oDiv = $("<DIV>", {class:"ui-widget-content"});
 			//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 			oDiv.append ("Set widgets with state: ");
-			var sID = cJquery.child_ID(oElement, cCAWidgetTypes.IDs.RULE_IN_STATE);
+			sID = cJquery.child_ID(oElement, cCAWidgetTypes.IDs.RULE_IN_STATE);
 			var oStateSelect= $("<Select>", {id:sID});
-			for (var sProp in cCAModifierTypes.states)	{
+			for ( sProp in cCAModifierTypes.states)	{
 				var oState = cCAModifierTypes.states[sProp];
-				var oOption = $("<option>",{value:oState.id}).append(oState.label);
+				oOption = $("<option>",{value:oState.id, text:oState.label});
 				oStateSelect.append(oOption);
 			}
 			oDiv.append(oStateSelect);
 			
 			//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 			oDiv.append (" and ");
-			var sID = cJquery.child_ID(oElement, cCAWidgetTypes.IDs.RULE_VERB);
+			sID = cJquery.child_ID(oElement, cCAWidgetTypes.IDs.RULE_VERB);
 			var oVerbSelect = $("<Select>", {id:sID});
-			for (var sProp in cCAModifierTypes.verbs)	{
+			for ( sProp in cCAModifierTypes.verbs)	{
 				var oVerb = cCAModifierTypes.verbs[sProp];
-				var oOption = $("<option>",{value:oVerb.id}).append(oVerb.label);
+				oOption = $("<option>",{value:oVerb.id, text:oVerb.label});
 				oVerbSelect.append(oOption);
 			}
 			oDiv.append(oVerbSelect);
 			
-			var sID = cJquery.child_ID(oElement, cCAWidgetTypes.IDs.NEIGHBOUR_COUNT);
+			sID = cJquery.child_ID(oElement, cCAWidgetTypes.IDs.NEIGHBOUR_COUNT);
 			var oCountSelect = $("<Select>", {id:sID});
 				for (var i=1; i<=8; i++){
-					var oOption = $("<option>").append(i);
+					oOption = $("<option>",{text:i});
 					oCountSelect.append(oOption);
 				}
 			oDiv.append(oCountSelect);
 			
 			//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 			oDiv.append (" Neighbours to output ");
-			var sID = cJquery.child_ID(oElement, cCAWidgetTypes.IDs.RULE_OUT_STATE);
+			sID = cJquery.child_ID(oElement, cCAWidgetTypes.IDs.RULE_OUT_STATE);
 			//any cell with X neighbours will output 1 0r zero
 			var oOutSelect = $("<Select>", {id:sID});
-				oOutSelect.append( $("<option>").append(0) );
-				oOutSelect.append( $("<option>").append(1) );
+				oOutSelect.append( $("<option>",{text:"0"} ))
+				oOutSelect.append( $("<option>").append(1) )
 			oDiv.append(oOutSelect);
 				
 			//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-			var oButton = $("<button>").append("Apply");
+			oButton = $("<button>").append("Apply");
 			oDiv.append (oButton);
 			oButton.click(function(){ oThis.onNeighbourRuleClick() });
 		oElement.append(oDiv);
@@ -343,7 +342,6 @@ $.widget( "ck.caeditor",{
 	
 	//*************************************************************
 	pr_set_identity_rule: function(){
-		var oElement = this.element;
 		var oRule = cCaIdentityRule.makeRule();
 		var s64 = cCARuleBase64Exporter.export(oRule,cCACellTypes.default_state);
 		this.pr_set_base64Rule(s64);
@@ -362,8 +360,6 @@ $.widget( "ck.caeditor",{
 	//# Events
 	//*****************************************************************
 	onGotClipText: function(psText){
-		var oElement = this.element;
-		
 		if (psText === "") {
 			cBrowser.writeConsoleWarning("nothing in clipboard!");
 			this.pr_set_identity_rule();
@@ -398,7 +394,6 @@ $.widget( "ck.caeditor",{
 	
 	//*************************************************************
 	onEditWidgetClick: function(poData){
-		var oElement = this.element;
 		var oRule = this.rule;
 
 		try{
