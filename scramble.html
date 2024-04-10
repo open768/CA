@@ -64,7 +64,7 @@
 	<script language="javascript">
 	function onJqueryLoad(){
 		if ( !$.widget) {
-				document.write("<font color='red' size=20>JQuery UI is missing - check includes</font>")
+				$.error("JQuery UI is missing")
 				return
 		}
 		$("#infopanel").show()

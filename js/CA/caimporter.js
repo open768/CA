@@ -208,35 +208,10 @@ class cCARuleBase64Importer {
  * @typedef {cCAExportedState}
  */
 class cCAExportedState {
-	/**
-	 * Description placeholder
-	 * 
-	 *
-	 * @type {*}
-	 */
 	state = null
-	/**
-	 * Description placeholder
-	 * 
-	 *
-	 * @type {*}
-	 */
 	rule = null
-	/**
-	 * Description placeholder
-	 * 
-	 *
-	 * @type {*}
-	 */
 	state_transitions = null
 
-	/**
-	 * Creates an instance of cCAExportedState.
-	 * 
-	 *
-	 * @constructor
-	 * @param {*} piState
-	 */
 	constructor(piState) {
 		this.state = piState
 	}
@@ -250,39 +225,14 @@ class cCAExportedState {
  * @typedef {cCAExportedObj}
  */
 class cCAExportedObj {
-	/**
-	 * Description placeholder
-	 * 
-	 *
-	 * @type {number}
-	 */
 	version = 1.0
-	/**
-	 * Description placeholder
-	 * 
-	 *
-	 * @type {*}
-	 */
 	neighbour_type = null
-	/**
-	 * Description placeholder
-	 * 
-	 *
-	 * @type {*}
-	 */
 	boredom = null
-	/**
-	 * Description placeholder
-	 * 
-	 *
-	 * @type {{}}
-	 */
 	states = []
 
 	/**
-	 * Description placeholder
+	 * checks whether an object is an exported object
 	 * 
-	 *
 	 * @static
 	 * @param {*} poObj
 	 * @returns {boolean}
@@ -320,17 +270,17 @@ class cCARuleObjExporter {
 
 		if (!cCommon.obj_is(poRule, "cCARule")) throw new CAException("export requires cCARule")
 
-		var oObj = new cCAExportedObj
-		oObj.neighbour_type = poRule.neighbour_type
+		var oExport = new cCAExportedObj
+		oExport.neighbour_type = poRule.neighbour_type
 		for (var iState = 1; iState <= poRule.stateRules.length; iState++) {
 			var oState = new cCAExportedState(iState)
 			oState.rule = cCARuleBase64Exporter.export(poRule, iState)
-			oObj.states.push(oState)
+			oExport.states.push(oState)
 		}
-		oObj.boredom = poRule.boredom
+		oExport.boredom = poRule.boredom
 
 		cDebug.leave()
-		return oObj
+		return oExport
 	}
 }
 
