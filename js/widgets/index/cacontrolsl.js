@@ -265,7 +265,7 @@ class cCAControlsL {
 					this.#onSetRuleClick()
 					break
 				default:
-					alert("unknown rule type: ", oRuleJson.type)
+					alert("unknown rule type: "+ oRuleJson.type)
 					throw new CAException("not implemented")
 			}
 		}

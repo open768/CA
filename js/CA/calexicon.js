@@ -16,13 +16,6 @@ var cCaLexiconRule = function(piType, psLabel, psRule){
 	this.rule = psRule
 }
 
-/**
- * Description placeholder
- * 
- *
- * @class cCALexicon
- * @typedef {cCALexicon}
- */
 /* eslint-disable-next-line no-unused-vars */
 class cCALexicon {
 	/**
@@ -30,7 +23,7 @@ class cCALexicon {
 	 * 
 	 *
 	 * @static
-	 * @returns {{}}
+	 * @returns list
 	 */
 	static get_presets(){
 		var aPresets = []
