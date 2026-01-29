@@ -13,7 +13,7 @@ For licenses that allow for commercial use please contact cluck@chickenkatsu.co.
  * 
  *
  * @class cCAStateRule
- * @typedef {cCAStateRule}
+ 
  */class cCAStateRule {
 	/**
 	 * Creates an instance of cCAStateRule.
@@ -34,7 +34,7 @@ For licenses that allow for commercial use please contact cluck@chickenkatsu.co.
  * 
  *
  * @class cCARule
- * @typedef {cCARule}
+ 
  */
 /* eslint-disable-next-line no-unused-vars */
 class cCARule{

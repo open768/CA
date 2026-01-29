@@ -63,7 +63,7 @@ class cCAScramblerEvent extends cCAEvent{
  * 
  *
  * @class cCAScramblerTypes
- * @typedef {cCAScramblerTypes}
+ 
  */
 class cCAScramblerTypes{
 	/**

@@ -42,7 +42,6 @@ class cCARuleBinaryExporter {
  * 
  *
  * @class cCARuleBinaryImporter
- * @typedef {cCARuleBinaryImporter}
  */
 class cCARuleBinaryImporter {
 	/**
@@ -94,14 +93,6 @@ class cCARuleBinaryImporter {
 //###############################################################################
 //# Base64
 //###############################################################################
-/**
- * Description placeholder
- * 
- *
- * @class cCARuleRepeatBase64Importer
- * @typedef {cCARuleRepeatBase64Importer}
- */
-/* eslint-disable-next-line no-unused-vars */
 class cCARuleRepeatBase64Importer {
 	/**
 	 * Description placeholder
@@ -138,7 +129,6 @@ class cCARuleRepeatBase64Importer {
  * 
  *
  * @class cCARuleBase64Exporter
- * @typedef {cCARuleBase64Exporter}
  */
 class cCARuleBase64Exporter {
 	//*****************************************************************************
@@ -173,7 +163,6 @@ class cCARuleBase64Exporter {
  * 
  *
  * @class cCARuleBase64Importer
- * @typedef {cCARuleBase64Importer}
  */
 class cCARuleBase64Importer {
 	/**
@@ -205,7 +194,7 @@ class cCARuleBase64Importer {
  * 
  *
  * @class cCAExportedState
- * @typedef {cCAExportedState}
+ 
  */
 class cCAExportedState {
 	state = null
@@ -222,7 +211,7 @@ class cCAExportedState {
  * 
  *
  * @class cCAExportedObj
- * @typedef {cCAExportedObj}
+ 
  */
 class cCAExportedObj {
 	version = 1.0
@@ -253,7 +242,7 @@ class cCAExportedObj {
  * 
  *
  * @class cCARuleObjExporter
- * @typedef {cCARuleObjExporter}
+ 
  */
 /* eslint-disable-next-line no-unused-vars */
 class cCARuleObjExporter {
@@ -289,7 +278,7 @@ class cCARuleObjExporter {
  * 
  *
  * @class cCARuleObjImporter
- * @typedef {cCARuleObjImporter}
+ 
  */
 /* eslint-disable-next-line no-unused-vars */
 class cCARuleObjImporter {
@@ -322,7 +311,7 @@ class cCARuleObjImporter {
  * 
  *
  * @class cCaIdentityRule
- * @typedef {cCaIdentityRule}
+ 
  */
 class cCaIdentityRule {
 	/**
@@ -355,7 +344,7 @@ class cCaIdentityRule {
  * 
  *
  * @class cCaRandomRule
- * @typedef {cCaRandomRule}
+ 
  */
 /* eslint-disable-next-line no-unused-vars */
 class cCaRandomRule {
@@ -390,7 +379,7 @@ class cCaRandomRule {
  * 
  *
  * @class cCARuleWolfram1DImporter
- * @typedef {cCARuleWolfram1DImporter}
+ 
  */
 /* eslint-disable-next-line no-unused-vars */
 class cCARuleWolfram1DImporter {
@@ -446,7 +435,7 @@ class cCARuleWolfram1DImporter {
  * 
  *
  * @class cCARuleLifeImporter
- * @typedef {cCARuleLifeImporter}
+ 
  */
 class cCARuleLifeImporter {
 	//***************************************************************
@@ -527,7 +516,7 @@ class cCARuleLifeImporter {
  * 
  *
  * @class cCAModifierTypes
- * @typedef {cCAModifierTypes}
+ 
  */
 class cCAModifierTypes {
 	/**
@@ -561,7 +550,7 @@ class cCAModifierTypes {
  * 
  *
  * @class cCARuleModifier
- * @typedef {cCARuleModifier}
+ 
  */
 /* eslint-disable-next-line no-unused-vars */
 class cCARuleModifier {
