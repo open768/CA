@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "none",
+    "checkJs": true,
+    "allowJs": true,
+    "baseUrl": "."
+  },
+  "include": [
+    "**/*.js",
+    "../jsinc/**/*.js"
+  ],
+  "exclude": [
+    "**/node_modules",
+    "**/bower_components",
+    "**/dist",
+    "**/build",
+    "**/test"
+  ]
+}
