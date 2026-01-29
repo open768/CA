@@ -11,6 +11,7 @@ For licenses that allow for commercial use please contact cluck@chickenkatsu.co.
 class cCAJsonTypes {
 	static textarea_id = "txt"
 	static tabs_id = "tab"
+	static body_id = "body"
 }
 
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -54,34 +55,42 @@ class cCAJson {
 	//#################################################################`
 	#init() {
 		var oThis, oElement
-		var oDiv, sID, oButton
+		var oHeaderDiv, oBodyDiv, sBodyID, sID, oButton
 
 		cDebug.enter()
 		oElement = this.element
+		sBodyID = cJquery.child_ID(oElement, cCAJsonTypes.body_id)
 		oThis = this
 
-		oDiv = $("<DIV>", { class: "ui-widget-header" })
-			oDiv.append("Json")
-			oElement.append(oDiv)
+		oHeaderDiv = $("<DIV>", { class: "ui-widget-header" })
+			oHeaderDiv.append("Json")
 
-		oDiv = $("<DIV>", { class: "ui-widget-content" })
+		var sButtonID = cJquery.child_ID(oElement, "btnJson")
+		oButton = $("<button>",{ ID: sButtonID }).append("+")
+		oButton.click(function () { oThis.#showHide(sButtonID,sBodyID)})
+		oHeaderDiv.append(oButton)
+		oElement.append(oHeaderDiv)
+
+		sBodyID = cJquery.child_ID(oElement, cCAJsonTypes.body_id)
+		oBodyDiv = $("<DIV>", { class: "ui-widget-content", ID: sBodyID })
 			//---------textbox
 			sID = cJquery.child_ID(oElement, cCAJsonTypes.textarea_id)
 			var oBox = $("<TEXTAREA>", { ID: sID, class: "json", title: "Json goes here" })
-			oDiv.append(oBox)
+			oBodyDiv.append(oBox)
 
 			//---------buttons
 			if (this.create_button) {
 				oButton = $("<button>").append("Create")
 				oButton.click(function () { oThis.#onClickExport() })
-				oDiv.append(oButton)
+				oBodyDiv.append(oButton)
 			}
 
 			oButton = $("<button>").append("import")
 			oButton.click(function () { oThis.#onClickImport() })
-			oDiv.append(oButton)
+			oBodyDiv.append(oButton)
 
-		oElement.append(oDiv)
+		oElement.append(oBodyDiv)
+		oBodyDiv.hide()
 
 		cDebug.leave()
 	}
@@ -89,6 +98,15 @@ class cCAJson {
 	//#################################################################
 	//# EVENTS
 	//#################################################################`
+	#showHide(sButtonID, sBodyID){
+			var oBody = $("#" + sBodyID)
+			var oButton = $("#" + sButtonID)
+			var bVisible = oBody.is(":visible")
+			oBody.toggle(!bVisible)
+			oButton.text(bVisible ? "+" : "-")
+	}
+
+	//*****************************************************************
 	#onClickExport() {
 		cDebug.enter()
 		if (this.grid == null){
