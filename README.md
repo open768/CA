@@ -8,3 +8,9 @@ this uses a new notation called CARB which allows all possible CA rules to be ex
 # License
 Creative Commons Attribution 4.0 International License
 https://creativecommons.org/licenses/by/4.0/legalcode
+
+# dependencies
+bean.js             https://github.com/fat/bean
+jquery-cookie
+jquery-canvas
+js-md5
