@@ -2,12 +2,12 @@ class cSecrets {
     static GOOGLEANALYTICS_ID = "UA-51550338-3"; //put your own Google Analytics ID here
 
     static add_googletag() {
-        const $head = $("body");
+        var document = $("body");
 
         $("<script/>", {
             async: true,
             src: "https://www.googletagmanager.com/gtag/js?id=" + cSecrets.GOOGLEANALYTICS_ID
-        }).appendTo($head);
+        }).appendTo(document);
 
         $("<script/>", {
             text:
@@ -15,6 +15,6 @@ class cSecrets {
                 "function gtag(){ dataLayer.push(arguments); }" +
                 "gtag('js', new Date());" +
                 "gtag('config', '" + cSecrets.GOOGLEANALYTICS_ID + "');"
-        }).appendTo($head);
+        }).appendTo(document);
     }
 }
