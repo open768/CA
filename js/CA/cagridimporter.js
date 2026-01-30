@@ -119,7 +119,7 @@ class cCAGridJSONExporter {
 		if (sBin.length !== iBinLength)
 			throw new CAException("wrong binary length")
 
-		s64 = cCASimpleBase64.toBase64(sBin)
+		s64 = cSimpleBase64.toBase64(sBin)
 		return s64
 	}
 }
@@ -155,7 +155,7 @@ class cCAGridJSONImporter {
 		oGrid.create_cells()
 		var iBinLength = oGrid.rows * oGrid.cols
 		var s64 = poJson.grid.data
-		var sBin = cCASimpleBase64.toBinary(s64, iBinLength) //convert base64 to binary - have to set expected bin length
+		var sBin = cSimpleBase64.toBinary(s64, iBinLength) //convert base64 to binary - have to set expected bin length
 		var iIndex = 0
 
 		for (var iRow = 1; iRow <= oGrid.rows; iRow++)

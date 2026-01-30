@@ -56,7 +56,7 @@
         "cCARuleTypes": "readonly",
         "cCAScrambler": "readonly",
         "cCAScramblerEvent": "readonly",
-        "cCASimpleBase64": "readonly",
+        "cSimpleBase64": "readonly",
         "cCommon": "readonly",
         "cConverterEncodings": "readonly",
         "cDebug": "readonly",

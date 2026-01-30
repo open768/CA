@@ -115,7 +115,7 @@ class cCARuleRepeatBase64Importer {
 		s64 = s64 + sInput.slice(0, iRemain)
 		if (s64.length < cCARuleTypes.base64_length) throw new CAException("base64 not long enough, must be " + cCARuleTypes.base64_length + "chars")
 
-		var sBin = cCASimpleBase64.toBinary(s64, cCARuleTypes.max_inputs)
+		var sBin = cSimpleBase64.toBinary(s64, cCARuleTypes.max_inputs)
 		var oRule = cCARuleBinaryImporter.makeRule(sBin)
 
 		cDebug.leave()
@@ -149,7 +149,7 @@ class cCARuleBase64Exporter {
 
 		//a bit of a long way to go about it
 		var sBin = cCARuleBinaryExporter.export(poRule, piState)	//convert rule to binary
-		var sOut = cCASimpleBase64.toBase64(sBin)			//convert binary to base64string
+		var sOut = cSimpleBase64.toBase64(sBin)			//convert binary to base64string
 		if (sOut.length !== cCARuleTypes.base64_length) throw new CAException("generated base64 is the wrong length")
 
 		cDebug.leave()
@@ -178,7 +178,7 @@ class cCARuleBase64Importer {
 
 		if (ps64.length < cCARuleTypes.base64_length) throw new CAException("base64 not long enough, must be " + cCARuleTypes.base64_length + "chars")
 		if (!cConverterEncodings.isBase64(ps64)) throw new CAException("input must be base64  string")
-		var sBin = cCASimpleBase64.toBinary(ps64, cCARuleTypes.max_inputs)
+		var sBin = cSimpleBase64.toBinary(ps64, cCARuleTypes.max_inputs)
 		var oRule = cCARuleBinaryImporter.makeRule(sBin)
 
 		cDebug.leave()
