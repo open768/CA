@@ -29,7 +29,7 @@
 	<link rel="stylesheet" href="css/CA.css">
 	<link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
 
-	<!-- my useful functions -->
+	<!-- jsinc functions -->
 	<script src="../jsinc/ck-inc/jquery/jquery.common.js"></script>
 	<script src="../jsinc/ck-inc/common.js"></script>
 	<script src="../jsinc/ck-inc/debug.js"></script>
@@ -49,6 +49,7 @@
 	<script src="js/CA/calexicon.js"></script>
 	
 	<!-- widgets for page -->
+	<script src="js/secrets.js"></script>
 	<script src="js/widgets/components/cacanvas.js"></script>
 	<script src="js/widgets/components/cajson.js"></script>
 	<script src="js/widgets/components/caremotecontrol.js"></script>
@@ -60,37 +61,19 @@
 	<script src="js/widgets/index/cacontrolsr.js"></script>
 </head>
 <body>
-	<!-- Global site tag (gtag.js) - Google Analytics -->
-	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-51550338-3"></script>
-	<script>
-	  window.dataLayer = window.dataLayer || [];
-	  function gtag(){dataLayer.push(arguments);}
-	  gtag('js', new Date());
-
-	  gtag('config', 'UA-51550338-3');
-	</script>
-
-	
-	<div id="machine">Loading Machine</div>
-
 	<script >
 		//cDebug.on(cDebugTypes.levels.extra)		//turn on debugging
 		function onJqueryLoad(){
-			if ( !$.widget) {
-				document.write("<font color='red' size=20>JQuery UI is missing - check includes</font>")
-				return
-			}
-			$("#infopanel").show()
-			$("#machine").camachine({name:"caexplore"});
+			cSecrets.add_googletag()
+			$("#machine").camachine({name:"caexplore"});		//main UI is in here
 		}
-		if ( !$) 
-			document.write("<font color='red' size=20>JQuery is missing - check includes</font>")
-		else
-			$(onJqueryLoad);
+		$(onJqueryLoad);
 	</script>
 
-	<DIV id="infopanel" style="display:none"><ul>
-		<li>for the following ... copy the rule into the clipboard and
+	<div id="machine">Loading Machine</div>
+
+	<DIV id="infopanel"><ul>
+		<li>copy the rule into the clipboard and
 			<ul>
 				<li>for the editor <a target=editor href="editor.html">Click here</a></li>
 				<li>for the scrambler <a target=editor href="scrambler.html">Click here</a></li>
