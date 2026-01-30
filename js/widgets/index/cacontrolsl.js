@@ -149,7 +149,7 @@ class cCAControlsL {
 			case cCARuleEvent.actions.update_rule:
 				cDebug.write("update_rule")
 				var oRule = poEvent.data
-				this._convert_rule_to_base64(oRule)
+				this._update_rule_text(oRule)
 				break
 		}
 		cDebug.leave()
@@ -168,7 +168,7 @@ class cCAControlsL {
 		}
 		try {
 			var oRule = cCARuleRepeatBase64Importer.makeRule(sInput)
-			this._convert_rule_to_base64(oRule)
+			this._update_rule_text(oRule)
 		}
 		catch (e) {
 			alert("something went wrong:\n" + e.message)
@@ -193,11 +193,11 @@ class cCAControlsL {
 			switch (iSelected) {
 				case cCARuleTypes.rule_types.life:
 					oRule = cCARuleLifeImporter.makeRule(oTextArea.val())
-					this._convert_rule_to_base64(oRule)
+					this._update_rule_text(oRule)
 					break
 				case cCARuleTypes.rule_types.wolfram1d:
 					oRule = cCARuleWolfram1DImporter.makeRule(oTextArea.val())
-					this._convert_rule_to_base64(oRule)
+					this._update_rule_text(oRule)
 					break
 				case cCARuleTypes.rule_types.base64:
 					oRule = cCARuleBase64Importer.makeRule(oTextArea.val())
@@ -253,7 +253,7 @@ class cCAControlsL {
 
 		if (sPreset === cCAControlLTypes.random_ID) {
 			var oRule = cCaRandomRule.makeRule()
-			this._convert_rule_to_base64(oRule)
+			this._update_rule_text(oRule)
 		} else {
 			var oRuleJson = JSON.parse(sPreset)
 
@@ -292,16 +292,19 @@ class cCAControlsL {
 	}
 
 	//****************************************************************************
-	_convert_rule_to_base64(poRule) {
+	_update_rule_text(poRule) {
 		var oElement = this.element
 
+		//convert to base64
 		var s64 = cCARuleBase64Exporter.export(poRule, cCACellTypes.default_state)
 		this.rule = poRule
 
+		//updatethe textarea with the rule and copy to clipboard
 		var oTextArea = $("#" + cJquery.child_ID(oElement, cCAControlLTypes.rule_text_ID))
 		oTextArea.val(s64)
 		cBrowser.copy_to_clipboard(s64)
 
+		//update the rule type and trigger the rule set
 		var oSelect = $("#" + cJquery.child_ID(oElement, cCAControlLTypes.rule_type_id))
 		oSelect.val(cCARuleTypes.rule_types.base64)
 		oSelect.selectmenu("refresh")

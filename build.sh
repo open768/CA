@@ -14,5 +14,3 @@ zip -q -9 -r $FILE CA -x \*\.git\/\* -x \*\\[\* -x \*\vector\/\*
 echo step 1
 zip -q -9 -r $FILE jsinc/ck-inc -x \*\space\/\*
 
-echo step 2
-zip -q -9 -r $FILE jsinc/extra/jquery* jsinc/extra/bean* jsinc/extra/js-md5
