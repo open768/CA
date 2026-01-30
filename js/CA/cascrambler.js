@@ -88,7 +88,7 @@ class cCAScrambler{
 	/** @type number  */ inital_runs = -1
 	/** @type string  */ plaintext = null
 	/** @type number  */ initial_runs_completed = 0
-	/** @type enum */ status = null
+	/** @type cCAScramblerTypes */ status = null
 
 	
 	/**
@@ -109,7 +109,7 @@ class cCAScrambler{
 		this.initial_runs_completed = 0
 		this.status = cCAScramblerTypes.status.dormant
 
-		var oThis = this
+		var oThis = this /** @type cCAScrambler */
 
 		//subscribe to grid events
 		cCAEventHelper.subscribe_to_grid_events(this.grid.name, (poEvent)=>{oThis.onCAGridEvent(poEvent)})

@@ -13,7 +13,7 @@ class cCAChartTypes {
 	static is_charts_loaded= false
 	
 	static{
-		var oThis = this
+		var oThis = this /** @type cCAChartTypes */
 		if (!google.charts)  $.error("google.charts class is missing! check includes")	
 		
 		try{
@@ -51,7 +51,7 @@ class cCAChart{
 		this.#grid_name = poOptions.grid_name
 		
 		var oElement = this.#element
-		var oThis = this
+		var oThis = this /** @type cCAChart */
 		
 		//basic stuff
 		oElement.empty()

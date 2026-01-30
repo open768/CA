@@ -32,7 +32,7 @@ class cCAControlsL {
 	constructor(poOptions, poElement) {
 		cDebug.enter()
 		this.element = poElement
-		var oThis = this
+		var oThis = this	/** @type cCAControlsL */
 		var oElement
 		this.grid_name = poOptions.grid_name
 
@@ -64,7 +64,7 @@ class cCAControlsL {
 		var oHeader, oContent, sID
 
 		oElement = this.element
-		oThis = this
+		oThis = this	/** @type cCAControlsL */
 
 
 		//--rules widgets-------------------------------------------------

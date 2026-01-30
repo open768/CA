@@ -28,7 +28,7 @@ class cCAJson {
 		this.element = poElement
 		this.grid_name = poOptions.grid_name
 		this.create_button = poOptions.create_button
-		var oThis = this
+		var oThis = this	/** @type cCAJson */
 		var oElement
 		oElement = this.element
 
@@ -60,7 +60,7 @@ class cCAJson {
 		cDebug.enter()
 		oElement = this.element
 		sBodyID = cJquery.child_ID(oElement, cCAJsonTypes.body_id)
-		oThis = this
+		oThis = this	/** @type cCAJson */
 
 		oHeaderDiv = $("<DIV>", { class: "ui-widget-header" })
 			oHeaderDiv.append("Json")

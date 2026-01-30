@@ -54,7 +54,7 @@ class cCAGridInitUI{
 	//***************************************************************
 	#init(){
 		var oElement = this.element
-		var oThis = this
+		var oThis = this /** @type cCAGridInit */
 		
 		var oDiv = $("<DIV>",{class:"ui-widget-header"})
 			oDiv.append("initialise")

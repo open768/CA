@@ -126,7 +126,7 @@ class cCACryptControl {
 
 	//*******************************************************************************
 	constructor(poOptions, poElement) {
-		var oThis = this
+		var oThis = this	/** @type cCACryptControl */
 		this.element = poElement
 		var oElement = poElement
 
@@ -146,7 +146,7 @@ class cCACryptControl {
 
 	//*******************************************************************************
 	init() {
-		var oThis = this
+		var oThis = this		/** @type cCACryptControl */
 		var oElement = this.element
 		var oDiv = $("<DIV>", { class: "ui-widget-header" })
 		oDiv.append("Control")
@@ -183,7 +183,7 @@ class cCACryptControl {
 	//*******************************************************************************
 	async onEncryptClick() {
 		var oElement = this.element
-		var oThis = this
+		var oThis = this		/** @type cCACryptControl */
 
 		//check that a grid is definitely there
 		if (!this.grid) throw new CACryptException("no Grid")

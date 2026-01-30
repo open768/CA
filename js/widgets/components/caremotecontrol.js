@@ -27,11 +27,11 @@ class cCARemoteControls{
 	constructor(poOptions, poElement){
 		this.element = poElement
 		this.grid_name = poOptions.grid_name
-		var oThis = this
+		var oThis = this	/** @type cCARemoteControls */
 		var oElement = poElement
 		
 		//check dependencies
-		if (!bean ) $.error("bean is missing , chack includes")
+		if (!bean ) $.error("bean is missing , check includes")
 		
 		//set basic stuff
 		oElement.uniqueId()
@@ -43,7 +43,7 @@ class cCARemoteControls{
 		
 		//put something in the widget
 		oElement.empty()
-		this.#init()
+		this._init()
 
 	}
 	
@@ -57,10 +57,10 @@ class cCARemoteControls{
 	
 		switch (piAction){
 			case cCAGridTypes.actions.stop:
-				this.#set_controls(false)
+				this._set_controls(false)
 				break
 			case cCAGridTypes.actions.play:
-				this.#set_controls(true)
+				this._set_controls(true)
 				break
 		}
 		var oEvent = new cCAActionEvent( this.grid_name, cCAActionEvent.actions.control, parseInt(piAction))
@@ -70,15 +70,15 @@ class cCARemoteControls{
 	
 	//****************************************************************************
 	onCACanvasEvent(poEvent) {
-		var oThis = this
+		var oThis = this	/** @type cCARemoteControls */
 		cDebug.enter()
 		switch (poEvent.action) {
 			case cCACanvasEvent.actions.set_grid:
 				this.grid_set = true
-				this.#enable_buttons()
+				this._enable_buttons()
 				break
 			case cCACanvasEvent.notify.nochange:
-				setTimeout( function(){	oThis.#set_controls(false)}, 100) //stop
+				setTimeout( function(){	oThis._set_controls(false)}, 100) //stop
 		}
 		cDebug.leave()
 	}
@@ -87,23 +87,23 @@ class cCARemoteControls{
 	onCARuleEvent(poEvent){
 		if (poEvent.action === cCARuleEvent.actions.set_rule){
 			this.rule_set = true
-			this.#enable_buttons()
+			this._enable_buttons()
 		}
 	}
 	
 	//***************************************************************
 	//* Privates
 	//***************************************************************
-	#enable_buttons(){
+	_enable_buttons(){
 		if (this.grid_set && this.rule_set )
-			this.#set_controls(false)
+			this._set_controls(false)
 	}
 
 	/**
 	 * Description
 	 * @param {boolean} pbRunning
 	 */
-	#set_controls(pbRunning){
+	_set_controls(pbRunning){
 		var oElement = this.element
 		var sID = cJquery.child_ID(oElement,cCARemoteControls.buttonNames.play)
 		cJquery.enable_element(sID, !pbRunning)
@@ -115,10 +115,10 @@ class cCARemoteControls{
 		cJquery.enable_element(sID, pbRunning)
 	}
 	
-	#init(){
+	_init(){
 		var oDiv, oButton
 		var oElement = this.element
-		var oThis = this
+		var oThis = this /** @type cCARemoteControls */
 		
 		//--controls------------------------------------------------		
 		oDiv = $("<DIV>",{class:"ui-widget-header"})

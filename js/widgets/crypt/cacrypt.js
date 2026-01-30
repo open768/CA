@@ -43,7 +43,7 @@ class cCACryptStatus{
 
 			
 		//subscribe to CAEvents
-		var oThis = this
+		var oThis = this	/** @type cCACryptStatus */
 		bean.on (document, cCACryptEvent.hook, function(poEvent){ oThis.onCACryptEvent(poEvent)} )
 	}
 	
