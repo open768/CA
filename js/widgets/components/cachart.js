@@ -39,7 +39,7 @@ class cCAChart{
 	#vis_data= null
 	#chart= null
 	#element = null
-	#grid_name = null
+	grid_name = null
 	
 	constructor(poOptions, poElement){
 		
@@ -48,7 +48,7 @@ class cCAChart{
 
 		//store the element
 		this.#element = poElement
-		this.#grid_name = poOptions.grid_name
+		this.grid_name = poOptions.grid_name
 		
 		var oElement = this.#element
 		var oThis = this /** @type cCAChart */
@@ -68,9 +68,9 @@ class cCAChart{
 		this._clear_chart()
 
 		//subscribe to CAEvents
-		cCAEventHelper.subscribe_to_action_events( this.#grid_name, poEvent => { oThis.onCAActionEvent(poEvent) })
-		cCAEventHelper.subscribe_to_rule_events( this.#grid_name, poEvent => { oThis.onCARuleEvent(poEvent) })
-		cCAEventHelper.subscribe_to_canvas_events(this.#grid_name, poEvent => { oThis.onCACanvasEvent(poEvent) })
+		cCAEventHelper.subscribe_to_action_events( this.grid_name, poEvent => { oThis.onCAActionEvent(poEvent) })
+		cCAEventHelper.subscribe_to_rule_events( this.grid_name, poEvent => { oThis.onCARuleEvent(poEvent) })
+		cCAEventHelper.subscribe_to_canvas_events(this.grid_name, poEvent => { oThis.onCACanvasEvent(poEvent) })
 	}
 	
 	//*****************************************************************
