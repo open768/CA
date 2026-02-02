@@ -52,13 +52,13 @@ class cCAControlsR{
 		
 		oElement = this.element
 		
-		//--input-------------------------------------------------
+		//--status-------------------------------------------------
 		oDiv = $("<DIV>")
 			oDiv.castatus({grid_name:this.grid_name})
 			oElement.append(oDiv)
 		oElement.append("<P>")
 		
-		//-------------------------------------------------------------
+		//---chart----------------------------------------------------------
 		oDiv = $("<DIV>")
 			oDiv.cachart({grid_name:this.grid_name})
 			oElement.append(oDiv)
