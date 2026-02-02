@@ -123,17 +123,15 @@ class cCARemoteControls {
 
 		function _add_button(psID, psiIcon, psTitle, piAction) {
 			var sID = cJquery.child_ID(oElement, psID)
-			var oButton = $("<button>", { width: "30px", height: "30px", id: sID })
-			oButton.button({ icon: psiIcon })
+			var oButton = $("<button>", { width: "30px", height: "30px", id: sID, title: psTitle })
+			oButton.button({ icon: psiIcon, showLabel: false })
 			cJquery.enable_element(oButton, false)
 			oButton.click(() => oThis.onClickControl(piAction))
 			oDiv.append(oButton)
 		}
 
 		//--widget header------------------------------------------------		
-		oDiv = $("<DIV>", { class: "ui-widget-header" })
-		oDiv.append("controls")
-		oElement.append(oDiv)
+		cJquery.add_widget_header(oElement, "controls")
 
 		//---widget body
 		oDiv = $("<DIV>", { class: "ui-widget-content" })

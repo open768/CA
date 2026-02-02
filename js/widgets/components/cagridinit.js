@@ -12,7 +12,7 @@ For licenses that allow for commercial use please contact cluck@chickenkatsu.co.
 //###################################################################
 //#
 //###################################################################
-class cCAGridInitUI {
+class cCAGridStateInit {
 	element = null
 	grid_name = null
 
@@ -91,7 +91,7 @@ $.widget(
 			var oOptions = this.options
 			if (!oOptions.grid_name) $.error("grid name not provided")
 
-			new cCAGridInitUI(oOptions, this.element) //call class constructor
+			new cCAGridStateInit(oOptions, this.element) //call class constructor
 		}
 	}
 )

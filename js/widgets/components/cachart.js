@@ -60,10 +60,8 @@ class cCAChart{
 		oElement.width(poOptions.width)
 		
 		//put something in the widget
-		var oDiv = $("<DIV>",{class:"ui-widget-header"}).append("Chart")
-			oDiv.width(poOptions.width)
-			oElement.append(oDiv)
-		oDiv = $("<DIV>",{class:"ui-widget-content",id:cJquery.child_ID(oElement, "chart")})
+		cJquery.add_widget_header(oElement, "Chart")
+		var oDiv = $("<DIV>",{class:"ui-widget-content",id:cJquery.child_ID(oElement, "chart")})
 			oDiv.width(poOptions.width)
 			oDiv.height(poOptions.height)
 			oElement.append(oDiv)
