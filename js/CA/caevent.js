@@ -99,25 +99,25 @@ class cCACanvasEvent extends cCABaseEvent{
 //###############################################################################
 /* eslint-disable-next-line no-unused-vars */
 class cCAEventHelper {
-	static #dummy_action = "dummy"
+	static dummy_action = "dummy"
 
 	static subscribe_to_action_events(psGridName, pfnCallback){
-		var oEvent = new cCAActionEvent(psGridName, this.#dummy_action) //create an event to get the channel ID
+		var oEvent = new cCAActionEvent(psGridName, this.dummy_action) //create an event to get the channel ID
 		this._do_subscribe(oEvent.channel_id(), pfnCallback)
 	}
 
 	static subscribe_to_canvas_events(psGridName, pfnCallback){
-		var oEvent = new cCACanvasEvent(psGridName,this.#dummy_action)
+		var oEvent = new cCACanvasEvent(psGridName,this.dummy_action)
 		this._do_subscribe(oEvent.channel_id(), pfnCallback)
 	}
 	
 	static subscribe_to_grid_events(psGridName, pfnCallback){
-		var oEvent = new cCAGridEvent(psGridName,this.#dummy_action)
+		var oEvent = new cCAGridEvent(psGridName,this.dummy_action)
 		this._do_subscribe(oEvent.channel_id(), pfnCallback)
 	}
 
 	static subscribe_to_rule_events(psGridName, pfnCallback){
-		var oEvent = new cCARuleEvent(psGridName,this.#dummy_action)
+		var oEvent = new cCARuleEvent(psGridName,this.dummy_action)
 		this._do_subscribe(oEvent.channel_id(), pfnCallback)
 	}
 

@@ -35,10 +35,10 @@ class cCAChartTypes {
 //# Options
 //#################################################################
 class cCAChart{
-	#runs =0
-	#vis_data= null
-	#chart= null
-	#element = null
+	runs =0
+	vis_data= null
+	chart= null
+	element = null
 	grid_name = null
 	
 	constructor(poOptions, poElement){
@@ -47,10 +47,10 @@ class cCAChart{
 		if (!poOptions.grid_name) $.error("grid name not provided")
 
 		//store the element
-		this.#element = poElement
+		this.element = poElement
 		this.grid_name = poOptions.grid_name
 		
-		var oElement = this.#element
+		var oElement = this.element
 		var oThis = this /** @type cCAChart */
 		
 		//basic stuff
@@ -79,16 +79,16 @@ class cCAChart{
 	
 	//*****************************************************************
 	_create_data(){
-		var oElement = this.#element
+		var oElement = this.element
 		
 		//check if the data has been previously created
-		if (this.#vis_data) return
+		if (this.vis_data) return
 		if (!google.visualization)  $.error("google.visualization class is missing! check includes")	
 		this._clear_chart()
 
 		//create the google data
 		var oData = new google.visualization.DataTable()
-		this.#vis_data = oData
+		this.vis_data = oData
 		oData.addColumn('number', 'Run')
 		oData.addColumn('number', 'changed')		
 		oData.addColumn('number', 'active')		
@@ -96,7 +96,7 @@ class cCAChart{
 
 		//create the chart
 		var oChartElement = $("#"+cJquery.child_ID(oElement, "chart"))
-		this.#chart = new google.visualization.LineChart( oChartElement[0] )
+		this.chart = new google.visualization.LineChart( oChartElement[0] )
 	}
 	
 	//*****************************************************************
@@ -120,10 +120,10 @@ class cCAChart{
 				}
 				
 				this._create_data()
-				this.#vis_data.addRow([this.#runs, oData.changed, oData.active, "Run: " + this.#runs])
-				this.#chart.draw(this.#vis_data)
+				this.vis_data.addRow([this.runs, oData.changed, oData.active, "Run: " + this.runs])
+				this.chart.draw(this.vis_data)
 				
-				this.#runs ++
+				this.runs ++
 				break
 		}
 		cDebug.leave()
@@ -152,11 +152,11 @@ class cCAChart{
 	}
 	
 	_clear_chart(){
-		var oElement = this.#element
+		var oElement = this.element
 		var oChartElement = $("#"+cJquery.child_ID(oElement, "chart"))
-		this.#vis_data = null
-		this.#chart = null
-		this.#runs = 0
+		this.vis_data = null
+		this.chart = null
+		this.runs = 0
 		oChartElement.empty()
 		oChartElement.append("Waiting for Data ...")
 	}

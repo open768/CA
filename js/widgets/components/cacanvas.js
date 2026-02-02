@@ -26,20 +26,20 @@ class cCACanvas {
 
 	grid = null
 	grid_name = null
-	#canvas = null
-	#cells_to_draw = 0
-	#cells_drawn = 0
-	#mouse = {
+	canvas = null
+	cells_to_draw = 0
+	cells_drawn = 0
+	mouse = {
 		X: 0,
 		Y: 0,
 		has_events: false,
 		is_down: false
 	}
-	#last_mouse_pos = {
+		last_mouse_pos = {
 		row: -1,
 		col: -1
 	}
-	#has_mouseup = false
+	has_mouseup = false
 
 	//#################################################################
 	//# Constructor
@@ -122,11 +122,11 @@ class cCACanvas {
 					this._set_grid(oGrid)
 				//put something in the widget
 					this._initCanvas()
-				if (!this.#has_mouseup) { //only set #mouse event handler once
+				if (!this.has_mouseup) { //only set #mouse event handler once
 						oElement.mouseup(() => { oThis._onMouseUp() })
 						oElement.mousemove((poEvent) => { oThis._onMouseMove(poEvent) })
 						oElement.mousedown((poEvent) => { oThis._onMouseDown(poEvent) })
-					this.#has_mouseup = true
+					this.has_mouseup = true
 				}
 				break
 		}
@@ -136,11 +136,11 @@ class cCACanvas {
 	//****************************************************************
 	_count_drawn_cells(){
 		//update the count of cells drawn
-		this.#cells_drawn++
+		this.cells_drawn++
 		var oThis = this	/** @type cCACanvas */
 
 		// when all cells have been drawn, let the grid know that the cells have been consumed
-		if (this.#cells_drawn >= this.#cells_to_draw) {
+		if (this.cells_drawn >= this.cells_to_draw) {
 			//let the grid know that the canvas completed #drawing
 			cDebug.write("finished drawing")
 
@@ -159,7 +159,7 @@ class cCACanvas {
 		if (!this.grid) return
 		if (!this.interactive) return
 
-		this.#mouse.is_down = true
+		this.mouse.is_down = true
 		this._set_one_cell(poEvent)
 	}
 
@@ -167,14 +167,14 @@ class cCACanvas {
 	_onMouseMove(poEvent) {
 		if (!this.interactive) return
 		if (!this.grid) return
-		if (!this.#mouse.is_down) return
+		if (!this.mouse.is_down) return
 		
 		this._set_one_cell(poEvent)
 	}
 
 	//****************************************************************
 	_onMouseUp() {
-		this.#mouse.is_down = false
+		this.mouse.is_down = false
 	}
 
 	//#################################################################
@@ -205,12 +205,12 @@ class cCACanvas {
 		if (ic > this.cols) ir = this.cols
 
 		var oRC = null
-		if (ir != this.#last_mouse_pos.row || ic != this.#last_mouse_pos.col) {
-			this.#last_mouse_pos.row = ir
-			this.#last_mouse_pos.col = ic
-			oRC = this.#last_mouse_pos
+		if (ir != this.last_mouse_pos.row || ic != this.last_mouse_pos.col) {
+			this.last_mouse_pos.row = ir
+			this.last_mouse_pos.col = ic
+			oRC = this.	last_mouse_pos
 		} else if (!pbChangedOnly)
-			oRC = this.#last_mouse_pos
+			oRC = this.last_mouse_pos
 		return oRC
 	}
 
@@ -236,9 +236,9 @@ class cCACanvas {
 	_on_grid_clear() {
 		cDebug.enter()
 
-		if (this.#canvas) {
+		if (this.canvas) {
 			cDebug.write("Clearing canvas")
-			this.#canvas.clearCanvas()
+			this.canvas.clearCanvas()
 		}
 
 		cDebug.leave()
@@ -265,7 +265,7 @@ class cCACanvas {
 		oCanvas.attr("width", this.cols * this.cell_size)
 		oCanvas.attr("height", this.rows * this.cell_size)
 		oElement.append(oCanvas)
-		this.#canvas = oCanvas
+		this.canvas = oCanvas
 
 		//initialise the grid
 		var oEvent = new cCAActionEvent(this.grid_name, cCAActionEvent.actions.grid_init, cCAGridTypes.init.block.id)
@@ -281,7 +281,7 @@ class cCACanvas {
 	_drawGrid(paChangedCells) {
 		cDebug.enter()
 
-		this.#cells_drawn = 0
+		this.cells_drawn = 0
 
 		var oCell
 		if (!paChangedCells) $.error("null changed cells")
@@ -302,8 +302,8 @@ class cCACanvas {
 		cDebug.enter()
 		var oGrid = this.grid
 
-		this.#cells_to_draw = oGrid.rows * oGrid.cols
-		this.#cells_drawn = 0
+		this.cells_to_draw = oGrid.rows * oGrid.cols
+		this.cells_drawn = 0
 
 		for (var ir = 1; ir <= oGrid.rows; ir++) {
 			for (var ic = 1; ic <= oGrid.cols; ic++) {
@@ -316,7 +316,7 @@ class cCACanvas {
 
 	//****************************************************************
 	_draw_cell(poCell) {
-		var oCanvas = this.#canvas
+		var oCanvas = this.canvas
 
 
 		//-----------------coords of cell

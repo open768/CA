@@ -22,8 +22,8 @@ class cCAStatus{
 	element = null
 	grid_name = null
 	HEAP_INTERVAL = 100
-	#heap_timer_running = false
-	#stop_heap_timer = false
+	heap_timer_running = false
+	stop_heap_timer = false
 	
 	//***************************************************************
 	constructor(poOptions, poElement){
@@ -66,13 +66,13 @@ class cCAStatus{
 		cDebug.write("heap: " + sHeapValue)
 
 		//next heap timer
-		if ( this.#stop_heap_timer ){
-			this.#heap_timer_running = false
-			this.#stop_heap_timer = false
+		if ( this.stop_heap_timer ){
+			this.heap_timer_running = false
+			this.stop_heap_timer = false
 		}else{
 			//next timer
 			setTimeout( () => oThis.onHeapTimer(), oThis.HEAP_INTERVAL)
-			this.#heap_timer_running = true
+			this.heap_timer_running = true
 		}
 	}
 
@@ -84,7 +84,7 @@ class cCAStatus{
 			var iAction = poEvent.data
 			switch(iAction){
 				case cCAGridTypes.actions.play:   //start watching the heap when CA is played
-					if (this.#heap_timer_running)
+					if (this.heap_timer_running)
 						cDebug.warn("heap timer allready running")
 					else{
 						var oThis = this	/** @type cCAStatus */
@@ -92,7 +92,7 @@ class cCAStatus{
 					}
 					break
 				case cCAGridTypes.actions.stop:
-					this.#stop_heap_timer = true	//stop watching heap when stop pressed, or CA stops
+					this.stop_heap_timer = true	//stop watching heap when stop pressed, or CA stops
 			}
 		}
 				
