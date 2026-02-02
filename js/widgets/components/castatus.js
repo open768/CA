@@ -71,7 +71,7 @@ class cCAStatus{
 			this.#stop_heap_timer = false
 		}else{
 			//next timer
-			setTimeout( function(){ oThis.onHeapTimer()}, oThis.HEAP_INTERVAL)
+			setTimeout( () => oThis.onHeapTimer(), oThis.HEAP_INTERVAL)
 			this.#heap_timer_running = true
 		}
 	}
@@ -88,7 +88,7 @@ class cCAStatus{
 						cDebug.warn("heap timer allready running")
 					else{
 						var oThis = this	/** @type cCAStatus */
-						setTimeout( function(){ oThis.onHeapTimer()}, oThis.HEAP_INTERVAL)
+						setTimeout( () => oThis.onHeapTimer(), oThis.HEAP_INTERVAL)
 					}
 					break
 				case cCAGridTypes.actions.stop:

@@ -18,10 +18,10 @@ class cCAGridRunData {
 /* eslint-disable-next-line no-unused-vars */
 class cCAGridCell {
 	row = null
-	col=null
-	value=null
-	
-	constructor (piRow, piCol, piValue){
+	col = null
+	value = null
+
+	constructor(piRow, piCol, piValue) {
 		this.row = piRow
 		this.col = piCol
 		this.value = piValue
@@ -39,9 +39,9 @@ class cCAGrid {
 	#cell_data = null
 	#name = null
 	#running = false
-	rows=0
-	cols=0
-	#rule=null
+	rows = 0
+	cols = 0
+	#rule = null
 	#changed_cells = null
 	#runData = null
 	#history = []
@@ -69,43 +69,43 @@ class cCAGrid {
 		this.#runData = new cCAGridRunData()
 
 		var oThis = this /** @type cCAGrid */
-		cCAEventHelper.subscribe_to_grid_events(this.#name, (poEvent)=>{oThis.onCAGridEvent(poEvent)})
-		cCAEventHelper.subscribe_to_action_events(this.#name, (poEvent)=>{oThis.onCAActionEvent(poEvent)})
-		cCAEventHelper.subscribe_to_rule_events(this.#name, (poEvent)=>{oThis.onCARuleEvent(poEvent)})
+		cCAEventHelper.subscribe_to_grid_events(this.#name, (poEvent) => { oThis.onCAGridEvent(poEvent) })
+		cCAEventHelper.subscribe_to_action_events(this.#name, (poEvent) => { oThis.onCAActionEvent(poEvent) })
+		cCAEventHelper.subscribe_to_rule_events(this.#name, (poEvent) => { oThis.onCARuleEvent(poEvent) })
 	}
 
 	//#######################################################################
 	//# event handlers
 	//#######################################################################
-	onCARuleEvent(poEvent){
-		switch(poEvent.action){
+	onCARuleEvent(poEvent) {
+		switch (poEvent.action) {
 			case cCARuleEvent.actions.set_rule:
 				this.set_rule(poEvent.data)
 		}
 	}
 
-	onCAActionEvent(poEvent){
-		switch(poEvent.action){
+	onCAActionEvent(poEvent) {
+		switch (poEvent.action) {
 			case cCAActionEvent.actions.grid_init:
-				this.#init(poEvent.data)
+				this._init(poEvent.data)
 				break
 			case cCAActionEvent.actions.control:
-				this.#action(poEvent.data)
+				this._action(poEvent.data)
 				break
 		}
 	}
 
-		/**
-	 * @param {cCAGridEvent} poEvent
-	 */
-	onCAGridEvent(poEvent){
+	/**
+ * @param {cCAGridEvent} poEvent
+ */
+	onCAGridEvent(poEvent) {
 		var oThis = this /** @type cCAGrid */
-		switch(poEvent.action){
+		switch (poEvent.action) {
 			case cCAGridEvent.notify.changedCellsConsumed:
-				this.#onNotifyCellsConsumed()
+				this._onNotifyCellsConsumed()
 				break
 			case cCAGridEvent.actions.set_cell:
-				this.#onSetOneCellOnly(poEvent.data)
+				this._onSetOneCellOnly(poEvent.data)
 				break
 		}
 	}
@@ -113,7 +113,7 @@ class cCAGrid {
 	//#######################################################################
 	//# methods
 	//#######################################################################
-	is_running(){
+	is_running() {
 		return this.#running
 	}
 
@@ -124,16 +124,16 @@ class cCAGrid {
 	set_rule(poRule, pbLinkCells = true) {
 		cDebug.enter()
 		//clear rules from all cells
-		this.#clear_cell_rules()
+		this._clear_cell_rules()
 
 		//set the rule for the grid
 		this.#rule = poRule
-		if (pbLinkCells) this.#link_cells()
+		if (pbLinkCells) this._link_cells()
 		cDebug.leave()
 	}
-	
+
 	//****************************************************************
-	get_rule(){
+	get_rule() {
 		return this.#rule
 	}
 
@@ -156,7 +156,7 @@ class cCAGrid {
 		this.#history = []
 
 		//link if there is a rule
-		if (this.#rule) this.#link_cells()
+		if (this.#rule) this._link_cells()
 
 		var oEvent = new cCAGridEvent(this.#name, cCAGridEvent.notify.clear)
 		oEvent.trigger()
@@ -208,14 +208,14 @@ class cCAGrid {
 
 	//****************************************************************
 	//****************************************************************
-	get_changed_cells(){
+	get_changed_cells() {
 		return this.#changed_cells
 	}
 
 	//#######################################################################
 	//Privates
 	//#######################################################################
-	#action(piAction) {
+	_action(piAction) {
 		cDebug.enter()
 		if (this.#rule == null) throw new CAException("no rule set")
 
@@ -224,7 +224,7 @@ class cCAGrid {
 			case cCAGridTypes.actions.play:
 				if (this.#running) throw new CAException("CA is allready running")
 				this.#running = true
-				this.#step()
+				this._step()
 				this.#runData.runs = 1
 				break
 			case cCAGridTypes.actions.stop:
@@ -233,7 +233,7 @@ class cCAGrid {
 				this.#running = false
 				break
 			case cCAGridTypes.actions.step:
-				this.#step()
+				this._step()
 				break
 			default:
 				throw new CAException("action not recognised: " + piAction)
@@ -243,7 +243,7 @@ class cCAGrid {
 	}
 
 	//****************************************************************
-	#step(){
+	_step() {
 		//cant step until changed_cells are consumed
 		if (this.#changed_cells)
 			throw new CAException("changed cells must be consumed before stepping")
@@ -273,7 +273,7 @@ class cCAGrid {
 			this.#running = false
 			cDebug.warn("no change detected in grid")
 			this.#changed_cells = null
-			oEvent = new cCAGridEvent(this.#name, cCAGridEvent.notify.nochange)			
+			oEvent = new cCAGridEvent(this.#name, cCAGridEvent.notify.nochange)
 			oEvent.trigger()
 			return
 		}
@@ -288,13 +288,13 @@ class cCAGrid {
 				this.#runData.active++
 		}
 
-		this.#add_to_history()
+		this._add_to_history()
 
-		this.#informGridDone()
+		this._informGridDone()
 	}
 
 	//****************************************************************
-	#init(piInitType) {
+	_init(piInitType) {
 		cDebug.enter()
 		if (this.#running) throw new CAException("cant init when running")
 
@@ -305,12 +305,12 @@ class cCAGrid {
 		oInitialiser.init(this, piInitType)
 		cDebug.write("done init grid: " + piInitType)
 
-		this.#informGridDone()
+		this._informGridDone()
 		cDebug.leave()
 	}
 
 	//****************************************************************
-	#clear_cell_rules() {
+	_clear_cell_rules() {
 		cDebug.enter()
 		var oCell
 		for (var iNr = 1; iNr <= this.rows; iNr++)
@@ -324,7 +324,7 @@ class cCAGrid {
 	//#######################################################################
 	//# events
 	//#######################################################################
-	#informGridDone(){
+	_informGridDone() {
 		//inform consumers that grid has executed
 		this.#runData.changed_cells = this.#changed_cells
 		this.#changed_cells = null
@@ -336,23 +336,23 @@ class cCAGrid {
 	 * Sets a single cell
 	 * @param {cCAGridCell} poCell
 	 */
-	#onSetOneCellOnly(poCell){
+	_onSetOneCellOnly(poCell) {
 		this.#changed_cells = []
 		this.setCellValue(poCell.row, poCell.col, poCell.value)
-		this.#informGridDone()
+		this._informGridDone()
 	}
 
 	/**
 	 * Description
 	 */
-	#onNotifyCellsConsumed() {
+	_onNotifyCellsConsumed() {
 		cDebug.enter()
 		this.#changed_cells = null		//always clean out the changed cells
-		
+
 		if (this.#running) {
 			cDebug.write("running again")
 			this.#runData.runs++
-			var oEvent = new cCAActionEvent(this.#name,  cCAActionEvent.actions.control, cCAGridTypes.actions.step);
+			var oEvent = new cCAActionEvent(this.#name, cCAActionEvent.actions.control, cCAGridTypes.actions.step);
 			oEvent.trigger()
 		}
 		cDebug.leave()
@@ -361,15 +361,15 @@ class cCAGrid {
 	//#######################################################################
 	//# privates
 	//#######################################################################
-	#add_to_history(){
+	_add_to_history() {
 		//trim the history
 		var aHistory = this.#history
 		while (aHistory.length > cCAGrid.HISTORY_LEN)
 			aHistory.shift()
 
 
-		var sHash = this.#changed_cells_hash()
-		if (aHistory.includes(sHash)){
+		var sHash = this._changed_cells_hash()
+		if (aHistory.includes(sHash)) {
 			this.#running = false
 			cDebug.warn("repeat pattern seen")
 			var oEvent = new cCAGridEvent(this.#name, cCAGridEvent.notify.repeatPattern)
@@ -379,27 +379,27 @@ class cCAGrid {
 		aHistory.push(sHash)
 	}
 
-	#changed_cells_hash(){
+	_changed_cells_hash() {
 		//create a hash code
 		var sBinary = ""
 		var iCountOnes = 0
 		var iCountZeros = 0
-		
+
 		this.#changed_cells.forEach(poCell => {
 			sBinary += poCell.value
-			if (poCell.value !== 0) 
-				iCountOnes ++;
+			if (poCell.value !== 0)
+				iCountOnes++;
 			else
-				iCountZeros ++;
+				iCountZeros++;
 		})
 
-		var sHash = md5(sBinary) + "_"+iCountOnes+","+ iCountZeros
+		var sHash = md5(sBinary) + "_" + iCountOnes + "," + iCountZeros
 
 		return sHash
 	}
 
 	//****************************************************************
-	#link_cells() {
+	_link_cells() {
 		cDebug.enter()
 		if (!this.#rule) throw new Error("no rule set")
 
@@ -409,15 +409,15 @@ class cCAGrid {
 		for (var iNr = 1; iNr <= this.rows; iNr++)
 			for (var iNc = 1; iNc <= this.cols; iNc++) {
 				var oCell = this.getCell(iNr, iNc, true) //create cells
-				this.#link_cell(oCell, cCACellTypes.directions.north, iNr - 1, iNc)
-				this.#link_cell(oCell, cCACellTypes.directions.east, iNr, iNc + 1)
-				this.#link_cell(oCell, cCACellTypes.directions.south, iNr + 1, iNc)
-				this.#link_cell(oCell, cCACellTypes.directions.west, iNr, iNc - 1)
+				this._link_cell(oCell, cCACellTypes.directions.north, iNr - 1, iNc)
+				this._link_cell(oCell, cCACellTypes.directions.east, iNr, iNc + 1)
+				this._link_cell(oCell, cCACellTypes.directions.south, iNr + 1, iNc)
+				this._link_cell(oCell, cCACellTypes.directions.west, iNr, iNc - 1)
 				if (iType == cCACellTypes.neighbours.eightway) {
-					this.#link_cell(oCell, cCACellTypes.directions.northeast, iNr - 1, iNc + 1)
-					this.#link_cell(oCell, cCACellTypes.directions.southeast, iNr + 1, iNc + 1)
-					this.#link_cell(oCell, cCACellTypes.directions.southwest, iNr + 1, iNc - 1)
-					this.#link_cell(oCell, cCACellTypes.directions.northwest, iNr - 1, iNc - 1)
+					this._link_cell(oCell, cCACellTypes.directions.northeast, iNr - 1, iNc + 1)
+					this._link_cell(oCell, cCACellTypes.directions.southeast, iNr + 1, iNc + 1)
+					this._link_cell(oCell, cCACellTypes.directions.southwest, iNr + 1, iNc - 1)
+					this._link_cell(oCell, cCACellTypes.directions.northwest, iNr - 1, iNc - 1)
 				}
 			}
 		cDebug.write("completed cell linking")
@@ -425,7 +425,7 @@ class cCAGrid {
 	}
 
 	//****************************************************************
-	#link_cell(poCell, piDirection, piNRow, piNCol) {
+	_link_cell(poCell, piDirection, piNRow, piNCol) {
 		var iNr, iNc
 		//wrap around neighbour row and col
 		iNr = piNRow

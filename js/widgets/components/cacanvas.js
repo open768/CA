@@ -123,9 +123,9 @@ class cCACanvas {
 				//put something in the widget
 				this.#initCanvas()
 				if (!this.#has_mouseup) { //only set #mouse event handler once
-					oElement.mouseup(function () { oThis.#onMouseUp() })
-					oElement.mousemove(function (poEvent) { oThis.#onMouseMove(poEvent) })
-					oElement.mousedown(function (poEvent) { oThis.#onMouseDown(poEvent) })
+					oElement.mouseup(() => { oThis.#onMouseUp() })
+					oElement.mousemove((poEvent) => { oThis.#onMouseMove(poEvent) })
+					oElement.mousedown((poEvent) => { oThis.#onMouseDown(poEvent) })
 					this.#has_mouseup = true
 				}
 				break
@@ -145,7 +145,7 @@ class cCACanvas {
 			cDebug.write("finished drawing")
 
 			setTimeout(				//canvas needs to yield to allow image to be drawn
-				function () { 
+				() => { 
 					var oEvent = new cCAGridEvent(oThis.#grid_name, cCAGridEvent.notify.changedCellsConsumed);
 					oEvent.trigger()
 				}, 	

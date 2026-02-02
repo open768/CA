@@ -86,7 +86,7 @@ class cCAControlsL {
 			oContent.append(oSelect)
 
 			oSelect.selectmenu({
-				select(poEvent) { oThis._onPresetsClick(poEvent) }
+				select: (poEvent) => { oThis._onPresetsClick(poEvent) }
 			})
 
 			//- - WORD REPEATER- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -98,14 +98,14 @@ class cCAControlsL {
 			oContent.append(oInput)
 
 			var oButton = $("<button>", { title: "creates a rule from the word in the box" }).button({ icon: "ui-icon-circle-arrow-e" })
-				oButton.click(function () { oThis._onSetRepeaterClick() })
+				oButton.click(() => { oThis._onSetRepeaterClick() })
 			oContent.append(oButton)
 
 			// RULE ENTRY - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 			oContent.append("<HR>")
 			sID = cJquery.child_ID(oElement, cCAControlLTypes.rule_text_ID)
 			var oBox = $("<TEXTAREA>", { ID: sID, class: "rule", title: "enter the rule here" })
-			oBox.keyup(function () { oThis._onTextareaChange() })
+			oBox.keyup(() => { oThis._onTextareaChange() })
 			oContent.append(oBox)
 
 			//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -119,7 +119,7 @@ class cCAControlsL {
 			oSelect.selectmenu()
 
 			oButton = $("<button>", { title: "use the rule entered in the box above" }).button({ icon: "ui-icon-circle-arrow-e" })
-				oButton.click(function () { oThis._onSetRuleClick() })
+				oButton.click(() => { oThis._onSetRuleClick() })
 			oContent.append(oButton)
 
 			//- BOREDOM- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -133,7 +133,7 @@ class cCAControlsL {
 				}
 			oContent.append(oSelect)
 			oSelect.selectmenu({
-				select(poEvent) { oThis._onBoredomClick(poEvent) }
+				select: (poEvent) => { oThis._onBoredomClick(poEvent) }
 			})
 		oElement.append(oContent)
 	}

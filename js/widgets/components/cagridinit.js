@@ -70,7 +70,7 @@ class cCAGridInitUI{
 			}
 			oDiv.append(oSelect)
 			oSelect.selectmenu({
-					select:function(poEvent){oThis.onInitClick(poEvent)}
+					select:(poEvent)=>{oThis.onInitClick(poEvent)}
 			})
 			oElement.append(oDiv)
 	}

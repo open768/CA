@@ -78,7 +78,7 @@ class cCARemoteControls{
 				this._enable_buttons()
 				break
 			case cCACanvasEvent.notify.nochange:
-				setTimeout( function(){	oThis._set_controls(false)}, 100) //stop
+				setTimeout(() => {	oThis._set_controls(false)}, 100) //stop
 		}
 		cDebug.leave()
 	}
@@ -120,33 +120,36 @@ class cCARemoteControls{
 		var oElement = this.element
 		var oThis = this /** @type cCARemoteControls */
 		
-		//--controls------------------------------------------------		
+		//--widget header------------------------------------------------		
 		oDiv = $("<DIV>",{class:"ui-widget-header"})
 			oDiv.append("controls")
 		oElement.append(oDiv)
 		
-		//disabled until grid and rule are set
+		//---widget body
 		oDiv = $("<DIV>",{class:"ui-widget-content"})
 			var sID
+			//--- stop button----------------------------------------
 			sID = cJquery.child_ID(oElement, cCARemoteControls.buttonNames.stop)
 			oButton = $("<button>",{width:"30px",height:"30px",id:sID})
 				oButton.button({icon:"ui-icon-stop"})
 				cJquery.enable_element(oButton,false)
-				oButton.click(	function(){ oThis.onClickControl(cCAGridTypes.actions.stop)}	)
+				oButton.click(() => { oThis.onClickControl(cCAGridTypes.actions.stop)} )
 				oDiv.append(oButton)
 
+			//--- play button----------------------------------------
 			sID = cJquery.child_ID(oElement, cCARemoteControls.buttonNames.play)
 			oButton = $("<button>",{width:"30px",height:"30px",id:sID})
 				oButton.button({icon:"ui-icon-circle-triangle-e"})
 				cJquery.enable_element(oButton,false)
-				oButton.click(	function(){ oThis.onClickControl(cCAGridTypes.actions.play)}	)
+				oButton.click(() => { oThis.onClickControl(cCAGridTypes.actions.play)} )
 				oDiv.append(oButton)
 
+			//--- step button----------------------------------------
 			sID = cJquery.child_ID(oElement, cCARemoteControls.buttonNames.step)
 			oButton = $("<button>",{width:"30px",height:"30px",title:"step",id:sID})
 				oButton.button({icon:"ui-icon-seek-end"})
 				cJquery.enable_element(oButton,false)
-				oButton.click(	function(){ oThis.onClickControl(cCAGridTypes.actions.step)}	)
+				oButton.click(() => { oThis.onClickControl(cCAGridTypes.actions.step)} )
 				oDiv.append(oButton)
 		oElement.append(oDiv)
 	}

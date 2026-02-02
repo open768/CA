@@ -18,14 +18,14 @@ class cCAChartTypes {
 		
 		try{
 			google.charts.load('current', {'packages':['corechart']}).then( 
-				function(poEvent){oThis.OnGoogleChartsLoaded(poEvent)}
+				(poEvent)=>{oThis.OnGoogleChartsLoaded(poEvent)}
 			)
 		}catch (e){
 			cDebug.write("unable to load Google charts: " + e.msg)
 		}
 	}
 	
-	static OnGoogleChartsLoaded(){
+	static OnGoogleChartsLoaded(poEvent){
 		this.is_charts_loaded = true
 	}
 }
