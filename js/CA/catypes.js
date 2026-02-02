@@ -61,7 +61,7 @@ class cCACellTypes {
 class cCARuleTypes {
 	static max_inputs = Math.pow(2, 9) - 1
 	static base64_length = Math.ceil((Math.pow(2, 9) - 1) / 6)
-	static no_boredom = null
+	static no_boredom = -1
 	static rule_types = {
 		life: 1,
 		binary: 2,

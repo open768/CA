@@ -34,51 +34,32 @@ class cCAEvaluatedCell {
  */
 /* eslint-disable-next-line no-unused-vars */
 class cCACell {
-	/** @type cCARule */ rule = null
-	/** @type number */ state = null
-	/** @type number */ value = 0
-	/** @type Map */ data = null
+	/** @type cCARule */ rule = null					//the rule that applies to this cell
+	/** @type number */ state = null					//for multi state rules (not used)
+	/** @type number */ value = 0						//the value of the cell
+	/** @type Map */ data = null						//the cell doesnt know what the data means, only that there is some data in there. this leaves the implementation of the cell flexible.
 	/** @type Map */ neighbours = null
-	/** @type cCAEvaluatedCell */ evaluated = null
-	/** @type number */ previous_bitmap = 0
-	/** @type number */ previous_bitmap_count = 0
-	/** @type Map */ boredom_flips = null
+	/** @type cCAEvaluatedCell */ evaluated = null		//stores the evaluated state of the cell during a CA step
+	/** @type number */ previous_bitmap = 0				//for boredom
+	/** @type number */ previous_bitmap_count = 0		//for boredom
 
-	/**
-	 * Creates an instance of cCACell.
-	 * 
-	 *
-	 * @constructor
-	 */
 	constructor() {
-		//not passing in row and col as cells dont have to be limited to 2d and only know about their neighbours 
 		this.rule = null
-		this.data = new Map()	//the cell doesnt know what the data means, only that there is some data in there. this leaves the implementation of the cell flexible.
-		this.neighbours = new Map() //hash map of neighbours
+		this.data = new Map()
+		this.neighbours = new Map() //links to neighbouring cells
 		this.clear()
 	}
 
 	//****************************************************************
-	/**
-	 * Description placeholder
-	 * 
-	 */
 	clear() {
 		this.state = 1
 		this.value = 0
 		this.previous_bitmap = 0
 		this.previous_bitmap_count = 0
 		this.evaluated = new cCAEvaluatedCell()
-		this.boredom_flips = new Map
 	}
 
 	//****************************************************************
-	/**
-	 * Description placeholder
-	 * 
-	 *
-	 * @returns {*}
-	 */
 	apply_rule() {
 		//just calls the rules apply method. the benefit of doing it this way is 
 		//that each cell could have a different rule.
@@ -88,10 +69,6 @@ class cCACell {
 	}
 
 	//****************************************************************
-	/**
-	 * Description placeholder
-	 * 
-	 */
 	promote() {
 		this.state = this.evaluated.state
 		this.value = this.evaluated.value
@@ -100,9 +77,8 @@ class cCACell {
 
 	//*****************************************************************
 	/**
-	 * Description placeholder
+	 * returns 8 way neighbourhood bitmap, uses bitmap operations to reduce number of operations
 	 * 
-	 *
 	 * @returns {*}
 	 */
 	get8WayPattern() {
@@ -111,7 +87,7 @@ class cCACell {
 
 		oNorth = oNeigh.get(cCACellTypes.directions.north)
 		if (oNorth.evaluated.done) {
-			//optimisated by looking at the North cell, reduces the number of ops from 8 to 4
+			//optimisated by looking at the North cell which has always allready been evaluated, reduces the number of ops from 8 to 4
 			iValue = oNorth.evaluated.pattern
 			iValue <<= 3		//remove cells not in neighbourhood of this cell (makes number 12 bit, and bits are not in the right place)
 			iValue &= cCARuleTypes.max_inputs //truncate number to 9 bit number (but bits are not in the right place)
@@ -153,9 +129,8 @@ class cCACell {
 
 	//*****************************************************************
 	/**
-	 * Description placeholder
+	 * returns neighbourhood bitmap
 	 * 
-	 *
 	 * @param {*} piNeighbourType
 	 * @returns {*}
 	 */
@@ -187,32 +162,35 @@ class cCACell {
 
 	//*****************************************************************
 	/**
-	 * Description
+	 * simple Boredom checker
+	 * 
 	 * @param {number} piBitmap
-	 * @returns {Boolean}  true if cell is bored of this bitmap. false otherwise
+	 * @returns {Boolean}  
+	 * 
+	 * - true if cell is bored of this bitmap. false otherwise
+	 * - bitmap is passed in - CA being evaluated - grid hasnt been fully updated 
+	 * - history doesnt need to be stored, just need to know how many times 
+	 * the same pattern was seen sequentially
 	 */
 	check_boredom(piBitmap) {
-		if (this.rule.boredom == cCARuleTypes.no_boredom || (piBitmap == 0))
+		//	only active cells can get bored
+		if (this.rule.boredom == null || this.rule.boredom == cCARuleTypes.no_boredom || this.value == 0 || piBitmap == 0)
 			return false
 
-		//history doesnt need to be stored, just need to know the same pattern was seen
+		//was it the same bitmap as last time
 		if (this.previous_bitmap == piBitmap)
 			this.previous_bitmap_count++
+		else {
+			this.previous_bitmap = piBitmap
+			this.previous_bitmap_count = 1
+			return false
+		}
+
 		if (this.previous_bitmap_count >= this.rule.boredom) {
 			//reset the count (so it doesnt start triggering everytime)
 			this.previous_bitmap_count = 1
-
-			//add the bitmap to the rule flips, or remove if its allready there
-			if (this.boredom_flips.get(piBitmap))
-				this.boredom_flips.remove(piBitmap)
-			else {
-				this.boredom_flips.set(piBitmap, 1)
-				return true
-			}
-		}
-		else {
-			this.previous_bitmap_count = 1
-			this.previous_bitmap = piBitmap
+			this.value = 0	//make cell inactive because its bored
+			return true
 		}
 		return false
 	}
