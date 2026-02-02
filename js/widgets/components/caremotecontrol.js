@@ -57,14 +57,14 @@ class cCARemoteControls {
 
 		switch (piAction) {
 			case cCAGridTypes.actions.stop:
-				this._set_controls(false)
+				this._enable_controls(false)
 				break
 			case cCAGridTypes.actions.play:
-				this._set_controls(true)
+				this._enable_controls(true)
 				break
 		}
 		var oEvent = new cCAActionEvent(this.grid_name, cCAActionEvent.actions.control, parseInt(piAction))
-		oEvent.trigger()
+		oEvent.trigger()	//triggers the event on the document
 	}
 
 
@@ -78,7 +78,7 @@ class cCARemoteControls {
 				this._enable_buttons()
 				break
 			case cCACanvasEvent.notify.nochange:
-				setTimeout(() => { oThis._set_controls(false) }, 100) //stop
+				setTimeout(() => { oThis._enable_controls(false) }, 100) //stop
 		}
 		cDebug.leave()
 	}
@@ -96,14 +96,14 @@ class cCARemoteControls {
 	//***************************************************************
 	_enable_buttons() {
 		if (this.grid_set && this.rule_set)
-			this._set_controls(false)
+			this._enable_controls(false)
 	}
 
 	/**
 	 * Description
 	 * @param {boolean} pbRunning
 	 */
-	_set_controls(pbRunning) {
+	_enable_controls(pbRunning) {
 		var oElement = this.element
 		var sID = cJquery.child_ID(oElement, cCARemoteControls.buttonNames.play)
 		cJquery.enable_element(sID, !pbRunning)

@@ -17,8 +17,8 @@ You the consumer of this application are entirely responsible for importing this
 
 //###############################################################################
 // eslint-disable-next-line no-unused-vars
-class cCACryptEvent extends cCAEvent{
-	#event_type_id = "CACRYEV"
+class cCACryptEvent extends cCABaseEvent{
+	event_type_id = "CACRYEV"
 
 	static types = {
 		general: "GNR"

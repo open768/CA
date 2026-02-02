@@ -16,10 +16,10 @@ class CAException {
 
 //***************************************************************************
 class cCABaseEvent{
-	grid_name = null					//grid name is used
+	grid_name = null					//grid name is used to create a
 	action = null
 	data = null
-	#event_type_id = "***NOT SET***"				//this is an abstract property
+	event_type_id = "***NOT SET***"		//this is an abstract property
 
 	constructor(psGridName, psAction, poData = null) {
 		if (!psGridName || !psAction) $.error("incorrect number of arguments")
@@ -45,7 +45,7 @@ class cCABaseEvent{
 //***************************************************************************
 /* eslint-disable-next-line no-unused-vars */
 class cCAActionEvent extends cCABaseEvent{
-	#event_type_id = "CAACTEV"
+	event_type_id = "CAACTEV"
 	static actions = {
 		ready: "AERD",
 		grid_init: "AEGI",
@@ -57,7 +57,7 @@ class cCAActionEvent extends cCABaseEvent{
 //***************************************************************************
 /* eslint-disable-next-line no-unused-vars */
 class cCARuleEvent extends cCABaseEvent{
-	#event_type_id = "CARULEEV"
+	event_type_id = "CARULEEV"
 	static actions = {
 		update_rule: "REUR",
 		set_rule: "GESR"
@@ -68,7 +68,7 @@ class cCARuleEvent extends cCABaseEvent{
 //###############################################################################
 /* eslint-disable-next-line no-unused-vars */
 class cCAGridEvent extends cCABaseEvent{
-	#event_type_id = "CAGRIDEV"
+	event_type_id = "CAGRIDEV"
 	static actions = {
 		init_grid: "GAini",
 		set_cell: "GASet",
@@ -86,7 +86,7 @@ class cCAGridEvent extends cCABaseEvent{
 
 /* eslint-disable-next-line no-unused-vars */
 class cCACanvasEvent extends cCABaseEvent{
-	#event_type_id = "CACANVASEV"
+	event_type_id = "CACANVASEV"
 	static actions = {
 		grid_status: "CAstatus",
 		set_grid: "CASetgrid"

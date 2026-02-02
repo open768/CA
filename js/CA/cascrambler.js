@@ -15,7 +15,7 @@ You the consumer of this application are entirely responsible for importing this
 
 **************************************************************************/
 /** Scrambler Events */
-class cCAScramblerEvent extends cCAEvent{
+class cCAScramblerEvent extends cCABaseEvent{
 	/**
 	 * Description placeholder
 	 * 
