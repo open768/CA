@@ -103,26 +103,26 @@ class cCAEventHelper {
 
 	static subscribe_to_action_events(psGridName, pfnCallback){
 		var oEvent = new cCAActionEvent(psGridName, this.#dummy_action) //create an event to get the channel ID
-		this.#do_subscribe(oEvent.channel_id(), pfnCallback)
+		this._do_subscribe(oEvent.channel_id(), pfnCallback)
 	}
 
 	static subscribe_to_canvas_events(psGridName, pfnCallback){
 		var oEvent = new cCACanvasEvent(psGridName,this.#dummy_action)
-		this.#do_subscribe(oEvent.channel_id(), pfnCallback)
+		this._do_subscribe(oEvent.channel_id(), pfnCallback)
 	}
 	
 	static subscribe_to_grid_events(psGridName, pfnCallback){
 		var oEvent = new cCAGridEvent(psGridName,this.#dummy_action)
-		this.#do_subscribe(oEvent.channel_id(), pfnCallback)
+		this._do_subscribe(oEvent.channel_id(), pfnCallback)
 	}
 
 	static subscribe_to_rule_events(psGridName, pfnCallback){
 		var oEvent = new cCARuleEvent(psGridName,this.#dummy_action)
-		this.#do_subscribe(oEvent.channel_id(), pfnCallback)
+		this._do_subscribe(oEvent.channel_id(), pfnCallback)
 	}
 
 	//***************************************************************
-	static #do_subscribe(psChannelID, pfnCallback){
+	static _do_subscribe(psChannelID, pfnCallback){
 		if (pfnCallback == null ) $.error("callback missing")
 		bean.on(document, psChannelID, pfnCallback)
 	}

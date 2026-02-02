@@ -37,7 +37,7 @@ class cCAControlsR{
 		
 		//put something in the widget
 		oElement.empty()
-		this.#init()
+		this._init()
 
 	}
 	
@@ -46,7 +46,7 @@ class cCAControlsR{
 	//***************************************************************
 	//* Privates
 	//***************************************************************
-	#init(){
+	_init(){
 		var oDiv
 		var oElement
 		

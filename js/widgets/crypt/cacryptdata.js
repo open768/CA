@@ -157,7 +157,7 @@ class cCACryptControl {
 		oButton.append("<span class='material-icons'>lock</span>")
 		oButton.append("Encrypt")
 		oButton.prop("disabled", true)
-		oButton.click(function () { oThis.onEncryptClick() })
+		oButton.click(() => { oThis.onEncryptClick() })
 		oDiv.append(oButton)
 
 		sID = cJquery.child_ID(oElement, this.child_names.decrypt)
@@ -165,7 +165,7 @@ class cCACryptControl {
 		oButton.append("<span class='material-icons'>lock_open</span>")
 		oButton.append("Decrypt")
 		oButton.prop("disabled", true)
-		oButton.click(function () { oThis.onDecryptClick() })
+		oButton.click(() => { oThis.onDecryptClick() })
 		oDiv.append(oButton)
 
 		sID = cJquery.child_ID(oElement, this.child_names.inital_runs)
@@ -213,7 +213,7 @@ class cCACryptControl {
 		//start the scrambling
 		cCACryptEvent.triggerStatus("scrambling started")
 		var oScrambler = new cCAScrambler(this.grid, iInitialruns, sPlaintext)
-		bean.on(oScrambler, cCAScramblerEvent.hook, function (poEvent) { oThis.onCAScramblerEvent(poEvent) })
+		bean.on(oScrambler, cCAScramblerEvent.hook, (poEvent) => { oThis.onCAScramblerEvent(poEvent) })
 		oScrambler.scramble()
 	}
 

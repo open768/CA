@@ -46,7 +46,7 @@ class cCAStatus{
 		
 		//put something in the widget
 		oElement.empty()
-		this.#init()
+		this._init()
 	}
 	
 	//****************************************************************************
@@ -119,7 +119,7 @@ class cCAStatus{
 	//***************************************************************
 	//* Privates
 	//***************************************************************
-	#add_row(poTable, psID, psLabel){
+	_add_row(poTable, psID, psLabel){
 		var oElement = this.element
 		var oCell, oRow
 
@@ -132,7 +132,7 @@ class cCAStatus{
 		poTable.append(oRow)
 	}
 
-	#init(){
+	_init(){
 		var oDiv, oTable
 		var oElement = this.element
 		
@@ -142,10 +142,10 @@ class cCAStatus{
 		
 		oDiv = $("<DIV>",{class:"ui-widget-content"})
 			oTable = $("<Table>",{cellpadding:2})
-				this.#add_row(oTable,cCAStatusTypes.ACTIVE_ID, "Active")
-				this.#add_row(oTable,cCAStatusTypes.CHANGED_ID, "Changed")
-				this.#add_row(oTable,cCAStatusTypes.RUNS_ID, "Runs")
-				this.#add_row(oTable,cCAStatusTypes.HEAP_ID, "Heap")
+				this._add_row(oTable,cCAStatusTypes.ACTIVE_ID, "Active")
+				this._add_row(oTable,cCAStatusTypes.CHANGED_ID, "Changed")
+				this._add_row(oTable,cCAStatusTypes.RUNS_ID, "Runs")
+				this._add_row(oTable,cCAStatusTypes.HEAP_ID, "Heap")
 			oDiv.append(oTable)
 		oElement.append(oDiv)
 	}

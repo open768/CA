@@ -46,7 +46,7 @@ $.widget("ck.caeditwidget", {
 		oElement.uniqueId()
 		oElement.addClass("ui-widget")
 		oElement.addClass("caindex")
-		oElement.click(function () { oThis.onClick() })
+		oElement.click(() => oThis.onClick())
 
 		//add a canvas
 		var oCanvas = $("<canvas>")
@@ -177,27 +177,27 @@ class cCAEditorWidget {
 		var oThis = this
 
 		//-------------------------------------------------------------------
-		this.#render()
+		this._render()
 
 		//-------------------------------------------------------------------
 		//get the contents of the clipboard
 		//async fetch from clipboard, will display a warning to user
 		cBrowser.get_clipboard_permissions()
-		this.#set_status("waiting for clipboard")
+		this._set_status("waiting for clipboard")
 		try {
-			cBrowser.paste_from_clipboard(function (psText) { oThis.onGotClipText(psText) })
+			cBrowser.paste_from_clipboard((psText) => oThis.onGotClipText(psText))
 		} catch (e) {
 			cBrowser.writeConsoleWarning(e.message)
-			this.#set_identity_rule()
+			this._set_identity_rule()
 		}
 
 		//add event listener
-		bean.on(document, cCAWidgetTypes.click_event, function (poOptions) { oThis.onEditWidgetClick(poOptions) })
+		bean.on(document, cCAWidgetTypes.click_event, (poOptions) => oThis.onEditWidgetClick(poOptions))
 	}
 	//*****************************************************************
 	//# privates
 	//*****************************************************************
-	#render() {
+	_render() {
 		var oThis = this
 		var oElement = this.element
 
@@ -218,11 +218,11 @@ class cCAEditorWidget {
 		oDiv = $("<DIV>", { class: "ui-widget-content" })
 		sID = cJquery.child_ID(oElement, cCAWidgetTypes.IDs.RULE)
 		var oBox = $("<TEXTAREA>", { ID: sID, rows: 5, cols: 80, class: "rule rule_wide", title: "enter the base64 rule here" })
-		oBox.keyup(function () { oThis.onRuleInputKeyUp() })
+		oBox.keyup(() => oThis.onRuleInputKeyUp())
 		oDiv.append(oBox)
 
 		var oButton = $("<button>", { title: "use the rule entered in the box above" }).button({ icon: "ui-icon-circle-arrow-e" })
-		oButton.click(function () { oThis.onSetRuleClick() })
+		oButton.click(() => oThis.onSetRuleClick())
 		oDiv.append(oButton)
 		oElement.append(oDiv)
 		oElement.append("<hr>")
@@ -296,19 +296,19 @@ class cCAEditorWidget {
 		//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 		oButton = $("<button>").append("Apply")
 		oDiv.append(oButton)
-		oButton.click(function () { oThis.onNeighbourRuleClick() })
+		oButton.click(() => oThis.onNeighbourRuleClick())
 		oElement.append(oDiv)
 	}
 
 	//*****************************************************************
-	#set_status(psText) {
+	_set_status(psText) {
 		var oElement = this.element
 		var sID = cJquery.child_ID(oElement, cCAWidgetTypes.IDs.STATUS)
 		$("#" + sID).html(psText)
 	}
 
 	//*************************************************************
-	#add_edit_widgets() {
+	_add_edit_widgets() {
 		var oThis = this
 		var oOptions = oThis.options
 		var oElement = oThis.element
@@ -338,16 +338,16 @@ class cCAEditorWidget {
 	}
 
 	//*************************************************************
-	#set_identity_rule() {
+	_set_identity_rule() {
 		var oRule = cCaIdentityRule.makeRule()
 		var s64 = cCARuleBase64Exporter.export(oRule, cCACellTypes.default_state)
-		this.#set_base64Rule(s64)
-		this.#set_status("Identity Rule")
+		this._set_base64Rule(s64)
+		this._set_status("Identity Rule")
 		this.onSetRuleClick()
 	}
 
 	//*************************************************************
-	#set_base64Rule(ps64) {
+	_set_base64Rule(ps64) {
 		var oElement = this.element
 		var sID = cJquery.child_ID(oElement, cCAWidgetTypes.IDs.RULE)
 		$("#" + sID).val(ps64)
@@ -359,18 +359,18 @@ class cCAEditorWidget {
 	onGotClipText(psText) {
 		if (psText === "") {
 			cBrowser.writeConsoleWarning("nothing in clipboard!")
-			this.#set_identity_rule()
+			this._set_identity_rule()
 			return
 		}
 
 		try {
 			this.rule = cCARuleBase64Importer.makeRule(psText)
-			this.#set_base64Rule(psText)
+			this._set_base64Rule(psText)
 			this.onSetRuleClick()
-			this.#set_status("rule loaded from clipboard")
+			this._set_status("rule loaded from clipboard")
 		} catch (e) {
 			cBrowser.writeConsoleWarning("not a valid rule in clipboard!")
-			this.#set_identity_rule()
+			this._set_identity_rule()
 		}
 	}
 
@@ -382,7 +382,7 @@ class cCAEditorWidget {
 
 		try {
 			this.rule = cCARuleBase64Importer.makeRule(oTextArea.val())
-			this.#add_edit_widgets()
+			this._add_edit_widgets()
 		} catch (e) {
 			alert("Whoops - something went wrong!\n\n" + e.message)
 		}
@@ -396,7 +396,7 @@ class cCAEditorWidget {
 		try {
 			oRule.set_output(cCACellTypes.default_state, poData.index, poData.value)
 			var s64 = cCARuleBase64Exporter.export(oRule, cCACellTypes.default_state)
-			this.#set_base64Rule(s64)
+			this._set_base64Rule(s64)
 		} catch (e) {
 			alert("Whoops - something went wrong!\n\n" + e.message)
 		}
@@ -411,7 +411,7 @@ class cCAEditorWidget {
 		var sText = oTextArea.val()
 		var iDiff = cCARuleTypes.base64_length - sText.length
 
-		this.#set_status(iDiff + " chars remaining")
+		this._set_status(iDiff + " chars remaining")
 	}
 
 	//*************************************************************
@@ -430,7 +430,7 @@ class cCAEditorWidget {
 
 		cCARuleModifier.modify_neighbours(oRule, iInEnum, iVerb, iCount, iValue)
 		var s64 = cCARuleBase64Exporter.export(oRule, cCACellTypes.default_state)
-		this.#set_base64Rule(s64)
+		this._set_base64Rule(s64)
 		this.onSetRuleClick()
 	}
 }

@@ -43,17 +43,17 @@ class cCAJson {
 
 		//put something in the widget
 		oElement.empty()
-		this.#init()
+		this._init()
 
 		//subscribe to CA Events
-		cCAEventHelper.subscribe_to_canvas_events(this.grid_name, poEvent => { oThis.#onCACanvasEvent(poEvent) })
+		cCAEventHelper.subscribe_to_canvas_events(this.grid_name, poEvent => oThis._onCACanvasEvent(poEvent))
 		cDebug.leave()
 	}
 
 	//#################################################################
 	//# Initialise
 	//#################################################################`
-	#init() {
+	_init() {
 		var oThis, oElement
 		var oHeaderDiv, oBodyDiv, sBodyID, sID, oButton
 
@@ -63,31 +63,31 @@ class cCAJson {
 		oThis = this	/** @type cCAJson */
 
 		oHeaderDiv = $("<DIV>", { class: "ui-widget-header" })
-			oHeaderDiv.append("Json")
+		oHeaderDiv.append("Json")
 
 		var sButtonID = cJquery.child_ID(oElement, "btnJson")
-		oButton = $("<button>",{ ID: sButtonID }).append("+")
-		oButton.click(function () { oThis.#showHide(sButtonID,sBodyID)})
+		oButton = $("<button>", { ID: sButtonID }).append("+")
+		oButton.click(() => oThis._showHide(sButtonID, sBodyID))
 		oHeaderDiv.append(oButton)
 		oElement.append(oHeaderDiv)
 
 		sBodyID = cJquery.child_ID(oElement, cCAJsonTypes.body_id)
 		oBodyDiv = $("<DIV>", { class: "ui-widget-content", ID: sBodyID })
-			//---------textbox
-			sID = cJquery.child_ID(oElement, cCAJsonTypes.textarea_id)
-			var oBox = $("<TEXTAREA>", { ID: sID, class: "json", title: "Json goes here" })
-			oBodyDiv.append(oBox)
+		//---------textbox
+		sID = cJquery.child_ID(oElement, cCAJsonTypes.textarea_id)
+		var oBox = $("<TEXTAREA>", { ID: sID, class: "json", title: "Json goes here" })
+		oBodyDiv.append(oBox)
 
-			//---------buttons
-			if (this.create_button) {
-				oButton = $("<button>").append("Create")
-				oButton.click(function () { oThis.#onClickExport() })
-				oBodyDiv.append(oButton)
-			}
-
-			oButton = $("<button>").append("import")
-			oButton.click(function () { oThis.#onClickImport() })
+		//---------buttons
+		if (this.create_button) {
+			oButton = $("<button>").append("Create")
+			oButton.click(() => oThis._onClickExport())
 			oBodyDiv.append(oButton)
+		}
+
+		oButton = $("<button>").append("import")
+		oButton.click(() => oThis._onClickImport())
+		oBodyDiv.append(oButton)
 
 		oElement.append(oBodyDiv)
 		oBodyDiv.hide()
@@ -98,32 +98,32 @@ class cCAJson {
 	//#################################################################
 	//# EVENTS
 	//#################################################################`
-	#showHide(sButtonID, sBodyID){
-			var oBody = $("#" + sBodyID)
-			var oButton = $("#" + sButtonID)
-			var bVisible = oBody.is(":visible")
-			oBody.toggle(!bVisible)
-			oButton.text(bVisible ? "+" : "-")
+	_showHide(sButtonID, sBodyID) {
+		var oBody = $("#" + sBodyID)
+		var oButton = $("#" + sButtonID)
+		var bVisible = oBody.is(":visible")
+		oBody.toggle(!bVisible)
+		oButton.text(bVisible ? "+" : "-")
 	}
 
 	//*****************************************************************
-	#onClickExport() {
+	_onClickExport() {
 		cDebug.enter()
-		if (this.grid == null){
+		if (this.grid == null) {
 			alert("cant create json - grid is not set")
 			throw new Error("cant create json - grid is not set")
 		}
-		else if (!this.grid.get_rule()){
+		else if (!this.grid.get_rule()) {
 			alert("no rule set")
 			throw new Error("cant create json - rule is not set")
 		}
 		else
-			this.#create_json()
+			this._create_json()
 		cDebug.leave()
 	}
 
 	//*****************************************************************
-	#onClickImport() {
+	_onClickImport() {
 		cDebug.enter()
 
 		var oElement = this.element
@@ -154,9 +154,9 @@ class cCAJson {
 
 
 	//*****************************************************************
-	#onCACanvasEvent(poEvent) {
+	_onCACanvasEvent(poEvent) {
 		cDebug.enter()
-		if (poEvent.action === cCACanvasEvent.actions.set_grid){
+		if (poEvent.action === cCACanvasEvent.actions.set_grid) {
 			cDebug.write("set_grid")
 			this.grid = poEvent.data
 		}
@@ -166,7 +166,7 @@ class cCAJson {
 	//#################################################################
 	//# EVENTS
 	//#################################################################`
-	#create_json() {
+	_create_json() {
 		cDebug.enter()
 		var oElement = this.element
 

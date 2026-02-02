@@ -67,7 +67,7 @@ class cCAChart{
 			oDiv.width(poOptions.width)
 			oDiv.height(poOptions.height)
 			oElement.append(oDiv)
-		this.#clear_chart()
+		this._clear_chart()
 
 		//subscribe to CAEvents
 		cCAEventHelper.subscribe_to_action_events( this.#grid_name, poEvent => { oThis.onCAActionEvent(poEvent) })
@@ -80,13 +80,13 @@ class cCAChart{
 	//*****************************************************************
 	
 	//*****************************************************************
-	#create_data(){
+	_create_data(){
 		var oElement = this.#element
 		
 		//check if the data has been previously created
 		if (this.#vis_data) return
 		if (!google.visualization)  $.error("google.visualization class is missing! check includes")	
-		this.#clear_chart()
+		this._clear_chart()
 
 		//create the google data
 		var oData = new google.visualization.DataTable()
@@ -121,7 +121,7 @@ class cCAChart{
 					return
 				}
 				
-				this.#create_data()
+				this._create_data()
 				this.#vis_data.addRow([this.#runs, oData.changed, oData.active, "Run: " + this.#runs])
 				this.#chart.draw(this.#vis_data)
 				
@@ -137,7 +137,7 @@ class cCAChart{
 		switch (poEvent.action){
 			case cCARuleEvent.actions.set_rule:
 				cDebug.write("set_rule action")
-				this.#clear_chart()
+				this._clear_chart()
 		}
 		cDebug.leave()
 	}
@@ -148,12 +148,12 @@ class cCAChart{
 		switch (poEvent.action){
 			case cCAActionEvent.actions.grid_init:
 				cDebug.write("grid_init action")
-				this.#clear_chart()
+				this._clear_chart()
 		}
 		cDebug.leave()
 	}
 	
-	#clear_chart(){
+	_clear_chart(){
 		var oElement = this.#element
 		var oChartElement = $("#"+cJquery.child_ID(oElement, "chart"))
 		this.#vis_data = null
