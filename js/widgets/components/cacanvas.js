@@ -35,7 +35,7 @@ class cCACanvas {
 		has_events: false,
 		is_down: false
 	}
-		last_mouse_pos = {
+	last_mouse_pos = {
 		row: -1,
 		col: -1
 	}
@@ -63,8 +63,8 @@ class cCACanvas {
 
 		//subscribe to CAEvents (see #set_grid for subscribing to grid events)
 		var oThis = this /** @type cCACanvas */
-		cCAEventHelper.subscribe_to_action_events( this.grid_name, poEvent => { oThis._onCAActionEvent(poEvent) })
-		cCAEventHelper.subscribe_to_grid_events( this.grid_name, poEvent => { oThis._onCAGridEvent(poEvent) })
+		cCAEventHelper.subscribe_to_action_events(this.grid_name, poEvent => oThis._onCAActionEvent(poEvent))
+		cCAEventHelper.subscribe_to_grid_events(this.grid_name, poEvent => oThis._onCAGridEvent(poEvent))
 	}
 
 	//#################################################################
@@ -119,13 +119,13 @@ class cCACanvas {
 				cDebug.write("action: ready")
 				//associate a CA grid with the widget
 				oGrid = new cCAGrid(this.grid_name, this.rows, this.cols)
-					this._set_grid(oGrid)
+				this._set_grid(oGrid)
 				//put something in the widget
-					this._initCanvas()
+				this._initCanvas()
 				if (!this.has_mouseup) { //only set #mouse event handler once
-						oElement.mouseup(() => { oThis._onMouseUp() })
-						oElement.mousemove((poEvent) => { oThis._onMouseMove(poEvent) })
-						oElement.mousedown((poEvent) => { oThis._onMouseDown(poEvent) })
+					oElement.mouseup(() =>  oThis._onMouseUp() )
+					oElement.mousemove((poEvent) =>  oThis._onMouseMove(poEvent) )
+					oElement.mousedown((poEvent) =>  oThis._onMouseDown(poEvent) )
 					this.has_mouseup = true
 				}
 				break
@@ -134,7 +134,7 @@ class cCACanvas {
 	}
 
 	//****************************************************************
-	_count_drawn_cells(){
+	_count_drawn_cells() {
 		//update the count of cells drawn
 		this.cells_drawn++
 		var oThis = this	/** @type cCACanvas */
@@ -145,12 +145,12 @@ class cCACanvas {
 			cDebug.write("finished drawing")
 
 			setTimeout(				//canvas needs to yield to allow image to be drawn
-				() => { 
+				function() {
 					var oEvent = new cCAGridEvent(oThis.grid_name, cCAGridEvent.notify.changedCellsConsumed);
 					oEvent.trigger()
-				}, 	
+				},
 				this.CELL_LOAD_DELAY		//fudge factor to delay next grid cycle
-			)	
+			)
 		}
 	}
 
@@ -168,7 +168,7 @@ class cCACanvas {
 		if (!this.interactive) return
 		if (!this.grid) return
 		if (!this.mouse.is_down) return
-		
+
 		this._set_one_cell(poEvent)
 	}
 
@@ -208,7 +208,7 @@ class cCACanvas {
 		if (ir != this.last_mouse_pos.row || ic != this.last_mouse_pos.col) {
 			this.last_mouse_pos.row = ir
 			this.last_mouse_pos.col = ic
-			oRC = this.	last_mouse_pos
+			oRC = this.last_mouse_pos
 		} else if (!pbChangedOnly)
 			oRC = this.last_mouse_pos
 		return oRC
@@ -327,13 +327,13 @@ class cCACanvas {
 		var ix = (iCol - 1) * this.cell_size
 
 		//------------------draw
-		var sFill = (poCell.value == 0 ? '#fff'  : '#000')
+		var sFill = (poCell.value == 0 ? '#fff' : '#000')
 		oCanvas.drawRect({
 			fillStyle: sFill,
 			x: ix, y: iy,
 			width: this.cell_size,
 			height: this.cell_size,
-			strokeStyle: "transparent"				
+			strokeStyle: "transparent"
 		})
 		this._count_drawn_cells()
 	}

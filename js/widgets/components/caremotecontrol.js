@@ -38,8 +38,8 @@ class cCARemoteControls {
 		oElement.addClass("ui-widget")
 
 		//subscribe to CAEvents
-		cCAEventHelper.subscribe_to_rule_events(this.grid_name, poEvent => { oThis.onCARuleEvent(poEvent) })
-		cCAEventHelper.subscribe_to_canvas_events(this.grid_name, poEvent => { oThis.onCACanvasEvent(poEvent) })
+		cCAEventHelper.subscribe_to_rule_events(this.grid_name, poEvent => oThis.onCARuleEvent(poEvent))
+		cCAEventHelper.subscribe_to_canvas_events(this.grid_name, poEvent => oThis.onCACanvasEvent(poEvent))
 
 		//put something in the widget
 		oElement.empty()
@@ -78,7 +78,7 @@ class cCARemoteControls {
 				this._enable_buttons()
 				break
 			case cCACanvasEvent.notify.nochange:
-				setTimeout(() => { oThis._enable_controls(false) }, 100) //stop
+				setTimeout(() => oThis._enable_controls(false), 100) //stop
 		}
 		cDebug.leave()
 	}
@@ -117,7 +117,7 @@ class cCARemoteControls {
 
 	//***************************************************************
 	_init() {
-		var oDiv 
+		var oDiv
 		var oElement = this.element
 		var oThis = this /** @type cCARemoteControls */
 
@@ -138,7 +138,7 @@ class cCARemoteControls {
 
 		//--- stop button----------------------------------------
 		_add_button(cCARemoteControls.buttonNames.stop, "ui-icon-stop", "stop", cCAGridTypes.actions.stop)
-		_add_button(cCARemoteControls.buttonNames.play, "ui-icon-circle-triangle-e","play", cCAGridTypes.actions.play)
+		_add_button(cCARemoteControls.buttonNames.play, "ui-icon-circle-triangle-e", "play", cCAGridTypes.actions.play)
 		_add_button(cCARemoteControls.buttonNames.step, "icon", "step", cCAGridTypes.actions.step)
 
 		oElement.append(oDiv)

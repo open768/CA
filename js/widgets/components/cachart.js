@@ -10,22 +10,22 @@ For licenses that allow for commercial use please contact cluck@chickenkatsu.co.
 ///load google charts
 
 class cCAChartTypes {
-	static is_charts_loaded= false
-	
-	static{
+	static is_charts_loaded = false
+
+	static {
 		var oThis = this /** @type cCAChartTypes */
-		if (!google.charts)  $.error("google.charts class is missing! check includes")	
-		
-		try{
-			google.charts.load('current', {'packages':['corechart']}).then( 
-				(poEvent)=>{oThis.OnGoogleChartsLoaded(poEvent)}
+		if (!google.charts) $.error("google.charts class is missing! check includes")
+
+		try {
+			google.charts.load('current', { 'packages': ['corechart'] }).then(
+				(poEvent) => oThis.OnGoogleChartsLoaded(poEvent)
 			)
-		}catch (e){
+		} catch (e) {
 			cDebug.write("unable to load Google charts: " + e.msg)
 		}
 	}
-	
-	static OnGoogleChartsLoaded(poEvent){
+
+	static OnGoogleChartsLoaded(poEvent) {
 		this.is_charts_loaded = true
 	}
 }
@@ -34,71 +34,71 @@ class cCAChartTypes {
 //#################################################################
 //# Options
 //#################################################################
-class cCAChart{
-	runs =0
-	vis_data= null
-	chart= null
+class cCAChart {
+	runs = 0
+	vis_data = null
+	chart = null
 	element = null
 	grid_name = null
-	
-	constructor(poOptions, poElement){
-		
+
+	constructor(poOptions, poElement) {
+
 		//checks
 		if (!poOptions.grid_name) $.error("grid name not provided")
 
 		//store the element
 		this.element = poElement
 		this.grid_name = poOptions.grid_name
-		
+
 		var oElement = this.element
 		var oThis = this /** @type cCAChart */
-		
+
 		//basic stuff
 		oElement.empty()
 		oElement.uniqueId()
 		oElement.addClass("ui-widget")
 		oElement.width(poOptions.width)
-		
+
 		//put something in the widget
 		cJquery.add_widget_header(oElement, "Chart")
-		var oDiv = $("<DIV>",{class:"ui-widget-content",id:cJquery.child_ID(oElement, "chart")})
-			oDiv.width(poOptions.width)
-			oDiv.height(poOptions.height)
-			oElement.append(oDiv)
+		var oDiv = $("<DIV>", { class: "ui-widget-content", id: cJquery.child_ID(oElement, "chart") })
+		oDiv.width(poOptions.width)
+		oDiv.height(poOptions.height)
+		oElement.append(oDiv)
 		this._clear_chart()
 
 		//subscribe to CAEvents
-		cCAEventHelper.subscribe_to_action_events( this.grid_name, poEvent => { oThis.onCAActionEvent(poEvent) })
-		cCAEventHelper.subscribe_to_rule_events( this.grid_name, poEvent => { oThis.onCARuleEvent(poEvent) })
-		cCAEventHelper.subscribe_to_canvas_events(this.grid_name, poEvent => { oThis.onCACanvasEvent(poEvent) })
+		cCAEventHelper.subscribe_to_action_events(this.grid_name, poEvent => oThis.onCAActionEvent(poEvent))
+		cCAEventHelper.subscribe_to_rule_events(this.grid_name, poEvent => oThis.onCARuleEvent(poEvent))
+		cCAEventHelper.subscribe_to_canvas_events(this.grid_name, poEvent => oThis.onCACanvasEvent(poEvent))
 	}
-	
+
 	//*****************************************************************
 	//# methods
 	//*****************************************************************
-	
+
 	//*****************************************************************
-	_create_data(){
+	_create_data() {
 		var oElement = this.element
-		
+
 		//check if the data has been previously created
 		if (this.vis_data) return
-		if (!google.visualization)  $.error("google.visualization class is missing! check includes")	
+		if (!google.visualization) $.error("google.visualization class is missing! check includes")
 		this._clear_chart()
 
 		//create the google data
 		var oData = new google.visualization.DataTable()
 		this.vis_data = oData
 		oData.addColumn('number', 'Run')
-		oData.addColumn('number', 'changed')		
-		oData.addColumn('number', 'active')		
-		oData.addColumn({type: 'string', role: 'tooltip', p: {html: true}})				
+		oData.addColumn('number', 'changed')
+		oData.addColumn('number', 'active')
+		oData.addColumn({ type: 'string', role: 'tooltip', p: { html: true } })
 
 		//create the chart
-		var oChartElement = $("#"+cJquery.child_ID(oElement, "chart"))
-		this.chart = new google.visualization.LineChart( oChartElement[0] )
+		var oChartElement = $("#" + cJquery.child_ID(oElement, "chart"))
+		this.chart = new google.visualization.LineChart(oChartElement[0])
 	}
-	
+
 	//*****************************************************************
 	//# events
 	//*****************************************************************
@@ -108,31 +108,31 @@ class cCAChart{
 			case cCACanvasEvent.actions.grid_status:
 				//add the data to the data structure and draw
 				cDebug.write("status action")
-				if (!cCAChartTypes.is_charts_loaded){
+				if (!cCAChartTypes.is_charts_loaded) {
 					cDebug.extra_debug("still waiting for google charts")
 					cDebug.leave()
 					return
 				}
 				var oData = poEvent.data
-				if (!oData){
+				if (!oData) {
 					cDebug.extra_debug("no data")
 					return
 				}
-				
+
 				this._create_data()
 				this.vis_data.addRow([this.runs, oData.changed, oData.active, "Run: " + this.runs])
 				this.chart.draw(this.vis_data)
-				
-				this.runs ++
+
+				this.runs++
 				break
 		}
 		cDebug.leave()
 	}
-	
+
 	//*****************************************************************
-	onCARuleEvent(poEvent){
+	onCARuleEvent(poEvent) {
 		cDebug.enter()
-		switch (poEvent.action){
+		switch (poEvent.action) {
 			case cCARuleEvent.actions.set_rule:
 				cDebug.write("set_rule action")
 				this._clear_chart()
@@ -141,19 +141,19 @@ class cCAChart{
 	}
 
 	//*****************************************************************
-	onCAActionEvent(poEvent){
+	onCAActionEvent(poEvent) {
 		cDebug.enter()
-		switch (poEvent.action){
+		switch (poEvent.action) {
 			case cCAActionEvent.actions.grid_init:
 				cDebug.write("grid_init action")
 				this._clear_chart()
 		}
 		cDebug.leave()
 	}
-	
-	_clear_chart(){
+
+	_clear_chart() {
 		var oElement = this.element
-		var oChartElement = $("#"+cJquery.child_ID(oElement, "chart"))
+		var oChartElement = $("#" + cJquery.child_ID(oElement, "chart"))
 		this.vis_data = null
 		this.chart = null
 		this.runs = 0
@@ -166,15 +166,15 @@ class cCAChart{
 //#################################################################
 //# Options
 //#################################################################
-$.widget( "ck.cachart",{
-	options:{
+$.widget("ck.cachart", {
+	options: {
 		width: 240,
-		height:100,
-		grid_name:null
+		height: 100,
+		grid_name: null
 	},
 
 	//*****************************************************************
-	_create: function(){
+	_create: function () {
 		new cCAChart(this.options, this.element) //call the class constructor
 	}
 })

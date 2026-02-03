@@ -139,9 +139,9 @@ class cCACryptControl {
 		this.init()
 
 		//subscribe to CAEvents
-		cCAEventHelper.subscribe_to_grid_events( this.ca_name, poEvent => { oThis.onCAGridEvent(poEvent) })
-		cCAEventHelper.subscribe_to_rule_events( this.ca_name, poEvent => { oThis.onCARuleEvent(poEvent) })
-		cCAEventHelper.subscribe_to_canvas_events(this.ca_name, poEvent => { oThis.onCACanvasEvent(poEvent) })
+		cCAEventHelper.subscribe_to_grid_events(this.ca_name, poEvent => oThis.onCAGridEvent(poEvent))
+		cCAEventHelper.subscribe_to_rule_events(this.ca_name, poEvent => oThis.onCARuleEvent(poEvent))
+		cCAEventHelper.subscribe_to_canvas_events(this.ca_name, poEvent => oThis.onCACanvasEvent(poEvent))
 	}
 
 	//*******************************************************************************
@@ -157,7 +157,7 @@ class cCACryptControl {
 		oButton.append("<span class='material-icons'>lock</span>")
 		oButton.append("Encrypt")
 		oButton.prop("disabled", true)
-		oButton.click(() => { oThis.onEncryptClick() })
+		oButton.click(() => oThis.onEncryptClick())
 		oDiv.append(oButton)
 
 		sID = cJquery.child_ID(oElement, this.child_names.decrypt)
@@ -165,7 +165,7 @@ class cCACryptControl {
 		oButton.append("<span class='material-icons'>lock_open</span>")
 		oButton.append("Decrypt")
 		oButton.prop("disabled", true)
-		oButton.click(() => { oThis.onDecryptClick() })
+		oButton.click(() => oThis.onDecryptClick())
 		oDiv.append(oButton)
 
 		sID = cJquery.child_ID(oElement, this.child_names.inital_runs)
@@ -213,7 +213,7 @@ class cCACryptControl {
 		//start the scrambling
 		cCACryptEvent.triggerStatus("scrambling started")
 		var oScrambler = new cCAScrambler(this.grid, iInitialruns, sPlaintext)
-		bean.on(oScrambler, cCAScramblerEvent.hook, (poEvent) => { oThis.onCAScramblerEvent(poEvent) })
+		bean.on(oScrambler, cCAScramblerEvent.hook, (poEvent) => oThis.onCAScramblerEvent(poEvent))
 		oScrambler.scramble()
 	}
 
@@ -249,7 +249,7 @@ class cCACryptControl {
 
 	//*******************************************************************************
 	onCAGridEvent(poEvent) {
-		if (poEvent.action === cCAGridEvent.actions.import_grid){
+		if (poEvent.action === cCAGridEvent.actions.import_grid) {
 			this.grid = poEvent.data
 			cCACryptEvent.triggerStatus("grid imported - ready to rock")
 		}

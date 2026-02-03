@@ -69,9 +69,9 @@ class cCAGrid {
 		this.runData = new cCAGridRunData()
 
 		var oThis = this /** @type cCAGrid */
-		cCAEventHelper.subscribe_to_grid_events(this.name, (poEvent) => { oThis.onCAGridEvent(poEvent) })
-		cCAEventHelper.subscribe_to_action_events(this.name, (poEvent) => { oThis.onCAActionEvent(poEvent) })
-		cCAEventHelper.subscribe_to_rule_events(this.name, (poEvent) => { oThis.onCARuleEvent(poEvent) })
+		cCAEventHelper.subscribe_to_grid_events(this.name, (poEvent) => oThis.onCAGridEvent(poEvent))
+		cCAEventHelper.subscribe_to_action_events(this.name, (poEvent) => oThis.onCAActionEvent(poEvent))
+		cCAEventHelper.subscribe_to_rule_events(this.name, (poEvent) => oThis.onCARuleEvent(poEvent))
 	}
 
 	//#######################################################################
@@ -385,13 +385,14 @@ class cCAGrid {
 		var iCountOnes = 0
 		var iCountZeros = 0
 
-		this.changed_cells.forEach(poCell => {
-			sBinary += poCell.value
-			if (poCell.value !== 0)
-				iCountOnes++;
-			else
-				iCountZeros++;
-		})
+		this.changed_cells.forEach(
+			function(poCell){
+				sBinary += poCell.value
+				if (poCell.value !== 0)
+					iCountOnes++;
+				else
+					iCountZeros++;
+			})
 
 		var sHash = md5(sBinary) + "_" + iCountOnes + "," + iCountZeros
 
