@@ -63,8 +63,8 @@ class cCARemoteControls {
 				this._enable_controls(true)
 				break
 		}
-		var oEvent = new cCAActionEvent(this.grid_name, cCAActionEvent.actions.control, parseInt(piAction))
-		oEvent.trigger()	//triggers the event on the document
+		var oActionEvent = new cCAActionEvent(this.grid_name, cCAActionEvent.actions.control, parseInt(piAction))
+		oActionEvent.trigger()	//triggers the event on the document
 	}
 
 

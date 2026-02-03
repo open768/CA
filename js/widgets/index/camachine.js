@@ -87,8 +87,8 @@ $.widget( "ck.camachine",{
 		cBrowser.get_clipboard_permissions(true)
 		
 		//---------------informs subscribers that UI is ready -------------------------------
-		var oEvent = new cCAActionEvent( oOptions.name, cCAActionEvent.actions.ready,null)
-		oEvent.trigger()
+		var oActionEvent = new cCAActionEvent( oOptions.name, cCAActionEvent.actions.ready,null)
+		oActionEvent.trigger()
 
 	},
 })

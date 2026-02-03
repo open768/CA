@@ -38,12 +38,12 @@ class cCAGridStateInit {
     var iSelected = parseInt($(poEvent.target).val());
 
     //---------tell subscribers to init
-    var oEvent = new cCAActionEvent(
+    var oActionEvent = new cCAActionEvent(
       this.grid_name,
       cCAActionEvent.actions.grid_init,
       iSelected,
     );
-    oEvent.trigger();
+    oActionEvent.trigger();
   }
 
   //***************************************************************

@@ -122,8 +122,8 @@ class cCAScrambler{
 	async perform_inital_runs(){
 		if (this.initial_runs_completed < this.inital_runs){
 			this.status = cCAScramblerTypes.status.initialRuns
-			var oEvent = new cCAActionEvent(this.grid.name, cCAGridTypes.actions.step)
-			oEvent.trigger()
+			var oActionEvent = new cCAActionEvent(this.grid.name, cCAGridTypes.actions.step)
+			oActionEvent.trigger()
 		}else
 			throw new Error("not implemented")
 	}
@@ -137,8 +137,8 @@ class cCAScrambler{
 	 * @returns {*}
 	 */
 	async scramble(){ 
-		var oEvent = new cCAScramblerEvent( cCAScramblerEvent.types.general, cCAScramblerEvent.actions.status, "Started scrambler")
-		oEvent.trigger()
+		var oScramblerEvent = new cCAScramblerEvent( cCAScramblerEvent.types.general, cCAScramblerEvent.actions.status, "Started scrambler")
+		oScramblerEvent.trigger()
 
 		this.initial_runs_completed = 0
 		this.perform_inital_runs()

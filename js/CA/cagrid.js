@@ -158,8 +158,8 @@ class cCAGrid {
 		//link if there is a rule
 		if (this.rule) this._link_cells()
 
-		var oEvent = new cCAGridEvent(this.name, cCAGridEvent.notify.clear)
-		oEvent.trigger()
+		var oGridEvent = new cCAGridEvent(this.name, cCAGridEvent.notify.clear)
+		oGridEvent.trigger()
 		cDebug.leave()
 	}
 
@@ -273,8 +273,8 @@ class cCAGrid {
 			this.running = false
 			cDebug.warn("no change detected in grid")
 			this.changed_cells = null
-			oEvent = new cCAGridEvent(this.name, cCAGridEvent.notify.nochange)
-			oEvent.trigger()
+			var oGridEvent = new cCAGridEvent(this.name, cCAGridEvent.notify.nochange)
+			oGridEvent.trigger()
 			return
 		}
 
@@ -328,8 +328,8 @@ class cCAGrid {
 		//inform consumers that grid has executed
 		this.runData.changed_cells = this.changed_cells
 		this.changed_cells = null
-		var oEvent = new cCAGridEvent(this.name, cCAGridEvent.notify.done, this.runData)
-		oEvent.trigger()
+		var oGridEvent = new cCAGridEvent(this.name, cCAGridEvent.notify.done, this.runData)
+		oGridEvent.trigger()
 	}
 
 	/**
@@ -352,8 +352,8 @@ class cCAGrid {
 		if (this.running) {
 			cDebug.write("running again")
 			this.runData.runs++
-			var oEvent = new cCAActionEvent(this.name, cCAActionEvent.actions.control, cCAGridTypes.actions.step);
-			oEvent.trigger()
+			var oActionEvent = new cCAActionEvent(this.name, cCAActionEvent.actions.control, cCAGridTypes.actions.step);
+			oActionEvent.trigger()
 		}
 		cDebug.leave()
 	}
@@ -372,8 +372,8 @@ class cCAGrid {
 		if (aHistory.includes(sHash)) {
 			this.running = false
 			cDebug.warn("repeat pattern seen")
-			var oEvent = new cCAGridEvent(this.name, cCAGridEvent.notify.repeatPattern)
-			oEvent.trigger()
+			var oGridEvent = new cCAGridEvent(this.name, cCAGridEvent.notify.repeatPattern)
+			oGridEvent.trigger()
 			return
 		}
 		aHistory.push(sHash)

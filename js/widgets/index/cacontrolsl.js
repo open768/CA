@@ -206,8 +206,8 @@ class cCAControlsL {
 					if (!isNaN(oBoredomList.val())) oRule.boredom = oBoredomList.val()
 
 					//inform subscribers
-					var oEvent = new cCARuleEvent(this.grid_name, cCARuleEvent.actions.set_rule, oRule)
-					oEvent.trigger()
+					var oRuleEvent = new cCARuleEvent(this.grid_name, cCARuleEvent.actions.set_rule, oRule)
+					oRuleEvent.trigger()
 					break
 				default:
 					throw new CAException("unknown rule type")
@@ -281,8 +281,8 @@ class cCAControlsL {
 		this.rule.set_boredom(iBoredem)
 
 		//inform subscribers
-		var oEvent = new cCARuleEvent(this.grid_name, cCARuleEvent.actions.set_rule, this.rule)
-		oEvent.trigger()	
+		var oRuleEvent = new cCARuleEvent(this.grid_name, cCARuleEvent.actions.set_rule, this.rule)
+		oRuleEvent.trigger()	
 	}
 
 	//#################################################################

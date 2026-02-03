@@ -84,13 +84,13 @@ class cCACanvas {
 				break
 			case cCAGridEvent.notify.nochange:
 				alert("no change detected in grid")
-				oEvent = new cCACanvasEvent(this.grid_name, cCACanvasEvent.notify.nochange, null)
-				oEvent.trigger()
+				var oCanvasEvent = new cCACanvasEvent(this.grid_name, cCACanvasEvent.notify.nochange, null)
+				oCanvasEvent.trigger()
 				break
 			case cCAGridEvent.notify.repeatPattern:
 				alert("repeat pattern seen")
-				oEvent = new cCACanvasEvent(this.grid_name, cCACanvasEvent.notify.nochange, null)
-				oEvent.trigger()
+				var oCanvasEvent = new cCACanvasEvent(this.grid_name, cCACanvasEvent.notify.nochange, null)
+				oCanvasEvent.trigger()
 				break
 			case cCAGridEvent.actions.import_grid:
 				cDebug.write("action: import grid")
@@ -101,8 +101,8 @@ class cCACanvas {
 				this._drawGrid(oGrid.get_changed_cells())
 
 				//rule has been set
-				oEvent = new cCARuleEvent(this.grid_name, cCARuleEvent.actions.update_rule, oGrid.get_rule())
-				oEvent.trigger()
+				var oRuleEvent = new cCARuleEvent(this.grid_name, cCARuleEvent.actions.update_rule, oGrid.get_rule())
+				oRuleEvent.trigger()
 				break
 		}
 	}
@@ -146,8 +146,8 @@ class cCACanvas {
 
 			setTimeout(				//canvas needs to yield to allow image to be drawn
 				function() {
-					var oEvent = new cCAGridEvent(oThis.grid_name, cCAGridEvent.notify.changedCellsConsumed);
-					oEvent.trigger()
+					var oGridEvent = new cCAGridEvent(oThis.grid_name, cCAGridEvent.notify.changedCellsConsumed);
+					oGridEvent.trigger()
 				},
 				this.CELL_LOAD_DELAY		//fudge factor to delay next grid cycle
 			)
@@ -186,8 +186,8 @@ class cCACanvas {
 		var oRC = this._get_cell_rc_from_event(poEvent, true)
 		if (oRC) {
 			var oChangedCell = new cCAGridCell(oRC.row, oRC.col, 1)
-			var oEvent = new cCAGridEvent(this.grid_name, cCAGridEvent.actions.set_cell, oChangedCell)
-			oEvent.trigger()
+			var oGridEvent = new cCAGridEvent(this.grid_name, cCAGridEvent.actions.set_cell, oChangedCell)
+			oGridEvent.trigger()
 		}
 	}
 
@@ -226,8 +226,8 @@ class cCACanvas {
 		this._drawGrid(poData.changed_cells)	//draw the changed cells
 
 		//tell consumers about status
-		var oEvent = new cCACanvasEvent(this.grid_name, cCACanvasEvent.actions.grid_status, poData)
-		oEvent.trigger()
+		var oCanvasEvent = new cCACanvasEvent(this.grid_name, cCACanvasEvent.actions.grid_status, poData)
+		oCanvasEvent.trigger()
 
 		cDebug.leave()
 	}
@@ -249,8 +249,8 @@ class cCACanvas {
 		this.grid = poGrid
 
 		// publish grid details to anyone interested - eg to export grid data, or start/stop the grid
-		var oEvent = new cCACanvasEvent(this.grid_name, cCACanvasEvent.actions.set_grid, poGrid)
-		oEvent.trigger()
+		var oCanvasEvent = new cCACanvasEvent(this.grid_name, cCACanvasEvent.actions.set_grid, poGrid)
+		oCanvasEvent.trigger()
 	}
 
 	//****************************************************************
@@ -268,8 +268,8 @@ class cCACanvas {
 		this.canvas = oCanvas
 
 		//initialise the grid
-		var oEvent = new cCAActionEvent(this.grid_name, cCAActionEvent.actions.grid_init, cCAGridTypes.init.block.id)
-		oEvent.trigger()
+		var oActionEvent = new cCAActionEvent(this.grid_name, cCAActionEvent.actions.grid_init, cCAGridTypes.init.block.id)
+		oActionEvent.trigger()
 		cDebug.leave()
 	}
 
