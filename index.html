@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html>
+
 <head>
+	<title>Cellular Automata Explorer</title>
 	<!--**************************************************************************
-	Cellular Automata Simulator © 2013 by open768 
+	Cellular Automata Simulator © 2013-2026 by chickenkatsu.co.uk ( 
 	is licensed under Attribution-NonCommercial-ShareAlike 4.0 International. 
 	To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-sa/4.0/
 	contact: https://github.com/open768/
@@ -13,18 +15,18 @@
 	**************************************************************************-->
 	<!-- 3rd party libraries (w3c) -->
 	<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-	
+
 	<!-- 3rd party libraries (bean) -->
-	<script  src="https://cdnjs.cloudflare.com/ajax/libs/bean/1.0.15/bean.min.js"></script>
-	
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/bean/1.0.15/bean.min.js"></script>
+
 	<!-- 3rd party libraries (jquery) -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 	<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
-	<script  src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
-	<script  src="https://cdnjs.cloudflare.com/ajax/libs/jcanvas/23.0.0/umd/jcanvas.min.js"></script>
-	<script  src="https://cdn.jsdelivr.net/npm/js-md5@0.8.3/build/md5.min.js"></script>
-	<script  src="https://www.gstatic.com/charts/loader.js"></script>
-	
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jcanvas/23.0.0/umd/jcanvas.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/js-md5@0.8.3/build/md5.min.js"></script>
+	<script src="https://www.gstatic.com/charts/loader.js"></script>
+
 	<!-- stylesheets -->
 	<link rel="stylesheet" href="css/CA.css">
 	<link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
@@ -47,7 +49,7 @@
 	<script src="js/CA/cagridimporter.js"></script>
 	<script src="js/CA/caimporter.js"></script>
 	<script src="js/CA/calexicon.js"></script>
-	
+
 	<!-- widgets for page -->
 	<script src="js/secrets.js"></script>
 	<script src="js/widgets/components/cacanvas.js"></script>
@@ -60,28 +62,46 @@
 	<script src="js/widgets/index/cacontrolsl.js"></script>
 	<script src="js/widgets/index/cacontrolsr.js"></script>
 </head>
+
 <body>
-	<script >
+	<script>
 		//cDebug.on(cDebugTypes.levels.extra)		//turn on debugging
-		function onJqueryLoad(){
+		function onJqueryLoad() {
 			cSecrets.add_googletag()
-			$("#machine").camachine({name:"caexplore"});		//main UI is in here
+			$("#machine").camachine({ name: "caexplore" });		//main UI is in here
 		}
 		$(onJqueryLoad);
 	</script>
 
-	<div id="machine">Loading Machine</div>
+	<div class="w3-card">
+		<header class="w3-container w3-light-blue">
+			<h3>Cellular Automata Explorer</h3>
+		</header>
+		<div class="w3-container w3-padding-16">
+			<div id="machine">Loading Machine</div>
+		</div>
+	</div>
 
-	<DIV id="infopanel"><ul>
-		<li>copy the rule into the clipboard and
+	<DIV id="infopanel" class="w3-card-4 w3-sand" style="position: fixed; bottom: 0; right: 0; left:0 ">
+		<header class="w3-container w3-yellow">
+			<h3>Information</h3>
+		</header>
+		<div class="w3-container">
 			<ul>
-				<li>for the editor <a target=editor href="editor.html">Click here</a></li>
-				<li>for the scrambler <a target=editor href="scrambler.html">Click here</a></li>
-				<li>for the encryptor <a target=editor href="crypt.html">Click here</a></li>
-			</ul> 
-		<li>for documentation see <a href="https://docs.google.com/document/d/1Cfn2wzHjWAyRCol7YzSSda7y-o4xKYcIUZwRrdAyHtc/edit?usp=sharing" target="_new">this document</a>
-		<li>we're on <a href="https://github.com/open768/CA">Github</a>
-		<li>for more CA rules see <a target="mcell" href="http://psoup.math.wisc.edu/mcell/ca_rules.html">http://psoup.math.wisc.edu/mcell/ca_rules.html</a>
-	</ul></DIV>
+				<li>copy the rule into the clipboard and
+					<ul>
+						<li>for the editor <a target=editor href="editor.html">Click here</a></li>
+						<li>for the scrambler <a target=editor href="scrambler.html">Click here</a></li>
+						<li>for the encryptor <a target=editor href="crypt.html">Click here</a></li>
+					</ul>
+				<li>for documentation see <a href="https://github.com/open768/CA/blob/master/%5Bdoc%5D"
+						target="_new">this document</a>
+				<li>we're on <a href="https://github.com/open768/CA">Github</a>
+				<li>for more CA rules see <a target="mcell"
+						href="http://psoup.math.wisc.edu/mcell/ca_rules.html">http://psoup.math.wisc.edu/mcell/ca_rules.html</a>
+			</ul>
+		</div>
+	</DIV>
 </body>
+
 </html>

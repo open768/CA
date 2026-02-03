@@ -13,3 +13,6 @@ css/jquery/
 #design stuff
 *.afdesign
 *.ldb
+
+#tmp documents
+~*
