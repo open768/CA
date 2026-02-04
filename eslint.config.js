@@ -23,4 +23,4 @@ module.exports = [
       // Add custom rules here
     },
   },
-];
+]

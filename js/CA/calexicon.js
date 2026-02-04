@@ -10,51 +10,48 @@ For licenses that allow for commercial use please contact cluck@chickenkatsu.co.
 //for more rules see: http://psoup.math.wisc.edu/mcell/ca_rules.html
 
 //###############################################################################
-var cCaLexiconRule = function(piType, psLabel, psRule){
-	this.type = piType
-	this.label = psLabel
-	this.rule = psRule
+var cCaLexiconRule = function (piType, psLabel, psRule) {
+  this.type = piType
+  this.label = psLabel
+  this.rule = psRule
 }
-
 
 class cCALexicon {
-	/**
-	 * Description placeholder
-	 * 
-	 *
-	 * @static
-	 * @returns list
-	 */
-	static get_presets(){
-		var aPresets = []
-		aPresets.push( this._make_life_rule("2x2", "B36/S125"))
-		aPresets.push( this._make_life_rule("34 life", "B34/S34"))
-		aPresets.push( this._make_life_rule("Anneal", "B4678/S35678"))
-		aPresets.push( this._make_life_rule("Amoeba", "B357/S1358"))
-		aPresets.push( this._make_life_rule("Assimilation", "B345/S4567"))
-		aPresets.push( this._make_life_rule("Coagulations", "B378/S235678"))
-		aPresets.push( this._make_life_rule("Conways","B3/S23"))
-		aPresets.push( this._make_life_rule("Coral", "B3/S45678"))
-		aPresets.push( this._make_life_rule("Diamoeba", "B35678/S5678"))
-		aPresets.push( this._make_life_rule("Maze", "B3/S1234"))
-		aPresets.push( this._make_life_rule("Replicator","B1357/S1357"))
-		aPresets.push( this._make_life_rule("Walled Cities", "B45678/S2345"))
-		
-		return aPresets
-	}
-	
-	/**
-	 * Description placeholder
-	 * 
-	 *
-	 * @static
-	 * @param {*} psName
-	 * @param {*} psRule
-	 * @returns {cCaLexiconRule}
-	 */
-	static _make_life_rule(psName, psRule){
-		return new cCaLexiconRule(cCAConsts.rule_types.life,psName,psRule)
-	}
-	
-}
+  /**
+   * Description placeholder
+   *
+   *
+   * @static
+   * @returns list
+   */
+  static get_presets() {
+    var aPresets = []
+    aPresets.push(this._make_life_rule("2x2", "B36/S125"))
+    aPresets.push(this._make_life_rule("34 life", "B34/S34"))
+    aPresets.push(this._make_life_rule("Anneal", "B4678/S35678"))
+    aPresets.push(this._make_life_rule("Amoeba", "B357/S1358"))
+    aPresets.push(this._make_life_rule("Assimilation", "B345/S4567"))
+    aPresets.push(this._make_life_rule("Coagulations", "B378/S235678"))
+    aPresets.push(this._make_life_rule("Conways", "B3/S23"))
+    aPresets.push(this._make_life_rule("Coral", "B3/S45678"))
+    aPresets.push(this._make_life_rule("Diamoeba", "B35678/S5678"))
+    aPresets.push(this._make_life_rule("Maze", "B3/S1234"))
+    aPresets.push(this._make_life_rule("Replicator", "B1357/S1357"))
+    aPresets.push(this._make_life_rule("Walled Cities", "B45678/S2345"))
 
+    return aPresets
+  }
+
+  /**
+   * Description placeholder
+   *
+   *
+   * @static
+   * @param {*} psName
+   * @param {*} psRule
+   * @returns {cCaLexiconRule}
+   */
+  static _make_life_rule(psName, psRule) {
+    return new cCaLexiconRule(cCAConsts.rule_types.life, psName, psRule)
+  }
+}
