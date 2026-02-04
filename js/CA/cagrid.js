@@ -373,7 +373,9 @@ class cCAGrid {
   _add_to_history() {
     //trim the history
     var aHistory = this.history
-    while (aHistory.length > cCAGrid.HISTORY_LEN) aHistory.shift()
+
+    //is history too long?
+    while (aHistory.length > cCAGrid.HISTORY_LEN) aHistory.shift() //remove first history entry
 
     var sHash = this._changed_cells_hash()
     if (aHistory.includes(sHash)) {

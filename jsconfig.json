@@ -10,7 +10,7 @@
     "**/*.js",
     "globals.d.ts",
     "../jsinc/**/*.js"
-  ],
+, "js/widgets/index/caindexjs"  ],
   "exclude": [
     "**/node_modules",
     "**/bower_components",
