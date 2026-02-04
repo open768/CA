@@ -62,8 +62,8 @@ class cCACanvas {
     poElement.addClass("CACanvas")
 
     //subscribe to CAEvents (see #set_grid for subscribing to grid events)
-    var oThis = this
-    /** @type cCACanvas */
+    /** @type cCACanvas */ var oThis = this
+
     cCAEventHelper.subscribe_to_action_events(this.grid_name, (poEvent) =>
       oThis._onCAActionEvent(poEvent),
     )
@@ -127,8 +127,8 @@ class cCACanvas {
   //****************************************************************
   _onCAActionEvent(poEvent) {
     var oElement = this.element
-    var oThis = this
-    /** @type cCACanvas */
+    /** @type cCACanvas */ var oThis = this
+
     var oGrid
 
     cDebug.enter()
@@ -156,9 +156,7 @@ class cCACanvas {
   _count_drawn_cells() {
     //update the count of cells drawn
     this.cells_drawn++
-    var oThis = this
-
-    /** @type cCACanvas */
+    /** @type cCACanvas */ var oThis = this
 
     // when all cells have been drawn, let the grid know that the cells have been consumed
     if (this.cells_drawn >= this.cells_to_draw) {

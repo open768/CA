@@ -21,14 +21,12 @@ class cCAControlLTypes {
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 //* this could be broken down into smaller widgets
 class cCAControlsL {
-  grid = null
-  /** @type cCAGrid */
-  rule = null
-  /** @type cCARule */
-  element = null
-  grid_name = null
+  /** @type cCAGrid */ grid = null
 
-  /** @type string */
+  /** @type cCARule */ rule = null
+
+  element = null
+  /** @type string */ grid_name = null
 
   //#################################################################
   //# Constructor
@@ -36,8 +34,8 @@ class cCAControlsL {
   constructor(poOptions, poElement) {
     cDebug.enter()
     this.element = poElement
-    var oThis = this
-    /** @type cCAControlsL */
+    /** @type cCAControlsL */ var oThis = this
+
     var oElement
     this.grid_name = poOptions.grid_name
 
@@ -72,9 +70,7 @@ class cCAControlsL {
     var oHeader, oContent, sID
 
     var oElement = this.element
-    var oThis = this
-
-    /** @type cCAControlsL */
+    /** @type cCAControlsL */ var oThis = this
 
     //--rules widgets-------------------------------------------------
     oHeader = $("<DIV>", { class: "ui-widget-header" })

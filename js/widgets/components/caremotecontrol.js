@@ -27,8 +27,8 @@ class cCARemoteControls {
   constructor(poOptions, poElement) {
     this.element = poElement
     this.grid_name = poOptions.grid_name
-    var oThis = this
-    /** @type cCARemoteControls */
+    /** @type cCARemoteControls */ var oThis = this
+
     var oElement = poElement
 
     //check dependencies
@@ -76,8 +76,8 @@ class cCARemoteControls {
 
   //****************************************************************************
   onCACanvasEvent(poEvent) {
-    var oThis = this
-    /** @type cCARemoteControls */
+    /** @type cCARemoteControls */ var oThis = this
+
     cDebug.enter()
     switch (poEvent.action) {
       case cCACanvasEvent.actions.set_grid:
@@ -125,9 +125,7 @@ class cCARemoteControls {
   _init() {
     var oDiv
     var oElement = this.element
-    var oThis = this
-
-    /** @type cCARemoteControls */
+    /** @type cCARemoteControls */ var oThis = this
 
     function _add_button(psID, psiIcon, psTitle, piAction) {
       var sID = cJquery.child_ID(oElement, psID)

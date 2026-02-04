@@ -30,8 +30,8 @@ class cCAStatus {
     this.element = poElement
     this.grid_name = poOptions.grid_name
 
-    var oThis = this
-    /** @type cCAStatus */
+    /** @type cCAStatus */ var oThis = this
+
     var oElement = this.element
 
     //set basic stuff
@@ -59,9 +59,7 @@ class cCAStatus {
   //****************************************************************************
   async onHeapTimer() {
     var oElement = this.element
-    var oThis = this
-
-    /** @type cCAStatus */
+    /** @type cCAStatus */ var oThis = this
 
     cDebug.write("heap timer running")
 
@@ -94,8 +92,7 @@ class cCAStatus {
           if (this.heap_timer_running)
             cDebug.warn("heap timer allready running")
           else {
-            var oThis = this
-            /** @type cCAStatus */
+            /** @type cCAStatus */ var oThis = this
             setTimeout(() => oThis.onHeapTimer(), oThis.HEAP_INTERVAL)
           }
           break
