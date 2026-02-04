@@ -16,4 +16,4 @@ css/jquery/
 
 #tmp documents
 ~*
-\[doc]/camodel.archimate.bak
+*.bak

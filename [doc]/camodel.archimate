@@ -36,7 +36,7 @@
       <element xsi:type="archimate:ApplicationFunction" name="cajson" id="id-e5eede1edbd04fa58ccb37289073d778" profiles="id-fc7d37bdde134f83bbb533c0c5fde1cf"/>
       <element xsi:type="archimate:ApplicationFunction" name="ccaremotecontrol" id="id-a6608a86bd234d64854ca7b25c4ed4f8" profiles="id-fc7d37bdde134f83bbb533c0c5fde1cf"/>
       <element xsi:type="archimate:ApplicationFunction" name="ccastatus" id="id-5bb3df42d2ab4b62be26cdf9600a06cd" profiles="id-fc7d37bdde134f83bbb533c0c5fde1cf"/>
-      <element xsi:type="archimate:ApplicationFunction" name="ccamachine" id="id-07bb93f29ea049309728b6e39b3e424f" profiles="id-fc7d37bdde134f83bbb533c0c5fde1cf"/>
+      <element xsi:type="archimate:ApplicationFunction" name="caindex" id="id-07bb93f29ea049309728b6e39b3e424f" profiles="id-fc7d37bdde134f83bbb533c0c5fde1cf"/>
       <element xsi:type="archimate:ApplicationFunction" name="ccacontrolsl" id="id-5f41e090fd07486483bfab71dca9f5b3" profiles="id-fc7d37bdde134f83bbb533c0c5fde1cf"/>
       <element xsi:type="archimate:ApplicationFunction" name="cCAchart" id="id-f6d6e47df9a646679932b19485e586d1" profiles="id-fc7d37bdde134f83bbb533c0c5fde1cf"/>
       <element xsi:type="archimate:ApplicationFunction" name="ccagridstateinit" id="id-3d500dd2793441db9dd647b964ac2da8" profiles="id-fc7d37bdde134f83bbb533c0c5fde1cf"/>
