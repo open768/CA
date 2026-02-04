@@ -1,6 +1,6 @@
 
 //###############################################################################
-/* eslint-disable-next-line no-unused-vars */
+
 class cCAIndexOps {
 	//bits are created 	nw,n,ne,w,c,e,sw,s,se
 

@@ -226,7 +226,7 @@ class cCAExportedObj {
  * @class cCARuleObjExporter
  
  */
-/* eslint-disable-next-line no-unused-vars */
+
 class cCARuleObjExporter {
 	/**
 	 * Description placeholder
@@ -262,7 +262,7 @@ class cCARuleObjExporter {
  * @class cCARuleObjImporter
  
  */
-/* eslint-disable-next-line no-unused-vars */
+
 class cCARuleObjImporter {
 	/**
 	 * Description placeholder
@@ -328,7 +328,7 @@ class cCaIdentityRule {
  * @class cCaRandomRule
  
  */
-/* eslint-disable-next-line no-unused-vars */
+
 class cCaRandomRule {
 	/**
 	 * Description placeholder
@@ -363,7 +363,7 @@ class cCaRandomRule {
  * @class cCARuleWolfram1DImporter
  
  */
-/* eslint-disable-next-line no-unused-vars */
+
 class cCARuleWolfram1DImporter {
 	/**
 	 * Description placeholder
@@ -439,9 +439,9 @@ class cCARuleLifeImporter {
 		if (psInput == null) throw new CAException(" no rule to import")
 
 		//validate rule and extract rule components
-		var aMatches = psInput.match(/B(\d+)\/S(\d+)/i)
+		var aMatches = psInput.match(/B(\d+)\/S(\d+)/i)		// check for Bnnn/Snnn format
 		if (aMatches == null) {
-			aMatches = psInput.match(/S(\d+)\/B(\d+)/i)
+			aMatches = psInput.match(/S(\d+)\/B(\d+)/i) 	// check for Snnn/Bnnn format
 			if (aMatches == null) throw new CAException(psInput + " is not a valid life notation - must be Bnnn/Snnn")
 			sBorn = aMatches[2]
 			sSurvive = aMatches[1]
@@ -534,7 +534,7 @@ class cCAModifierTypes {
  * @class cCARuleModifier
  
  */
-/* eslint-disable-next-line no-unused-vars */
+
 class cCARuleModifier {
 	/**
 	 * Description placeholder

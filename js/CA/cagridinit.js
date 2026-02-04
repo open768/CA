@@ -2,7 +2,7 @@
 //%
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 /** initialises the grid */
-/* eslint-disable-next-line no-unused-vars */
+
 class cCAGridInitialiser {
 	init(poGrid, piInitType) {
 		cDebug.enter()

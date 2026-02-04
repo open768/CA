@@ -17,7 +17,7 @@ For licenses that allow for commercial use please contact cluck@chickenkatsu.co.
  * @class cCACellTypes
  
  */
-/* eslint-disable-next-line no-unused-vars */
+
 class cCACellTypes {
 	static neighbours = {
 		fourway: 0,
@@ -65,7 +65,7 @@ class cCAConsts {
 
 
 
-/* eslint-disable-next-line no-unused-vars */
+
 class cCAGridTypes {
 	static init = {
 		blank: { id: 0, label: "Blank" },

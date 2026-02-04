@@ -36,7 +36,7 @@ For licenses that allow for commercial use please contact cluck@chickenkatsu.co.
  * @class cCARule
  
  */
-/* eslint-disable-next-line no-unused-vars */
+
 class cCARule {
 	/** @type number */ neighbour_type = cCACellTypes.neighbours.eightway
 	/** @type boolean */ has_state_transitions = false

@@ -16,7 +16,7 @@ var cCaLexiconRule = function(piType, psLabel, psRule){
 	this.rule = psRule
 }
 
-/* eslint-disable-next-line no-unused-vars */
+
 class cCALexicon {
 	/**
 	 * Description placeholder

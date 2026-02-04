@@ -7,16 +7,6 @@
         {
             "type": "chrome",
             "request": "launch",
-            "name": "crypt",
-            "file": "crypt.html",
-            "runtimeArgs": [
-                "--user-data-dir=${env:LOCALAPPDATA}\\Google\\Chrome\\User Data",
-                "--profile-directory=Default"
-              ]
-        },
-        {
-            "type": "chrome",
-            "request": "launch",
             "name": "index debug",
             "file": "index.html?debug",
         },

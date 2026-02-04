@@ -61,7 +61,7 @@ class cCAGridExported {
  *
  * @class cCAGridJSONExporter
  */
-/* eslint-disable-next-line no-unused-vars */
+
 class cCAGridJSONExporter {
 	/**
 	 * Description placeholder
@@ -130,7 +130,7 @@ class cCAGridJSONExporter {
 /**
  * imports a cCAGrid from JSON
  */
-/* eslint-disable-next-line no-unused-vars */
+
 class cCAGridJSONImporter {
 	//*********************************************
 	/**

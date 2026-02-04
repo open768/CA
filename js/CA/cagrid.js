@@ -15,7 +15,7 @@ class cCAGridRunData {
 	changed_cells = null
 }
 
-/* eslint-disable-next-line no-unused-vars */
+
 class cCAGridCell {
 	row = null
 	col = null
@@ -31,7 +31,7 @@ class cCAGridCell {
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 //%
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-/* eslint-disable-next-line no-unused-vars */
+
 class cCAGrid {
 	//#######################################################################
 	//# instance variables

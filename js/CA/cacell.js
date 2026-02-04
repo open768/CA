@@ -32,7 +32,7 @@ class cCAEvaluatedCell {
  * @class cCACell
  
  */
-/* eslint-disable-next-line no-unused-vars */
+
 class cCACell {
 	/** @type cCARule */ rule = null					//the rule that applies to this cell
 	/** @type number */ state = null					//for multi state rules (not used)
