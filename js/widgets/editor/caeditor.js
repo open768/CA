@@ -321,7 +321,7 @@ class cCAEditorWidget {
 
 		//add the cells
 		var iVal
-		for (var iIndex = 1; iIndex <= cCARuleTypes.max_inputs; iIndex++) {
+		for (var iIndex = 1; iIndex <= cCAConsts.MAX_INPUTS; iIndex++) {
 			try {
 				iVal = oRule.get_rule_output(cCACellTypes.default_state, iIndex)
 			}
@@ -409,7 +409,7 @@ class cCAEditorWidget {
 		var sID = cJquery.child_ID(oElement, cCAWidgetTypes.IDs.RULE)
 		var oTextArea = $("#" + sID)
 		var sText = oTextArea.val()
-		var iDiff = cCARuleTypes.base64_length - sText.length
+		var iDiff = cCAConsts.BASE64_LENGTH - sText.length
 
 		this._set_status(iDiff + " chars remaining")
 	}

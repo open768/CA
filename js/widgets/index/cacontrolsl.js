@@ -111,9 +111,9 @@ class cCAControlsL {
 		sID = cJquery.child_ID(oElement, cCAControlLTypes.rule_type_id)
 		oSelect = $("<SELECT>", { id: sID, width: 200, title: "choose the rule type to enter in the box above" })
 		oSelect.append($("<option>", { selected: 1, disabled: 1, value: -1 }).append("Rule Type"))
-		oSelect.append($("<option>", { value: cCARuleTypes.rule_types.base64 }).append("base64"))
-		oSelect.append($("<option>", { value: cCARuleTypes.rule_types.life }).append("life"))
-		oSelect.append($("<option>", { value: cCARuleTypes.rule_types.wolfram1d }).append("wolfram"))
+		oSelect.append($("<option>", { value: cCAConsts.rule_types.base64 }).append("base64"))
+		oSelect.append($("<option>", { value: cCAConsts.rule_types.life }).append("life"))
+		oSelect.append($("<option>", { value: cCAConsts.rule_types.wolfram1d }).append("wolfram"))
 		oContent.append(oSelect)
 		oSelect.selectmenu()
 
@@ -126,7 +126,7 @@ class cCAControlsL {
 		sID = cJquery.child_ID(oElement, cCAControlLTypes.boredom_ID)
 		oSelect = $("<SELECT>", { id: sID, width: 50, title: "how many times will a cell see a pattern before it gets bored" })
 		oSelect.append($("<option>", { selected: 1, disabled: 1 }).append("Select"))
-		oSelect.append($("<option>", { value: cCARuleTypes.no_boredom }).append("Never"))
+		oSelect.append($("<option>", { value: cCAConsts.NO_BOREDOM }).append("Never"))
 		for (var i = 2; i <= 10; i++) {
 			oSelect.append($("<option>", { value: i }).append(i + " times"))
 		}
@@ -190,20 +190,23 @@ class cCAControlsL {
 		var oRule
 		try {
 			switch (iSelected) {
-				case cCARuleTypes.rule_types.life:
+				case cCAConsts.rule_types.life:
 					oRule = cCARuleLifeImporter.makeRule(oTextArea.val())
 					this._update_rule_text(oRule)
 					break
-				case cCARuleTypes.rule_types.wolfram1d:
+				case cCAConsts.rule_types.wolfram1d:
 					oRule = cCARuleWolfram1DImporter.makeRule(oTextArea.val())
 					this._update_rule_text(oRule)
 					break
-				case cCARuleTypes.rule_types.base64:
+				case cCAConsts.rule_types.base64:
 					oRule = cCARuleBase64Importer.makeRule(oTextArea.val())
 
 					//set the boredom if chosen
 					var oBoredomList = $("#" + cJquery.child_ID(oElement, cCAControlLTypes.boredom_ID))
-					if (!isNaN(oBoredomList.val())) oRule.boredom = oBoredomList.val()
+					if (!isNaN(oBoredomList.val())) 
+						oRule.boredom = oBoredomList.val()
+					else
+						oRule.boredom = cCAConsts.NO_BOREDOM
 
 					//inform subscribers
 					var oRuleEvent = new cCARuleEvent(this.grid_name, cCARuleEvent.actions.set_rule, oRule)
@@ -232,9 +235,9 @@ class cCAControlsL {
 		var sSelected = oSelect.val()
 		if (sSelected) {
 			var iSelected = parseInt(sSelected)
-			if (iSelected == cCARuleTypes.rule_types.base64) {
+			if (iSelected == cCAConsts.rule_types.base64) {
 				var sText = oTextArea.val()
-				var iDiff = cCARuleTypes.base64_length - sText.length
+				var iDiff = cCAConsts.BASE64_LENGTH - sText.length
 				this._set_status(iDiff + " chars remaining")
 			}
 		}
@@ -257,9 +260,9 @@ class cCAControlsL {
 			var oRuleJson = JSON.parse(sPreset)
 
 			switch (oRuleJson.type) {
-				case cCARuleTypes.rule_types.life:
+				case cCAConsts.rule_types.life:
 					oTextArea.val(oRuleJson.rule)
-					oRulesSelect.val(cCARuleTypes.rule_types.life)
+					oRulesSelect.val(cCAConsts.rule_types.life)
 					oRulesSelect.selectmenu("refresh")
 					this._onSetRuleClick()
 					break
@@ -309,7 +312,7 @@ class cCAControlsL {
 
 		//update the rule type and trigger the rule set
 		var oSelect = $("#" + cJquery.child_ID(oElement, cCAControlLTypes.rule_type_id))
-		oSelect.val(cCARuleTypes.rule_types.base64)
+		oSelect.val(cCAConsts.rule_types.base64)
 		oSelect.selectmenu("refresh")
 		this._onSetRuleClick()
 	}

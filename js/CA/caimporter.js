@@ -28,7 +28,7 @@ class cCARuleBinaryExporter {
 		var sOut = ""
 		if (piState > poRule.stateRules.length) throw new CAException("invalid state requested")
 
-		for (var i = 1; i <= cCARuleTypes.max_inputs; i++)
+		for (var i = 1; i <= cCAConsts.MAX_INPUTS; i++)
 			sOut = sOut + poRule.get_rule_output(piState, i)
 
 		cDebug.leave()
@@ -55,38 +55,20 @@ class cCARuleBinaryImporter {
 	static makeRule(psInput) {
 		cDebug.enter()
 
-		if (psInput.length < cCARuleTypes.max_inputs) throw new CAException("incorrect length binary input:" + psInput.length + " should be " + cCARuleTypes.max_inputs)
-		if (psInput.length > cCARuleTypes.max_inputs) psInput = psInput.slice(0, cCARuleTypes.max_inputs - 1)
+		if (psInput.length < cCAConsts.MAX_INPUTS) throw new CAException("incorrect length binary input:" + psInput.length + " should be " + cCAConsts.MAX_INPUTS)
+		if (psInput.length > cCAConsts.MAX_INPUTS) psInput = psInput.slice(0, cCAConsts.MAX_INPUTS - 1)
 
 		//create  the rule 
 		var oRule = new cCARule()
 		oRule.neighbour_type = cCACellTypes.neighbours.eightway
 		oRule.has_state_transitions = false
-		for (var i = 1; i <= cCARuleTypes.max_inputs; i++) {
+		for (var i = 1; i <= cCAConsts.MAX_INPUTS; i++) {
 			var ch = psInput.charAt(i - 1)
 			oRule.set_output(cCACellTypes.default_state, i, parseInt(ch))
 		}
 
 		cDebug.leave()
 		return oRule
-	}
-
-
-	//***************************************************************
-	/**
-	 * Description placeholder
-	 * 
-	 */
-	test() {
-		cDebug.write("Testing cCARuleBinaryImporter")
-		var oRule1 = cCARuleLifeImporter.makeRule("B3/S23")
-
-		var sBinaryIn = this.export(oRule1, 1)
-		var oRule2 = this.makeRule(sBinaryIn, 1)
-
-		var sBinaryOut = this.export(oRule2, 1)
-		if (sBinaryOut !== sBinaryIn) throw new Error("test failed")
-		cDebug.write("Test passed")
 	}
 }
 
@@ -109,13 +91,13 @@ class cCARuleRepeatBase64Importer {
 		if (sInput.length == 0) throw new CAException("no input provided.")
 		if (!cConverterEncodings.isBase64(sInput)) throw new CAException("input must be base64 string")
 
-		var iRepeat = Math.floor(cCARuleTypes.base64_length / sInput.length)
+		var iRepeat = Math.floor(cCAConsts.BASE64_LENGTH / sInput.length)
 		var s64 = sInput.repeat(iRepeat)
-		var iRemain = cCARuleTypes.base64_length - s64.length
+		var iRemain = cCAConsts.BASE64_LENGTH - s64.length
 		s64 = s64 + sInput.slice(0, iRemain)
-		if (s64.length < cCARuleTypes.base64_length) throw new CAException("base64 not long enough, must be " + cCARuleTypes.base64_length + "chars")
+		if (s64.length < cCAConsts.BASE64_LENGTH) throw new CAException("base64 not long enough, must be " + cCAConsts.BASE64_LENGTH + "chars")
 
-		var sBin = cSimpleBase64.toBinary(s64, cCARuleTypes.max_inputs)
+		var sBin = cSimpleBase64.toBinary(s64, cCAConsts.MAX_INPUTS)
 		var oRule = cCARuleBinaryImporter.makeRule(sBin)
 
 		cDebug.leave()
@@ -150,7 +132,7 @@ class cCARuleBase64Exporter {
 		//a bit of a long way to go about it
 		var sBin = cCARuleBinaryExporter.export(poRule, piState)	//convert rule to binary
 		var sOut = cSimpleBase64.toBase64(sBin)			//convert binary to base64string
-		if (sOut.length !== cCARuleTypes.base64_length) throw new CAException("generated base64 is the wrong length")
+		if (sOut.length !== cCAConsts.BASE64_LENGTH) throw new CAException("generated base64 is the wrong length")
 
 		cDebug.leave()
 		return sOut
@@ -176,9 +158,9 @@ class cCARuleBase64Importer {
 	static makeRule(ps64) {
 		cDebug.enter()
 
-		if (ps64.length < cCARuleTypes.base64_length) throw new CAException("base64 not long enough, must be " + cCARuleTypes.base64_length + "chars")
+		if (ps64.length < cCAConsts.BASE64_LENGTH) throw new CAException("base64 not long enough, must be " + cCAConsts.BASE64_LENGTH + "chars")
 		if (!cConverterEncodings.isBase64(ps64)) throw new CAException("input must be base64  string")
-		var sBin = cSimpleBase64.toBinary(ps64, cCARuleTypes.max_inputs)
+		var sBin = cSimpleBase64.toBinary(ps64, cCAConsts.MAX_INPUTS)
 		var oRule = cCARuleBinaryImporter.makeRule(sBin)
 
 		cDebug.leave()
@@ -328,7 +310,7 @@ class cCaIdentityRule {
 		oRule.neighbour_type = cCACellTypes.neighbours.eightway
 		oRule.has_state_transitions = false
 
-		for (var i = 1; i <= cCARuleTypes.max_inputs; i++) {
+		for (var i = 1; i <= cCAConsts.MAX_INPUTS; i++) {
 			var iCentre = cCAIndexOps.get_value(i, cCACellTypes.directions.centre)
 			oRule.set_output(cCACellTypes.default_state, i, iCentre)
 		}
@@ -362,7 +344,7 @@ class cCaRandomRule {
 		oRule.neighbour_type = cCACellTypes.neighbours.eightway
 		oRule.has_state_transitions = false
 
-		for (var i = 1; i <= cCARuleTypes.max_inputs; i++) {
+		for (var i = 1; i <= cCAConsts.MAX_INPUTS; i++) {
 			var iRnd = Math.floor(Math.random() * 1.99)
 			oRule.set_output(cCACellTypes.default_state, i, iRnd)
 		}
@@ -411,7 +393,7 @@ class cCARuleWolfram1DImporter {
 
 		//make wolfram changes to the rule
 		//when the middle row is empty apply the wolfram rule to the row above
-		for (var iInput = 1; iInput <= cCARuleTypes.max_inputs; iInput++) {
+		for (var iInput = 1; iInput <= cCAConsts.MAX_INPUTS; iInput++) {
 			var iCentreBits = cCAIndexOps.get_centre_bits(iInput)
 			if (iCentreBits == 0) {
 				var iNorthBits = cCAIndexOps.get_north_bits(iInput)
@@ -484,11 +466,11 @@ class cCARuleLifeImporter {
 
 		//create  the rule 
 		var oRule = new cCARule()
-		oRule.neighbour_type = cCARuleTypes.Neighbour_8way
+		oRule.neighbour_type = cCACellTypes.neighbours.eightway
 		oRule.has_state_transitions = false
 
 		//populate the rule 
-		for (var i = 1; i <= cCARuleTypes.max_inputs; i++) {
+		for (var i = 1; i <= cCAConsts.MAX_INPUTS; i++) {
 			var iCentre = cCAIndexOps.get_value(i, cCACellTypes.directions.centre)
 			var iCount = cCAIndexOps.get_bit_count(i) - iCentre
 			var iNewValue
@@ -571,7 +553,7 @@ class cCARuleModifier {
 		if (piCount < 1 || piCount > 8) throw new CAException("invalid neighbour count")
 		if (piOutState < 0 || piOutState > 1) throw new CAException("invalid output state :" + piOutState)
 
-		for (var i = 1; i <= cCARuleTypes.max_inputs; i++) {
+		for (var i = 1; i <= cCAConsts.MAX_INPUTS; i++) {
 			var iCentre = cCAIndexOps.get_value(i, cCACellTypes.directions.centre)
 			//---------------------------------------------------------------
 			var bMatches = false

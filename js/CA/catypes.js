@@ -50,18 +50,10 @@ class cCACellTypes {
 
 
 //###############################################################################
-/**
- * Description placeholder
- * 
- *
- * @class cCARuleTypes
- 
- */
-/* eslint-disable-next-line no-unused-vars */
-class cCARuleTypes {
-	static max_inputs = Math.pow(2, 9) - 1
-	static base64_length = Math.ceil((Math.pow(2, 9) - 1) / 6)
-	static no_boredom = -1
+class cCAConsts {
+	static MAX_INPUTS = Math.pow(2, 9) - 1
+	static BASE64_LENGTH = Math.ceil((Math.pow(2, 9) - 1) / 6)
+	static NO_BOREDOM = -1
 	static rule_types = {
 		life: 1,
 		binary: 2,

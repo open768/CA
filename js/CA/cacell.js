@@ -90,7 +90,7 @@ class cCACell {
 			//optimisated by looking at the North cell which has always allready been evaluated, reduces the number of ops from 8 to 4
 			iValue = oNorth.evaluated.pattern
 			iValue <<= 3		//remove cells not in neighbourhood of this cell (makes number 12 bit, and bits are not in the right place)
-			iValue &= cCARuleTypes.max_inputs //truncate number to 9 bit number (but bits are not in the right place)
+			iValue &= cCAConsts.MAX_INPUTS //truncate number to 9 bit number (but bits are not in the right place)
 			iValue >>>= 3		//get ready for adding southerly cells (bits in correct place)
 
 			//further optimise by 1 op by looking at the evaluated West cell			
@@ -102,7 +102,7 @@ class cCACell {
 				iValue |= iWPattern //copy pattern
 
 				iValue <<= 1; iValue |= oNeigh.get(cCACellTypes.directions.southeast).value
-				iValue &= cCARuleTypes.max_inputs
+				iValue &= cCAConsts.MAX_INPUTS
 			} else {
 				iValue <<= 1; iValue |= oNeigh.get(cCACellTypes.directions.southwest).value
 				iValue <<= 1; iValue |= oNeigh.get(cCACellTypes.directions.south).value
@@ -174,7 +174,7 @@ class cCACell {
 	 */
 	check_boredom(piBitmap) {
 		//	only active cells can get bored
-		if (this.rule.boredom == null || this.rule.boredom == cCARuleTypes.no_boredom || this.value == 0 || piBitmap == 0)
+		if (this.rule.boredom == null || this.rule.boredom == cCAConsts.NO_BOREDOM || this.value == 0 || piBitmap == 0)
 			return false
 
 		//was it the same bitmap as last time

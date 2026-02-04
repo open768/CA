@@ -23,8 +23,8 @@ For licenses that allow for commercial use please contact cluck@chickenkatsu.co.
 	 */
 	constructor() {
 		this.neighbour_type = cCACellTypes.neighbours.eightway
-		this.outputs = new Array(cCARuleTypes.max_inputs)
-		this.nextStates = new Array(cCARuleTypes.max_inputs)	//for future use
+		this.outputs = new Array(cCAConsts.MAX_INPUTS)
+		this.nextStates = new Array(cCAConsts.MAX_INPUTS)	//for future use
 	}
 }
 
@@ -41,7 +41,7 @@ class cCARule {
 	/** @type number */ neighbour_type = cCACellTypes.neighbours.eightway
 	/** @type boolean */ has_state_transitions = false
 	/** @type Array */ 	 stateRules = null
-	/** @type number */  boredom = cCARuleTypes.no_boredom		//how many times a pattern is seen before a cell is bored
+	/** @type number */  boredom = cCAConsts.NO_BOREDOM		//how many times a pattern is seen before a cell is bored
 
 	/**
 	 * Creates an instance of cCARule.
@@ -53,7 +53,7 @@ class cCARule {
 		this.neighbour_type = cCACellTypes.neighbours.eightway
 		this.has_state_transitions = false
 		this.stateRules = []
-		this.boredom = cCARuleTypes.no_boredom
+		this.boredom = cCAConsts.NO_BOREDOM
 	}
 
 	//***************************************************************
@@ -70,7 +70,7 @@ class cCARule {
 		oRule.neighbour_type = cCACellTypes.neighbours.eightway
 		oRule.has_state_transitions = false
 
-		for (var i = 1; i <= cCARuleTypes.max_inputs; i++) {
+		for (var i = 1; i <= cCAConsts.MAX_INPUTS; i++) {
 			var iRnd = Math.floor(Math.random() * 1.99)
 			oRule.set_output(cCACellTypes.default_state, i, iRnd)
 		}
@@ -209,7 +209,7 @@ class cCARule {
 		//check for cell boredom
 		/** @type Boolean */ var bBored
 		bBored = false
-		if (this.boredom !== cCARuleTypes.no_boredom)
+		if (this.boredom !== cCAConsts.NO_BOREDOM)
 			bBored = poCell.check_boredom(iBitmap)
 
 		if (bBored)
