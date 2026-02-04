@@ -1,5 +1,4 @@
 //###############################################################################
-
 class CAException {
   /**
    * Creates an instance of CAException.
@@ -19,10 +18,17 @@ class cCABaseEvent {
   grid_name = null //grid name is used to create a
   action = null
   data = null
-  event_type_id = "***NOT SET***" //this is an abstract property
+  /**
+   * @abstract
+   * @type {string}
+   */
+  static event_type_id = null // this is an abstract property
 
   constructor(psGridName, psAction, poData = null) {
     if (!psGridName || !psAction) $.error("incorrect number of arguments")
+    if (!this.constructor.event_type_id)
+      $.error("event_type_id not overridden in class:" + this.constructor.name)
+
     this.grid_name = psGridName
     this.action = psAction
     this.data = poData
@@ -33,19 +39,24 @@ class cCABaseEvent {
    * @memberof cCABaseEvent
    */
   channel_id() {
-    return this.event_type_id + this.grid_name //creates a unique ID for a specific grid
+    return this.constructor.event_type_id + this.grid_name //creates a unique ID for a specific grid
   }
 
   async trigger() {
     var sEventName = this.channel_id()
     bean.fire(document, sEventName, this)
   }
+
+  subscribe(pfnCallback) {
+    if (pfnCallback == null) $.error("callback missing")
+    bean.on(document, this.channel_id(), pfnCallback)
+  }
 }
 
 //***************************************************************************
 
 class cCAActionEvent extends cCABaseEvent {
-  event_type_id = "CAACTEV"
+  static event_type_id = "CAACTEV"
   static actions = {
     ready: "AERD",
     grid_init: "AEGI",
@@ -56,7 +67,7 @@ class cCAActionEvent extends cCABaseEvent {
 //***************************************************************************
 
 class cCARuleEvent extends cCABaseEvent {
-  event_type_id = "CARULEEV"
+  static event_type_id = "CARULEEV"
   static actions = {
     update_rule: "REUR",
     set_rule: "GESR",
@@ -66,7 +77,7 @@ class cCARuleEvent extends cCABaseEvent {
 //###############################################################################
 
 class cCAGridEvent extends cCABaseEvent {
-  event_type_id = "CAGRIDEV"
+  static event_type_id = "CAGRIDEV"
   static actions = {
     init_grid: "GAini",
     set_cell: "GASet",
@@ -82,7 +93,7 @@ class cCAGridEvent extends cCABaseEvent {
 }
 
 class cCACanvasEvent extends cCABaseEvent {
-  event_type_id = "CACANVASEV"
+  static event_type_id = "CACANVASEV"
   static actions = {
     grid_status: "CAstatus",
     set_grid: "CASetgrid",
