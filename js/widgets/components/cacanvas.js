@@ -58,8 +58,8 @@ class cCACanvas {
 
 		//set basic stuff
 		poElement.uniqueId()
-		poElement.addClass('ui-widget')
-		poElement.addClass('CACanvas')
+		poElement.addClass('ui-widget') //css
+		poElement.addClass('CACanvas') //css
 
 		//subscribe to CAEvents (see #set_grid for subscribing to grid events)
 		/** @type cCACanvas */ var oThis = this
