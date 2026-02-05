@@ -1,21 +1,11 @@
 {
-  "compilerOptions": {
-    "target": "ES2022",
-    "module": "none",
-    "checkJs": true,
-    "allowJs": true,
-    "baseUrl": "."
-  },
-  "include": [
-    "**/*.js",
-    "globals.d.ts",
-    "../jsinc/**/*.js"
-, "js/widgets/index/caindexjs"  ],
-  "exclude": [
-    "**/node_modules",
-    "**/bower_components",
-    "**/dist",
-    "**/build",
-    "**/test"
-  ]
+	"compilerOptions": {
+		"target": "ES2022",
+		"module": "none",
+		"checkJs": true,
+		"allowJs": true,
+		"baseUrl": "."
+	},
+	"include": ["**/*.js", "globals.d.ts", "../jsinc/**/*.js"],
+	"exclude": ["**/node_modules", "**/bower_components", "**/dist", "**/build", "**/test"]
 }
