@@ -19,7 +19,7 @@ class cCAChartTypes {
 
 		try {
 			google.charts
-				.load('current', { packages: ['corechart'] })
+				.load('current', { packages: ['corechart'] }) // @ts-expect-error
 				.then(poEvent => oThis.OnGoogleChartsLoaded(poEvent))
 		} catch (e) {
 			cDebug.write('unable to load Google charts: ' + e.msg)

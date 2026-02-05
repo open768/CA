@@ -24,8 +24,18 @@ class cCABaseEvent {
 	 */
 	static event_type_id = null // this is an abstract property
 
+	/**
+	 * Creates a new CA event instance.
+	 *
+	 * @param {string} psGridName - The grid name associated with the event.
+	 * @param {string} psAction - The action type for the event.
+	 * @param {*} [poData=null] - Optional payload for the event.
+	 * @throws {Error} If required arguments are missing or the class does not override event_type_id.
+	 */
 	constructor(psGridName, psAction, poData = null) {
 		if (!psGridName || !psAction) $.error('incorrect number of arguments')
+
+		// @ts-expect-error
 		if (!this.constructor.event_type_id) $.error('event_type_id not overridden in class:' + this.constructor.name)
 
 		this.grid_name = psGridName
@@ -38,6 +48,7 @@ class cCABaseEvent {
 	 * @memberof cCABaseEvent
 	 */
 	channel_id() {
+		// @ts-expect-error
 		return this.constructor.event_type_id + this.grid_name //creates a unique ID for a specific grid
 	}
 
