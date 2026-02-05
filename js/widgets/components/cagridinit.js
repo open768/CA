@@ -46,7 +46,6 @@ class cCAGridStateInit {
 	//***************************************************************
 	_init() {
 		var oElement = this.element
-		/** @type cCAGridStateInit */ var oThis = this
 
 		var oDiv = $('<DIV>', { class: 'ui-widget-header' })
 		oDiv.append('initialise')
@@ -65,7 +64,7 @@ class cCAGridStateInit {
 		}
 		oDiv.append(oSelect)
 		oSelect.selectmenu({
-			select: poEvent => oThis.onInitClick(poEvent)
+			select: poEvent => this.onInitClick(poEvent)
 		})
 		oElement.append(oDiv)
 	}

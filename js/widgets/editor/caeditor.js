@@ -39,14 +39,13 @@ $.widget('ck.caeditwidget', {
 	//# Constructor
 	//*****************************************************************
 	_create: function () {
-		var oThis = this
-		var oOptions = oThis.options
-		var oElement = oThis.element
+		var oOptions = this.options
+		var oElement = this.element
 
 		oElement.uniqueId()
 		oElement.addClass('ui-widget')
 		oElement.addClass('caindex')
-		oElement.click(() => oThis.onClick())
+		oElement.click(() => this.onClick())
 
 		//add a canvas
 		var oCanvas = $('<canvas>')
@@ -72,8 +71,7 @@ $.widget('ck.caeditwidget', {
 	//# privates
 	//*****************************************************************
 	_drawGrid: function (oCanvas) {
-		var oThis = this
-		var oOptions = oThis.options
+		var oOptions = this.options
 
 		//-------------draw the 2 vertical and 2 horizontal lines for the grid
 		var iMax = oOptions.cell_size * 3 + 2
@@ -100,8 +98,7 @@ $.widget('ck.caeditwidget', {
 
 	//******************************************************************
 	_drawNeighbourhood: function (oCanvas) {
-		var oThis = this
-		var oOptions = oThis.options
+		var oOptions = this.options
 
 		//----------- draw the cells
 		var iDir, iCount, iBit
@@ -134,9 +131,8 @@ $.widget('ck.caeditwidget', {
 
 	//******************************************************************
 	_set_value: function (piValue) {
-		var oThis = this
-		var oElement = oThis.element
-		var oOptions = oThis.options
+		var oElement = this.element
+		var oOptions = this.options
 
 		oOptions.value = piValue
 
@@ -149,9 +145,7 @@ $.widget('ck.caeditwidget', {
 	//# Events
 	//*****************************************************************
 	onClick: function () {
-		var oThis = this
-
-		var oOptions = oThis.options
+		var oOptions = this.options
 		if (oOptions.value == 0) this._set_value(1)
 		else this._set_value(0)
 
@@ -174,7 +168,6 @@ class cCAEditorWidget {
 
 		//set basic stuff
 		poElement.uniqueId()
-		var oThis = this
 
 		//-------------------------------------------------------------------
 		this._render()
@@ -185,20 +178,19 @@ class cCAEditorWidget {
 		cBrowser.get_clipboard_permissions()
 		this._set_status('waiting for clipboard')
 		try {
-			cBrowser.paste_from_clipboard(psText => oThis.onGotClipText(psText))
+			cBrowser.paste_from_clipboard(psText => this.onGotClipText(psText))
 		} catch (e) {
 			cBrowser.writeConsoleWarning(e.message)
 			this._set_identity_rule()
 		}
 
 		//add event listener
-		bean.on(document, cCAWidgetTypes.click_event, poOptions => oThis.onEditWidgetClick(poOptions))
+		bean.on(document, cCAWidgetTypes.click_event, poOptions => this.onEditWidgetClick(poOptions))
 	}
 	//*****************************************************************
 	//# privates
 	//*****************************************************************
 	_render() {
-		var oThis = this
 		var oElement = this.element
 
 		oElement.empty()
@@ -224,13 +216,13 @@ class cCAEditorWidget {
 			class: 'rule rule_wide',
 			title: 'enter the base64 rule here'
 		})
-		oBox.keyup(() => oThis.onRuleInputKeyUp())
+		oBox.keyup(() => this.onRuleInputKeyUp())
 		oDiv.append(oBox)
 
 		var oButton = $('<button>', {
 			title: 'use the rule entered in the box above'
 		}).button({ icon: 'ui-icon-circle-arrow-e' })
-		oButton.click(() => oThis.onSetRuleClick())
+		oButton.click(() => this.onSetRuleClick())
 		oDiv.append(oButton)
 		oElement.append(oDiv)
 		oElement.append('<hr>')
@@ -305,7 +297,7 @@ class cCAEditorWidget {
 		//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 		oButton = $('<button>').append('Apply')
 		oDiv.append(oButton)
-		oButton.click(() => oThis.onNeighbourRuleClick())
+		oButton.click(() => this.onNeighbourRuleClick())
 		oElement.append(oDiv)
 	}
 
@@ -318,9 +310,8 @@ class cCAEditorWidget {
 
 	//*************************************************************
 	_add_edit_widgets() {
-		var oThis = this
-		var oOptions = oThis.options
-		var oElement = oThis.element
+		var oOptions = this.options
+		var oElement = this.element
 		var oRule = this.rule
 
 		//clear out any cells present
@@ -412,8 +403,7 @@ class cCAEditorWidget {
 
 	//*************************************************************
 	onRuleInputKeyUp() {
-		var oThis = this
-		var oElement = oThis.element
+		var oElement = this.element
 		var sID = cJquery.child_ID(oElement, cCAWidgetTypes.IDs.RULE)
 		var oTextArea = $('#' + sID)
 		var sText = oTextArea.val()

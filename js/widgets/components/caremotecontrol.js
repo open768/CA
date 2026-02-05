@@ -27,8 +27,6 @@ class cCARemoteControls {
 	constructor(poOptions, poElement) {
 		this.element = poElement
 		this.grid_name = poOptions.grid_name
-		/** @type cCARemoteControls */ var oThis = this
-
 		var oElement = poElement
 
 		//check dependencies
@@ -39,8 +37,8 @@ class cCARemoteControls {
 		oElement.addClass('ui-widget')
 
 		//subscribe to CAEvents
-		cCARuleEvent.subscribe(this.grid_name, poEvent => oThis.onCARuleEvent(poEvent))
-		cCACanvasEvent.subscribe(this.grid_name, poEvent => oThis.onCACanvasEvent(poEvent))
+		cCARuleEvent.subscribe(this.grid_name, poEvent => this.onCARuleEvent(poEvent))
+		cCACanvasEvent.subscribe(this.grid_name, poEvent => this.onCACanvasEvent(poEvent))
 
 		//put something in the widget
 		oElement.empty()
@@ -67,8 +65,6 @@ class cCARemoteControls {
 
 	//****************************************************************************
 	onCACanvasEvent(poEvent) {
-		/** @type cCARemoteControls */ var oThis = this
-
 		cDebug.enter()
 		switch (poEvent.action) {
 			case cCACanvasEvent.actions.set_grid:
@@ -76,7 +72,7 @@ class cCARemoteControls {
 				this._enable_buttons()
 				break
 			case cCACanvasEvent.notify.nochange:
-				setTimeout(() => oThis._enable_controls(false), 100) //stop
+				setTimeout(() => this._enable_controls(false), 100) //stop
 		}
 		cDebug.leave()
 	}
@@ -116,7 +112,7 @@ class cCARemoteControls {
 	_init() {
 		var oDiv
 		var oElement = this.element
-		/** @type cCARemoteControls */ var oThis = this
+		var oThis = this //needed for closure
 
 		function _add_button(psID, psiIcon, psTitle, piAction) {
 			var sID = cJquery.child_ID(oElement, psID)
@@ -128,7 +124,7 @@ class cCARemoteControls {
 			})
 			oButton.button({ icon: psiIcon, showLabel: false })
 			cJquery.enable_element(oButton, false)
-			oButton.click(() => oThis.onClickControl(piAction))
+			oButton.click(() => oThis.onClickControl(piAction)) //retain oThis in closure
 			oDiv.append(oButton)
 		}
 

@@ -39,7 +39,7 @@ class cCACanvas {
 		row: -1,
 		col: -1
 	}
-	has_mouseup = false
+	mouse_events_set = false
 
 	//#################################################################
 	//# Constructor
@@ -62,10 +62,9 @@ class cCACanvas {
 		poElement.addClass('CACanvas') //css
 
 		//subscribe to CAEvents (see #set_grid for subscribing to grid events)
-		/** @type cCACanvas */ var oThis = this
 
-		cCAActionEvent.subscribe(this.grid_name, poEvent => oThis._onCAActionEvent(poEvent))
-		cCAGridEvent.subscribe(this.grid_name, poEvent => oThis._onCAGridEvent(poEvent))
+		cCAActionEvent.subscribe(this.grid_name, poEvent => this._onCAActionEvent(poEvent))
+		cCAGridEvent.subscribe(this.grid_name, poEvent => this._onCAGridEvent(poEvent))
 	}
 
 	//#################################################################
@@ -108,8 +107,6 @@ class cCACanvas {
 	//****************************************************************
 	_onCAActionEvent(poEvent) {
 		var oElement = this.element
-		/** @type cCACanvas */ var oThis = this
-
 		var oGrid
 
 		cDebug.enter()
@@ -121,12 +118,12 @@ class cCACanvas {
 				this._set_grid(oGrid)
 				//put something in the widget
 				this._initCanvas()
-				if (!this.has_mouseup) {
+				if (!this.mouse_events_set) {
 					//only set #mouse event handler once
-					oElement.mouseup(() => oThis._onMouseUp())
-					oElement.mousemove(poEvent => oThis._onMouseMove(poEvent))
-					oElement.mousedown(poEvent => oThis._onMouseDown(poEvent))
-					this.has_mouseup = true
+					oElement.mouseup(() => this._onMouseUp())
+					oElement.mousemove(poEvent => this._onMouseMove(poEvent))
+					oElement.mousedown(poEvent => this._onMouseDown(poEvent))
+					this.mouse_events_set = true
 				}
 				break
 		}
@@ -137,7 +134,6 @@ class cCACanvas {
 	_count_drawn_cells() {
 		//update the count of cells drawn
 		this.cells_drawn++
-		/** @type cCACanvas */ var oThis = this
 
 		// when all cells have been drawn, let the grid know that the cells have been consumed
 		if (this.cells_drawn >= this.cells_to_draw) {
@@ -146,9 +142,7 @@ class cCACanvas {
 
 			setTimeout(
 				//canvas needs to yield to allow image to be drawn
-				function () {
-					cCAGridEvent.fire_event(oThis.grid_name, cCAGridEvent.notify.changedCellsConsumed)
-				},
+				() => cCAGridEvent.fire_event(this.grid_name, cCAGridEvent.notify.changedCellsConsumed),
 				this.CELL_LOAD_DELAY //fudge factor to delay next grid cycle
 			)
 		}

@@ -69,11 +69,9 @@ class cCAGrid {
 		this.running = false
 		this.runData = new cCAGridRunData()
 
-		/** @type cCAGrid */ var oThis = this
-
-		cCAGridEvent.subscribe(this.name, poEvent => oThis.onCAGridEvent(poEvent))
-		cCAActionEvent.subscribe(this.name, poEvent => oThis.onCAActionEvent(poEvent))
-		cCARuleEvent.subscribe(this.name, poEvent => oThis.onCARuleEvent(poEvent))
+		cCAGridEvent.subscribe(this.name, poEvent => this.onCAGridEvent(poEvent))
+		cCAActionEvent.subscribe(this.name, poEvent => this.onCAActionEvent(poEvent))
+		cCARuleEvent.subscribe(this.name, poEvent => this.onCARuleEvent(poEvent))
 	}
 
 	//#######################################################################
@@ -101,7 +99,6 @@ class cCAGrid {
 	 * @param {cCAGridEvent} poEvent
 	 */
 	onCAGridEvent(poEvent) {
-		/** @type cCAGrid */ var oThis = this
 		switch (poEvent.action) {
 			case cCAGridEvent.notify.changedCellsConsumed:
 				this._onNotifyCellsConsumed()

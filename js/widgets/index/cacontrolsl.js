@@ -34,12 +34,9 @@ class cCAControlsL {
 	constructor(poOptions, poElement) {
 		cDebug.enter()
 		this.element = poElement
-		/** @type cCAControlsL */ var oThis = this
 
-		var oElement
+		var oElement = this.element
 		this.grid_name = poOptions.grid_name
-
-		oElement = this.element
 
 		//check dependencies
 		if (!bean) $.error('bean class is missing! check includes')
@@ -56,7 +53,7 @@ class cCAControlsL {
 		this._init()
 
 		//subscribe to CA Events
-		cCARuleEvent.subscribe(this.grid_name, poEvent => oThis._onCARuleEvent(poEvent))
+		cCARuleEvent.subscribe(this.grid_name, poEvent => this._onCARuleEvent(poEvent))
 	}
 
 	//#################################################################
@@ -66,7 +63,7 @@ class cCAControlsL {
 		var oHeader, oContent, sID
 
 		var oElement = this.element
-		/** @type cCAControlsL */ var oThis = this
+		/** @type cCAControlsL */
 
 		//--rules widgets-------------------------------------------------
 		oHeader = $('<DIV>', { class: 'ui-widget-header' })
@@ -91,7 +88,7 @@ class cCAControlsL {
 		oContent.append(oSelect)
 
 		oSelect.selectmenu({
-			select: poEvent => oThis._onPresetsClick(poEvent)
+			select: poEvent => this._onPresetsClick(poEvent)
 		})
 
 		//- - WORD REPEATER- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -111,7 +108,7 @@ class cCAControlsL {
 		var oButton = $('<button>', {
 			title: 'creates a rule from the word in the box'
 		}).button({ icon: 'ui-icon-circle-arrow-e' })
-		oButton.click(() => oThis._onSetRepeaterClick())
+		oButton.click(() => this._onSetRepeaterClick())
 		oContent.append(oButton)
 
 		// RULE ENTRY - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -122,7 +119,7 @@ class cCAControlsL {
 			class: 'rule',
 			title: 'enter the rule here'
 		})
-		oBox.keyup(() => oThis._onTextareaChange())
+		oBox.keyup(() => this._onTextareaChange())
 		oContent.append(oBox)
 
 		//- RULE PRESETS- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -142,7 +139,7 @@ class cCAControlsL {
 		oButton = $('<button>', {
 			title: 'use the rule entered in the box above'
 		}).button({ icon: 'ui-icon-circle-arrow-e' })
-		oButton.click(() => oThis._onSetRuleClick())
+		oButton.click(() => this._onSetRuleClick())
 		oContent.append(oButton)
 
 		//- BOREDOM- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -160,7 +157,7 @@ class cCAControlsL {
 		}
 		oContent.append(oSelect)
 		oSelect.selectmenu({
-			select: poEvent => oThis._onBoredomClick(poEvent)
+			select: poEvent => this._onBoredomClick(poEvent)
 		})
 		oElement.append(oContent)
 	}

@@ -28,7 +28,6 @@ class cCAJson {
 		this.element = poElement
 		this.grid_name = poOptions.grid_name
 		this.create_button = poOptions.create_button
-		/** @type cCAJson */ var oThis = this
 
 		var oElement
 		oElement = this.element
@@ -47,7 +46,7 @@ class cCAJson {
 		this._init()
 
 		//subscribe to CA Events
-		cCACanvasEvent.subscribe(this.grid_name, poEvent => oThis._onCACanvasEvent(poEvent))
+		cCACanvasEvent.subscribe(this.grid_name, poEvent => this._onCACanvasEvent(poEvent))
 		cDebug.leave()
 	}
 
@@ -55,25 +54,26 @@ class cCAJson {
 	//# Initialise
 	//#################################################################`
 	_init() {
-		var oThis, oElement
+		var oElement
 		var oHeaderDiv, oBodyDiv, sBodyID, sID, oButton
 
 		cDebug.enter()
 		oElement = this.element
 		sBodyID = cJquery.child_ID(oElement, cCAJsonTypes.body_id)
-		/** @type cCAJson */ oThis = this
 
+		//-----------header----------------------------------------
 		oHeaderDiv = $('<DIV>', { class: 'ui-widget-header' })
 		oHeaderDiv.append('Json')
 
 		var sButtonID = cJquery.child_ID(oElement, 'btnJson')
 		oButton = $('<button>', { ID: sButtonID }).append('+')
-		oButton.click(() => oThis._showHide(sButtonID, sBodyID))
+		oButton.click(() => this._showHide(sButtonID, sBodyID))
 		oHeaderDiv.append(oButton)
 		oElement.append(oHeaderDiv)
 
-		sBodyID = cJquery.child_ID(oElement, cCAJsonTypes.body_id)
+		//----------------body-------------------------------------
 		oBodyDiv = $('<DIV>', { class: 'ui-widget-content', ID: sBodyID })
+
 		//---------textbox
 		sID = cJquery.child_ID(oElement, cCAJsonTypes.textarea_id)
 		var oBox = $('<TEXTAREA>', {
@@ -86,12 +86,12 @@ class cCAJson {
 		//---------buttons
 		if (this.create_button) {
 			oButton = $('<button>').append('Create')
-			oButton.click(() => oThis._onClickExport())
+			oButton.click(() => this._onClickExport())
 			oBodyDiv.append(oButton)
 		}
 
 		oButton = $('<button>').append('import')
-		oButton.click(() => oThis._onClickImport())
+		oButton.click(() => this._onClickImport())
 		oBodyDiv.append(oButton)
 
 		oElement.append(oBodyDiv)

@@ -13,14 +13,12 @@ class cCAChartTypes {
 	static is_charts_loaded = false
 
 	static {
-		/** @type cCAChartTypes */ var oThis = this
-
 		if (!google.charts) $.error('google.charts class is missing! check includes')
 
 		try {
 			google.charts
-				.load('current', { packages: ['corechart'] }) // @ts-expect-error
-				.then(poEvent => oThis.OnGoogleChartsLoaded(poEvent))
+				.load('current', { packages: ['corechart'] })
+				.then(poEvent => this.OnGoogleChartsLoaded(poEvent))
 		} catch (e) {
 			cDebug.write('unable to load Google charts: ' + e.msg)
 		}
@@ -50,7 +48,6 @@ class cCAChart {
 		this.grid_name = poOptions.grid_name
 
 		var oElement = this.element
-		/** @type cCAChart */ var oThis = this
 
 		//basic stuff
 		oElement.empty()
@@ -70,9 +67,9 @@ class cCAChart {
 		this._clear_chart()
 
 		//subscribe to CAEvents
-		cCAActionEvent.subscribe(this.grid_name, poEvent => oThis.onCAActionEvent(poEvent))
-		cCARuleEvent.subscribe(this.grid_name, poEvent => oThis.onCARuleEvent(poEvent))
-		cCACanvasEvent.subscribe(this.grid_name, poEvent => oThis.onCACanvasEvent(poEvent))
+		cCAActionEvent.subscribe(this.grid_name, poEvent => this.onCAActionEvent(poEvent))
+		cCARuleEvent.subscribe(this.grid_name, poEvent => this.onCARuleEvent(poEvent))
+		cCACanvasEvent.subscribe(this.grid_name, poEvent => this.onCACanvasEvent(poEvent))
 	}
 
 	//*****************************************************************

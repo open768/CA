@@ -30,8 +30,6 @@ class cCAStatus {
 		this.element = poElement
 		this.grid_name = poOptions.grid_name
 
-		/** @type cCAStatus */ var oThis = this
-
 		var oElement = this.element
 
 		//set basic stuff
@@ -42,8 +40,8 @@ class cCAStatus {
 		if (!bean) $.error('bean is missing , chack includes')
 
 		//subscribe to CAEvents
-		cCACanvasEvent.subscribe(this.grid_name, poEvent => oThis.onCACanvasEvent(poEvent))
-		cCAActionEvent.subscribe(this.grid_name, poEvent => oThis.onCAActionEvent(poEvent))
+		cCACanvasEvent.subscribe(this.grid_name, poEvent => this.onCACanvasEvent(poEvent))
+		cCAActionEvent.subscribe(this.grid_name, poEvent => this.onCAActionEvent(poEvent))
 
 		//put something in the widget
 		oElement.empty()
@@ -55,7 +53,6 @@ class cCAStatus {
 	//****************************************************************************
 	async onHeapTimer() {
 		var oElement = this.element
-		/** @type cCAStatus */ var oThis = this
 
 		cDebug.write('heap timer running')
 
@@ -72,7 +69,7 @@ class cCAStatus {
 			this.stop_heap_timer = false
 		} else {
 			//next timer
-			setTimeout(() => oThis.onHeapTimer(), oThis.HEAP_INTERVAL)
+			setTimeout(() => this.onHeapTimer(), this.HEAP_INTERVAL)
 			this.heap_timer_running = true
 		}
 	}
@@ -86,10 +83,8 @@ class cCAStatus {
 			switch (iAction) {
 				case cCAGridTypes.actions.play: //start watching the heap when CA is played
 					if (this.heap_timer_running) cDebug.warn('heap timer allready running')
-					else {
-						/** @type cCAStatus */ var oThis = this
-						setTimeout(() => oThis.onHeapTimer(), oThis.HEAP_INTERVAL)
-					}
+					else setTimeout(() => this.onHeapTimer(), this.HEAP_INTERVAL)
+
 					break
 				case cCAGridTypes.actions.stop:
 					this.stop_heap_timer = true //stop watching heap when stop pressed, or CA stops
