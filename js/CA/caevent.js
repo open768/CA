@@ -96,8 +96,7 @@ class cCAGridEvent extends cCABaseEvent {
 	static event_type_id = 'CAGRIDEV'
 	static actions = {
 		init_grid: 'GAini',
-		set_cell: 'GASet',
-		import_grid: 'GEIG'
+		set_cell: 'GASet'
 	}
 	static notify = {
 		clear: 'GNclear',
@@ -112,7 +111,8 @@ class cCACanvasEvent extends cCABaseEvent {
 	static event_type_id = 'CACANVASEV'
 	static actions = {
 		grid_status: 'CAstatus',
-		set_grid: 'CASetgrid'
+		set_grid: 'CASetgrid',
+		import_grid: 'GEIG'
 	}
 	static notify = {
 		nochange: 'CNnochange'

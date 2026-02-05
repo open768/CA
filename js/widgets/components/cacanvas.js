@@ -65,16 +65,28 @@ class cCACanvas {
 
 		cCAActionEvent.subscribe(this.grid_name, poEvent => this._onCAActionEvent(poEvent))
 		cCAGridEvent.subscribe(this.grid_name, poEvent => this._onCAGridEvent(poEvent))
+		cCACanvasEvent.subscribe(this.grid_name, poEvent => this._onCACanvasEvent(poEvent))
 	}
 
 	//#################################################################
 	//# events
 	//#################################################################`
-	/**
-	 * @param {cCAGridEvent} poEvent
-	 */
+	_onCACanvasEvent(poEvent) {
+		switch (poEvent.action) {
+			case cCACanvasEvent.actions.import_grid:
+				cDebug.write('action: import grid')
+				var oGrid = poEvent.data
+				this._set_grid(oGrid)
+				//draw the grid
+				this._on_grid_clear()
+				this._drawGrid(oGrid.get_changed_cells())
+
+				//rule has been set
+				cCARuleEvent.fire_event(this.grid_name, cCARuleEvent.actions.update_rule, oGrid.get_rule())
+		}
+	}
+
 	_onCAGridEvent(poEvent) {
-		var oEvent
 		switch (poEvent.action) {
 			case cCAGridEvent.notify.done:
 				this._on_grid_done(poEvent.data)
@@ -89,17 +101,6 @@ class cCACanvas {
 			case cCAGridEvent.notify.repeatPattern:
 				alert('repeat pattern seen')
 				cCACanvasEvent.fire_event(this.grid_name, cCACanvasEvent.notify.nochange, null)
-				break
-			case cCAGridEvent.actions.import_grid:
-				cDebug.write('action: import grid')
-				var oGrid = poEvent.data
-				this._set_grid(oGrid)
-				//draw the grid
-				this._on_grid_clear()
-				this._drawGrid(oGrid.get_changed_cells())
-
-				//rule has been set
-				cCARuleEvent.fire_event(this.grid_name, cCARuleEvent.actions.update_rule, oGrid.get_rule())
 				break
 		}
 	}
