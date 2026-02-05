@@ -28,9 +28,11 @@ class cCAGridCell {
 }
 
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-//%
-//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+/**
+ * 	cCAGrid is the main class for the cellular automata.
+ *  It contains the cells and applies the rules to them.
+ *  It also fires events as the grid changes.
+ */
 class cCAGrid {
 	//#######################################################################
 	//# instance variables

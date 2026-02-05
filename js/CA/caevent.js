@@ -34,6 +34,7 @@ class cCABaseEvent {
 	 */
 	constructor(psGridName, psAction, poData = null) {
 		if (!psGridName || !psAction) $.error('incorrect number of arguments')
+		if (typeof bean === 'undefined') $.error('bean library is missing')
 
 		// @ts-expect-error
 		if (!this.constructor.event_type_id) $.error('event_type_id not overridden in class:' + this.constructor.name)
