@@ -1,140 +1,108 @@
 //###############################################################################
 class CAException {
-  /**
-   * Creates an instance of CAException.
-   *
-   *
-   * @constructor
-   * @param {string} psMessage
-   */
-  constructor(psMessage) {
-    this.message = psMessage
-    this.name = "CAException"
-  }
+	/**
+	 * Creates an instance of CAException.
+	 *
+	 *
+	 * @constructor
+	 * @param {string} psMessage
+	 */
+	constructor(psMessage) {
+		this.message = psMessage
+		this.name = 'CAException'
+	}
 }
 
 //***************************************************************************
 class cCABaseEvent {
-  grid_name = null //grid name is used to create a
-  action = null
-  data = null
-  /**
-   * @abstract
-   * @type {string}
-   */
-  static event_type_id = null // this is an abstract property
+	grid_name = null //grid name is used to create a
+	action = null
+	data = null
+	/**
+	 * @abstract
+	 * @type {string}
+	 */
+	static event_type_id = null // this is an abstract property
 
-  constructor(psGridName, psAction, poData = null) {
-    if (!psGridName || !psAction) $.error("incorrect number of arguments")
-    if (!this.constructor.event_type_id)
-      $.error("event_type_id not overridden in class:" + this.constructor.name)
+	constructor(psGridName, psAction, poData = null) {
+		if (!psGridName || !psAction) $.error('incorrect number of arguments')
+		if (!this.constructor.event_type_id) $.error('event_type_id not overridden in class:' + this.constructor.name)
 
-    this.grid_name = psGridName
-    this.action = psAction
-    this.data = poData
-  }
+		this.grid_name = psGridName
+		this.action = psAction
+		this.data = poData
+	}
 
-  /**
-   * @return {*}
-   * @memberof cCABaseEvent
-   */
-  channel_id() {
-    return this.constructor.event_type_id + this.grid_name //creates a unique ID for a specific grid
-  }
+	/**
+	 * @return {*}
+	 * @memberof cCABaseEvent
+	 */
+	channel_id() {
+		return this.constructor.event_type_id + this.grid_name //creates a unique ID for a specific grid
+	}
 
-  async trigger() {
-    var sEventName = this.channel_id()
-    bean.fire(document, sEventName, this)
-  }
+	async trigger() {
+		var sEventName = this.channel_id()
+		bean.fire(document, sEventName, this)
+	}
 
-  subscribe(pfnCallback) {
-    if (pfnCallback == null) $.error("callback missing")
-    bean.on(document, this.channel_id(), pfnCallback)
-  }
+	static async fire_event(psGridName, psAction, poData = null) {
+		var oEvent = new this(psGridName, psAction, poData)
+		oEvent.trigger()
+	}
 
-  static fire_event(psGridName, psAction, poData = null) {
-    var oEvent = new this(psGridName, psAction, poData)
-    oEvent.trigger()
-  }
+	static async subscribe(psGridName, pfnCallback) {
+		var oEvent = new this(psGridName, 'dummy') //create an event to get the channel ID
+		bean.on(document, oEvent.channel_id(), pfnCallback)
+	}
 }
 
 //***************************************************************************
 
 class cCAActionEvent extends cCABaseEvent {
-  static event_type_id = "CAACTEV"
-  static actions = {
-    ready: "AERD",
-    grid_init: "AEGI",
-    control: "AECN",
-  }
+	static event_type_id = 'CAACTEV'
+	static actions = {
+		ready: 'AERD',
+		grid_init: 'AEGI',
+		control: 'AECN'
+	}
 }
 
 //***************************************************************************
 
 class cCARuleEvent extends cCABaseEvent {
-  static event_type_id = "CARULEEV"
-  static actions = {
-    update_rule: "REUR",
-    set_rule: "GESR",
-  }
+	static event_type_id = 'CARULEEV'
+	static actions = {
+		update_rule: 'REUR',
+		set_rule: 'GESR'
+	}
 }
 
 //###############################################################################
 
 class cCAGridEvent extends cCABaseEvent {
-  static event_type_id = "CAGRIDEV"
-  static actions = {
-    init_grid: "GAini",
-    set_cell: "GASet",
-    import_grid: "GEIG",
-  }
-  static notify = {
-    clear: "GNclear",
-    done: "GNDone",
-    changedCellsConsumed: "GNccc",
-    nochange: "GNnochg",
-    repeatPattern: "GNPattern",
-  }
+	static event_type_id = 'CAGRIDEV'
+	static actions = {
+		init_grid: 'GAini',
+		set_cell: 'GASet',
+		import_grid: 'GEIG'
+	}
+	static notify = {
+		clear: 'GNclear',
+		done: 'GNDone',
+		changedCellsConsumed: 'GNccc',
+		nochange: 'GNnochg',
+		repeatPattern: 'GNPattern'
+	}
 }
 
 class cCACanvasEvent extends cCABaseEvent {
-  static event_type_id = "CACANVASEV"
-  static actions = {
-    grid_status: "CAstatus",
-    set_grid: "CASetgrid",
-  }
-  static notify = {
-    nochange: "CNnochange",
-  }
-}
-
-//###############################################################################
-class cCAEventHelper {
-  static dummy_action = "dummy"
-
-  static subscribe_to_action_events(psGridName, pfnCallback) {
-    var oEvent = new cCAActionEvent(psGridName, this.dummy_action) //create an event to get the channel ID
-    this._do_subscribe(oEvent.channel_id(), pfnCallback)
-  }
-
-  static subscribe_to_canvas_events(psGridName, pfnCallback) {
-    var oEvent = new cCACanvasEvent(psGridName, this.dummy_action)
-    this._do_subscribe(oEvent.channel_id(), pfnCallback)
-  }
-
-  static subscribe_to_grid_events(psGridName, pfnCallback) {
-    var oEvent = new cCAGridEvent(psGridName, this.dummy_action)
-    this._do_subscribe(oEvent.channel_id(), pfnCallback)
-  }
-
-  static subscribe_to_rule_events(psGridName, pfnCallback) {
-    var oEvent = new cCARuleEvent(psGridName, this.dummy_action)
-    this._do_subscribe(oEvent.channel_id(), pfnCallback)
-  }
-
-  //***************************************************************
-  static _do_subscribe(psChannelID, pfnCallback) {
-    if (pfnCallback == null) $.error("callback missing")
-    bean.on(document, psChannelID, pfnCallback)
-  }
+	static event_type_id = 'CACANVASEV'
+	static actions = {
+		grid_status: 'CAstatus',
+		set_grid: 'CASetgrid'
+	}
+	static notify = {
+		nochange: 'CNnochange'
+	}
 }
