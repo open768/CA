@@ -99,11 +99,6 @@ $.widget("ck.caindex", {
     cBrowser.get_clipboard_permissions(true)
 
     //---------------informs subscribers that UI is ready -------------------------------
-    var oActionEvent = new cCAActionEvent(
-      oOptions.name,
-      cCAActionEvent.actions.ready,
-      null,
-    )
-    oActionEvent.trigger()
+    cCAActionEvent.fire_event(oOptions.name, cCAActionEvent.actions.ready, null)
   },
 })

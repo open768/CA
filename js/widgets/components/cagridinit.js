@@ -38,12 +38,11 @@ class cCAGridStateInit {
     var iSelected = parseInt($(poEvent.target).val()) //selected value in pulldown
 
     //---------tell subscribers to init
-    var oActionEvent = new cCAActionEvent(
+    cCAActionEvent.fire_event(
       this.grid_name,
       cCAActionEvent.actions.grid_init,
       iSelected,
     )
-    oActionEvent.trigger()
   }
 
   //***************************************************************

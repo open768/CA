@@ -258,12 +258,11 @@ class cCAControlsL {
           else oRule.boredom = cCAConsts.NO_BOREDOM
 
           //inform subscribers
-          var oRuleEvent = new cCARuleEvent(
+          cCARuleEvent.fire_event(
             this.grid_name,
             cCARuleEvent.actions.set_rule,
             oRule,
           )
-          oRuleEvent.trigger()
           break
         default:
           throw new CAException("unknown rule type")
@@ -340,12 +339,11 @@ class cCAControlsL {
     this.rule.set_boredom(iBoredem)
 
     //inform subscribers
-    var oRuleEvent = new cCARuleEvent(
+    cCARuleEvent.fire_event(
       this.grid_name,
       cCARuleEvent.actions.set_rule,
       this.rule,
     )
-    oRuleEvent.trigger()
   }
 
   //#################################################################

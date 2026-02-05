@@ -51,6 +51,11 @@ class cCABaseEvent {
     if (pfnCallback == null) $.error("callback missing")
     bean.on(document, this.channel_id(), pfnCallback)
   }
+
+  static fire_event(psGridName, psAction, poData = null) {
+    var oEvent = new this(psGridName, psAction, poData)
+    oEvent.trigger()
+  }
 }
 
 //***************************************************************************
