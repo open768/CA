@@ -53,10 +53,10 @@ class cCARemoteControls {
 		}
 
 		switch (piAction) {
-			case cCAGridTypes.actions.stop:
+			case cCAActionEvent.control_actions.stop:
 				this._enable_controls(false)
 				break
-			case cCAGridTypes.actions.play:
+			case cCAActionEvent.control_actions.play:
 				this._enable_controls(true)
 				break
 		}
@@ -135,9 +135,19 @@ class cCARemoteControls {
 		oDiv = $('<DIV>', { class: 'ui-widget-content' })
 
 		//--- stop button----------------------------------------
-		_add_button(cCARemoteControls.buttonNames.stop, 'ui-icon-stop', 'stop', cCAGridTypes.actions.stop)
-		_add_button(cCARemoteControls.buttonNames.play, 'ui-icon-circle-triangle-e', 'play', cCAGridTypes.actions.play)
-		_add_button(cCARemoteControls.buttonNames.step, 'ui-icon-circle-arrow-e', 'step', cCAGridTypes.actions.step)
+		_add_button(cCARemoteControls.buttonNames.stop, 'ui-icon-stop', 'stop', cCAActionEvent.control_actions.stop)
+		_add_button(
+			cCARemoteControls.buttonNames.play,
+			'ui-icon-circle-triangle-e',
+			'play',
+			cCAActionEvent.control_actions.play
+		)
+		_add_button(
+			cCARemoteControls.buttonNames.step,
+			'ui-icon-circle-arrow-e',
+			'step',
+			cCAActionEvent.control_actions.step
+		)
 
 		oElement.append(oDiv)
 	}

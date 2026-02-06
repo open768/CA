@@ -216,17 +216,17 @@ class cCAGrid {
 
 		cDebug.write('running action: ' + piAction)
 		switch (piAction) {
-			case cCAGridTypes.actions.play:
+			case cCAActionEvent.control_actions.play:
 				if (this.running) throw new CAException('CA is allready running')
 				this.running = true
 				this._step()
 				this.runData.runs = 1
 				break
-			case cCAGridTypes.actions.stop:
+			case cCAActionEvent.control_actions.stop:
 				if (!this.running) throw new CAException('CA is not running')
 				this.running = false
 				break
-			case cCAGridTypes.actions.step:
+			case cCAActionEvent.control_actions.step:
 				this._step()
 				break
 			default:
@@ -341,7 +341,7 @@ class cCAGrid {
 		if (this.running) {
 			cDebug.write('running again')
 			this.runData.runs++
-			cCAActionEvent.fire_event(this.name, cCAActionEvent.actions.control, cCAGridTypes.actions.step)
+			cCAActionEvent.fire_event(this.name, cCAActionEvent.actions.control, cCAActionEvent.control_actions.step)
 		}
 		cDebug.leave()
 	}

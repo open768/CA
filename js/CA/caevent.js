@@ -23,6 +23,11 @@ class cCAActionEvent extends cBaseEvent {
 		grid_init: 'AAinit',
 		control: 'AAcontrol'
 	}
+	static control_actions = {
+		play: 1,
+		stop: 2,
+		step: 3
+	}
 }
 
 //***************************************************************************

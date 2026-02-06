@@ -75,9 +75,4 @@ class cCAGridTypes {
 		random: { id: 9, label: 'Random' },
 		vert_line: { id: 10, label: 'V-Line' }
 	}
-	static actions = {
-		play: 1,
-		stop: 2,
-		step: 3
-	}
 }
