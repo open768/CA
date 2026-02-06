@@ -90,7 +90,7 @@ class cCAGrid {
 				this._init(poEvent.data)
 				break
 			case cCAActionEvent.actions.control:
-				this._action(poEvent.data)
+				this._on_control_action(poEvent.data)
 				break
 		}
 	}
@@ -210,7 +210,7 @@ class cCAGrid {
 	//#######################################################################
 	//Privates
 	//#######################################################################
-	_action(piAction) {
+	_on_control_action(piAction) {
 		cDebug.enter()
 		if (this.rule == null) throw new CAException('no rule set')
 
