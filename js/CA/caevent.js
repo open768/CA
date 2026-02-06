@@ -61,12 +61,18 @@ class cCABaseEvent {
 
 	static async fire_event(psGridName, psAction, poData = null) {
 		if (this === cCABaseEvent) throw new CAException('cCABaseEvent is abstract')
+		if (!psGridName) throw new CAException('grid name is required')
+		if (!psAction) throw new CAException('action is required')
+
 		var oEvent = new this(psGridName, psAction, poData) //create specific instance
 		oEvent.trigger()
 	}
 
 	static async subscribe(psGridName, pfnCallback) {
 		if (this === cCABaseEvent) throw new CAException('cCABaseEvent is abstract')
+		if (typeof pfnCallback !== 'function') throw new CAException('callback must be a function')
+		if (!psGridName) throw new CAException('grid name is required')
+
 		var oEvent = new this(psGridName, 'dummy') //create an event to get the channel ID
 		bean.on(document, oEvent.channel_id(), pfnCallback)
 	}
