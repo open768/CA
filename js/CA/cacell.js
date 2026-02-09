@@ -63,7 +63,9 @@ class cCACell {
 	apply_rule() {
 		//just calls the rules apply method. the benefit of doing it this way is
 		//that each cell could have a different rule.
-		if (this.rule == null) throw new CAException('no rule defined')
+		if (this.rule == null) {
+			throw new CAException('no rule defined')
+		}
 		var bHasChanged = this.rule.evaluateCell(this)
 		return bHasChanged
 	}
@@ -191,12 +193,14 @@ class cCACell {
 	 */
 	check_boredom(piBitmap) {
 		//	only active cells can get bored
-		if (this.rule.boredom == null || this.rule.boredom == cCAConsts.NO_BOREDOM || this.value == 0 || piBitmap == 0)
+		if (this.rule.boredom == null || this.rule.boredom == cCAConsts.NO_BOREDOM || this.value == 0 || piBitmap == 0) {
 			return false
+		}
 
 		//was it the same bitmap as last time
-		if (this.previous_bitmap == piBitmap) this.previous_bitmap_count++
-		else {
+		if (this.previous_bitmap == piBitmap) {
+			this.previous_bitmap_count++
+		} else {
 			this.previous_bitmap = piBitmap
 			this.previous_bitmap_count = 1
 			return false
@@ -220,7 +224,9 @@ class cCACell {
 	 * @param {*} poCell
 	 */
 	setNeighbour(piDirection, poCell) {
-		if (poCell == null) throw new CAException('no neighbour cell provided')
+		if (poCell == null) {
+			throw new CAException('no neighbour cell provided')
+		}
 		this.neighbours.set(piDirection, poCell)
 	}
 }

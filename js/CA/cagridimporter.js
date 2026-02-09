@@ -47,10 +47,18 @@ class cCAGridExported {
 	 * @returns {boolean}
 	 */
 	static is_valid_obj(poObj) {
-		if (!poObj.version) throw new Error('no version')
-		if (!poObj.grid) throw new Error('no grid')
-		if (!poObj.rule) throw new Error('no Rule')
-		if (poObj.version !== 1) throw new Error('incompatible version')
+		if (!poObj.version) {
+			throw new Error('no version')
+		}
+		if (!poObj.grid) {
+			throw new Error('no grid')
+		}
+		if (!poObj.rule) {
+			throw new Error('no Rule')
+		}
+		if (poObj.version !== 1) {
+			throw new Error('incompatible version')
+		}
 		return true
 	}
 }
@@ -73,10 +81,14 @@ class cCAGridJSONExporter {
 	 */
 	static export(poGrid) {
 		cDebug.enter()
-		if (!cCommon.obj_is(poGrid, 'cCAGrid')) throw new CAException('param 1 is not cCAGrid')
+		if (!cCommon.obj_is(poGrid, 'cCAGrid')) {
+			throw new CAException('param 1 is not cCAGrid')
+		}
 		var oRule = poGrid.get_rule()
 
-		if (!oRule) throw new CAException('no rule set!')
+		if (!oRule) {
+			throw new CAException('no rule set!')
+		}
 
 		var oObj = new cCAGridExported()
 		//get the rule from the grid
@@ -102,21 +114,28 @@ class cCAGridJSONExporter {
 	 * @returns {string}
 	 */
 	static get_grid_base64(poGrid) {
-		if (!cCommon.obj_is(poGrid, 'cCAGrid')) throw new CAException('param 1 is not cCAGrid')
+		if (!cCommon.obj_is(poGrid, 'cCAGrid')) {
+			throw new CAException('param 1 is not cCAGrid')
+		}
 		var oRule = poGrid.get_rule()
-		if (oRule.stateRules.length > 1) throw new CAException('rules can only have 1 state')
+		if (oRule.stateRules.length > 1) {
+			throw new CAException('rules can only have 1 state')
+		}
 
 		var sBin = ''
 		/** @type {string}	 */ var s64 = null
 
-		for (var iRow = 1; iRow <= poGrid.rows; iRow++)
+		for (var iRow = 1; iRow <= poGrid.rows; iRow++) {
 			for (var iCol = 1; iCol <= poGrid.cols; iCol++) {
 				var oCell = poGrid.getCell(iRow, iCol, true)
 				sBin = sBin + oCell.value
 			}
+		}
 
 		var iBinLength = poGrid.rows * poGrid.cols
-		if (sBin.length !== iBinLength) throw new CAException('wrong binary length')
+		if (sBin.length !== iBinLength) {
+			throw new CAException('wrong binary length')
+		}
 
 		s64 = cSimpleBase64.toBase64(sBin)
 		return s64
@@ -142,7 +161,9 @@ class cCAGridJSONImporter {
 	 * @returns {cCAGrid}
 	 */
 	static populate(psName, poJson) {
-		if (!cCAGridExported.is_valid_obj(poJson)) throw new CAException('invalid object')
+		if (!cCAGridExported.is_valid_obj(poJson)) {
+			throw new CAException('invalid object')
+		}
 		//-------------------------------------------------------------------
 		/** @type {cCAGrid}	 */ var oGrid = new cCAGrid(psName, poJson.grid.rows, poJson.grid.cols)
 
@@ -157,12 +178,13 @@ class cCAGridJSONImporter {
 		var sBin = cSimpleBase64.toBinary(s64, iBinLength) //convert base64 to binary - have to set expected bin length
 		var iIndex = 0
 
-		for (var iRow = 1; iRow <= oGrid.rows; iRow++)
+		for (var iRow = 1; iRow <= oGrid.rows; iRow++) {
 			for (var iCol = 1; iCol <= oGrid.cols; iCol++) {
 				var sBinDigit = sBin[iIndex]
 				oGrid.setCellValue(iRow, iCol, parseInt(sBinDigit))
 				iIndex++
 			}
+		}
 		return oGrid
 	}
 }

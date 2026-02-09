@@ -24,11 +24,17 @@ class cCARuleBinaryExporter {
 	 */
 	static export(poRule, piState) {
 		cDebug.enter()
-		if (!cCommon.obj_is(poRule, 'cCARule')) throw new CAException('export requires cCARule')
+		if (!cCommon.obj_is(poRule, 'cCARule')) {
+			throw new CAException('export requires cCARule')
+		}
 		var sOut = ''
-		if (piState > poRule.stateRules.length) throw new CAException('invalid state requested')
+		if (piState > poRule.stateRules.length) {
+			throw new CAException('invalid state requested')
+		}
 
-		for (var i = 1; i <= cCAConsts.MAX_INPUTS; i++) sOut = sOut + poRule.get_rule_output(piState, i)
+		for (var i = 1; i <= cCAConsts.MAX_INPUTS; i++) {
+			sOut = sOut + poRule.get_rule_output(piState, i)
+		}
 
 		cDebug.leave()
 		return sOut
@@ -54,11 +60,14 @@ class cCARuleBinaryImporter {
 	static makeRule(psInput) {
 		cDebug.enter()
 
-		if (psInput.length < cCAConsts.MAX_INPUTS)
+		if (psInput.length < cCAConsts.MAX_INPUTS) {
 			throw new CAException(
 				'incorrect length binary input:' + psInput.length + ' should be ' + cCAConsts.MAX_INPUTS
 			)
-		if (psInput.length > cCAConsts.MAX_INPUTS) psInput = psInput.slice(0, cCAConsts.MAX_INPUTS - 1)
+		}
+		if (psInput.length > cCAConsts.MAX_INPUTS) {
+			psInput = psInput.slice(0, cCAConsts.MAX_INPUTS - 1)
+		}
 
 		//create  the rule
 		var oRule = new cCARule()
@@ -90,15 +99,20 @@ class cCARuleRepeatBase64Importer {
 		cDebug.enter()
 
 		var sInput = psShort.trim()
-		if (sInput.length == 0) throw new CAException('no input provided.')
-		if (!cConverterEncodings.isBase64(sInput)) throw new CAException('input must be base64 string')
+		if (sInput.length == 0) {
+			throw new CAException('no input provided.')
+		}
+		if (!cConverterEncodings.isBase64(sInput)) {
+			throw new CAException('input must be base64 string')
+		}
 
 		var iRepeat = Math.floor(cCAConsts.BASE64_LENGTH / sInput.length)
 		var s64 = sInput.repeat(iRepeat)
 		var iRemain = cCAConsts.BASE64_LENGTH - s64.length
 		s64 = s64 + sInput.slice(0, iRemain)
-		if (s64.length < cCAConsts.BASE64_LENGTH)
+		if (s64.length < cCAConsts.BASE64_LENGTH) {
 			throw new CAException('base64 not long enough, must be ' + cCAConsts.BASE64_LENGTH + 'chars')
+		}
 
 		var sBin = cSimpleBase64.toBinary(s64, cCAConsts.MAX_INPUTS)
 		var oRule = cCARuleBinaryImporter.makeRule(sBin)
@@ -129,13 +143,19 @@ class cCARuleBase64Exporter {
 	static export(poRule, piState) {
 		cDebug.enter()
 
-		if (!cCommon.obj_is(poRule, 'cCARule')) throw new CAException('export requires cCARule')
-		if (piState > poRule.stateRules.length) throw new CAException('invalid state requested')
+		if (!cCommon.obj_is(poRule, 'cCARule')) {
+			throw new CAException('export requires cCARule')
+		}
+		if (piState > poRule.stateRules.length) {
+			throw new CAException('invalid state requested')
+		}
 
 		//a bit of a long way to go about it
 		var sBin = cCARuleBinaryExporter.export(poRule, piState) //convert rule to binary
 		var sOut = cSimpleBase64.toBase64(sBin) //convert binary to base64string
-		if (sOut.length !== cCAConsts.BASE64_LENGTH) throw new CAException('generated base64 is the wrong length')
+		if (sOut.length !== cCAConsts.BASE64_LENGTH) {
+			throw new CAException('generated base64 is the wrong length')
+		}
 
 		cDebug.leave()
 		return sOut
@@ -161,9 +181,12 @@ class cCARuleBase64Importer {
 	static makeRule(ps64) {
 		cDebug.enter()
 
-		if (ps64.length < cCAConsts.BASE64_LENGTH)
+		if (ps64.length < cCAConsts.BASE64_LENGTH) {
 			throw new CAException('base64 not long enough, must be ' + cCAConsts.BASE64_LENGTH + 'chars')
-		if (!cConverterEncodings.isBase64(ps64)) throw new CAException('input must be base64  string')
+		}
+		if (!cConverterEncodings.isBase64(ps64)) {
+			throw new CAException('input must be base64  string')
+		}
 		var sBin = cSimpleBase64.toBinary(ps64, cCAConsts.MAX_INPUTS)
 		var oRule = cCARuleBinaryImporter.makeRule(sBin)
 
@@ -213,12 +236,22 @@ class cCAExportedObj {
 	 * @returns {boolean}
 	 */
 	static is_valid_obj(poObj) {
-		if (!poObj.version) throw new Error('no version')
-		if (!poObj.neighbour_type) throw new Error('no neighbour_type')
-		if (!poObj.states) throw new Error('no states')
+		if (!poObj.version) {
+			throw new Error('no version')
+		}
+		if (!poObj.neighbour_type) {
+			throw new Error('no neighbour_type')
+		}
+		if (!poObj.states) {
+			throw new Error('no states')
+		}
 
-		if (poObj.version !== 1) throw new Error('incompatible version')
-		if (poObj.states.length !== 1) throw new Error('unsupported number of states')
+		if (poObj.version !== 1) {
+			throw new Error('incompatible version')
+		}
+		if (poObj.states.length !== 1) {
+			throw new Error('unsupported number of states')
+		}
 		return true
 	}
 }
@@ -243,7 +276,9 @@ class cCARuleObjExporter {
 	static export(poRule) {
 		cDebug.enter()
 
-		if (!cCommon.obj_is(poRule, 'cCARule')) throw new CAException('export requires cCARule')
+		if (!cCommon.obj_is(poRule, 'cCARule')) {
+			throw new CAException('export requires cCARule')
+		}
 
 		var oExport = new cCAExportedObj()
 		oExport.neighbour_type = poRule.neighbour_type
@@ -279,7 +314,9 @@ class cCARuleObjImporter {
 	static makeRule(poObj) {
 		cDebug.enter()
 
-		if (!cCAExportedObj.is_valid_obj(poObj)) throw new CAException('import requires cCAExportedObj')
+		if (!cCAExportedObj.is_valid_obj(poObj)) {
+			throw new CAException('import requires cCAExportedObj')
+		}
 		var oRule = cCARuleBase64Importer.makeRule(poObj.states[0].rule)
 		oRule.neighbour_type = poObj.neighbour_type
 		oRule.boredom = poObj.boredom
@@ -379,8 +416,12 @@ class cCARuleWolfram1DImporter {
 	static makeRule(piRule) {
 		cDebug.enter()
 
-		if (isNaN(piRule)) throw new CAException('rule must be a number.')
-		if (piRule < 1 || piRule > 256) throw new CAException('rule must be between 1 and 256')
+		if (isNaN(piRule)) {
+			throw new CAException('rule must be a number.')
+		}
+		if (piRule < 1 || piRule > 256) {
+			throw new CAException('rule must be between 1 and 256')
+		}
 
 		//create an identity rule
 		var oRule = cCaIdentityRule.makeRule()
@@ -401,8 +442,11 @@ class cCARuleWolfram1DImporter {
 			if (iCentreBits == 0) {
 				var iNorthBits = cCAIndexOps.get_north_bits(iInput)
 				var iCentre
-				if (iNorthBits == 0) iCentre = cCAIndexOps.get_value(iInput, cCACellTypes.directions.centre)
-				else iCentre = aWolfram[iNorthBits]
+				if (iNorthBits == 0) {
+					iCentre = cCAIndexOps.get_value(iInput, cCACellTypes.directions.centre)
+				} else {
+					iCentre = aWolfram[iNorthBits]
+				}
 				oRule.set_output(cCACellTypes.default_state, iInput, iCentre)
 			}
 		}
@@ -437,13 +481,17 @@ class cCARuleLifeImporter {
 		var aBorn = new Array(9)
 		var aSurvive = new Array(9)
 
-		if (psInput == null) throw new CAException(' no rule to import')
+		if (psInput == null) {
+			throw new CAException(' no rule to import')
+		}
 
 		//validate rule and extract rule components
 		var aMatches = psInput.match(/B(\d+)\/S(\d+)/i) // check for Bnnn/Snnn format
 		if (aMatches == null) {
 			aMatches = psInput.match(/S(\d+)\/B(\d+)/i) // check for Snnn/Bnnn format
-			if (aMatches == null) throw new CAException(psInput + ' is not a valid life notation - must be Bnnn/Snnn')
+			if (aMatches == null) {
+				throw new CAException(psInput + ' is not a valid life notation - must be Bnnn/Snnn')
+			}
 			sBorn = aMatches[2]
 			sSurvive = aMatches[1]
 		} else {
@@ -456,14 +504,16 @@ class cCARuleLifeImporter {
 		//populate importer arrays
 		for (var iBorn = 0; iBorn < sBorn.length; iBorn++) {
 			var iBornPos = parseInt(sBorn.charAt(iBorn))
-			if (iBornPos < 1 || iBornPos > cCACellTypes.neighbours.maximum)
+			if (iBornPos < 1 || iBornPos > cCACellTypes.neighbours.maximum) {
 				throw new CAException(iBornPos + ' is not a valid born count')
+			}
 			aBorn[iBornPos] = 1
 		}
 		for (var iSurvive = 0; iSurvive < sSurvive.length; iSurvive++) {
 			var iSurvivePos = parseInt(sSurvive.charAt(iSurvive))
-			if (iSurvivePos < 0 || iSurvivePos > cCACellTypes.neighbours.maximum)
+			if (iSurvivePos < 0 || iSurvivePos > cCACellTypes.neighbours.maximum) {
 				throw new CAException(iSurvivePos + ' is not a valid survivor count')
+			}
 			aSurvive[iSurvivePos] = 1
 		}
 
@@ -481,10 +531,14 @@ class cCARuleLifeImporter {
 			iNewValue = iCentre
 			if (iCentre == 1) {
 				//check whether cell survives
-				if (aSurvive[iCount] != 1) iNewValue = 0
+				if (aSurvive[iCount] != 1) {
+					iNewValue = 0
+				}
 			} else {
 				//check whether cell is born
-				if (aBorn[iCount] == 1) iNewValue = 1
+				if (aBorn[iCount] == 1) {
+					iNewValue = 1
+				}
 			}
 
 			oRule.set_output(cCACellTypes.default_state, i, iNewValue)
@@ -552,9 +606,15 @@ class cCARuleModifier {
 	 * @returns {*}
 	 */
 	static modify_neighbours(poRule, piInState, piVerb, piCount, piOutState) {
-		if (!cCommon.obj_is(poRule, 'cCARule')) throw new CAException('function requires cCARule')
-		if (piCount < 1 || piCount > 8) throw new CAException('invalid neighbour count')
-		if (piOutState < 0 || piOutState > 1) throw new CAException('invalid output state :' + piOutState)
+		if (!cCommon.obj_is(poRule, 'cCARule')) {
+			throw new CAException('function requires cCARule')
+		}
+		if (piCount < 1 || piCount > 8) {
+			throw new CAException('invalid neighbour count')
+		}
+		if (piOutState < 0 || piOutState > 1) {
+			throw new CAException('invalid output state :' + piOutState)
+		}
 
 		for (var i = 1; i <= cCAConsts.MAX_INPUTS; i++) {
 			var iCentre = cCAIndexOps.get_value(i, cCACellTypes.directions.centre)
@@ -571,7 +631,9 @@ class cCARuleModifier {
 					bMatches = true
 					break
 			}
-			if (!bMatches) continue
+			if (!bMatches) {
+				continue
+			}
 
 			//---------------------------------------------------------------
 			var iCount = cCAIndexOps.get_bit_count(i) - iCentre
@@ -591,7 +653,9 @@ class cCARuleModifier {
 					throw new CAException('invalid verb')
 			}
 
-			if (bMatches) poRule.set_output(cCACellTypes.default_state, i, piOutState)
+			if (bMatches) {
+				poRule.set_output(cCACellTypes.default_state, i, piOutState)
+			}
 		}
 
 		return poRule

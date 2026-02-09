@@ -37,7 +37,9 @@ class cCAStatus {
 		oElement.addClass('ui-widget')
 
 		//check dependencies
-		if (!bean) $.error('bean is missing , chack includes')
+		if (!bean) {
+			$.error('bean is missing , chack includes')
+		}
 
 		//subscribe to CAEvents
 		cCACanvasEvent.subscribe(this.grid_name, poEvent => this.onCACanvasEvent(poEvent))
@@ -82,8 +84,11 @@ class cCAStatus {
 			var iAction = poEvent.data
 			switch (iAction) {
 				case cCAGridTypes.actions.play: //start watching the heap when CA is played
-					if (this.heap_timer_running) cDebug.warn('heap timer allready running')
-					else setTimeout(() => this.onHeapTimer(), this.HEAP_INTERVAL)
+					if (this.heap_timer_running) {
+						cDebug.warn('heap timer allready running')
+					} else {
+						setTimeout(() => this.onHeapTimer(), this.HEAP_INTERVAL)
+					}
 
 					break
 				case cCAGridTypes.actions.stop:
@@ -99,7 +104,9 @@ class cCAStatus {
 
 		switch (poEvent.action) {
 			case cCACanvasEvent.actions.grid_status:
-				if (!poEvent.data) return
+				if (!poEvent.data) {
+					return
+				}
 
 				oTarget = $('#' + cJquery.child_ID(oElement, cCAStatusTypes.ACTIVE_ID))
 				oTarget.html(poEvent.data.active)
@@ -155,7 +162,9 @@ $.widget('ck.castatus', {
 	_create: function () {
 		//checks
 		var oOptions = this.options
-		if (!oOptions.grid_name) $.error('grid name not provided')
+		if (!oOptions.grid_name) {
+			$.error('grid name not provided')
+		}
 
 		new cCAStatus(oOptions, this.element) //call widget constructor
 	}

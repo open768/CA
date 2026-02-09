@@ -57,9 +57,15 @@ class cCAGrid {
 	 * @param {number} piCols
 	 */
 	constructor(psName, piRows, piCols) {
-		if (!md5) $.error('js-md5 library missing')
-		if (!psName) throw new CAException('no grid name')
-		if (piRows == null || piCols == null) throw new CAException('bad size information')
+		if (!md5) {
+			$.error('js-md5 library missing')
+		}
+		if (!psName) {
+			throw new CAException('no grid name')
+		}
+		if (piRows == null || piCols == null) {
+			throw new CAException('bad size information')
+		}
 
 		this.rows = piRows
 		this.cols = piCols
@@ -127,7 +133,9 @@ class cCAGrid {
 
 		//set the rule for the grid
 		this.rule = poRule
-		if (pbLinkCells) this._link_cells()
+		if (pbLinkCells) {
+			this._link_cells()
+		}
 		cDebug.leave()
 	}
 
@@ -146,15 +154,20 @@ class cCAGrid {
 		this.changed_cells = []
 
 		//create blank cells
-		for (var iNr = 1; iNr <= this.rows; iNr++)
-			for (var iNc = 1; iNc <= this.cols; iNc++) this.setCellValue(iNr, iNc, 0)
+		for (var iNr = 1; iNr <= this.rows; iNr++) {
+			for (var iNc = 1; iNc <= this.cols; iNc++) {
+				this.setCellValue(iNr, iNc, 0)
+			}
+		}
 
 		//reset instance state
 		this.changed_cells = null
 		this.history = []
 
 		//link if there is a rule
-		if (this.rule) this._link_cells()
+		if (this.rule) {
+			this._link_cells()
+		}
 
 		cCAGridEvent.fire_event(this.name, cCAGridEvent.notify.clear)
 		cDebug.leave()
@@ -168,7 +181,9 @@ class cCAGrid {
 	 * @returns {cCACell}
 	 */
 	setCellValue(piRow, piCol, iValue) {
-		if (this.cell_data == null) throw new CAException('grid not initialised')
+		if (this.cell_data == null) {
+			throw new CAException('grid not initialised')
+		}
 
 		var oCell = this.getCell(piRow, piCol, false)
 		if (oCell == null) {
@@ -180,7 +195,9 @@ class cCAGrid {
 
 		if (iValue !== oCell.value) {
 			oCell.value = iValue
-			if (this.changed_cells == null) this.changed_cells = []
+			if (this.changed_cells == null) {
+				this.changed_cells = []
+			}
 			this.changed_cells.push(oCell)
 		}
 		return oCell
@@ -194,9 +211,13 @@ class cCAGrid {
 	 * @returns {cCACell}
 	 */
 	getCell(piRow, piCol, pbCreate = false) {
-		if (this.cell_data == null) return null
+		if (this.cell_data == null) {
+			return null
+		}
 		var oCell = this.cell_data.get(piRow, piCol)
-		if (pbCreate && oCell == null) oCell = this.setCellValue(piRow, piCol, 0)
+		if (pbCreate && oCell == null) {
+			oCell = this.setCellValue(piRow, piCol, 0)
+		}
 
 		return oCell
 	}
@@ -212,18 +233,24 @@ class cCAGrid {
 	//#######################################################################
 	_on_control_action(piAction) {
 		cDebug.enter()
-		if (this.rule == null) throw new CAException('no rule set')
+		if (this.rule == null) {
+			throw new CAException('no rule set')
+		}
 
 		cDebug.write('running action: ' + piAction)
 		switch (piAction) {
 			case cCAActionEvent.control_actions.play:
-				if (this.running) throw new CAException('CA is allready running')
+				if (this.running) {
+					throw new CAException('CA is allready running')
+				}
 				this.running = true
 				this._step()
 				this.runData.runs = 1
 				break
 			case cCAActionEvent.control_actions.stop:
-				if (!this.running) throw new CAException('CA is not running')
+				if (!this.running) {
+					throw new CAException('CA is not running')
+				}
 				this.running = false
 				break
 			case cCAActionEvent.control_actions.step:
@@ -239,7 +266,9 @@ class cCAGrid {
 	//****************************************************************
 	_step() {
 		//cant step until changed_cells are consumed
-		if (this.changed_cells) throw new CAException('changed cells must be consumed before stepping')
+		if (this.changed_cells) {
+			throw new CAException('changed cells must be consumed before stepping')
+		}
 
 		//reset counters
 		this.changed_cells = []
@@ -249,33 +278,14 @@ class cCAGrid {
 
 		//apply rules
 		var bHasChanged, oCell, oEvent
-		for (var iRow = 1; iRow <= this.rows; iRow++)
-			for (var iCol = 1; iCol <= this.cols; iCol++) {
-				//cDebug.extended_debug("cell row: " + iRow + " col:" + iCol)
-				oCell = this.getCell(iRow, iCol, true)
-				if (oCell.rule == null) oCell.rule = this.rule
-				bHasChanged = oCell.apply_rule() //apply rule to each cell
-				if (bHasChanged) this.changed_cells.push(oCell) //if the cell has changed remember it
-				if (oCell.value > 0) this.runData.active++
-			}
-
-		//check how many cells changed
-		var iChangedLen = this.changed_cells.length
-		this.runData.changed = iChangedLen
-		if (iChangedLen == 0) {
-			this.running = false
-			cDebug.warn('no change detected in grid')
-			this.changed_cells = null
-			cCAGridEvent.fire_event(this.name, cCAGridEvent.notify.nochange)
-			return
-		}
-
-		//promote changed cells
-		for (var iIndex = 0; iIndex < iChangedLen; iIndex++) {
+		for (var iRow = 1; iRonpxhangedLen; iIndex++) {
 			oCell = this.changed_cells[iIndex]
 			oCell.promote()
-			if (oCell.value == 0) this.runData.active--
-			else this.runData.active++
+			if (oCell.value == 0) {
+				this.runData.active--
+			} else {
+				this.runData.active++
+			}
 		}
 
 		this._add_to_history()
@@ -286,7 +296,9 @@ class cCAGrid {
 	//****************************************************************
 	_init(piInitType) {
 		cDebug.enter()
-		if (this.running) throw new CAException('cant init when running')
+		if (this.running) {
+			throw new CAException('cant init when running')
+		}
 
 		this.changed_cells = []
 		this.history = []
@@ -303,11 +315,14 @@ class cCAGrid {
 	_clear_cell_rules() {
 		cDebug.enter()
 		var oCell
-		for (var iNr = 1; iNr <= this.rows; iNr++)
+		for (var iNr = 1; iNr <= this.rows; iNr++) {
 			for (var iNc = 1; iNc <= this.cols; iNc++) {
 				oCell = this.getCell(iNr, iNc)
-				if (oCell !== null) oCell.rule = null
+				if (oCell !== null) {
+					oCell.rule = null
+				}
 			}
+		}
 		cDebug.leave()
 	}
 
@@ -354,7 +369,9 @@ class cCAGrid {
 		var aHistory = this.history
 
 		//is history too long?
-		while (aHistory.length > cCAGrid.HISTORY_LEN) aHistory.shift() //remove first history entry
+		while (aHistory.length > cCAGrid.HISTORY_LEN) {
+			aHistory.shift()
+		} //remove first history entry
 
 		var sHash = this._changed_cells_hash()
 		if (aHistory.includes(sHash)) {
@@ -374,8 +391,11 @@ class cCAGrid {
 
 		this.changed_cells.forEach(function (poCell) {
 			sBinary += poCell.value
-			if (poCell.value !== 0) iCountOnes++
-			else iCountZeros++
+			if (poCell.value !== 0) {
+				iCountOnes++
+			} else {
+				iCountZeros++
+			}
 		})
 
 		var sHash = md5(sBinary) + '_' + iCountOnes + ',' + iCountZeros
@@ -386,12 +406,14 @@ class cCAGrid {
 	//****************************************************************
 	_link_cells() {
 		cDebug.enter()
-		if (!this.rule) throw new Error('no rule set')
+		if (!this.rule) {
+			throw new Error('no rule set')
+		}
 
 		var iType = this.rule.neighbour_type
 
 		cDebug.write('linking cells')
-		for (var iNr = 1; iNr <= this.rows; iNr++)
+		for (var iNr = 1; iNr <= this.rows; iNr++) {
 			for (var iNc = 1; iNc <= this.cols; iNc++) {
 				var oCell = this.getCell(iNr, iNc, true) //create cells
 				this._link_cell(oCell, cCACellTypes.directions.north, iNr - 1, iNc)
@@ -405,6 +427,7 @@ class cCAGrid {
 					this._link_cell(oCell, cCACellTypes.directions.northwest, iNr - 1, iNc - 1)
 				}
 			}
+		}
 		cDebug.write('completed cell linking')
 		cDebug.leave()
 	}
@@ -414,12 +437,20 @@ class cCAGrid {
 		var iNr, iNc
 		//wrap around neighbour row and col
 		iNr = piNRow
-		if (iNr < 1) iNr = this.rows
-		if (iNr > this.rows) iNr = 1
+		if (iNr < 1) {
+			iNr = this.rows
+		}
+		if (iNr > this.rows) {
+			iNr = 1
+		}
 
 		iNc = piNCol
-		if (iNc < 1) iNc = this.cols
-		if (iNc > this.cols) iNc = 1
+		if (iNc < 1) {
+			iNc = this.cols
+		}
+		if (iNc > this.cols) {
+			iNc = 1
+		}
 
 		//get the neighbour
 		var oNeigh = this.getCell(iNr, iNc, true) //shouldnt need to create cells, but just in case
