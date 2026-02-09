@@ -39,11 +39,11 @@ class cCAIndexOps {
 		}
 
 		var iAnd = piIndex & iVal //bitwise and
-		if (iAnd == iVal) {
+		if (iAnd == iVal) 
 			return 1
-		} else {
+		else 
 			return 0
-		}
+		
 	}
 
 	//***************************************************************
@@ -59,9 +59,9 @@ class cCAIndexOps {
 		var iCount = 0
 
 		while (iTmp > 0) {
-			if ((iTmp & 1) == 1) {
+			if ((iTmp & 1) == 1) 
 				iCount++
-			}
+			
 			iTmp = iTmp >>> 1 //keep right shifting the value until nothing is left
 		}
 		return iCount

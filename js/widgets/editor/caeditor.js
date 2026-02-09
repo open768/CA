@@ -109,7 +109,7 @@ $.widget('ck.caeditwidget', {
 
 		for (iDir = cCACellTypes.directions.northwest; iDir <= cCACellTypes.directions.southeast; iDir++) {
 			iBit = cCAIndexOps.get_value(oOptions.index, iDir)
-			if (iBit > 0) {
+			if (iBit > 0) 
 				oCanvas.drawRect({
 					fillStyle: 'black',
 					x: x,
@@ -118,7 +118,7 @@ $.widget('ck.caeditwidget', {
 					height: oOptions.cell_size * 0.8,
 					fromCenter: true
 				})
-			}
+			
 
 			x += oOptions.cell_size + 1
 			iCount++
@@ -138,11 +138,11 @@ $.widget('ck.caeditwidget', {
 		oOptions.value = piValue
 
 		//change cell style if its value
-		if (piValue == 0) {
+		if (piValue == 0) 
 			oElement.removeClass('caindexon')
-		} else {
+		else 
 			oElement.addClass('caindexon')
-		}
+		
 	},
 
 	//*****************************************************************
@@ -150,11 +150,11 @@ $.widget('ck.caeditwidget', {
 	//*****************************************************************
 	onClick: function () {
 		var oOptions = this.options
-		if (oOptions.value == 0) {
+		if (oOptions.value == 0) 
 			this._set_value(1)
-		} else {
+		else 
 			this._set_value(0)
-		}
+		
 
 		bean.fire(document, cCAWidgetTypes.click_event, oOptions)
 	}

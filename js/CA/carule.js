@@ -102,12 +102,12 @@ class cCARule {
 	 * @param {number} piValue
 	 */
 	set_output(piState, piBitmap, piValue) {
-		if (piState < 1) {
+		if (piState < 1) 
 			throw new CAException('invalid state')
-		}
-		if (piState > this.stateRules.length) {
+		
+		if (piState > this.stateRules.length) 
 			this.create_state(piState) 		//create a new state if the state is unknown
-		}
+		
 		this.stateRules[piState - 1].outputs[piBitmap] = piValue
 	}
 
@@ -117,9 +117,9 @@ class cCARule {
 	 * @param {number} piBoredom
 	 */
 	set_boredom(piBoredom) {
-		if (piBoredom != cCAConsts.NO_BOREDOM && piBoredom < 2) {
+		if (piBoredom != cCAConsts.NO_BOREDOM && piBoredom < 2) 
 			throw new CAException('boredom must be at least 2')
-		}
+		
 		this.boredom = piBoredom
 	}
 
@@ -132,18 +132,18 @@ class cCARule {
 	 * @returns {number}
 	 */
 	get_rule_output(piState, piBitmap) {
-		if (piBitmap == 0) {
+		if (piBitmap == 0) 
 			return 0
-		} // cells must have neighbours - 0 doesnt become 1
+		// cells must have neighbours - 0 doesnt become 1
 		
-		if (piState > this.stateRules.length) {
+		if (piState > this.stateRules.length) 
 			throw new CAException('invalid state requested - too big')
-		}
+		
 		try {
 			var iOutput = this.stateRules[piState - 1].outputs[piBitmap] //TBD should be using a method
-			if (iOutput == null) {
+			if (iOutput == null) 
 				iOutput = 0
-			}
+			
 			return iOutput
 		} catch (e) {
 			cDebug.write_err('unable to get output for state ' + piState)
@@ -159,12 +159,12 @@ class cCARule {
 	 * @param {number} piState
 	 */
 	create_state(piState) {
-		if (piState <= this.stateRules.length) {
+		if (piState <= this.stateRules.length) 
 			return
-		} // dont create existing states
-		if (!this.has_state_transitions && piState !== cCACellTypes.default_state) {
+		// dont create existing states
+		if (!this.has_state_transitions && piState !== cCACellTypes.default_state) 
 			throw new CAException('state not possible without state transitions enabled')
-		}
+		
 
 		var oStateRule = new cCAStateRule()
 		oStateRule.neighbour_type = this.neighbour_type
@@ -181,15 +181,15 @@ class cCARule {
 	 * @param {*} piNextState
 	 */
 	set_nextState(piInState, piPattern, piNextState) {
-		if (!this.has_state_transitions) {
+		if (!this.has_state_transitions) 
 			throw new CAException('no state transitions possible')
-		}
-		if (piInState > this.stateRules.length) {
+		
+		if (piInState > this.stateRules.length) 
 			throw new CAException('invalid input state ')
-		}
-		if (piNextState > this.stateRules.length) {
+		
+		if (piNextState > this.stateRules.length) 
 			throw new CAException('invalid next state ')
-		}
+		
 		this.stateRules[piInState - 1].nextStates[piPattern] = piNextState //TBD should be using a method
 	}
 
@@ -203,15 +203,15 @@ class cCARule {
 	 * @returns {*}
 	 */
 	get_nextState(piInState, piPattern) {
-		if (piPattern == 0) {
+		if (piPattern == 0) 
 			return piInState
-		}
-		if (!this.has_state_transitions) {
+		
+		if (!this.has_state_transitions) 
 			throw new CAException('no state transitions possible')
-		}
-		if (piInState > this.stateRules.length) {
+		
+		if (piInState > this.stateRules.length) 
 			throw new CAException('invalid state requested')
-		}
+		
 		var iOutState = this.stateRules[piInState - 1].nextStates[piPattern] //TBD should be using a method
 		return iOutState
 	}
@@ -222,36 +222,36 @@ class cCARule {
 	 * @param {cCACell} poCell
 	 */
 	evaluateCell(poCell) {
-		if (poCell == null) {
+		if (poCell == null) 
 			throw new CAException('no cell provided')
-		}
+		
 
 		//get the cell neighbour value
 		var iBitmap = poCell.getPattern(this.neighbour_type)
 
 		//cells that are completely isolated remain dead
-		if (iBitmap == 0) {
+		if (iBitmap == 0) 
 			poCell.evaluated.value = 0
-		} else {
+		else {
 			//check for cell boredom
 			/** @type Boolean */ var bBored
 			bBored = false
-			if (this.boredom !== cCAConsts.NO_BOREDOM) {
+			if (this.boredom !== cCAConsts.NO_BOREDOM) 
 				bBored = poCell.check_boredom(iBitmap)
-			}
+					
 
-			if (bBored) {
+			if (bBored) 
 				poCell.evaluated.value = 0
-			} else {
+			else 
 				poCell.evaluated.value = this.get_rule_output(poCell.state, iBitmap)
-			}
+			
 
 			//mark cell as done
-			if (this.has_state_transitions) {
+			if (this.has_state_transitions) {	
 				// TBD state _transitions not implemented
-			} else {
+			} else 
 				poCell.evaluated.state = poCell.state
-			}
+			
 		}
 		poCell.evaluated.done = true
 		poCell.evaluated.pattern = iBitmap //the pattern evaluated - used to optimise cell evaluation

@@ -13,9 +13,9 @@ class cCAChartTypes {
 	static is_charts_loaded = false
 
 	static {
-		if (!google.charts) {
+		if (!google.charts) 
 			$.error('google.charts class is missing! check includes')
-		}
+		
 
 		try {
 			google.charts
@@ -43,9 +43,9 @@ class cCAChart {
 
 	constructor(poOptions, poElement) {
 		//checks
-		if (!poOptions.grid_name) {
+		if (!poOptions.grid_name) 
 			$.error('grid name not provided')
-		}
+		
 
 		//store the element
 		this.element = poElement
@@ -85,12 +85,12 @@ class cCAChart {
 		var oElement = this.element
 
 		//check if the data has been previously created
-		if (this.vis_data) {
+		if (this.vis_data) 
 			return
-		}
-		if (!google.visualization) {
+		
+		if (!google.visualization) 
 			$.error('google.visualization class is missing! check includes')
-		}
+		
 		this._clear_chart()
 
 		//create the google data

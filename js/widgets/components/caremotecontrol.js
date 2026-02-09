@@ -30,9 +30,9 @@ class cCARemoteControls {
 		var oElement = poElement
 
 		//check dependencies
-		if (!bean) {
+		if (!bean) 
 			$.error('bean is missing , check includes')
-		}
+		
 
 		//set basic stuff
 		oElement.uniqueId()
@@ -91,9 +91,9 @@ class cCARemoteControls {
 	//* Privates
 	//***************************************************************
 	_enable_buttons() {
-		if (this.grid_set && this.rule_set) {
+		if (this.grid_set && this.rule_set) 
 			this._enable_controls(false)
-		}
+		
 	}
 
 	/**
@@ -167,9 +167,9 @@ $.widget('ck.caremotecontrols', {
 	_create: function () {
 		//checks
 		var oOptions = this.options
-		if (!oOptions.grid_name) {
+		if (!oOptions.grid_name) 
 			$.error('grid name not provided')
-		}
+		
 
 		new cCARemoteControls(oOptions, this.element) //call class constructor
 	}

@@ -28,21 +28,21 @@ class cCAControlsR {
 		oElement.addClass('ui-widget')
 
 		//check dependencies
-		if (!bean) {
+		if (!bean) 
 			$.error('bean is missing , chack includes')
-		}
-		if (!oElement.cagridinit) {
+		
+		if (!oElement.cagridinit) 
 			$.error('cainit is missing , chack includes')
-		}
-		if (!oElement.castatus) {
+		
+		if (!oElement.castatus) 
 			$.error('castatus is missing , chack includes')
-		}
-		if (!oElement.cachart) {
+		
+		if (!oElement.cachart) 
 			$.error('caChart is missing , chack includes')
-		}
-		if (!oElement.caremotecontrols) {
+		
+		if (!oElement.caremotecontrols) 
 			$.error('caremotecontrols is missing , chack includes')
-		}
+		
 
 		//put something in the widget
 		oElement.empty()
@@ -93,9 +93,9 @@ $.widget('ck.cacontrolsr', {
 	_create: function () {
 		//checks
 		var oOptions = this.options
-		if (!oOptions.grid_name) {
+		if (!oOptions.grid_name) 
 			$.error('grid name not provided')
-		}
+		
 
 		new cCAControlsR(oOptions, this.element) //call widgetclass
 	}

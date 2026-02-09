@@ -39,15 +39,15 @@ class cCAControlsL {
 		this.grid_name = poOptions.grid_name
 
 		//check dependencies
-		if (!bean) {
+		if (!bean) 
 			$.error('bean class is missing! check includes')
-		}
-		if (!oElement.selectmenu) {
+		
+		if (!oElement.selectmenu) 
 			$.error('selectmenu class is missing! check includes')
-		}
-		if (!cCARuleBase64Importer) {
+		
+		if (!cCARuleBase64Importer) 
 			$.error('cCARuleBase64Importer class is missing! check includes')
-		}
+		
 
 		//set basic stuff
 		oElement.addClass('ui-widget')
@@ -158,9 +158,9 @@ class cCAControlsL {
 		})
 		oSelect.append($('<option>', { selected: 1, disabled: 1 }).append('Select'))
 		oSelect.append($('<option>', { value: cCAConsts.NO_BOREDOM }).append('Never'))
-		for (var i = 2; i <= 10; i++) {
+		for (var i = 2; i <= 10; i++) 
 			oSelect.append($('<option>', { value: i }).append(i + ' times'))
-		}
+		
 		oContent.append(oSelect)
 		oSelect.selectmenu({
 			select: poEvent => this._onBoredomClick(poEvent)
@@ -233,11 +233,11 @@ class cCAControlsL {
 
 					//set the boredom if chosen
 					var oBoredomList = $('#' + cJquery.child_ID(oElement, cCAControlLTypes.boredom_ID))
-					if (!isNaN(oBoredomList.val())) {
+					if (!isNaN(oBoredomList.val())) 
 						oRule.boredom = oBoredomList.val()
-					} else {
+					else 
 						oRule.boredom = cCAConsts.NO_BOREDOM
-					}
+					
 
 					//inform subscribers
 					cCARuleEvent.fire_event(this.grid_name, cCARuleEvent.actions.set_rule, oRule)
@@ -277,9 +277,9 @@ class cCAControlsL {
 		var oRulesSelect = $('#' + cJquery.child_ID(oElement, cCAControlLTypes.rule_type_id))
 
 		var sPreset = $(poEvent.target).val()
-		if (!sPreset) {
+		if (!sPreset) 
 			return
-		}
+		
 
 		if (sPreset === cCAControlLTypes.random_ID) {
 			var oRule = cCaRandomRule.makeRule()
@@ -373,9 +373,9 @@ $.widget('ck.cacontrolsl', {
 
 	_create: function () {
 		var oOptions = this.options
-		if (!oOptions.grid_name) {
+		if (!oOptions.grid_name) 
 			$.error('grid name not provided')
-		}
+		
 
 		new cCAControlsL(oOptions, this.element) //call widget constructor
 	}

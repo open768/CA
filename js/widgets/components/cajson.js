@@ -33,12 +33,12 @@ class cCAJson {
 		oElement = this.element
 
 		//check dependencies
-		if (!bean) {
+		if (!bean) 
 			$.error('bean class is missing! check includes')
-		}
-		if (!oElement.tabs) {
+		
+		if (!oElement.tabs) 
 			$.error('tabs class is missing! check includes')
-		}
+		
 
 		//set basic stuff
 		oElement.uniqueId()
@@ -124,9 +124,9 @@ class cCAJson {
 		} else if (!this.grid.get_rule()) {
 			alert('no rule set')
 			throw new Error('cant create json - rule is not set')
-		} else {
+		} else 
 			this._create_json()
-		}
+		
 		cDebug.leave()
 	}
 
@@ -197,9 +197,9 @@ $.widget('ck.cajson', {
 	},
 	_create: function () {
 		var oOptions = this.options
-		if (!oOptions.grid_name) {
+		if (!oOptions.grid_name) 
 			$.error('grid name not provided')
-		}
+		
 
 		new cCAJson(oOptions, this.element) //call class constructor
 	}

@@ -30,15 +30,15 @@ $.widget('ck.caindex', {
 		oElement = this.element
 
 		//check for classes
-		if (typeof cCARule !== 'function') {
+		if (typeof cCARule !== 'function') 
 			$.error('missing cCARule class')
-		}
-		if (!bean) {
+		
+		if (!bean) 
 			$.error('missing bean class')
-		}
-		if (!oOptions.name) {
+		
+		if (!oOptions.name) 
 			$.error('missing name')
-		}
+		
 		var sCaName = oOptions.name
 
 		//set basic stuff

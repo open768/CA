@@ -34,7 +34,7 @@ module.exports = defineConfig([
 
 			// Strongly recommended along with the above so fixes are unambiguous
 			// Require braces for all control statements (auto-fixable)
-			curly: ["error", "all"],                               // [4](https://eslint.org/docs/latest/rules/curly)
+			curly: ["error", "multi"],                               // [4](https://eslint.org/docs/latest/rules/curly)
 			// Keep opening braces on the same line as the control statement (auto-fixable)
 			"@stylistic/brace-style": ["error", "1tbs", { "allowSingleLine": false }], // [5](https://eslint.style/rules/default/brace-style)
 			// Enforce consistent indentation (auto-fixable)

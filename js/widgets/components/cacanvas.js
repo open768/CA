@@ -46,12 +46,12 @@ class cCACanvas {
 	//#################################################################`
 	constructor(poOptions, poElement) {
 		//check dependencies
-		if (!bean) {
+		if (!bean) 
 			$.error('bean class is missing! check includes')
-		}
-		if (!poOptions.grid_name) {
+		
+		if (!poOptions.grid_name) 
 			$.error('name must be provided')
-		}
+		
 		this.interactive = poOptions.interactive
 
 		this.element = poElement
@@ -155,12 +155,12 @@ class cCACanvas {
 
 	//****************************************************************
 	_onMouseDown(poEvent) {
-		if (!this.grid) {
+		if (!this.grid) 
 			return
-		}
-		if (!this.interactive) {
+		
+		if (!this.interactive) 
 			return
-		}
+		
 
 		this.mouse.is_down = true
 		this._set_one_cell(poEvent)
@@ -168,15 +168,15 @@ class cCACanvas {
 
 	//****************************************************************
 	_onMouseMove(poEvent) {
-		if (!this.interactive) {
+		if (!this.interactive) 
 			return
-		}
-		if (!this.grid) {
+		
+		if (!this.grid) 
 			return
-		}
-		if (!this.mouse.is_down) {
+		
+		if (!this.mouse.is_down) 
 			return
-		}
+		
 
 		this._set_one_cell(poEvent)
 	}
@@ -190,9 +190,9 @@ class cCACanvas {
 	//# privates
 	//#################################################################`
 	_set_one_cell(poEvent) {
-		if (this.grid.is_running()) {
+		if (this.grid.is_running()) 
 			return
-		}
+		
 
 		var oRC = this._get_cell_rc_from_event(poEvent, true)
 		if (oRC) {
@@ -209,27 +209,27 @@ class cCACanvas {
 		var ir = Math.trunc(Y / this.cell_size) + 1
 		var ic = Math.trunc(X / this.cell_size) + 1
 
-		if (ir < 1) {
+		if (ir < 1) 
 			ir = 1
-		}
-		if (ir > this.rows) {
+		
+		if (ir > this.rows) 
 			ir = this.rows
-		}
-		if (ic < 1) {
+		
+		if (ic < 1) 
 			ic = 1
-		}
-		if (ic > this.cols) {
+		
+		if (ic > this.cols) 
 			ir = this.cols
-		}
+		
 
 		var oRC = null
 		if (ir != this.last_mouse_pos.row || ic != this.last_mouse_pos.col) {
 			this.last_mouse_pos.row = ir
 			this.last_mouse_pos.col = ic
 			oRC = this.last_mouse_pos
-		} else if (!pbChangedOnly) {
+		} else if (!pbChangedOnly) 
 			oRC = this.last_mouse_pos
-		}
+		
 		return oRC
 	}
 
@@ -299,9 +299,9 @@ class cCACanvas {
 		this.cells_drawn = 0
 
 		var oCell
-		if (!paChangedCells) {
+		if (!paChangedCells) 
 			$.error('null changed cells')
-		}
+		
 		if (paChangedCells.length == 0) {
 			cDebug.warn('no changed cells - nothing to draw')
 			return
@@ -322,12 +322,12 @@ class cCACanvas {
 		this.cells_to_draw = oGrid.rows * oGrid.cols
 		this.cells_drawn = 0
 
-		for (var ir = 1; ir <= oGrid.rows; ir++) {
+		for (var ir = 1; ir <= oGrid.rows; ir++) 
 			for (var ic = 1; ic <= oGrid.cols; ic++) {
 				var oCell = oGrid.getCell(ir, ic)
 				this._draw_cell(oCell)
 			}
-		}
+		
 		cDebug.leave()
 	}
 

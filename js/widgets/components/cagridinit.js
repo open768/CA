@@ -80,9 +80,9 @@ $.widget('ck.cagridinit', {
 	_create: function () {
 		//checks
 		var oOptions = this.options
-		if (!oOptions.grid_name) {
+		if (!oOptions.grid_name) 
 			$.error('grid name not provided')
-		}
+		
 
 		new cCAGridStateInit(oOptions, this.element) //call class constructor
 	}
