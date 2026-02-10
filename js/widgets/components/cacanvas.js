@@ -283,7 +283,7 @@ class cCACanvas {
 		this.canvas = oCanvas
 
 		//initialise the grid
-		cCAActionEvent.fire_event(this.grid_name, cCAActionEvent.actions.grid_init, cCAGridTypes.init.block.id)
+		cCAActionEvent.fire_event(this.grid_name, cCAActionEvent.actions.grid_init, goGridInitTypes.block.id)
 		cDebug.leave()
 	}
 

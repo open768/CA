@@ -57,8 +57,8 @@ class cCAGridStateInit {
 			title: 'choose a pattern to initialise the grid with'
 		})
 		oSelect.append($('<option>', { selected: 1, disabled: 1, value: -1 }).append('Initialise'))
-		for (var sName in cCAGridTypes.init) {
-			var oItem = cCAGridTypes.init[sName]
+		for (var sName in goGridInitTypes) {
+			var oItem = goGridInitTypes[sName]
 			var oOption = $('<option>', { value: oItem.id }).append(oItem.label)
 			oSelect.append(oOption)
 		}

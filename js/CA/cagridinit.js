@@ -3,6 +3,10 @@
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 /** initialises the grid */
 
+/**
+ * @param {cCAGrid} poGrid
+ * @param {number} piInitType		fined in goGridInitTypes
+ */
 class cCAGridInitialiser {
 	static init(poGrid, piInitType) {
 		cDebug.enter()
@@ -11,36 +15,36 @@ class cCAGridInitialiser {
 		poGrid.create_cells()
 
 		switch (piInitType) {
-			case cCAGridTypes.init.blank.id:
+			case goGridInitTypes.blank.id:
 				break
-			case cCAGridTypes.init.block.id:
+			case goGridInitTypes.block.id:
 				this.init_block(poGrid)
 				break
-			case cCAGridTypes.init.checker.id:
+			case goGridInitTypes.checker.id:
 				this.init_checker(poGrid)
 				break
-			case cCAGridTypes.init.circle.id:
+			case goGridInitTypes.circle.id:
 				this.init_circle(poGrid)
 				break
-			case cCAGridTypes.init.cross.id:
+			case goGridInitTypes.cross.id:
 				this.init_cross(poGrid)
 				break
-			case cCAGridTypes.init.diagonal.id:
+			case goGridInitTypes.diagonal.id:
 				this.init_diagonal(poGrid)
 				break
-			case cCAGridTypes.init.diamond.id:
+			case goGridInitTypes.diamond.id:
 				this.init_diamond(poGrid)
 				break
-			case cCAGridTypes.init.horiz_line.id:
+			case goGridInitTypes.horiz_line.id:
 				this.init_horiz_line(poGrid)
 				break
-			case cCAGridTypes.init.random.id:
+			case goGridInitTypes.random.id:
 				this.init_random(poGrid)
 				break
-			case cCAGridTypes.init.sine.id:
+			case goGridInitTypes.sine.id:
 				this.init_sine(poGrid)
 				break
-			case cCAGridTypes.init.vert_line.id:
+			case goGridInitTypes.vert_line.id:
 				this.init_vert_line(poGrid)
 				break
 			//--------------------------------------------------------

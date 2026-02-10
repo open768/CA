@@ -60,18 +60,16 @@ class cCAConsts {
 	}
 }
 
-class cCAGridTypes {
-	static init = {
-		blank: { id: 0, label: 'Blank' },
-		block: { id: 1, label: 'Block' },
-		checker: { id: 2, label: 'Checker' },
-		circle: { id: 3, label: 'Circle' },
-		cross: { id: 4, label: 'Cross' },
-		diagonal: { id: 5, label: 'Diagonal' },
-		diamond: { id: 6, label: 'Diamond' },
-		horiz_line: { id: 7, label: 'H-Line' },
-		sine: { id: 8, label: 'Sine' },
-		random: { id: 9, label: 'Random' },
-		vert_line: { id: 10, label: 'V-Line' }
-	}
+var goGridInitTypes = {
+	blank: { id: 0, label: 'Blank' },
+	block: { id: 1, label: 'Block' },
+	checker: { id: 2, label: 'Checker' },
+	circle: { id: 3, label: 'Circle' },
+	cross: { id: 4, label: 'Cross' },
+	diagonal: { id: 5, label: 'Diagonal' },
+	diamond: { id: 6, label: 'Diamond' },
+	horiz_line: { id: 7, label: 'H-Line' },
+	sine: { id: 8, label: 'Sine' },
+	random: { id: 9, label: 'Random' },
+	vert_line: { id: 10, label: 'V-Line' }
 }

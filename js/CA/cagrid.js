@@ -305,6 +305,10 @@ class cCAGrid {
 	}
 
 	//****************************************************************
+	/*
+	 * @param {number} piInitType   defined in goGridInitTypes
+	 * @description initializes the grid with a pattern
+	 */
 	_init(piInitType) {
 		cDebug.enter()
 		if (this.running) 
