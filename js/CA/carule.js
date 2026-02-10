@@ -43,6 +43,7 @@ class cCARule {
 	NO_BOREDOM_BITMAP = -1
 	BOREDOM_BITMAP_KEY = "BBK"
 	BOREDOM_BITMAP_COUNT_KEY = "BBCK"
+	BORED_STATE_KEY = "BSK"
 
 	/**
 	 * Creates an instance of cCARule.
@@ -219,6 +220,7 @@ class cCARule {
 		if (!cell_data.has(this.BOREDOM_BITMAP_KEY) ) {
 			cell_data.set(this.BOREDOM_BITMAP_KEY, piBitmap)
 			cell_data.set(this.BOREDOM_BITMAP_COUNT_KEY, 1)
+			cell_data.set(this.BORED_STATE_KEY, false)
 			return false
 		}
 
@@ -227,6 +229,7 @@ class cCARule {
 		if (previous_bitmap != piBitmap) {
 			cell_data.set(this.BOREDOM_BITMAP_KEY, piBitmap)
 			cell_data.set(this.BOREDOM_BITMAP_COUNT_KEY, 1)
+			cell_data.set(this.BORED_STATE_KEY, false)
 			return false
 		}
 
@@ -234,9 +237,11 @@ class cCARule {
 		var count = cell_data.get(this.BOREDOM_BITMAP_COUNT_KEY) +1
 		if (count >= this.boredom_count) {
 			cell_data.set(this.BOREDOM_BITMAP_COUNT_KEY, 0) //reset count 
+			cell_data.set(this.BORED_STATE_KEY, true)
 			return true
 		} else{
 			cell_data.set(this.BOREDOM_BITMAP_COUNT_KEY, count)
+			cell_data.set(this.BORED_STATE_KEY, false)
 			return false
 		}
 	}

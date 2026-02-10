@@ -260,15 +260,17 @@ class cCAGrid {
 		this.runData.changed = 0
 		this.runData.active = 0
 		cDebug.write('stepping')
+		var bored_count = 0
 
 		//apply rules
 		var bHasChanged, oCell, oEvent
 		for (var iRow = 1; iRow <= this.rows; iRow++)
 			for (var iCol = 1; iCol <= this.cols; iCol++) {
-				//apply the rule to each cell 
 				/** @type cCACell*/ oCell = this.getCell(iRow, iCol, true)
 				if (oCell.rule == null) 
+					//if no rule is associated with a cell, set it here
 					oCell.rule = this.rule
+
 				bHasChanged = oCell.apply_rule() 
 
 				//check if the cell has changed
