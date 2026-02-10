@@ -13,21 +13,16 @@ For licenses that allow for commercial use please contact cluck@chickenkatsu.co.
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 /**
  * produced when the cCAGrid is exported
- *
  * @class cCAGridExported
  */
 class cCAGridExported {
 	/**
-	 * Description placeholder
-	 *
-	 *
+	 * 
 	 * @type {number}
 	 */
 	version = 1
 	/**
-	 * Description placeholder
-	 *
-	 *
+	 * 
 	 * @type {{ rows: number; cols: number; data: any; }}
 	 */
 	grid = {
@@ -39,9 +34,7 @@ class cCAGridExported {
 	/** @type {cCARule}	 */ rule = null
 
 	/**
-	 * Description placeholder
-	 *
-	 *
+	 * 
 	 * @static
 	 * @param {*} poObj
 	 * @returns {boolean}
@@ -66,15 +59,12 @@ class cCAGridExported {
 //*************************************************************************
 /**
  * exports a cCAGrid as  JSON
- *
  * @class cCAGridJSONExporter
  */
 
 class cCAGridJSONExporter {
 	/**
-	 * Description placeholder
-	 *
-	 *
+	 * 
 	 * @static
 	 * @param {cCAGrid} poGrid
 	 * @returns {cCAGridExported}
@@ -106,9 +96,7 @@ class cCAGridJSONExporter {
 
 	//*************************************************************************
 	/**
-	 * Description placeholder
-	 *
-	 *
+	 * 
 	 * @static
 	 * @param {cCAGrid} poGrid
 	 * @returns {string}
@@ -152,9 +140,7 @@ class cCAGridJSONExporter {
 class cCAGridJSONImporter {
 	//*********************************************
 	/**
-	 * Description placeholder
-	 *
-	 *
+	 * 
 	 * @static
 	 * @param {string} psName
 	 * @param {JSON} poJson

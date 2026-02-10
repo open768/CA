@@ -54,7 +54,8 @@ class cCARemoteControls {
 			return
 		}
 
-		switch (piAction) {
+		var iAction = parseInt(piAction)
+		switch (iAction) {
 			case cCAActionEvent.control_actions.stop:
 				this._enable_controls(false)
 				break
@@ -62,7 +63,7 @@ class cCARemoteControls {
 				this._enable_controls(true)
 				break
 		}
-		cCAActionEvent.fire_event(this.grid_name, cCAActionEvent.actions.control, parseInt(piAction))
+		cCAActionEvent.fire_event(this.grid_name, cCAActionEvent.actions.control, iAction)
 	}
 
 	//****************************************************************************
@@ -97,7 +98,6 @@ class cCARemoteControls {
 	}
 
 	/**
-	 * Description
 	 * @param {boolean} pbRunning
 	 */
 	_enable_controls(pbRunning) {

@@ -50,8 +50,7 @@ class cCAGrid {
 
 	/**
 	 * Creates an instance of cCAGrid.
-	 *
-	 * @constructor
+	 \*	 * @constructor
 	 * @param {string} psName
 	 * @param {number} piRows
 	 * @param {number} piCols
@@ -265,13 +264,15 @@ class cCAGrid {
 		var bHasChanged, oCell, oEvent
 		for (var iRow = 1; iRow <= this.rows; iRow++)
 			for (var iCol = 1; iCol <= this.cols; iCol++) {
-				//cDebug.extended_debug("cell row: " + iRow + " col:" + iCol)
-				oCell = this.getCell(iRow, iCol, true)
+				//apply the rule to each cell 
+				/** @type cCACell*/ oCell = this.getCell(iRow, iCol, true)
 				if (oCell.rule == null) 
 					oCell.rule = this.rule
-				bHasChanged = oCell.apply_rule() //apply rule to each cell
+				bHasChanged = oCell.apply_rule() 
+
+				//check if the cell has changed
 				if (bHasChanged) 
-					this.changed_cells.push(oCell) //if the cell has changed remember it
+					this.changed_cells.push(oCell)
 				if (oCell.value > 0) 
 					this.runData.active++
 			}
@@ -353,7 +354,6 @@ class cCAGrid {
 	}
 
 	/**
-	 * Description
 	 */
 	_onNotifyCellsConsumed() {
 		cDebug.enter()

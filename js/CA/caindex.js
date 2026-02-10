@@ -49,8 +49,7 @@ class cCAIndexOps {
 	//***************************************************************
 	/**
 	 * counts 1 bits in a number
-	 *
-	 * @static
+	 \*	 * @static
 	 * @param {*} piIndex
 	 * @returns {number}
 	 */
@@ -69,9 +68,7 @@ class cCAIndexOps {
 
 	//***************************************************************
 	/**
-	 * Description placeholder
-	 *
-	 *
+	 * 
 	 * @static
 	 * @param {number} piIndex
 	 * @returns {number}
@@ -88,9 +85,7 @@ class cCAIndexOps {
 
 	//***************************************************************
 	/**
-	 * Description placeholder
-	 *
-	 *
+	 * 
 	 * @static
 	 * @param {number} piIndex
 	 * @returns {number}
@@ -107,9 +102,7 @@ class cCAIndexOps {
 
 	//***************************************************************
 	/**
-	 * Description placeholder
-	 *
-	 *
+	 * 
 	 * @static
 	 * @param {*} piIndex
 	 * @returns {number}

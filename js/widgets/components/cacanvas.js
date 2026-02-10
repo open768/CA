@@ -235,7 +235,6 @@ class cCACanvas {
 
 	//****************************************************************
 	/**
-	 * Description
 	 * @param {cCAGridRunData} poData
 	 * @returns {any}
 	 */

@@ -14,9 +14,7 @@ For licenses that allow for commercial use please contact cluck@chickenkatsu.co.
 //###############################################################################
 class cCARuleBinaryExporter {
 	/**
-	 * Description placeholder
-	 *
-	 *
+	 * 
 	 * @static
 	 * @param {*} poRule
 	 * @param {*} piState
@@ -43,16 +41,12 @@ class cCARuleBinaryExporter {
 
 //###############################################################################
 /**
- * Description placeholder
- *
- *
+ * 
  * @class cCARuleBinaryImporter
  */
 class cCARuleBinaryImporter {
 	/**
-	 * Description placeholder
-	 *
-	 *
+	 * 
 	 * @static
 	 * @param {*} psInput
 	 * @returns {*}
@@ -88,9 +82,7 @@ class cCARuleBinaryImporter {
 //###############################################################################
 class cCARuleRepeatBase64Importer {
 	/**
-	 * Description placeholder
-	 *
-	 *
+	 * 
 	 * @static
 	 * @param {*} psShort
 	 * @returns {*}
@@ -124,17 +116,13 @@ class cCARuleRepeatBase64Importer {
 
 //###############################################################################
 /**
- * Description placeholder
- *
- *
+ * 
  * @class cCARuleBase64Exporter
  */
 class cCARuleBase64Exporter {
 	//*****************************************************************************
 	/**
-	 * Description placeholder
-	 *
-	 *
+	 * 
 	 * @static
 	 * @param {*} poRule
 	 * @param {*} piState
@@ -164,16 +152,12 @@ class cCARuleBase64Exporter {
 
 //###############################################################################
 /**
- * Description placeholder
- *
- *
+ * 
  * @class cCARuleBase64Importer
  */
 class cCARuleBase64Importer {
 	/**
-	 * Description placeholder
-	 *
-	 *
+	 * 
 	 * @static
 	 * @param {*} ps64
 	 * @returns {*}
@@ -199,9 +183,8 @@ class cCARuleBase64Importer {
 //# Json
 //###############################################################################
 /**
- * Description placeholder
  * 
- *
+ * 
  * @class cCAExportedState
  
  */
@@ -216,9 +199,8 @@ class cCAExportedState {
 }
 
 /**
- * Description placeholder
  * 
- *
+ * 
  * @class cCAExportedObj
  
  */
@@ -230,8 +212,7 @@ class cCAExportedObj {
 
 	/**
 	 * checks whether an object is an exported object
-	 *
-	 * @static
+	 \*	 * @static
 	 * @param {*} poObj
 	 * @returns {boolean}
 	 */
@@ -257,20 +238,17 @@ class cCAExportedObj {
 }
 
 /**
- * Description placeholder
  * 
- *
+ * 
  * @class cCARuleObjExporter
  
  */
 
 class cCARuleObjExporter {
 	/**
-	 * Description placeholder
-	 *
-	 *
+	 * 
 	 * @static
-	 * @param {*} poRule
+	 * @param {cCARule} poRule
 	 * @returns {cCAExportedObj}
 	 */
 	static export(poRule) {
@@ -287,7 +265,7 @@ class cCARuleObjExporter {
 			oState.rule = cCARuleBase64Exporter.export(poRule, iState)
 			oExport.states.push(oState)
 		}
-		oExport.boredom = poRule.boredom
+		oExport.boredom = poRule.boredom_count
 
 		cDebug.leave()
 		return oExport
@@ -295,20 +273,17 @@ class cCARuleObjExporter {
 }
 
 /**
- * Description placeholder
  * 
- *
+ * 
  * @class cCARuleObjImporter
  
  */
 
 class cCARuleObjImporter {
 	/**
-	 * Description placeholder
-	 *
-	 *
+	 * 
 	 * @static
-	 * @param {*} poObj
+	 * @param {cCAExportedObj} poObj
 	 * @returns {*}
 	 */
 	static makeRule(poObj) {
@@ -319,7 +294,7 @@ class cCARuleObjImporter {
 		
 		var oRule = cCARuleBase64Importer.makeRule(poObj.states[0].rule)
 		oRule.neighbour_type = poObj.neighbour_type
-		oRule.boredom = poObj.boredom
+		oRule.boredom_count = poObj.boredom
 
 		cDebug.leave()
 		return oRule
@@ -330,17 +305,14 @@ class cCARuleObjImporter {
 //# Others
 //###############################################################################
 /**
- * Description placeholder
  * 
- *
+ * 
  * @class cCaIdentityRule
  
  */
 class cCaIdentityRule {
 	/**
-	 * Description placeholder
-	 *
-	 *
+	 * 
 	 * @static
 	 * @returns {*}
 	 */
@@ -363,18 +335,15 @@ class cCaIdentityRule {
 
 //***************************************************************
 /**
- * Description placeholder
  * 
- *
+ * 
  * @class cCaRandomRule
  
  */
 
 class cCaRandomRule {
 	/**
-	 * Description placeholder
-	 *
-	 *
+	 * 
 	 * @static
 	 * @returns {*}
 	 */
@@ -397,18 +366,15 @@ class cCaRandomRule {
 
 //###############################################################################
 /**
- * Description placeholder
  * 
- *
+ * 
  * @class cCARuleWolfram1DImporter
  
  */
 
 class cCARuleWolfram1DImporter {
 	/**
-	 * Description placeholder
-	 *
-	 *
+	 * 
 	 * @static
 	 * @param {*} piRule
 	 * @returns {*}
@@ -458,18 +424,15 @@ class cCARuleWolfram1DImporter {
 
 //###############################################################################
 /**
- * Description placeholder
  * 
- *
+ * 
  * @class cCARuleLifeImporter
  
  */
 class cCARuleLifeImporter {
 	//***************************************************************
 	/**
-	 * Description placeholder
-	 *
-	 *
+	 * 
 	 * @static
 	 * @param {*} psInput
 	 * @returns {*}
@@ -551,17 +514,14 @@ class cCARuleLifeImporter {
 
 //###############################################################################
 /**
- * Description placeholder
  * 
- *
+ * 
  * @class cCAModifierTypes
  
  */
 class cCAModifierTypes {
 	/**
-	 * Description placeholder
-	 *
-	 *
+	 * 
 	 * @static
 	 * @type {{ at_least: { id: number; label: string; }; exactly: { id: number; label: string; }; at_most: { id: number; label: string; }; }}
 	 */
@@ -571,9 +531,7 @@ class cCAModifierTypes {
 		at_most: { id: 3, label: 'At Most' }
 	}
 	/**
-	 * Description placeholder
-	 *
-	 *
+	 * 
 	 * @static
 	 * @type {{ one: { id: number; label: string; }; zero: { id: number; label: string; }; any: { id: number; label: string; }; }}
 	 */
@@ -585,18 +543,15 @@ class cCAModifierTypes {
 }
 
 /**
- * Description placeholder
  * 
- *
+ * 
  * @class cCARuleModifier
  
  */
 
 class cCARuleModifier {
 	/**
-	 * Description placeholder
-	 *
-	 *
+	 * 
 	 * @static
 	 * @param {*} poRule
 	 * @param {*} piInState

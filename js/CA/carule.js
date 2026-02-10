@@ -9,16 +9,13 @@ For licenses that allow for commercial use please contact cluck@chickenkatsu.co.
 **************************************************************************/
 
 /**
- * Description placeholder
  * 
- *
+ * 
  * @class cCAStateRule
  
  */ class cCAStateRule {
 	/**
 	 * Creates an instance of cCAStateRule.
-	 *
-	 *
 	 * @constructor
 	 */
 	constructor() {
@@ -30,9 +27,8 @@ For licenses that allow for commercial use please contact cluck@chickenkatsu.co.
 
 //###############################################################################
 /**
- * Description placeholder
  * 
- *
+ * 
  * @class cCARule
  
  */
@@ -41,26 +37,26 @@ class cCARule {
 	/** @type number */ neighbour_type = cCACellTypes.neighbours.eightway
 	/** @type boolean */ has_state_transitions = false
 	/** @type Array */ stateRules = null
-	/** @type number */ boredom = cCAConsts.NO_BOREDOM //how many times a pattern is seen before a cell is bored
+	/** @type number */ boredom_count = cCAConsts.NO_BOREDOM //how many times a pattern is seen before a cell is bored
+
+	NO_BOREDOM_BITMAP = -1
+	BOREDOM_BITMAP_KEY = "BBK"
+	BOREDOM_BITMAP_COUNT_KEY = "BBCK"
 
 	/**
 	 * Creates an instance of cCARule.
-	 *
-	 *
 	 * @constructor
 	 */
 	constructor() {
 		this.neighbour_type = cCACellTypes.neighbours.eightway
 		this.has_state_transitions = false
 		this.stateRules = []
-		this.boredom = cCAConsts.NO_BOREDOM
+		this.boredom_count = cCAConsts.NO_BOREDOM
 	}
 
 	//***************************************************************
 	/**
-	 * Description placeholder
-	 *
-	 *
+	 * 
 	 * @static
 	 * @returns {cCARule}
 	 */
@@ -80,14 +76,13 @@ class cCARule {
 
 	//***************************************************************
 	/**
-	 * Description
 	 * @param {cCARule} poRule
 	 */
 	copy_to(poRule) {
 		cDebug.enter()
 		poRule.neighbour_type = this.neighbour_type
 		poRule.has_state_transitions = this.has_state_transitions
-		poRule.boredom = this.boredom
+		poRule.boredom_count = this.boredom_count
 		poRule.stateRules = cCommon.deep_copy(this.stateRules)
 	}
 
@@ -96,8 +91,7 @@ class cCARule {
 	//*****************************************************************
 	/**
 	 * sets the output for a particular bitmap for a state
-	 *
-	 * @param {number} piState
+	 \*	 * @param {number} piState
 	 * @param {number} piBitmap
 	 * @param {number} piValue
 	 */
@@ -113,21 +107,19 @@ class cCARule {
 
 	//*****************************************************************
 	/**
-	 * Description
 	 * @param {number} piBoredom
 	 */
 	set_boredom(piBoredom) {
 		if (piBoredom != cCAConsts.NO_BOREDOM && piBoredom < 2) 
 			throw new CAException('boredom must be at least 2')
 		
-		this.boredom = piBoredom
+		this.boredom_count = piBoredom
 	}
 
 	//*****************************************************************
 	/**
 	 * returns the output for a given bitmap for a state
-	 *
-	 * @param {number} piState
+	 \*	 * @param {number} piState
 	 * @param {number} piBitmap
 	 * @returns {number}
 	 */
@@ -153,9 +145,7 @@ class cCARule {
 
 	//*****************************************************************
 	/**
-	 * Description placeholder
-	 *
-	 *
+	 * 
 	 * @param {number} piState
 	 */
 	create_state(piState) {
@@ -173,9 +163,7 @@ class cCARule {
 
 	//*****************************************************************
 	/**
-	 * Description placeholder
-	 *
-	 *
+	 * 
 	 * @param {*} piInState
 	 * @param {*} piPattern
 	 * @param {*} piNextState
@@ -195,9 +183,7 @@ class cCARule {
 
 	//*****************************************************************
 	/**
-	 * Description placeholder
-	 *
-	 *
+	 * 
 	 * @param {*} piInState
 	 * @param {*} piPattern
 	 * @returns {*}
@@ -218,7 +204,36 @@ class cCARule {
 
 	//*****************************************************************
 	/**
-	 * Description
+	 * @param {cCACell} poCell
+	 * @param {number} piBitmap
+	 * @return {boolean}
+	 */
+	_evaluate_simple_boredom(poCell, piBitmap){
+		if (this.boredom_count == cCAConsts.NO_BOREDOM) 
+			return false
+
+		/** @type Map */ var cell_data = poCell.data
+
+		// check if boredom bitmap key is not there or is different bitmap
+		if (
+			!cell_data.has(this.BOREDOM_BITMAP_KEY) || cell_data[this.BOREDOM_BITMAP_KEY] != piBitmap) {
+			cell_data[this.BOREDOM_BITMAP_KEY] = piBitmap
+			cell_data[this.BOREDOM_BITMAP_COUNT_KEY] = 1
+			return false
+		}
+
+		// boredom bitmap is the same - increase count and check if bored
+		cell_data[this.BOREDOM_BITMAP_COUNT_KEY]++
+		if (cell_data[this.BOREDOM_BITMAP_COUNT_KEY] >= this.boredom_count) {
+			cell_data[this.BOREDOM_BITMAP_COUNT_KEY] = 0 //reset count so cell can be rebored later
+			return true
+		}
+		return false
+		
+	}
+
+	//*****************************************************************
+	/**
 	 * @param {cCACell} poCell
 	 */
 	evaluateCell(poCell) {
@@ -227,21 +242,20 @@ class cCARule {
 		
 
 		//get the cell neighbour value
-		var iBitmap = poCell.getPattern(this.neighbour_type)
+		var iBitmap = poCell.getBitmap(this.neighbour_type)
 
-		//cells that are completely isolated remain dead
 		if (iBitmap == 0) 
+			//cells that are completely isolated remain dead
 			poCell.evaluated.value = 0
 		else {
 			//check for cell boredom
-			/** @type Boolean */ var bBored
-			bBored = false
-			if (this.boredom !== cCAConsts.NO_BOREDOM) 
-				bBored = poCell.check_boredom(iBitmap)
+			/** @type Boolean */ var bBored  = false
+			if (this.boredom_count !== cCAConsts.NO_BOREDOM) 
+				bBored = this._evaluate_simple_boredom(poCell, iBitmap)
 					
-
-			if (bBored) 
-				poCell.evaluated.value = 0
+			if (bBored)
+				//flip the cell if bored
+				poCell.evaluated.value = (poCell.value == 1 ? 0 : 1	)
 			else 
 				poCell.evaluated.value = this.get_rule_output(poCell.state, iBitmap)
 			

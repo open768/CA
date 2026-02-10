@@ -10,8 +10,6 @@ For licenses that allow for commercial use please contact cluck@chickenkatsu.co.
 class cCAEvaluatedCell {
 	/**
 	 * Creates an instance of cCAEvaluatedCell.
-	 *
-	 *
 	 * @constructor
 	 */
 	constructor() {
@@ -26,9 +24,8 @@ class cCAEvaluatedCell {
 //#
 //###################################################################################
 /**
- * Description placeholder
  * 
- *
+ * 
  * @class cCACell
  
  */
@@ -37,15 +34,12 @@ class cCACell {
 	/** @type cCARule */ rule = null //the rule that applies to this cell
 	/** @type number */ state = null //for multi state rules (not used)
 	/** @type number */ value = 0 //the value of the cell
-	/** @type Map */ data = null //the cell doesnt know what the data means, only that there is some data in there. this leaves the implementation of the cell flexible.
+	/** @type Map */ data = null //the data is used by the rule, the cell doesnt use the data,
 	/** @type Map */ neighbours = null
 	/** @type cCAEvaluatedCell */ evaluated = null //stores the evaluated state of the cell during a CA step
-	/** @type number */ previous_bitmap = 0 //for boredom
-	/** @type number */ previous_bitmap_count = 0 //for boredom
 
 	constructor() {
 		this.rule = null
-		this.data = new Map()
 		this.neighbours = new Map() //links to neighbouring cells
 		this.clear()
 	}
@@ -54,9 +48,8 @@ class cCACell {
 	clear() {
 		this.state = 1
 		this.value = 0
-		this.previous_bitmap = 0
-		this.previous_bitmap_count = 0
 		this.evaluated = new cCAEvaluatedCell()
+		this.data = new Map()
 	}
 
 	//****************************************************************
@@ -79,11 +72,10 @@ class cCACell {
 
 	//*****************************************************************
 	/**
-	 * returns 8 way neighbourhood bitmap, uses bitmap operations to reduce number of operations
-	 *
-	 * @returns {*}
+	 * returns 8 way neighbourhood bitmap, uses bitmap operations to optimise number of operations
+	 \*	 * @returns {*}
 	 */
-	get8WayPattern() {
+	get8Bitmap() {
 		var oNeigh, iValue, oNorth, oWest, iWPattern
 		oNeigh = this.neighbours
 
@@ -144,17 +136,16 @@ class cCACell {
 	//*****************************************************************
 	/**
 	 * returns neighbourhood bitmap
-	 *
-	 * @param {*} piNeighbourType
+	 \*	 * @param {*} piNeighbourType
 	 * @returns {*}
 	 */
-	getPattern(piNeighbourType) {
+	getBitmap(piNeighbourType) {
 		var oHash, iValue
 
 		oHash = this.neighbours
 		switch (piNeighbourType) {
 			case cCACellTypes.neighbours.eightway:
-				iValue = this.get8WayPattern()
+				iValue = this.get8Bitmap()
 				break
 			case cCACellTypes.neighbours.fourway:
 				//-------------------------------------------------------
@@ -181,45 +172,7 @@ class cCACell {
 
 	//*****************************************************************
 	/**
-	 * simple Boredom checker
-	 *
-	 * @param {number} piBitmap
-	 * @returns {Boolean}
-	 *
-	 * - true if cell is bored of this bitmap. false otherwise
-	 * - bitmap is passed in - CA being evaluated - grid hasnt been fully updated
-	 * - history doesnt need to be stored, just need to know how many times
-	 * the same pattern was seen sequentially
-	 */
-	check_boredom(piBitmap) {
-		//	only active cells can get bored
-		if (this.rule.boredom == null || this.rule.boredom == cCAConsts.NO_BOREDOM || this.value == 0 || piBitmap == 0) 
-			return false
-		
-
-		//was it the same bitmap as last time
-		if (this.previous_bitmap == piBitmap) 
-			this.previous_bitmap_count++
-		else {
-			this.previous_bitmap = piBitmap
-			this.previous_bitmap_count = 1
-			return false
-		}
-
-		if (this.previous_bitmap_count >= this.rule.boredom) {
-			//reset the count (so it doesnt start triggering everytime)
-			this.previous_bitmap_count = 1
-			this.value = 0 //make cell inactive because its bored
-			return true
-		}
-		return false
-	}
-
-	//*****************************************************************
-	/**
-	 * Description placeholder
-	 *
-	 *
+	 * 
 	 * @param {*} piDirection
 	 * @param {*} poCell
 	 */

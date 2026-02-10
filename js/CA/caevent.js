@@ -2,8 +2,6 @@
 class CAException {
 	/**
 	 * Creates an instance of CAException.
-	 *
-	 *
 	 * @constructor
 	 * @param {string} psMessage
 	 */

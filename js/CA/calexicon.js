@@ -18,9 +18,7 @@ var cCaLexiconRule = function (piType, psLabel, psRule) {
 
 class cCALexicon {
 	/**
-	 * Description placeholder
-	 *
-	 *
+	 * 
 	 * @static
 	 * @returns list
 	 */
@@ -43,9 +41,7 @@ class cCALexicon {
 	}
 
 	/**
-	 * Description placeholder
-	 *
-	 *
+	 * 
 	 * @static
 	 * @param {*} psName
 	 * @param {*} psRule

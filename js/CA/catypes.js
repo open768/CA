@@ -10,9 +10,8 @@ For licenses that allow for commercial use please contact cluck@chickenkatsu.co.
 
 //###############################################################################
 /**
- * Description placeholder
  * 
- *
+ * 
  * @class cCACellTypes
  
  */

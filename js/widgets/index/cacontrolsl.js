@@ -217,7 +217,7 @@ class cCAControlsL {
 		}
 
 		var iSelected = parseInt(oSelect.val())
-		var oRule
+		/** @type {cCARule} */ var oRule
 		try {
 			switch (iSelected) {
 				case cCAConsts.rule_types.life:
@@ -234,9 +234,9 @@ class cCAControlsL {
 					//set the boredom if chosen
 					var oBoredomList = $('#' + cJquery.child_ID(oElement, cCAControlLTypes.boredom_ID))
 					if (!isNaN(oBoredomList.val())) 
-						oRule.boredom = oBoredomList.val()
+						oRule.boredom_count = oBoredomList.val()
 					else 
-						oRule.boredom = cCAConsts.NO_BOREDOM
+						oRule.boredom_count = cCAConsts.NO_BOREDOM
 					
 
 					//inform subscribers

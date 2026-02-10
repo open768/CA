@@ -83,7 +83,7 @@ class cCAStatus {
 		if (poEvent.action == cCAActionEvent.actions.control) {
 			var iAction = poEvent.data
 			switch (iAction) {
-				case cCAGridTypes.actions.play: //start watching the heap when CA is played
+				case cCAActionEvent.control_actions.play: //start watching the heap when CA is played
 					if (this.heap_timer_running) 
 						cDebug.warn('heap timer allready running')
 					else 
@@ -91,7 +91,7 @@ class cCAStatus {
 					
 
 					break
-				case cCAGridTypes.actions.stop:
+				case cCAActionEvent.control_actions.stop:
 					this.stop_heap_timer = true //stop watching heap when stop pressed, or CA stops
 			}
 		}
