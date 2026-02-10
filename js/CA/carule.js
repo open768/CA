@@ -214,22 +214,30 @@ class cCARule {
 
 		/** @type Map */ var cell_data = poCell.data
 
-		// check if boredom bitmap key is not there or is different bitmap
-		if (
-			!cell_data.has(this.BOREDOM_BITMAP_KEY) || cell_data[this.BOREDOM_BITMAP_KEY] != piBitmap) {
-			cell_data[this.BOREDOM_BITMAP_KEY] = piBitmap
-			cell_data[this.BOREDOM_BITMAP_COUNT_KEY] = 1
+		// check if boredom bitmap key is not there 
+		if (!cell_data.has(this.BOREDOM_BITMAP_KEY) ) {
+			cell_data.set(this.BOREDOM_BITMAP_KEY, piBitmap)
+			cell_data.set(this.BOREDOM_BITMAP_COUNT_KEY, 1)
 			return false
 		}
 
-		// boredom bitmap is the same - increase count and check if bored
-		cell_data[this.BOREDOM_BITMAP_COUNT_KEY]++
-		if (cell_data[this.BOREDOM_BITMAP_COUNT_KEY] >= this.boredom_count) {
-			cell_data[this.BOREDOM_BITMAP_COUNT_KEY] = 0 //reset count so cell can be rebored later
-			return true
+		// check if boredom bitmap is different bitmap
+		var previous_bitmap = cell_data.get(this.BOREDOM_BITMAP_KEY)
+		if (previous_bitmap != piBitmap) {
+			cell_data.set(this.BOREDOM_BITMAP_KEY, piBitmap)
+			cell_data.set(this.BOREDOM_BITMAP_COUNT_KEY, 1)
+			return false
 		}
-		return false
-		
+
+		// bitmap is the same - increase count and check if bored
+		var count = cell_data.get(this.BOREDOM_BITMAP_COUNT_KEY) +1
+		if (count >= this.boredom_count) {
+			cell_data.set(this.BOREDOM_BITMAP_COUNT_KEY, 0) //reset count 
+			return true
+		} else{
+			cell_data.set(this.BOREDOM_BITMAP_COUNT_KEY, count)
+			return false
+		}
 	}
 
 	//*****************************************************************
