@@ -38,6 +38,7 @@ class cCARule {
 	/** @type boolean */ has_state_transitions = false
 	/** @type Array */ stateRules = null
 	/** @type number */ boredom_count = cCAConsts.NO_BOREDOM //how many times a pattern is seen before a cell is bored
+	/** @type number */ bored_cells = 0 //how many cells were bored
 
 	NO_BOREDOM_BITMAP = -1
 	BOREDOM_BITMAP_KEY = "BBK"

@@ -4,7 +4,7 @@
 /** initialises the grid */
 
 class cCAGridInitialiser {
-	init(poGrid, piInitType) {
+	static init(poGrid, piInitType) {
 		cDebug.enter()
 		cDebug.write('init_type:' + piInitType)
 		//always blank first by creating new cells
@@ -54,7 +54,7 @@ class cCAGridInitialiser {
 	/**
 	 * @param {cCAGrid} poGrid
 	 */
-	init_checker(poGrid) {
+	static init_checker(poGrid) {
 		cDebug.write('init checker')
 		var iStartCol = 1
 		var iSize = 3
@@ -79,7 +79,7 @@ class cCAGridInitialiser {
 	/**
 	 * @param {cCAGrid} poGrid
 	 */
-	init_circle(poGrid) {
+	static init_circle(poGrid) {
 		cDebug.write('init circle')
 		var iMidC = Math.floor(poGrid.cols / 2)
 		var iMidR = Math.floor(poGrid.rows / 2)
@@ -100,7 +100,7 @@ class cCAGridInitialiser {
 	/**
 	 * @param {cCAGrid} poGrid
 	 */
-	init_cross(poGrid) {
+	static init_cross(poGrid) {
 		cDebug.write('init cross')
 		var iMidC = Math.floor(poGrid.cols / 2)
 		var iMidR = Math.floor(poGrid.rows / 2)
@@ -118,7 +118,7 @@ class cCAGridInitialiser {
 	/**
 	 * @param {cCAGrid} poGrid
 	 */
-	init_diagonal(poGrid) {
+	static init_diagonal(poGrid) {
 		cDebug.write('init diagonal')
 		for (var iNr = 1; iNr <= poGrid.rows; iNr++) {
 			if (iNr > poGrid.cols) 
@@ -132,7 +132,7 @@ class cCAGridInitialiser {
 	/**
 	 * @param {cCAGrid} poGrid
 	 */
-	init_diamond(poGrid) {
+	static init_diamond(poGrid) {
 		cDebug.write('init diamond')
 		var iMidCol = Math.floor(poGrid.cols / 2)
 		var iMidRow = Math.floor(poGrid.rows / 2)
@@ -153,7 +153,7 @@ class cCAGridInitialiser {
 	/**
 	 * @param {cCAGrid} poGrid
 	 */
-	init_horiz_line(poGrid) {
+	static init_horiz_line(poGrid) {
 		cDebug.write('init hline')
 		var iNr = Math.floor(poGrid.rows / 2)
 		for (var iNc = 1; iNc <= poGrid.cols; iNc++) 
@@ -165,7 +165,7 @@ class cCAGridInitialiser {
 	/**
 	 * @param {cCAGrid} poGrid
 	 */
-	init_random(poGrid) {
+	static init_random(poGrid) {
 		cDebug.write('init random')
 		for (var iNr = 1; iNr <= poGrid.rows; iNr++) 
 			for (var iNc = 1; iNc <= poGrid.cols; iNc++) {
@@ -179,7 +179,7 @@ class cCAGridInitialiser {
 	/**
 	 * @param {cCAGrid} poGrid
 	 */
-	init_sine(poGrid) {
+	static init_sine(poGrid) {
 		cDebug.write('init sine')
 		var dRadian = (2 * Math.PI) / poGrid.cols
 		var iRad = 0
@@ -197,7 +197,7 @@ class cCAGridInitialiser {
 	/**
 	 * @param {cCAGrid} poGrid
 	 */
-	init_vert_line(poGrid) {
+	static init_vert_line(poGrid) {
 		cDebug.write('init vline')
 		var iNc = Math.floor(poGrid.cols / 2)
 		for (var iNr = 1; iNr <= poGrid.cols; iNr++) 
@@ -208,7 +208,7 @@ class cCAGridInitialiser {
 	/**
 	 * @param {cCAGrid} poGrid
 	 */
-	init_block(poGrid) {
+	static 	init_block(poGrid) {
 		cDebug.write('init block')
 		var iMidC = Math.floor(poGrid.cols / 2)
 		var iMidR = Math.floor(poGrid.rows / 2)

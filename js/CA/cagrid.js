@@ -121,6 +121,7 @@ class cCAGrid {
 	//****************************************************************
 	/**
 	 * @param {cCARule} poRule
+	 * @param {boolean} pbLinkCells	 establish links between cells and rules
 	 */
 	set_rule(poRule, pbLinkCells = true) {
 		cDebug.enter()
@@ -312,8 +313,7 @@ class cCAGrid {
 		this.changed_cells = []
 		this.history = []
 		cDebug.write('initialising grid:' + piInitType)
-		var oInitialiser = new cCAGridInitialiser()
-		oInitialiser.init(this, piInitType)
+		cCAGridInitialiser.init(this, piInitType)
 		cDebug.write('done init grid: ' + piInitType)
 
 		this._informGridDone()
@@ -321,6 +321,12 @@ class cCAGrid {
 	}
 
 	//****************************************************************
+	/**
+	 *  rules are associated to each individual cell, 
+	 *  when setting a new rule, all rules must be removed from cells
+	 * 
+	 *  the new rule will be associated to the cells when the rule is run
+	 */
 	_clear_cell_rules() {
 		cDebug.enter()
 		var oCell
