@@ -41,9 +41,6 @@ class cCARule {
 	/** @type number */ bored_cells = 0 // how many cells were bored
 
 	NO_BOREDOM_BITMAP = -1
-	BOREDOM_BITMAP_KEY = 'BBK'
-	BOREDOM_BITMAP_COUNT_KEY = 'BBCK'
-	BORED_STATE_KEY = 'BSK'
 
 	/**
 	 * Creates an instance of cCARule.
@@ -216,31 +213,31 @@ class cCARule {
 		/** @type Map */ var cell_data = poCell.data
 
 		// check if boredom bitmap key is not there
-		if (!cell_data.has(this.BOREDOM_BITMAP_KEY)) {
-			cell_data.set(this.BOREDOM_BITMAP_KEY, piBitmap)
-			cell_data.set(this.BOREDOM_BITMAP_COUNT_KEY, 1)
-			cell_data.set(this.BORED_STATE_KEY, false)
+		if (!cell_data.has(CELL_DATA_KEYS.BOREDOM_BITMAP_KEY)) {
+			cell_data.set(CELL_DATA_KEYS.BOREDOM_BITMAP_KEY, piBitmap)
+			cell_data.set(CELL_DATA_KEYS.BOREDOM_BITMAP_COUNT_KEY, 1)
+			cell_data.set(CELL_DATA_KEYS.BORED_STATE_KEY, false)
 			return false
 		}
 
 		// check if boredom bitmap is different bitmap
-		var previous_bitmap = cell_data.get(this.BOREDOM_BITMAP_KEY)
+		var previous_bitmap = cell_data.get(CELL_DATA_KEYS.BOREDOM_BITMAP_KEY)
 		if (previous_bitmap != piBitmap) {
-			cell_data.set(this.BOREDOM_BITMAP_KEY, piBitmap)
-			cell_data.set(this.BOREDOM_BITMAP_COUNT_KEY, 1)
-			cell_data.set(this.BORED_STATE_KEY, false)
+			cell_data.set(CELL_DATA_KEYS.BOREDOM_BITMAP_KEY, piBitmap)
+			cell_data.set(CELL_DATA_KEYS.BOREDOM_BITMAP_COUNT_KEY, 1)
+			cell_data.set(CELL_DATA_KEYS.BORED_STATE_KEY, false)
 			return false
 		}
 
 		// bitmap is the same - increase count and check if bored
-		var count = cell_data.get(this.BOREDOM_BITMAP_COUNT_KEY) + 1
+		var count = cell_data.get(CELL_DATA_KEYS.BOREDOM_BITMAP_COUNT_KEY) + 1
 		if (count >= this.boredom_count) {
-			cell_data.set(this.BOREDOM_BITMAP_COUNT_KEY, 0) // reset count
-			cell_data.set(this.BORED_STATE_KEY, true)
+			cell_data.set(CELL_DATA_KEYS.BOREDOM_BITMAP_COUNT_KEY, 0) // reset count
+			cell_data.set(CELL_DATA_KEYS.BORED_STATE_KEY, true)
 			return true
 		} else {
-			cell_data.set(this.BOREDOM_BITMAP_COUNT_KEY, count)
-			cell_data.set(this.BORED_STATE_KEY, false)
+			cell_data.set(CELL_DATA_KEYS.BOREDOM_BITMAP_COUNT_KEY, count)
+			cell_data.set(CELL_DATA_KEYS.BORED_STATE_KEY, false)
 			return false
 		}
 	}
@@ -248,7 +245,7 @@ class cCARule {
 	//* ****************************************************************
 	/**
 	 * @param {cCACell} poCell
-	 * @returns {void}
+	 * @returns {boolean}
 	 */
 	evaluateCell(poCell) {
 		if (poCell == null)
@@ -291,10 +288,13 @@ class cCARule {
 		else
 			oStatus.active = 1
 
-		if (poCell.evaluated.value !== poCell.value)
+		var bHasChanged = poCell.evaluated.value !== poCell.value
+		if (bHasChanged)
 			oStatus.changed = 1
 
 		// send a status event
 		cCARuleEvent.fire_event(cCARuleEvent.actions.status, oStatus)
+
+		return bHasChanged
 	}
 }

@@ -42,12 +42,16 @@ class cCACellTypes {
 		down: 2,
 		reset: 3,
 	}
-
-	static hash_values = {
-		row: 'R',
-		col: 'C',
-	}
 }
+
+const CELL_DATA_KEYS = {
+	row: 'R',
+	col: 'C',
+	BOREDOM_BITMAP : 'BBK',
+	BOREDOM_BITMAP_COUNT : 'BBCK',
+	BORED_STATE : 'BSK'
+}
+
 
 //###############################################################################
 class cCAConsts {
@@ -78,10 +82,25 @@ var goGridInitTypes = {
 }
 
 class cCAStatus {
-	constructor() {
-		this.changed = 0
+	changed = 0
+	active = 0
+	inactive = 0
+	bored = 0
+}
+
+class cCARunData {
+	/** @type {number} */ active = 0
+	/** @type {number} */ inactive = 0
+	/** @type {number} */ runs = 0
+	/** @type {number} */ changed = 0
+	/** @type {Array} */ changed_cells = []
+	/** @type {number} */ bored = 0
+
+	clear_cell_counters() {
 		this.active = 0
 		this.inactive = 0
+		this.changed = 0
 		this.bored = 0
+		this.changed_cells = []
 	}
 }

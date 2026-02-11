@@ -1,5 +1,7 @@
 // eslint.config.js (ESM)
+// @ts-ignore
 import { defineConfig } from "eslint/config"
+// @ts-ignore
 import stylistic from "@stylistic/eslint-plugin"
 
 export default defineConfig([

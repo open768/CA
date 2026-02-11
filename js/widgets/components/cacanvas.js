@@ -233,8 +233,8 @@ class cCACanvas {
 
 	//* ***************************************************************
 	/**
-	 * @param {cCAGridRunData} poData
-	 * @returns {any}
+	 * @param {cCARunData} poData
+	 * @returns {void}
 	 */
 	_on_grid_done(poData) {
 		cDebug.enter()
@@ -334,8 +334,8 @@ class cCACanvas {
 
 		// -----------------coords of cell
 		var iRow, iCol
-		iRow = poCell.data.get(cCACellTypes.hash_values.row)
-		iCol = poCell.data.get(cCACellTypes.hash_values.col)
+		iRow = poCell.data.get(CELL_DATA_KEYS.row)
+		iCol = poCell.data.get(CELL_DATA_KEYS.col)
 		var iy = (iRow - 1) * this.cell_size
 		var ix = (iCol - 1) * this.cell_size
 
