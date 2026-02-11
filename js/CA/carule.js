@@ -19,9 +19,9 @@ For licenses that allow for commercial use please contact cluck@chickenkatsu.co.
 	 * @constructor
 	 */
 	constructor() {
-		this.neighbour_type = cCACellTypes.neighbours.eightway
-		this.outputs = new Array(cCAConsts.MAX_INPUTS)
-		this.nextStates = new Array(cCAConsts.MAX_INPUTS) // for future use
+		this.neighbour_type = CA_NEIGHBOURS.eightway
+		this.outputs = new Array(CACONSTS.MAX_INPUTS)
+		this.nextStates = new Array(CACONSTS.MAX_INPUTS) // for future use
 	}
 }
 
@@ -34,10 +34,10 @@ For licenses that allow for commercial use please contact cluck@chickenkatsu.co.
  */
 
 class cCARule {
-	/** @type number */ neighbour_type = cCACellTypes.neighbours.eightway
+	/** @type number */ neighbour_type = CA_NEIGHBOURS.eightway
 	/** @type boolean */ has_state_transitions = false
 	/** @type Array */ stateRules = null
-	/** @type number */ boredom_count = cCAConsts.NO_BOREDOM // how many times a pattern is seen before a cell is bored
+	/** @type number */ boredom_count = CACONSTS.NO_BOREDOM // how many times a pattern is seen before a cell is bored
 	/** @type number */ bored_cells = 0 // how many cells were bored
 
 	NO_BOREDOM_BITMAP = -1
@@ -47,10 +47,10 @@ class cCARule {
 	 * @constructor
 	 */
 	constructor() {
-		this.neighbour_type = cCACellTypes.neighbours.eightway
+		this.neighbour_type = CA_NEIGHBOURS.eightway
 		this.has_state_transitions = false
 		this.stateRules = []
-		this.boredom_count = cCAConsts.NO_BOREDOM
+		this.boredom_count = CACONSTS.NO_BOREDOM
 	}
 
 	//* **************************************************************
@@ -62,12 +62,12 @@ class cCARule {
 	static randomRule() {
 		cDebug.enter()
 		/** @type {cCARule}	 */ var oRule = new cCARule()
-		oRule.neighbour_type = cCACellTypes.neighbours.eightway
+		oRule.neighbour_type = CA_NEIGHBOURS.eightway
 		oRule.has_state_transitions = false
 
-		for (var i = 1; i <= cCAConsts.MAX_INPUTS; i++) {
+		for (var i = 1; i <= CACONSTS.MAX_INPUTS; i++) {
 			var iRnd = Math.floor(Math.random() * 1.99)
-			oRule.set_output(cCACellTypes.default_state, i, iRnd)
+			oRule.set_output(CA_STATES.default_state, i, iRnd)
 		}
 		cDebug.leave()
 		return oRule
@@ -109,7 +109,7 @@ class cCARule {
 	 * @param {number} piBoredom
 	 */
 	set_boredom(piBoredom) {
-		if (piBoredom != cCAConsts.NO_BOREDOM && piBoredom < 2)
+		if (piBoredom != CACONSTS.NO_BOREDOM && piBoredom < 2)
 			throw new CAException('boredom must be at least 2')
 
 		this.boredom_count = piBoredom
@@ -151,7 +151,7 @@ class cCARule {
 		if (piState <= this.stateRules.length)
 			return
 		// dont create existing states
-		if (!this.has_state_transitions && piState !== cCACellTypes.default_state)
+		if (!this.has_state_transitions && piState !== CA_STATES.default_state)
 			throw new CAException('state not possible without state transitions enabled')
 
 		var oStateRule = new cCAStateRule()
@@ -207,7 +207,7 @@ class cCARule {
 	 * @return {boolean}
 	 */
 	_evaluate_simple_boredom(poCell, piBitmap) {
-		if (this.boredom_count == cCAConsts.NO_BOREDOM)
+		if (this.boredom_count == CACONSTS.NO_BOREDOM)
 			return false
 
 		/** @type Map */ var cell_data = poCell.data
@@ -262,7 +262,7 @@ class cCARule {
 		} else {
 			// check for cell boredom
 			/** @type Boolean */ var bBored = false
-			if (this.boredom_count !== cCAConsts.NO_BOREDOM)
+			if (this.boredom_count !== CACONSTS.NO_BOREDOM)
 				bBored = this._evaluate_simple_boredom(poCell, iBitmap)
 
 			if (bBored) {

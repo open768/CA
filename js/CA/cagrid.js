@@ -311,7 +311,7 @@ class cCAGrid {
 
 	//* ***************************************************************
 	/*
-	 * @param {number} piInitType   defined in goGridInitTypes
+	 * @param {number} piInitType   defined in GRID_INIT_TYPES
 	 * @description initializes the grid with a pattern
 	 */
 	_init(piInitType) {
@@ -431,15 +431,15 @@ class cCAGrid {
 		for (var iNr = 1; iNr <= this.rows; iNr++)
 			for (var iNc = 1; iNc <= this.cols; iNc++) {
 				var oCell = this.getCell(iNr, iNc, true) // create cells
-				this._link_cell(oCell, cCACellTypes.directions.north, iNr - 1, iNc)
-				this._link_cell(oCell, cCACellTypes.directions.east, iNr, iNc + 1)
-				this._link_cell(oCell, cCACellTypes.directions.south, iNr + 1, iNc)
-				this._link_cell(oCell, cCACellTypes.directions.west, iNr, iNc - 1)
-				if (iType == cCACellTypes.neighbours.eightway) {
-					this._link_cell(oCell, cCACellTypes.directions.northeast, iNr - 1, iNc + 1)
-					this._link_cell(oCell, cCACellTypes.directions.southeast, iNr + 1, iNc + 1)
-					this._link_cell(oCell, cCACellTypes.directions.southwest, iNr + 1, iNc - 1)
-					this._link_cell(oCell, cCACellTypes.directions.northwest, iNr - 1, iNc - 1)
+				this._link_cell(oCell, CA_DIRECTIONS.north, iNr - 1, iNc)
+				this._link_cell(oCell, CA_DIRECTIONS.east, iNr, iNc + 1)
+				this._link_cell(oCell, CA_DIRECTIONS.south, iNr + 1, iNc)
+				this._link_cell(oCell, CA_DIRECTIONS.west, iNr, iNc - 1)
+				if (iType == CA_NEIGHBOURS.eightway) {
+					this._link_cell(oCell, CA_DIRECTIONS.northeast, iNr - 1, iNc + 1)
+					this._link_cell(oCell, CA_DIRECTIONS.southeast, iNr + 1, iNc + 1)
+					this._link_cell(oCell, CA_DIRECTIONS.southwest, iNr + 1, iNc - 1)
+					this._link_cell(oCell, CA_DIRECTIONS.northwest, iNr - 1, iNc - 1)
 				}
 			}
 		cDebug.write('completed cell linking')

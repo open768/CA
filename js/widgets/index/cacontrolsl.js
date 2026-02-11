@@ -71,27 +71,31 @@ class cCAControlsL {
 
 		// --rules widgets-------------------------------------------------
 		oHeader = $('<DIV>', { class: 'ui-widget-header' })
-		oHeader.append('Rule')
-		sID = cJquery.child_ID(oElement, CONTROL_IDS.status_ID)
-		var oSpan = $('<SPAN>', { id: sID }).html(' ??') // STATUS div
-		oHeader.append(oSpan)
-		oElement.append(oHeader)
+		{
+			oHeader.append('<SPAN>Rule</SPAN>')
+
+			sID = cJquery.child_ID(oElement, CONTROL_IDS.status_ID)
+			var oSpan = $('<SPAN>', { id: sID }).html(' ??') // STATUS div
+			oHeader.append(oSpan)
+
+			oElement.append(oHeader)
+		}
 
 		// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 		oContent = $('<DIV>', { class: 'ui-widget-content' })
-
-		// - - PRESETS- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-		this._init_presets(oContent)
-		this._init_repeater(oContent)
-		this._init_ruleentry(oContent)
-		this._init_boredom(oContent)
+		{
+			this._init_presets(oContent)
+			this._init_repeater(oContent)
+			this._init_ruleentry(oContent)
+			this._init_boredom(oContent)
+		}
 		oElement.append(oContent)
 	}
 
 	//* ****************************************************************************
 	_init_boredom(poContent) {
 		var oElement = this.element
-		// - BOREDOM- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
 		poContent.append('<HR>Boredom')
 		var sID = cJquery.child_ID(oElement, CONTROL_IDS.boredom_ID)
 		var oSelect = $('<SELECT>', {
@@ -101,7 +105,7 @@ class cCAControlsL {
 			disabled: true,
 		})
 		oSelect.append($('<option>', { selected: 1, disabled: 1 }).append('Select'))
-		oSelect.append($('<option>', { value: cCAConsts.NO_BOREDOM }).append('Never'))
+		oSelect.append($('<option>', { value: CACONSTS.NO_BOREDOM }).append('Never'))
 		for (var i = 2; i <= 10; i++)
 			oSelect.append($('<option>', { value: i }).append(i + ' times'))
 
@@ -111,6 +115,7 @@ class cCAControlsL {
 		})		
 	}
 
+	//* ****************************************************************************
 	_init_ruleentry(poContent) {
 		var oElement = this.element
 		poContent.append('<HR>')
@@ -132,9 +137,9 @@ class cCAControlsL {
 			title: 'choose the rule type to enter in the box above',
 		})
 		oSelect.append($('<option>', { selected: 1, disabled: 1, value: -1 }).append('Rule Type'))
-		oSelect.append($('<option>', { value: cCAConsts.rule_types.base64 }).append('base64'))
-		oSelect.append($('<option>', { value: cCAConsts.rule_types.life }).append('life'))
-		oSelect.append($('<option>', { value: cCAConsts.rule_types.wolfram1d }).append('wolfram'))
+		oSelect.append($('<option>', { value: CARULE_TYPES.base64 }).append('base64'))
+		oSelect.append($('<option>', { value: CARULE_TYPES.life }).append('life'))
+		oSelect.append($('<option>', { value: CARULE_TYPES.wolfram1d }).append('wolfram'))
 		poContent.append(oSelect)
 		oSelect.selectmenu()
 
@@ -149,14 +154,13 @@ class cCAControlsL {
 	_init_repeater(poContent) {
 		var oElement = this.element
 		poContent.append('<HR>')
-		var sID = cJquery.child_ID(oElement, CONTROL_IDS.repeater_ID)
 		poContent.append('word repeater')
 
+		var sID = cJquery.child_ID(oElement, CONTROL_IDS.repeater_ID)
 		var oInput = $('<INPUT>', {
 			type: 'text',
 			id: sID,
 			size: 12,
-			icon: 'ui-icon-circle-arrow-e',
 			title: 'put anything in this box - eg your name',
 		})
 		poContent.append(oInput)
@@ -165,6 +169,7 @@ class cCAControlsL {
 			title: 'creates a rule from the word in the box',
 		}).button({ icon: 'ui-icon-circle-arrow-e' })
 		oButton.click(() => this._onSetRepeaterClick())
+
 		poContent.append(oButton)
 	}
 
@@ -239,15 +244,15 @@ class cCAControlsL {
 		/** @type {cCARule} */ var oRule
 		try {
 			switch (iSelected) {
-				case cCAConsts.rule_types.life:
+				case CARULE_TYPES.life:
 					oRule = cCARuleLifeImporter.makeRule(oTextArea.val())
 					this._update_rule_text(oRule)
 					break
-				case cCAConsts.rule_types.wolfram1d:
+				case CARULE_TYPES.wolfram1d:
 					oRule = cCARuleWolfram1DImporter.makeRule(oTextArea.val())
 					this._update_rule_text(oRule)
 					break
-				case cCAConsts.rule_types.base64:
+				case CARULE_TYPES.base64:
 					oRule = cCARuleBase64Importer.makeRule(oTextArea.val())
 
 					// set the boredom if chosen
@@ -255,7 +260,7 @@ class cCAControlsL {
 					if (!isNaN(oBoredomList.val()))
 						oRule.boredom_count = oBoredomList.val()
 					else
-						oRule.boredom_count = cCAConsts.NO_BOREDOM
+						oRule.boredom_count = CACONSTS.NO_BOREDOM
 
 					// inform subscribers
 					cCARuleEvent.fire_event(this.grid_name, cCARuleEvent.actions.set_rule, oRule)
@@ -280,9 +285,9 @@ class cCAControlsL {
 		var sSelected = oSelect.val()
 		if (sSelected) {
 			var iSelected = parseInt(sSelected)
-			if (iSelected == cCAConsts.rule_types.base64) {
+			if (iSelected == CARULE_TYPES.base64) {
 				var sText = oTextArea.val()
-				var iDiff = cCAConsts.BASE64_LENGTH - sText.length
+				var iDiff = CACONSTS.BASE64_LENGTH - sText.length
 				this._set_status(iDiff + ' chars remaining')
 			}
 		}
@@ -306,9 +311,9 @@ class cCAControlsL {
 			var oRuleJson = JSON.parse(sPreset)
 
 			switch (oRuleJson.type) {
-				case cCAConsts.rule_types.life:
+				case CARULE_TYPES.life:
 					oTextArea.val(oRuleJson.rule)
-					oRulesSelect.val(cCAConsts.rule_types.life)
+					oRulesSelect.val(CARULE_TYPES.life)
 					oRulesSelect.selectmenu('refresh')
 					this._onSetRuleClick()
 					break
@@ -346,7 +351,7 @@ class cCAControlsL {
 		var oElement = this.element
 
 		// convert to base64
-		var s64 = cCARuleBase64Exporter.export(poRule, cCACellTypes.default_state)
+		var s64 = cCARuleBase64Exporter.export(poRule, CA_STATES.default_state)
 		this.rule = poRule
 
 		// updatethe textarea with the rule and copy to clipboard
@@ -356,7 +361,7 @@ class cCAControlsL {
 
 		// update the rule type and trigger the rule set
 		var oSelect = $('#' + cJquery.child_ID(oElement, CONTROL_IDS.rule_type_id))
-		oSelect.val(cCAConsts.rule_types.base64)
+		oSelect.val(CARULE_TYPES.base64)
 		oSelect.selectmenu('refresh')
 		this._onSetRuleClick()
 	}

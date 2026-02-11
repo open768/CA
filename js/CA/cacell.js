@@ -79,16 +79,16 @@ class cCACell {
 		var oNeigh, iValue, oNorth, oWest, iWPattern
 		oNeigh = this.neighbours
 
-		oNorth = oNeigh.get(cCACellTypes.directions.north)
+		oNorth = oNeigh.get(CA_DIRECTIONS.north)
 		if (oNorth.evaluated.done) {
 			// optimisated by looking at the North cell which has always allready been evaluated, reduces the number of ops from 8 to 4
 			iValue = oNorth.evaluated.pattern
 			iValue <<= 3 // remove cells not in neighbourhood of this cell (makes number 12 bit, and bits are not in the right place)
-			iValue &= cCAConsts.MAX_INPUTS // truncate number to 9 bit number (but bits are not in the right place)
+			iValue &= CACONSTS.MAX_INPUTS // truncate number to 9 bit number (but bits are not in the right place)
 			iValue >>>= 3 // get ready for adding southerly cells (bits in correct place)
 
 			// further optimise by 1 op by looking at the evaluated West cell
-			oWest = oNeigh.get(cCACellTypes.directions.west)
+			oWest = oNeigh.get(CA_DIRECTIONS.west)
 			if (oWest.evaluated.done) {
 				iWPattern = oWest.evaluated.pattern
 				iWPattern &= 0b11 // only interested in last 2 bits from west cell
@@ -96,38 +96,38 @@ class cCACell {
 				iValue |= iWPattern // copy pattern
 
 				iValue <<= 1
-				iValue |= oNeigh.get(cCACellTypes.directions.southeast).value
-				iValue &= cCAConsts.MAX_INPUTS
+				iValue |= oNeigh.get(CA_DIRECTIONS.southeast).value
+				iValue &= CACONSTS.MAX_INPUTS
 			} else {
 				iValue <<= 1
-				iValue |= oNeigh.get(cCACellTypes.directions.southwest).value
+				iValue |= oNeigh.get(CA_DIRECTIONS.southwest).value
 				iValue <<= 1
-				iValue |= oNeigh.get(cCACellTypes.directions.south).value
+				iValue |= oNeigh.get(CA_DIRECTIONS.south).value
 				iValue <<= 1
-				iValue |= oNeigh.get(cCACellTypes.directions.southeast).value
+				iValue |= oNeigh.get(CA_DIRECTIONS.southeast).value
 			}
 		} else {
 			// create a 9 bit number consisting of the values of the neighbours
 			// -------------------------------------------------------
-			iValue = oNeigh.get(cCACellTypes.directions.northwest).value
+			iValue = oNeigh.get(CA_DIRECTIONS.northwest).value
 			iValue <<= 1
-			iValue |= oNeigh.get(cCACellTypes.directions.north).value
+			iValue |= oNeigh.get(CA_DIRECTIONS.north).value
 			iValue <<= 1
-			iValue |= oNeigh.get(cCACellTypes.directions.northeast).value
+			iValue |= oNeigh.get(CA_DIRECTIONS.northeast).value
 			// -------------------------------------------------------
 			iValue <<= 1
-			iValue |= oNeigh.get(cCACellTypes.directions.west).value
+			iValue |= oNeigh.get(CA_DIRECTIONS.west).value
 			iValue <<= 1
 			iValue |= this.value
 			iValue <<= 1
-			iValue |= oNeigh.get(cCACellTypes.directions.east).value
+			iValue |= oNeigh.get(CA_DIRECTIONS.east).value
 			// -------------------------------------------------------
 			iValue <<= 1
-			iValue |= oNeigh.get(cCACellTypes.directions.southwest).value
+			iValue |= oNeigh.get(CA_DIRECTIONS.southwest).value
 			iValue <<= 1
-			iValue |= oNeigh.get(cCACellTypes.directions.south).value
+			iValue |= oNeigh.get(CA_DIRECTIONS.south).value
 			iValue <<= 1
-			iValue |= oNeigh.get(cCACellTypes.directions.southeast).value
+			iValue |= oNeigh.get(CA_DIRECTIONS.southeast).value
 		}
 
 		return iValue
@@ -144,24 +144,24 @@ class cCACell {
 
 		oHash = this.neighbours
 		switch (piNeighbourType) {
-			case cCACellTypes.neighbours.eightway:
+			case CA_NEIGHBOURS.eightway:
 				iValue = this.get8Bitmap()
 				break
-			case cCACellTypes.neighbours.fourway:
+			case CA_NEIGHBOURS.fourway:
 				// -------------------------------------------------------
-				iValue = oHash.get(cCACellTypes.directions.northwest).value
+				iValue = oHash.get(CA_DIRECTIONS.northwest).value
 				iValue <<= 1
-				iValue |= oHash.get(cCACellTypes.directions.north).value
+				iValue |= oHash.get(CA_DIRECTIONS.north).value
 				// -------------------------------------------------------
 				iValue <<= 1
-				iValue |= oHash.get(cCACellTypes.directions.west).value
+				iValue |= oHash.get(CA_DIRECTIONS.west).value
 				iValue <<= 1
 				iValue |= this.value
 				iValue <<= 1
-				iValue |= oHash.get(cCACellTypes.directions.east).value
+				iValue |= oHash.get(CA_DIRECTIONS.east).value
 				// -------------------------------------------------------
 				iValue <<= 1
-				iValue |= oHash.get(cCACellTypes.directions.south).value
+				iValue |= oHash.get(CA_DIRECTIONS.south).value
 				break
 			default:
 				throw new CAException('unknown neighbour type: ' + piNeighbourType)

@@ -9,40 +9,33 @@ For licenses that allow for commercial use please contact cluck@chickenkatsu.co.
 **************************************************************************/
 
 //###############################################################################
-/**
- *
- *
- * @class cCACellTypes
 
- */
-
-class cCACellTypes {
-	static neighbours = {
-		fourway: 0,
-		eightway: 1,
-		maximum: 8,
-	}
-
-	static directions = {
-		northwest: 1,
-		north: 2,
-		northeast: 3,
-		west: 4,
-		centre: 5,
-		east: 6,
-		southwest: 7,
-		south: 8,
-		southeast: 9,
-	}
-
-	static default_state = 1
-	static states = {
-		same: 0,
-		up: 1,
-		down: 2,
-		reset: 3,
-	}
+const CA_NEIGHBOURS = {
+	fourway: 0,
+	eightway: 1,
+	maximum: 8,
 }
+
+const CA_DIRECTIONS = {
+	northwest: 1,
+	north: 2,
+	northeast: 3,
+	west: 4,
+	centre: 5,
+	east: 6,
+	southwest: 7,
+	south: 8,
+	southeast: 9,
+}
+
+const CA_STATES = {
+	same: 0,
+	up: 1,
+	down: 2,
+	reset: 3,
+	default_state : 1
+}
+
 
 const CELL_DATA_KEYS = {
 	row: 'R',
@@ -52,22 +45,21 @@ const CELL_DATA_KEYS = {
 	BORED_STATE : 'BSK'
 }
 
-
-//###############################################################################
-class cCAConsts {
-	static MAX_INPUTS = Math.pow(2, 9) - 1
-	static BASE64_LENGTH = Math.ceil((Math.pow(2, 9) - 1) / 6)
-	static NO_BOREDOM = -1
-	static rule_types = {
-		life: 1,
-		binary: 2,
-		base64: 3,
-		wolfram1d: 4,
-		random: 5,
-	}
+const CARULE_TYPES = {
+	life: 1,
+	binary: 2,
+	base64: 3,
+	wolfram1d: 4,
+	random: 5,
 }
 
-var goGridInitTypes = {
+const CACONSTS = {
+	MAX_INPUTS : Math.pow(2, 9) - 1,
+	BASE64_LENGTH : Math.ceil((Math.pow(2, 9) - 1) / 6),
+	NO_BOREDOM : -1,
+}
+
+const GRID_INIT_TYPES = {
 	blank: { id: 0, label: 'Blank' },
 	block: { id: 1, label: 'Block' },
 	checker: { id: 2, label: 'Checker' },
@@ -81,6 +73,7 @@ var goGridInitTypes = {
 	vert_line: { id: 10, label: 'V-Line' },
 }
 
+//###############################################################################
 class cCAStatus {
 	changed = 0
 	active = 0

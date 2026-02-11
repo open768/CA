@@ -107,7 +107,7 @@ $.widget('ck.caeditwidget', {
 		iCount = 1
 		x = y = oOptions.cell_size / 2
 
-		for (iDir = cCACellTypes.directions.northwest; iDir <= cCACellTypes.directions.southeast; iDir++) {
+		for (iDir = CA_DIRECTIONS.northwest; iDir <= CA_DIRECTIONS.southeast; iDir++) {
 			iBit = cCAIndexOps.get_value(oOptions.index, iDir)
 			if (iBit > 0)
 				oCanvas.drawRect({
@@ -326,9 +326,9 @@ class cCAEditorWidget {
 
 		// add the cells
 		var iVal
-		for (var iIndex = 1; iIndex <= cCAConsts.MAX_INPUTS; iIndex++) {
+		for (var iIndex = 1; iIndex <= CACONSTS.MAX_INPUTS; iIndex++) {
 			try {
-				iVal = oRule.get_rule_output(cCACellTypes.default_state, iIndex)
+				iVal = oRule.get_rule_output(CA_STATES.default_state, iIndex)
 			} catch (e) {
 				iVal = 0
 				console.log(e.message)
@@ -345,7 +345,7 @@ class cCAEditorWidget {
 	//* ************************************************************
 	_set_identity_rule() {
 		var oRule = cCaIdentityRule.makeRule()
-		var s64 = cCARuleBase64Exporter.export(oRule, cCACellTypes.default_state)
+		var s64 = cCARuleBase64Exporter.export(oRule, CA_STATES.default_state)
 		this._set_base64Rule(s64)
 		this._set_status('Identity Rule')
 		this.onSetRuleClick()
@@ -398,8 +398,8 @@ class cCAEditorWidget {
 		var oRule = this.rule
 
 		try {
-			oRule.set_output(cCACellTypes.default_state, poData.index, poData.value)
-			var s64 = cCARuleBase64Exporter.export(oRule, cCACellTypes.default_state)
+			oRule.set_output(CA_STATES.default_state, poData.index, poData.value)
+			var s64 = cCARuleBase64Exporter.export(oRule, CA_STATES.default_state)
 			this._set_base64Rule(s64)
 		} catch (e) {
 			alert('Whoops - something went wrong!\n\n' + e.message)
@@ -412,7 +412,7 @@ class cCAEditorWidget {
 		var sID = cJquery.child_ID(oElement, cCAWidgetTypes.IDs.RULE)
 		var oTextArea = $('#' + sID)
 		var sText = oTextArea.val()
-		var iDiff = cCAConsts.BASE64_LENGTH - sText.length
+		var iDiff = CACONSTS.BASE64_LENGTH - sText.length
 
 		this._set_status(iDiff + ' chars remaining')
 	}
@@ -432,7 +432,7 @@ class cCAEditorWidget {
 		var iValue = parseInt($('#' + sOutID).val())
 
 		cCARuleModifier.modify_neighbours(oRule, iInEnum, iVerb, iCount, iValue)
-		var s64 = cCARuleBase64Exporter.export(oRule, cCACellTypes.default_state)
+		var s64 = cCARuleBase64Exporter.export(oRule, CA_STATES.default_state)
 		this._set_base64Rule(s64)
 		this.onSetRuleClick()
 	}

@@ -7,31 +7,31 @@ class cCAIndexOps {
 		var iVal
 
 		switch (piDirection) {
-			case cCACellTypes.directions.northwest:
+			case CA_DIRECTIONS.northwest:
 				iVal = 256
 				break
-			case cCACellTypes.directions.north:
+			case CA_DIRECTIONS.north:
 				iVal = 128
 				break
-			case cCACellTypes.directions.northeast:
+			case CA_DIRECTIONS.northeast:
 				iVal = 64
 				break
-			case cCACellTypes.directions.west:
+			case CA_DIRECTIONS.west:
 				iVal = 32
 				break
-			case cCACellTypes.directions.centre:
+			case CA_DIRECTIONS.centre:
 				iVal = 16
 				break
-			case cCACellTypes.directions.east:
+			case CA_DIRECTIONS.east:
 				iVal = 8
 				break
-			case cCACellTypes.directions.southwest:
+			case CA_DIRECTIONS.southwest:
 				iVal = 4
 				break
-			case cCACellTypes.directions.south:
+			case CA_DIRECTIONS.south:
 				iVal = 2
 				break
-			case cCACellTypes.directions.southeast:
+			case CA_DIRECTIONS.southeast:
 				iVal = 1
 				break
 			default:
@@ -74,11 +74,11 @@ class cCAIndexOps {
 	 */
 	static get_north_bits(piIndex) {
 		var iVal = 0
-		iVal |= this.get_value(piIndex, cCACellTypes.directions.northwest)
+		iVal |= this.get_value(piIndex, CA_DIRECTIONS.northwest)
 		iVal <<= 1
-		iVal |= this.get_value(piIndex, cCACellTypes.directions.north)
+		iVal |= this.get_value(piIndex, CA_DIRECTIONS.north)
 		iVal <<= 1
-		iVal |= this.get_value(piIndex, cCACellTypes.directions.northeast)
+		iVal |= this.get_value(piIndex, CA_DIRECTIONS.northeast)
 		return iVal
 	}
 
@@ -91,11 +91,11 @@ class cCAIndexOps {
 	 */
 	static get_centre_bits(piIndex) {
 		var iVal = 0
-		iVal |= this.get_value(piIndex, cCACellTypes.directions.west)
+		iVal |= this.get_value(piIndex, CA_DIRECTIONS.west)
 		iVal <<= 1
-		iVal |= this.get_value(piIndex, cCACellTypes.directions.centre)
+		iVal |= this.get_value(piIndex, CA_DIRECTIONS.centre)
 		iVal <<= 1
-		iVal |= this.get_value(piIndex, cCACellTypes.directions.east)
+		iVal |= this.get_value(piIndex, CA_DIRECTIONS.east)
 		return iVal
 	}
 
@@ -108,11 +108,11 @@ class cCAIndexOps {
 	 */
 	static get_south_bits(piIndex) {
 		var iVal = 0
-		iVal |= this.get_value(piIndex, cCACellTypes.directions.southwest)
+		iVal |= this.get_value(piIndex, CA_DIRECTIONS.southwest)
 		iVal <<= 1
-		iVal |= this.get_value(piIndex, cCACellTypes.directions.south)
+		iVal |= this.get_value(piIndex, CA_DIRECTIONS.south)
 		iVal <<= 1
-		iVal |= this.get_value(piIndex, cCACellTypes.directions.southeast)
+		iVal |= this.get_value(piIndex, CA_DIRECTIONS.southeast)
 		return iVal
 	}
 }
