@@ -1,4 +1,9 @@
 {
+  "type": "module",
+  "name": "cellular-automata",
+  "version": "1.0.0",
+  "description": "A cellular automata simulator",
+  "main": "index.html",
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@stylistic/eslint-plugin": "^5.8.0",

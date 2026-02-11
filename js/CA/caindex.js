@@ -1,7 +1,7 @@
 //###############################################################################
 
 class cCAIndexOps {
-	//bits are created 	nw,n,ne,w,c,e,sw,s,se
+	// bits are created 	nw,n,ne,w,c,e,sw,s,se
 
 	static get_value(piIndex, piDirection) {
 		var iVal
@@ -38,15 +38,14 @@ class cCAIndexOps {
 				throw new CAException('unknown direction ' + piDirection)
 		}
 
-		var iAnd = piIndex & iVal //bitwise and
-		if (iAnd == iVal) 
+		var iAnd = piIndex & iVal // bitwise and
+		if (iAnd == iVal)
 			return 1
-		else 
+		else
 			return 0
-		
 	}
 
-	//***************************************************************
+	//* **************************************************************
 	/**
 	 * counts 1 bits in a number
 	 \*	 * @static
@@ -58,17 +57,17 @@ class cCAIndexOps {
 		var iCount = 0
 
 		while (iTmp > 0) {
-			if ((iTmp & 1) == 1) 
+			if ((iTmp & 1) == 1)
 				iCount++
-			
-			iTmp = iTmp >>> 1 //keep right shifting the value until nothing is left
+
+			iTmp = iTmp >>> 1 // keep right shifting the value until nothing is left
 		}
 		return iCount
 	}
 
-	//***************************************************************
+	//* **************************************************************
 	/**
-	 * 
+	 *
 	 * @static
 	 * @param {number} piIndex
 	 * @returns {number}
@@ -83,9 +82,9 @@ class cCAIndexOps {
 		return iVal
 	}
 
-	//***************************************************************
+	//* **************************************************************
 	/**
-	 * 
+	 *
 	 * @static
 	 * @param {number} piIndex
 	 * @returns {number}
@@ -100,9 +99,9 @@ class cCAIndexOps {
 		return iVal
 	}
 
-	//***************************************************************
+	//* **************************************************************
 	/**
-	 * 
+	 *
 	 * @static
 	 * @param {*} piIndex
 	 * @returns {number}

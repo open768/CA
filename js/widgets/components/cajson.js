@@ -14,15 +14,15 @@ class cCAJsonTypes {
 	static body_id = 'body'
 }
 
-//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+// %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 class cCAJson {
 	grid = null
 	grid_name = null
 	create_button = false
 
 	//#################################################################
-	//# Constructor
-	//#################################################################`
+	// # Constructor
+	// #################################################################`
 	constructor(poOptions, poElement) {
 		cDebug.enter()
 		this.element = poElement
@@ -32,31 +32,30 @@ class cCAJson {
 		var oElement
 		oElement = this.element
 
-		//check dependencies
-		if (!bean) 
+		// check dependencies
+		if (!bean)
 			$.error('bean class is missing! check includes')
-		
-		if (!oElement.tabs) 
-			$.error('tabs class is missing! check includes')
-		
 
-		//set basic stuff
+		if (!oElement.tabs)
+			$.error('tabs class is missing! check includes')
+
+		// set basic stuff
 		oElement.uniqueId()
 		oElement.addClass('ui-widget')
 		$(oElement).tooltip()
 
-		//put something in the widget
+		// put something in the widget
 		oElement.empty()
 		this._init()
 
-		//subscribe to CA Events
+		// subscribe to CA Events
 		cCACanvasEvent.subscribe(this.grid_name, poEvent => this._onCACanvasEvent(poEvent))
 		cDebug.leave()
 	}
 
 	//#################################################################
-	//# Initialise
-	//#################################################################`
+	// # Initialise
+	// #################################################################`
 	_init() {
 		var oElement
 		var oHeaderDiv, oBodyDiv, sBodyID, sID, oButton
@@ -65,7 +64,7 @@ class cCAJson {
 		oElement = this.element
 		sBodyID = cJquery.child_ID(oElement, cCAJsonTypes.body_id)
 
-		//-----------header----------------------------------------
+		// -----------header----------------------------------------
 		oHeaderDiv = $('<DIV>', { class: 'ui-widget-header' })
 		oHeaderDiv.append('Json')
 
@@ -75,19 +74,19 @@ class cCAJson {
 		oHeaderDiv.append(oButton)
 		oElement.append(oHeaderDiv)
 
-		//----------------body-------------------------------------
+		// ----------------body-------------------------------------
 		oBodyDiv = $('<DIV>', { class: 'ui-widget-content', ID: sBodyID })
 
-		//---------textbox
+		// ---------textbox
 		sID = cJquery.child_ID(oElement, cCAJsonTypes.textarea_id)
 		var oBox = $('<TEXTAREA>', {
 			ID: sID,
 			class: 'json',
-			title: 'Json goes here'
+			title: 'Json goes here',
 		})
 		oBodyDiv.append(oBox)
 
-		//---------buttons
+		// ---------buttons
 		if (this.create_button) {
 			oButton = $('<button>').append('Create')
 			oButton.click(() => this._onClickExport())
@@ -105,8 +104,8 @@ class cCAJson {
 	}
 
 	//#################################################################
-	//# EVENTS
-	//#################################################################`
+	// # EVENTS
+	// #################################################################`
 	_showHide(sButtonID, sBodyID) {
 		var oBody = $('#' + sBodyID)
 		var oButton = $('#' + sButtonID)
@@ -115,7 +114,7 @@ class cCAJson {
 		oButton.text(bVisible ? '+' : '-')
 	}
 
-	//*****************************************************************
+	//* ****************************************************************
 	_onClickExport() {
 		cDebug.enter()
 		if (this.grid == null) {
@@ -124,19 +123,19 @@ class cCAJson {
 		} else if (!this.grid.get_rule()) {
 			alert('no rule set')
 			throw new Error('cant create json - rule is not set')
-		} else 
+		} else
 			this._create_json()
-		
+
 		cDebug.leave()
 	}
 
-	//*****************************************************************
+	//* ****************************************************************
 	_onClickImport() {
 		cDebug.enter()
 
 		var oElement = this.element
 
-		//get the json
+		// get the json
 		var sID = cJquery.child_ID(oElement, cCAJsonTypes.textarea_id)
 		var sJson = $('#' + sID).val()
 		if (sJson === '') {
@@ -151,15 +150,15 @@ class cCAJson {
 			return
 		}
 
-		//create the grid
+		// create the grid
 		var oGrid = cCAGridJSONImporter.populate(this.grid_name, oJson)
 
-		//fire events to tell other controls there is a new rule and grid in town
+		// fire events to tell other controls there is a new rule and grid in town
 		cCACanvasEvent.fire_event(this.grid_name, cCACanvasEvent.actions.import_grid, oGrid)
 		cDebug.leave()
 	}
 
-	//*****************************************************************
+	//* ****************************************************************
 	_onCACanvasEvent(poEvent) {
 		cDebug.enter()
 		if (poEvent.action === cCACanvasEvent.actions.set_grid) {
@@ -170,17 +169,17 @@ class cCAJson {
 	}
 
 	//#################################################################
-	//# EVENTS
-	//#################################################################`
+	// # EVENTS
+	// #################################################################`
 	_create_json() {
 		cDebug.enter()
 		var oElement = this.element
 
-		//export the grid
+		// export the grid
 		var oObj = cCAGridJSONExporter.export(this.grid)
 		var sJson = JSON.stringify(oObj)
 
-		//updatethe UI with JSON
+		// updatethe UI with JSON
 		var sID = cJquery.child_ID(oElement, cCAJsonTypes.textarea_id)
 		$('#' + sID).val(sJson)
 		cDebug.leave()
@@ -188,19 +187,18 @@ class cCAJson {
 }
 
 //###############################################################################
-//# widget
+// # widget
 //###############################################################################
 $.widget('ck.cajson', {
 	options: {
 		grid_name: null,
-		create_button: true
+		create_button: true,
 	},
 	_create: function () {
 		var oOptions = this.options
-		if (!oOptions.grid_name) 
+		if (!oOptions.grid_name)
 			$.error('grid name not provided')
-		
 
-		new cCAJson(oOptions, this.element) //call class constructor
-	}
+		new cCAJson(oOptions, this.element) // call class constructor
+	},
 })

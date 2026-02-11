@@ -1,7 +1,7 @@
 'use strict'
 /**************************************************************************
 Copyright (C) Chicken Katsu 2013-2022
-This code is protected by copyright under the terms of the 
+This code is protected by copyright under the terms of the
 Creative Commons Attribution 4.0 International License
 https://creativecommons.org/licenses/by/4.0/legalcode
 For licenses that allow for commercial use please contact cluck@chickenkatsu.co.uk
@@ -17,7 +17,7 @@ class cCAWidgetTypes {
 		RULE_NEIGHBOUR_COUNT: 'RNC',
 		RULE_VERB: 'RVE',
 		RULE_OUT_STATE: 'ROS',
-		RULE_IN_STATE: 'RIS'
+		RULE_IN_STATE: 'RIS',
 	}
 }
 
@@ -25,19 +25,19 @@ class cCAWidgetTypes {
 //#
 //#######################################################################
 $.widget('ck.caeditwidget', {
-	//*****************************************************************
-	//# Options
-	//*****************************************************************
+	//* ****************************************************************
+	// # Options
+	//* ****************************************************************
 	options: {
 		index: -1,
 		value: 0,
 		cell_size: -1,
-		debug: false
+		debug: false,
 	},
 
-	//*****************************************************************
-	//# Constructor
-	//*****************************************************************
+	//* ****************************************************************
+	// # Constructor
+	//* ****************************************************************
 	_create: function () {
 		var oOptions = this.options
 		var oElement = this.element
@@ -47,33 +47,33 @@ $.widget('ck.caeditwidget', {
 		oElement.addClass('caindex')
 		oElement.click(() => this.onClick())
 
-		//add a canvas
+		// add a canvas
 		var oCanvas = $('<canvas>')
 		var iSize = oOptions.cell_size * 3 + 2
 		oCanvas.attr('width', iSize)
 		oCanvas.attr('height', iSize)
 		oElement.append(oCanvas)
 
-		//add the label
+		// add the label
 		if (oOptions.debug) {
 			var oDiv = $('<div>')
 			oDiv.append(oOptions.index)
 			oElement.append(oDiv)
 		}
 
-		//draw the canvas
+		// draw the canvas
 		this._drawGrid(oCanvas)
 		this._drawNeighbourhood(oCanvas)
 		this._set_value(oOptions.value)
 	},
 
-	//*****************************************************************
-	//# privates
-	//*****************************************************************
+	//* ****************************************************************
+	// # privates
+	//* ****************************************************************
 	_drawGrid: function (oCanvas) {
 		var oOptions = this.options
 
-		//-------------draw the 2 vertical and 2 horizontal lines for the grid
+		// -------------draw the 2 vertical and 2 horizontal lines for the grid
 		var iMax = oOptions.cell_size * 3 + 2
 		for (var iLine = 1; iLine <= 2; iLine++) {
 			var iLineX = oOptions.cell_size * iLine + iLine
@@ -83,7 +83,7 @@ $.widget('ck.caeditwidget', {
 				x1: iLineX,
 				y1: 0,
 				x2: iLineX,
-				y2: iMax
+				y2: iMax,
 			})
 			oCanvas.drawLine({
 				strokeStyle: 'black',
@@ -91,16 +91,16 @@ $.widget('ck.caeditwidget', {
 				x1: 0,
 				y1: iLineX,
 				x2: iMax,
-				y2: iLineX
+				y2: iLineX,
 			})
 		}
 	},
 
-	//******************************************************************
+	//* *****************************************************************
 	_drawNeighbourhood: function (oCanvas) {
 		var oOptions = this.options
 
-		//----------- draw the cells
+		// ----------- draw the cells
 		var iDir, iCount, iBit
 		var x, y
 
@@ -109,16 +109,15 @@ $.widget('ck.caeditwidget', {
 
 		for (iDir = cCACellTypes.directions.northwest; iDir <= cCACellTypes.directions.southeast; iDir++) {
 			iBit = cCAIndexOps.get_value(oOptions.index, iDir)
-			if (iBit > 0) 
+			if (iBit > 0)
 				oCanvas.drawRect({
 					fillStyle: 'black',
 					x: x,
 					y: y,
 					width: oOptions.cell_size * 0.8,
 					height: oOptions.cell_size * 0.8,
-					fromCenter: true
+					fromCenter: true,
 				})
-			
 
 			x += oOptions.cell_size + 1
 			iCount++
@@ -130,34 +129,32 @@ $.widget('ck.caeditwidget', {
 		}
 	},
 
-	//******************************************************************
+	//* *****************************************************************
 	_set_value: function (piValue) {
 		var oElement = this.element
 		var oOptions = this.options
 
 		oOptions.value = piValue
 
-		//change cell style if its value
-		if (piValue == 0) 
+		// change cell style if its value
+		if (piValue == 0)
 			oElement.removeClass('caindexon')
-		else 
+		else
 			oElement.addClass('caindexon')
-		
 	},
 
-	//*****************************************************************
-	//# Events
-	//*****************************************************************
+	//* ****************************************************************
+	// # Events
+	//* ****************************************************************
 	onClick: function () {
 		var oOptions = this.options
-		if (oOptions.value == 0) 
+		if (oOptions.value == 0)
 			this._set_value(1)
-		else 
+		else
 			this._set_value(0)
-		
 
 		bean.fire(document, cCAWidgetTypes.click_event, oOptions)
-	}
+	},
 })
 
 //#######################################################################
@@ -168,20 +165,20 @@ class cCAEditorWidget {
 	element = null
 	rule = null
 
-	//****************************************************************
+	//* ***************************************************************
 	constructor(poOptions, poElement) {
 		this.options = poOptions
 		this.element = poElement
 
-		//set basic stuff
+		// set basic stuff
 		poElement.uniqueId()
 
-		//-------------------------------------------------------------------
+		// -------------------------------------------------------------------
 		this._render()
 
-		//-------------------------------------------------------------------
-		//get the contents of the clipboard
-		//async fetch from clipboard, will display a warning to user
+		// -------------------------------------------------------------------
+		// get the contents of the clipboard
+		// async fetch from clipboard, will display a warning to user
 		cBrowser.get_clipboard_permissions()
 		this._set_status('waiting for clipboard')
 		try {
@@ -191,12 +188,13 @@ class cCAEditorWidget {
 			this._set_identity_rule()
 		}
 
-		//add event listener
+		// add event listener
 		bean.on(document, cCAWidgetTypes.click_event, poOptions => this.onEditWidgetClick(poOptions))
 	}
-	//*****************************************************************
-	//# privates
-	//*****************************************************************
+
+	//* ****************************************************************
+	// # privates
+	//* ****************************************************************
 	_render() {
 		var oElement = this.element
 
@@ -205,15 +203,15 @@ class cCAEditorWidget {
 
 		var oDiv, sID
 
-		//-------------------------------------------------------------------
-		//status window
+		// -------------------------------------------------------------------
+		// status window
 		sID = cJquery.child_ID(oElement, cCAWidgetTypes.IDs.STATUS)
 		oDiv = $('<DIV>', { class: 'ui-widget-header', id: sID })
 		oDiv.append('??')
 		oElement.append(oDiv)
 
-		//-------------------------------------------------------------------
-		//rule box
+		// -------------------------------------------------------------------
+		// rule box
 		oDiv = $('<DIV>', { class: 'ui-widget-content' })
 		sID = cJquery.child_ID(oElement, cCAWidgetTypes.IDs.RULE)
 		var oBox = $('<TEXTAREA>', {
@@ -221,21 +219,21 @@ class cCAEditorWidget {
 			rows: 5,
 			cols: 80,
 			class: 'rule rule_wide',
-			title: 'enter the base64 rule here'
+			title: 'enter the base64 rule here',
 		})
 		oBox.keyup(() => this.onRuleInputKeyUp())
 		oDiv.append(oBox)
 
 		var oButton = $('<button>', {
-			title: 'use the rule entered in the box above'
+			title: 'use the rule entered in the box above',
 		}).button({ icon: 'ui-icon-circle-arrow-e' })
 		oButton.click(() => this.onSetRuleClick())
 		oDiv.append(oButton)
 		oElement.append(oDiv)
 		oElement.append('<hr>')
 
-		//-------------------------------------------------------------------
-		//panel for description
+		// -------------------------------------------------------------------
+		// panel for description
 
 		oDiv = $('<DIV>', { class: 'ui-widget-header' })
 		oDiv.append('Rule Widgets')
@@ -243,25 +241,25 @@ class cCAEditorWidget {
 
 		oDiv = $('<DIV>', { class: 'ui-widget-content' })
 		oDiv.append(
-			'input configurations below show the output for a particular configuration of a cell and its neighbours. Those highlighted in blue will output 1 (alive) otherwise 0 (dead). Click to change'
+			'input configurations below show the output for a particular configuration of a cell and its neighbours. Those highlighted in blue will output 1 (alive) otherwise 0 (dead). Click to change',
 		)
 		oElement.append(oDiv)
 
-		//-------------------------------------------------------------------
-		//individual widgets that can be clicked
+		// -------------------------------------------------------------------
+		// individual widgets that can be clicked
 		sID = cJquery.child_ID(oElement, cCAWidgetTypes.IDs.CELL_CONTAINER)
 		oDiv = $('<DIV>', { class: 'ui-widget-content', id: sID })
 		oElement.append(oDiv)
 		oElement.append('<hr>')
 
-		//-------------------------------------------------------------------
-		//rule controls
+		// -------------------------------------------------------------------
+		// rule controls
 		oDiv = $('<DIV>', { class: 'ui-widget-header' })
 		oDiv.append('Rule Controls')
 		oElement.append(oDiv)
 
 		oDiv = $('<DIV>', { class: 'ui-widget-content' })
-		//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+		// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 		oDiv.append('Set widgets with state: ')
 		sID = cJquery.child_ID(oElement, cCAWidgetTypes.IDs.RULE_IN_STATE)
 		var oStateSelect = $('<Select>', { id: sID })
@@ -273,7 +271,7 @@ class cCAEditorWidget {
 		}
 		oDiv.append(oStateSelect)
 
-		//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+		// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 		oDiv.append(' and ')
 		sID = cJquery.child_ID(oElement, cCAWidgetTypes.IDs.RULE_VERB)
 		var oVerbSelect = $('<Select>', { id: sID })
@@ -292,41 +290,41 @@ class cCAEditorWidget {
 		}
 		oDiv.append(oCountSelect)
 
-		//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+		// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 		oDiv.append(' Neighbours to output ')
 		sID = cJquery.child_ID(oElement, cCAWidgetTypes.IDs.RULE_OUT_STATE)
-		//any cell with X neighbours will output 1 0r zero
+		// any cell with X neighbours will output 1 0r zero
 		var oOutSelect = $('<Select>', { id: sID })
 		oOutSelect.append($('<option>').append(0))
 		oOutSelect.append($('<option>').append(1))
 		oDiv.append(oOutSelect)
 
-		//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+		// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 		oButton = $('<button>').append('Apply')
 		oDiv.append(oButton)
 		oButton.click(() => this.onNeighbourRuleClick())
 		oElement.append(oDiv)
 	}
 
-	//*****************************************************************
+	//* ****************************************************************
 	_set_status(psText) {
 		var oElement = this.element
 		var sID = cJquery.child_ID(oElement, cCAWidgetTypes.IDs.STATUS)
 		$('#' + sID).html(psText)
 	}
 
-	//*************************************************************
+	//* ************************************************************
 	_add_edit_widgets() {
 		var oOptions = this.options
 		var oElement = this.element
 		var oRule = this.rule
 
-		//clear out any cells present
+		// clear out any cells present
 		var sID = cJquery.child_ID(oElement, cCAWidgetTypes.IDs.CELL_CONTAINER)
 		var oDiv = $('#' + sID)
 		oDiv.empty()
 
-		//add the cells
+		// add the cells
 		var iVal
 		for (var iIndex = 1; iIndex <= cCAConsts.MAX_INPUTS; iIndex++) {
 			try {
@@ -338,13 +336,13 @@ class cCAEditorWidget {
 			var oSpan = $('<SPAN>').caeditwidget({
 				index: iIndex,
 				value: iVal,
-				cell_size: oOptions.cell_size
+				cell_size: oOptions.cell_size,
 			})
 			oDiv.append(oSpan)
 		}
 	}
 
-	//*************************************************************
+	//* ************************************************************
 	_set_identity_rule() {
 		var oRule = cCaIdentityRule.makeRule()
 		var s64 = cCARuleBase64Exporter.export(oRule, cCACellTypes.default_state)
@@ -353,16 +351,16 @@ class cCAEditorWidget {
 		this.onSetRuleClick()
 	}
 
-	//*************************************************************
+	//* ************************************************************
 	_set_base64Rule(ps64) {
 		var oElement = this.element
 		var sID = cJquery.child_ID(oElement, cCAWidgetTypes.IDs.RULE)
 		$('#' + sID).val(ps64)
 	}
 
-	//*****************************************************************
-	//# Events
-	//*****************************************************************
+	//* ****************************************************************
+	// # Events
+	//* ****************************************************************
 	onGotClipText(psText) {
 		if (psText === '') {
 			cBrowser.writeConsoleWarning('nothing in clipboard!')
@@ -381,7 +379,7 @@ class cCAEditorWidget {
 		}
 	}
 
-	//*************************************************************
+	//* ************************************************************
 	onSetRuleClick() {
 		var oElement = this.element
 		var sID = cJquery.child_ID(oElement, cCAWidgetTypes.IDs.RULE)
@@ -395,7 +393,7 @@ class cCAEditorWidget {
 		}
 	}
 
-	//*************************************************************
+	//* ************************************************************
 	onEditWidgetClick(poData) {
 		var oRule = this.rule
 
@@ -408,7 +406,7 @@ class cCAEditorWidget {
 		}
 	}
 
-	//*************************************************************
+	//* ************************************************************
 	onRuleInputKeyUp() {
 		var oElement = this.element
 		var sID = cJquery.child_ID(oElement, cCAWidgetTypes.IDs.RULE)
@@ -419,7 +417,7 @@ class cCAEditorWidget {
 		this._set_status(iDiff + ' chars remaining')
 	}
 
-	//*************************************************************
+	//* ************************************************************
 	onNeighbourRuleClick() {
 		var oElement = this.element
 		var oRule = this.rule
@@ -441,17 +439,17 @@ class cCAEditorWidget {
 }
 
 $.widget('ck.caeditor', {
-	//****************************************************************
-	//# Options
-	//****************************************************************
+	//* ***************************************************************
+	// # Options
+	//* ***************************************************************
 	options: {
-		cell_size: 10
+		cell_size: 10,
 	},
 
-	//*****************************************************************
-	//# Constructor
-	//*****************************************************************
+	//* ****************************************************************
+	// # Constructor
+	//* ****************************************************************
 	_create: function () {
 		new cCAEditorWidget(this.options, this.element)
-	}
+	},
 })

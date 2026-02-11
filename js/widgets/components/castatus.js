@@ -1,7 +1,7 @@
 'use strict'
 /**************************************************************************
 Copyright (C) Chicken Katsu 2013-2024
-This code is protected by copyright under the terms of the 
+This code is protected by copyright under the terms of the
 Creative Commons Attribution 4.0 International License
 https://creativecommons.org/licenses/by/4.0/legalcode
 For licenses that allow for commercial use please contact cluck@chickenkatsu.co.uk
@@ -18,95 +18,92 @@ class cCAStatusTypes {
 //###################################################################
 //#
 //###################################################################
-class cCAStatus {
+class cCAStatusWidget {
 	element = null
 	grid_name = null
 	HEAP_INTERVAL = 100
 	heap_timer_running = false
 	stop_heap_timer = false
 
-	//***************************************************************
+	//* **************************************************************
 	constructor(poOptions, poElement) {
 		this.element = poElement
 		this.grid_name = poOptions.grid_name
 
 		var oElement = this.element
 
-		//set basic stuff
+		// set basic stuff
 		oElement.uniqueId()
 		oElement.addClass('ui-widget')
 
-		//check dependencies
-		if (!bean) 
+		// check dependencies
+		if (!bean)
 			$.error('bean is missing , chack includes')
-		
 
-		//subscribe to CAEvents
+		// subscribe to CAEvents
 		cCACanvasEvent.subscribe(this.grid_name, poEvent => this.onCACanvasEvent(poEvent))
 		cCAActionEvent.subscribe(this.grid_name, poEvent => this.onCAActionEvent(poEvent))
 
-		//put something in the widget
+		// put something in the widget
 		oElement.empty()
 		this._init()
 	}
 
-	//****************************************************************************
+	//* ***************************************************************************
 	//*
-	//****************************************************************************
+	//* ***************************************************************************
 	async onHeapTimer() {
 		var oElement = this.element
 
 		cDebug.write('heap timer running')
 
-		//display the heap used
+		// display the heap used
 		var oTarget = $('#' + cJquery.child_ID(oElement, cCAStatusTypes.HEAP_ID))
 		var iHeapBytes = await cBrowser.getHeapMemoryUsed()
 		var sHeapValue = cCommon.bytesToSize(iHeapBytes)
 		oTarget.html(sHeapValue)
 		cDebug.write('heap: ' + sHeapValue)
 
-		//next heap timer
+		// next heap timer
 		if (this.stop_heap_timer) {
 			this.heap_timer_running = false
 			this.stop_heap_timer = false
 		} else {
-			//next timer
+			// next timer
 			setTimeout(() => this.onHeapTimer(), this.HEAP_INTERVAL)
 			this.heap_timer_running = true
 		}
 	}
 
-	//****************************************************************************
+	//* ***************************************************************************
 	//*
-	//****************************************************************************
+	//* ***************************************************************************
 	onCAActionEvent(poEvent) {
 		if (poEvent.action == cCAActionEvent.actions.control) {
 			var iAction = poEvent.data
 			switch (iAction) {
-				case cCAActionEvent.control_actions.play: //start watching the heap when CA is played
-					if (this.heap_timer_running) 
+				case cCAActionEvent.control_actions.play: // start watching the heap when CA is played
+					if (this.heap_timer_running)
 						cDebug.warn('heap timer allready running')
-					else 
+					else
 						setTimeout(() => this.onHeapTimer(), this.HEAP_INTERVAL)
-					
 
 					break
 				case cCAActionEvent.control_actions.stop:
-					this.stop_heap_timer = true //stop watching heap when stop pressed, or CA stops
+					this.stop_heap_timer = true // stop watching heap when stop pressed, or CA stops
 			}
 		}
 	}
 
-	//****************************************************************************
+	//* ***************************************************************************
 	onCACanvasEvent(poEvent) {
 		var oElement = this.element
 		var oTarget
 
 		switch (poEvent.action) {
 			case cCACanvasEvent.actions.grid_status:
-				if (!poEvent.data) 
+				if (!poEvent.data)
 					return
-				
 
 				oTarget = $('#' + cJquery.child_ID(oElement, cCAStatusTypes.ACTIVE_ID))
 				oTarget.html(poEvent.data.active)
@@ -117,9 +114,9 @@ class cCAStatus {
 		}
 	}
 
-	//***************************************************************
+	//* **************************************************************
 	//* Privates
-	//***************************************************************
+	//* **************************************************************
 	_add_row(poTable, psID, psLabel) {
 		var oElement = this.element
 		var oCell, oRow
@@ -137,7 +134,7 @@ class cCAStatus {
 		var oDiv, oTable
 		var oElement = this.element
 
-		//--create the UI-------------------------------------------------
+		// --create the UI-------------------------------------------------
 		oDiv = $('<DIV>', { class: 'ui-widget-header' }).append('Status')
 		oElement.append(oDiv)
 
@@ -157,15 +154,14 @@ class cCAStatus {
 //###################################################################
 $.widget('ck.castatus', {
 	options: {
-		grid_name: null
+		grid_name: null,
 	},
 	_create: function () {
-		//checks
+		// checks
 		var oOptions = this.options
-		if (!oOptions.grid_name) 
+		if (!oOptions.grid_name)
 			$.error('grid name not provided')
-		
 
-		new cCAStatus(oOptions, this.element) //call widget constructor
-	}
+		new cCAStatusWidget(oOptions, this.element) // call widget constructor
+	},
 })

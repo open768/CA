@@ -1,7 +1,7 @@
 'use strict'
 /**************************************************************************
 Copyright (C) Chicken Katsu 2013-2024
-This code is protected by copyright under the terms of the 
+This code is protected by copyright under the terms of the
 Creative Commons Attribution 4.0 International License
 https://creativecommons.org/licenses/by/4.0/legalcode
 For licenses that allow for commercial use please contact cluck@chickenkatsu.co.uk
@@ -10,18 +10,19 @@ For licenses that allow for commercial use please contact cluck@chickenkatsu.co.
 
 //###############################################################################
 /**
- * 
- * 
+ *
+ *
  * @class cCACellTypes
- 
+
  */
 
 class cCACellTypes {
 	static neighbours = {
 		fourway: 0,
 		eightway: 1,
-		maximum: 8
+		maximum: 8,
 	}
+
 	static directions = {
 		northwest: 1,
 		north: 2,
@@ -31,18 +32,20 @@ class cCACellTypes {
 		east: 6,
 		southwest: 7,
 		south: 8,
-		southeast: 9
+		southeast: 9,
 	}
+
 	static default_state = 1
 	static states = {
 		same: 0,
 		up: 1,
 		down: 2,
-		reset: 3
+		reset: 3,
 	}
+
 	static hash_values = {
 		row: 'R',
-		col: 'C'
+		col: 'C',
 	}
 }
 
@@ -56,7 +59,7 @@ class cCAConsts {
 		binary: 2,
 		base64: 3,
 		wolfram1d: 4,
-		random: 5
+		random: 5,
 	}
 }
 
@@ -71,5 +74,14 @@ var goGridInitTypes = {
 	horiz_line: { id: 7, label: 'H-Line' },
 	sine: { id: 8, label: 'Sine' },
 	random: { id: 9, label: 'Random' },
-	vert_line: { id: 10, label: 'V-Line' }
+	vert_line: { id: 10, label: 'V-Line' },
+}
+
+class cCAStatus {
+	constructor() {
+		this.changed = 0
+		this.active = 0
+		this.inactive = 0
+		this.bored = 0
+	}
 }

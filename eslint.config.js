@@ -1,11 +1,10 @@
-// eslint.config.js (CommonJS)
-//@ts-expect-error
-const { defineConfig } = require("eslint/config")
-//@ts-expect-error
-const stylistic = require("@stylistic/eslint-plugin")
+// eslint.config.js (ESM)
+import { defineConfig } from "eslint/config"
+import stylistic from "@stylistic/eslint-plugin"
 
-module.exports = defineConfig([
+export default defineConfig([
 	{
+		ignores: ["eslint.config.js"],
 		files: ["./**/*.js"],
 		languageOptions: {
 			ecmaVersion: "latest",
@@ -20,6 +19,7 @@ module.exports = defineConfig([
 		plugins: {
 			"@stylistic": stylistic,
 		},
+		...stylistic.configs.recommended,
 		rules: {
 			// 1) No trailing semicolons (auto-fixable)
 			// Note: core `semi` is deprecated from ESLint 8.53 but still works in ESLint 9;

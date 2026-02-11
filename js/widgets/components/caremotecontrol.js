@@ -1,7 +1,7 @@
 'use strict'
 /**************************************************************************
 Copyright (C) Chicken Katsu 2013-2024
-This code is protected by copyright under the terms of the 
+This code is protected by copyright under the terms of the
 Creative Commons Attribution 4.0 International License
 https://creativecommons.org/licenses/by/4.0/legalcode
 For licenses that allow for commercial use please contact cluck@chickenkatsu.co.uk
@@ -15,7 +15,7 @@ class cCARemoteControls {
 	static buttonNames = {
 		play: 'P',
 		stop: 'O',
-		step: 'E'
+		step: 'E',
 	}
 
 	element = null
@@ -23,31 +23,30 @@ class cCARemoteControls {
 	rule_set = false
 	grid_set = false
 
-	//***************************************************************
+	//* **************************************************************
 	constructor(poOptions, poElement) {
 		this.element = poElement
 		this.grid_name = poOptions.grid_name
 		var oElement = poElement
 
-		//check dependencies
-		if (!bean) 
+		// check dependencies
+		if (!bean)
 			$.error('bean is missing , check includes')
-		
 
-		//set basic stuff
+		// set basic stuff
 		oElement.uniqueId()
 		oElement.addClass('ui-widget')
 
-		//subscribe to CAEvents
+		// subscribe to CAEvents
 		cCARuleEvent.subscribe(this.grid_name, poEvent => this.onCARuleEvent(poEvent))
 		cCACanvasEvent.subscribe(this.grid_name, poEvent => this.onCACanvasEvent(poEvent))
 
-		//put something in the widget
+		// put something in the widget
 		oElement.empty()
 		this._init()
 	}
 
-	//****************************************************************************
+	//* ***************************************************************************
 	onClickControl(piAction) {
 		if (!this.rule_set) {
 			alert('set a rule first!!')
@@ -66,7 +65,7 @@ class cCARemoteControls {
 		cCAActionEvent.fire_event(this.grid_name, cCAActionEvent.actions.control, iAction)
 	}
 
-	//****************************************************************************
+	//* ***************************************************************************
 	onCACanvasEvent(poEvent) {
 		cDebug.enter()
 		switch (poEvent.action) {
@@ -75,12 +74,12 @@ class cCARemoteControls {
 				this._enable_buttons()
 				break
 			case cCACanvasEvent.notify.nochange:
-				setTimeout(() => this._enable_controls(false), 100) //stop
+				setTimeout(() => this._enable_controls(false), 100) // stop
 		}
 		cDebug.leave()
 	}
 
-	//****************************************************************************
+	//* ***************************************************************************
 	onCARuleEvent(poEvent) {
 		if (poEvent.action === cCARuleEvent.actions.set_rule) {
 			this.rule_set = true
@@ -88,13 +87,12 @@ class cCARemoteControls {
 		}
 	}
 
-	//***************************************************************
+	//* **************************************************************
 	//* Privates
-	//***************************************************************
+	//* **************************************************************
 	_enable_buttons() {
-		if (this.grid_set && this.rule_set) 
+		if (this.grid_set && this.rule_set)
 			this._enable_controls(false)
-		
 	}
 
 	/**
@@ -112,11 +110,11 @@ class cCARemoteControls {
 		cJquery.enable_element(sID, pbRunning)
 	}
 
-	//***************************************************************
+	//* **************************************************************
 	_init() {
 		var oDiv
 		var oElement = this.element
-		var oThis = this //needed for closure
+		var oThis = this // needed for closure
 
 		function _add_button(psID, psiIcon, psTitle, piAction) {
 			var sID = cJquery.child_ID(oElement, psID)
@@ -124,33 +122,33 @@ class cCARemoteControls {
 				width: '30px',
 				height: '30px',
 				id: sID,
-				title: psTitle
+				title: psTitle,
 			})
 			oButton.button({ icon: psiIcon, showLabel: false })
 			cJquery.enable_element(oButton, false)
-			oButton.click(() => oThis.onClickControl(piAction)) //retain oThis in closure
+			oButton.click(() => oThis.onClickControl(piAction)) // retain oThis in closure
 			oDiv.append(oButton)
 		}
 
-		//--widget header------------------------------------------------
+		// --widget header------------------------------------------------
 		cJquery.add_widget_header(oElement, 'controls')
 
-		//---widget body
+		// ---widget body
 		oDiv = $('<DIV>', { class: 'ui-widget-content' })
 
-		//--- stop button----------------------------------------
+		// --- stop button----------------------------------------
 		_add_button(cCARemoteControls.buttonNames.stop, 'ui-icon-stop', 'stop', cCAActionEvent.control_actions.stop)
 		_add_button(
 			cCARemoteControls.buttonNames.play,
 			'ui-icon-circle-triangle-e',
 			'play',
-			cCAActionEvent.control_actions.play
+			cCAActionEvent.control_actions.play,
 		)
 		_add_button(
 			cCARemoteControls.buttonNames.step,
 			'ui-icon-circle-arrow-e',
 			'step',
-			cCAActionEvent.control_actions.step
+			cCAActionEvent.control_actions.step,
 		)
 
 		oElement.append(oDiv)
@@ -162,15 +160,14 @@ class cCARemoteControls {
 //###################################################################
 $.widget('ck.caremotecontrols', {
 	options: {
-		grid_name: null
+		grid_name: null,
 	},
 	_create: function () {
-		//checks
+		// checks
 		var oOptions = this.options
-		if (!oOptions.grid_name) 
+		if (!oOptions.grid_name)
 			$.error('grid name not provided')
-		
 
-		new cCARemoteControls(oOptions, this.element) //call class constructor
-	}
+		new cCARemoteControls(oOptions, this.element) // call class constructor
+	},
 })
