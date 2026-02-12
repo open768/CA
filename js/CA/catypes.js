@@ -36,41 +36,40 @@ const CA_STATES = {
 	default_state : 1
 }
 
-
-const CELL_DATA_KEYS = {
-	row: 'R',
-	col: 'C',
-	BOREDOM_BITMAP : 'BBK',
-	BOREDOM_BITMAP_COUNT : 'BBCK',
-	BORED_STATE : 'BSK'
+class CELL_DATA_KEYS extends cStaticClass{
+	static row = 'R'
+	static col = 'C'
+	static BOREDOM_BITMAP = 'BBK'
+	static BOREDOM_BITMAP_COUNT = 'BBCK'
+	static BORED_STATE = 'BSK'
 }
 
-const CARULE_TYPES = {
-	life: 1,
-	binary: 2,
-	base64: 3,
-	wolfram1d: 4,
-	random: 5,
+class CARULE_TYPES extends cStaticClass {
+	static life = 1
+	static binary = 2
+	static base64 = 3
+	static wolfram1d = 4
+	static random = 5
 }
 
-const CACONSTS = {
-	MAX_INPUTS : Math.pow(2, 9) - 1,
-	BASE64_LENGTH : Math.ceil((Math.pow(2, 9) - 1) / 6),
-	NO_BOREDOM : -1,
+class CACONSTS extends cStaticClass {
+	static MAX_INPUTS = Math.pow(2, 9) - 1
+	static BASE64_LENGTH = Math.ceil((Math.pow(2, 9) - 1) / 6)
+	static NO_BOREDOM = -1
 }
 
-const GRID_INIT_TYPES = {
-	blank: { id: 0, label: 'Blank' },
-	block: { id: 1, label: 'Block' },
-	checker: { id: 2, label: 'Checker' },
-	circle: { id: 3, label: 'Circle' },
-	cross: { id: 4, label: 'Cross' },
-	diagonal: { id: 5, label: 'Diagonal' },
-	diamond: { id: 6, label: 'Diamond' },
-	horiz_line: { id: 7, label: 'H-Line' },
-	sine: { id: 8, label: 'Sine' },
-	random: { id: 9, label: 'Random' },
-	vert_line: { id: 10, label: 'V-Line' },
+class GRID_INIT_TYPES extends cStaticClass {
+	static blank = { id: 0, label: 'Blank' }
+	static block = { id: 1, label: 'Block' }
+	static checker = { id: 2, label: 'Checker' }
+	static circle = { id: 3, label: 'Circle' }
+	static cross = { id: 4, label: 'Cross' }
+	static diagonal = { id: 5, label: 'Diagonal' }
+	static diamond = { id: 6, label: 'Diamond' }
+	static horiz_line = { id: 7, label: 'H-Line' }
+	static sine = { id: 8, label: 'Sine' }
+	static random = { id: 9, label: 'Random' }
+	static vert_line = { id: 10, label: 'V-Line' }
 }
 
 //###############################################################################

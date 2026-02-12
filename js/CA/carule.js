@@ -201,31 +201,31 @@ class cCARule {
 		/** @type Map */ var cell_data = poCell.data
 
 		// check if boredom bitmap key is not there
-		if (!cell_data.has(CELL_DATA_KEYS.BOREDOM_BITMAP_KEY)) {
-			cell_data.set(CELL_DATA_KEYS.BOREDOM_BITMAP_KEY, piBitmap)
-			cell_data.set(CELL_DATA_KEYS.BOREDOM_BITMAP_COUNT_KEY, 1)
-			cell_data.set(CELL_DATA_KEYS.BORED_STATE_KEY, false)
+		if (!cell_data.has(CELL_DATA_KEYS.BOREDOM_BITMAP)) {
+			cell_data.set(CELL_DATA_KEYS.BOREDOM_BITMAP, piBitmap)
+			cell_data.set(CELL_DATA_KEYS.BOREDOM_BITMAP_COUNT, 1)
+			cell_data.set(CELL_DATA_KEYS.BORED_STATE, false)
 			return false
 		}
 
 		// check if boredom bitmap is different bitmap
-		var previous_bitmap = cell_data.get(CELL_DATA_KEYS.BOREDOM_BITMAP_KEY)
+		var previous_bitmap = cell_data.get(CELL_DATA_KEYS.BOREDOM_BITMAP)
 		if (previous_bitmap != piBitmap) {
-			cell_data.set(CELL_DATA_KEYS.BOREDOM_BITMAP_KEY, piBitmap)
-			cell_data.set(CELL_DATA_KEYS.BOREDOM_BITMAP_COUNT_KEY, 1)
-			cell_data.set(CELL_DATA_KEYS.BORED_STATE_KEY, false)
+			cell_data.set(CELL_DATA_KEYS.BOREDOM_BITMAP, piBitmap)
+			cell_data.set(CELL_DATA_KEYS.BOREDOM_BITMAP_COUNT, 1)
+			cell_data.set(CELL_DATA_KEYS.BORED_STATE, false)
 			return false
 		}
 
 		// bitmap is the same - increase count and check if bored
-		var count = cell_data.get(CELL_DATA_KEYS.BOREDOM_BITMAP_COUNT_KEY) + 1
+		var count = cell_data.get(CELL_DATA_KEYS.BOREDOM_BITMAP_COUNT) + 1
 		if (count >= this.boredom_count) {
-			cell_data.set(CELL_DATA_KEYS.BOREDOM_BITMAP_COUNT_KEY, 0) // reset count
-			cell_data.set(CELL_DATA_KEYS.BORED_STATE_KEY, true)
+			cell_data.set(CELL_DATA_KEYS.BOREDOM_BITMAP_COUNT, 0) // reset count
+			cell_data.set(CELL_DATA_KEYS.BORED_STATE, true)
 			return true
 		} else {
-			cell_data.set(CELL_DATA_KEYS.BOREDOM_BITMAP_COUNT_KEY, count)
-			cell_data.set(CELL_DATA_KEYS.BORED_STATE_KEY, false)
+			cell_data.set(CELL_DATA_KEYS.BOREDOM_BITMAP_COUNT, count)
+			cell_data.set(CELL_DATA_KEYS.BORED_STATE, false)
 			return false
 		}
 	}
@@ -243,11 +243,10 @@ class cCARule {
 		// get the cell neighbour value
 		var iBitmap = poCell.getBitmap(this.neighbour_type)
 
-		if (iBitmap == 0) {
+		if (iBitmap == 0) 
 			// cells that are completely isolated remain dead
 			poCell.evaluated.value = 0
-			oStatus.inactive++
-		} else {
+		else {
 			// check for cell boredom
 			/** @type Boolean */ var bBored = false
 			if (this.boredom_count !== CACONSTS.NO_BOREDOM)
@@ -260,13 +259,12 @@ class cCARule {
 				oStatus.bored = 1
 			} else
 				poCell.evaluated.value = this.get_rule_output(poCell.state, iBitmap)
-
-			// mark cell as done
-			if (this.has_state_transitions) {
-				// TBD state _transitions not implemented
-			} else
-				poCell.evaluated.state = poCell.state
 		}
+
+		// copy the state to the evaluated part (state transitions are not implemented yet)
+		poCell.evaluated.state = poCell.state
+
+		//mark cell as done
 		poCell.evaluated.done = true
 		poCell.evaluated.pattern = iBitmap // the pattern evaluated - used to optimise cell evaluation
 

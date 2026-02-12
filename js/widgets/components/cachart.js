@@ -19,15 +19,12 @@ class cCAChartTypes {
 		try {
 			google.charts
 				.load('current', { packages: ['corechart'] })
-				.then(poEvent => this.OnGoogleChartsLoaded(poEvent))
+				.then(poEvent => this.is_charts_loaded = true)
 		} catch (e) {
 			cDebug.write('unable to load Google charts: ' + e.msg)
 		}
 	}
 
-	static OnGoogleChartsLoaded(poEvent) {
-		this.is_charts_loaded = true
-	}
 }
 
 //#################################################################
