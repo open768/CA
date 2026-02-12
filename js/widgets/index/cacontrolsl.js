@@ -106,7 +106,9 @@ class cCAControlsL {
 		})
 		oSelect.append($('<option>', { selected: 1, disabled: 1 }).append('Select'))
 		oSelect.append($('<option>', { value: CACONSTS.NO_BOREDOM }).append('Never'))
-		for (var i = 2; i <= 10; i++)
+		for (var i = 2; i < 10; i++)
+			oSelect.append($('<option>', { value: i }).append(i + ' times'))
+		for (var i = 10; i <= 100; i+=10)
 			oSelect.append($('<option>', { value: i }).append(i + ' times'))
 
 		poContent.append(oSelect)

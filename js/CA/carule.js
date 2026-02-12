@@ -195,7 +195,7 @@ class cCARule {
 	 * @return {boolean}
 	 */
 	_evaluate_simple_boredom(poCell, piBitmap) {
-		if (this.boredom_count == CACONSTS.NO_BOREDOM)
+		if (this.boredom_count == null ||this.boredom_count == CACONSTS.NO_BOREDOM)
 			return false
 
 		/** @type Map */ var cell_data = poCell.data
