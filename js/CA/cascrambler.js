@@ -82,7 +82,7 @@ class cCAScramblerTypes{
 //#
 //###################################################################################
 /** class that performs data scrambling */
-/* eslint-disable-next-line no-unused-vars */
+ 
 class cCAScrambler{
 	/** @type cCAGrid */ grid=null
 	/** @type number  */ inital_runs = -1
@@ -98,10 +98,14 @@ class cCAScrambler{
 	 * @param {string} psPlainTxt	the plaintext to scramble
 	 */
 	constructor(poGrid, piInitialRuns, psPlainTxt){
-		if (!poGrid) $.error("Grid param, missing")
-		if (!poGrid.rule) $.error("no rule in the grid")
-		if (piInitialRuns<5) $.error("initial runs invalid - must be at least 5")
-		if (!psPlainTxt) $.error("plaintext missing")
+		if (!poGrid) 
+			$.error("Grid param, missing")
+		if (!poGrid.rule) 
+			$.error("no rule in the grid")
+		if (piInitialRuns<5) 
+			$.error("initial runs invalid - must be at least 5")
+		if (!psPlainTxt) 
+			$.error("plaintext missing")
 
 		this.grid = poGrid
 		this.plaintext = psPlainTxt
@@ -112,7 +116,9 @@ class cCAScrambler{
 		var oThis = this /** @type cCAScrambler */
 
 		//subscribe to grid events
-		cCAEventHelper.subscribe_to_grid_events(this.grid.name, (poEvent)=>{oThis.onCAGridEvent(poEvent)})
+		cCAEventHelper.subscribe_to_grid_events(this.grid.name, (poEvent)=>{
+			oThis.onCAGridEvent(poEvent)
+		})
 	}
 	
 	//*******************************************************************************

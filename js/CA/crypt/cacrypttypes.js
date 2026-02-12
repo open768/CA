@@ -16,7 +16,7 @@ You the consumer of this application are entirely responsible for importing this
 **************************************************************************/
 
 //###############################################################################
-// eslint-disable-next-line no-unused-vars
+ 
 class cCACryptTypes{
 	static name =  "cacryptgrid"
 	static rows = 100
