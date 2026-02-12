@@ -10,7 +10,7 @@ export default defineConfig([
 		files: ["./**/*.js"],
 		languageOptions: {
 			ecmaVersion: "latest",
-			sourceType: "commonjs",
+			sourceType: "script",
 			globals: {
 				$: "readonly",
 				bean: "readonly",
@@ -23,6 +23,13 @@ export default defineConfig([
 		},
 		...stylistic.configs.recommended,
 		rules: {
+			// 0) Flag unused declarations (functions/vars) and private class members
+			"no-unused-vars": ["warn", {
+				"vars": "local",
+				"args": "after-used",
+			}],
+			"no-unused-private-class-members": "warn",
+
 			// 1) No trailing semicolons (auto-fixable)
 			// Note: core `semi` is deprecated from ESLint 8.53 but still works in ESLint 9;
 			// it may be removed in ESLint 11. For now this will auto-remove semicolons.

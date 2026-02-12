@@ -200,7 +200,7 @@ class cCAExportedState {
 class cCAExportedObj {
 	version = 1.0
 	neighbour_type = null
-	boredom = null
+	boredom_count = null
 	states = []
 
 	/**
@@ -256,7 +256,7 @@ class cCARuleObjExporter {
 			oState.rule = cCARuleBase64Exporter.export(poRule, iState)
 			oExport.states.push(oState)
 		}
-		oExport.boredom = poRule.boredom_count
+		oExport.boredom_count = poRule.boredom_count
 
 		cDebug.leave()
 		return oExport
@@ -285,7 +285,7 @@ class cCARuleObjImporter {
 
 		var oRule = cCARuleBase64Importer.makeRule(poObj.states[0].rule)
 		oRule.neighbour_type = poObj.neighbour_type
-		oRule.boredom_count = poObj.boredom
+		oRule.boredom_count = poObj.boredom_count
 
 		cDebug.leave()
 		return oRule

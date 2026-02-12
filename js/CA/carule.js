@@ -1,4 +1,5 @@
 'use strict'
+/* exported cCAStateRule, cCARule */
 /**************************************************************************
 Copyright (C) Chicken Katsu 2013-2024
 This code is protected by copyright under the terms of the
@@ -36,26 +37,13 @@ For licenses that allow for commercial use please contact cluck@chickenkatsu.co.
 class cCARule {
 	/** @type number */ neighbour_type = CA_NEIGHBOURS.eightway
 	/** @type boolean */ has_state_transitions = false
-	/** @type Array */ stateRules = null
+	/** @type Array */ stateRules = []
 	/** @type number */ boredom_count = CACONSTS.NO_BOREDOM // how many times a pattern is seen before a cell is bored
-	/** @type number */ bored_cells = 0 // how many cells were bored
 
 	NO_BOREDOM_BITMAP = -1
 
-	/**
-	 * Creates an instance of cCARule.
-	 * @constructor
-	 */
-	constructor() {
-		this.neighbour_type = CA_NEIGHBOURS.eightway
-		this.has_state_transitions = false
-		this.stateRules = []
-		this.boredom_count = CACONSTS.NO_BOREDOM
-	}
-
 	//* **************************************************************
 	/**
-	 *
 	 * @static
 	 * @returns {cCARule}
 	 */

@@ -111,7 +111,7 @@ class cCAControlsL {
 
 		poContent.append(oSelect)
 		oSelect.selectmenu({
-			select: poEvent => this._onBoredomClick(poEvent),
+			select: poEvent => this._onSetRuleClick()
 		})		
 	}
 
@@ -327,19 +327,6 @@ class cCAControlsL {
 					throw new CAException('not implemented')
 			}
 		}
-	}
-
-	//* ***************************************************************************
-	_onBoredomClick(poEvent) {
-		if (!this.rule) {
-			alert('set a rule first')
-			return
-		}
-		var iBoredem = parseInt($(poEvent.target).val())
-		this.rule.set_boredom(iBoredem)
-
-		// inform subscribers
-		cCARuleEvent.fire_event(this.grid_name, cCARuleEvent.actions.set_rule, this.rule)
 	}
 
 	//#################################################################
