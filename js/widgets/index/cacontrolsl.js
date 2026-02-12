@@ -233,14 +233,19 @@ class cCAControlsL {
 		var oElement = this.element
 
 		var oTextArea = $('#' + cJquery.child_ID(oElement, CONTROL_IDS.rule_text_ID))
-		var oSelect = $('#' + cJquery.child_ID(oElement, CONTROL_IDS.rule_type_id))
+		var oRuleTypeSelect = $('#' + cJquery.child_ID(oElement, CONTROL_IDS.rule_type_id))
 
-		if (!oSelect.val()) {
+		if (!oRuleTypeSelect.val()) {
 			alert('choose a rule type to import')
 			return
 		}
 
-		var iSelected = parseInt(oSelect.val())
+		//enable the boredom selector
+		var sBoredomID = cJquery.child_ID(oElement, CONTROL_IDS.boredom_ID)
+		cJquery.enable_element(sBoredomID,true)
+
+		//parse the rule based on the type selected
+		var iSelected = parseInt(oRuleTypeSelect.val())
 		/** @type {cCARule} */ var oRule
 		try {
 			switch (iSelected) {

@@ -295,17 +295,24 @@ class cCARuleObjImporter {
 //###############################################################################
 // # Others
 //###############################################################################
-/**
- *
- *
- * @class cCaIdentityRule
-
- */
-class cCaIdentityRule {
+class cCARuleMaker{
 	/**
-	 *
+   * @abstract
+   * @static
+   * @returns {cCARule}
+   * @throws {Error} If not implemented by subclass.
+   */
+	static  makeRule() {
+		throw new Error('Abstract method `makeRule()` must be implemented.')
+	}
+}
+
+//* **************************************************************
+class cCaIdentityRule extends cCARuleMaker {
+	/**
 	 * @static
-	 * @returns {*}
+	 * @override
+	 * @returns {cCARule}
 	 */
 	static makeRule() {
 		cDebug.enter()
@@ -325,18 +332,11 @@ class cCaIdentityRule {
 }
 
 //* **************************************************************
-/**
- *
- *
- * @class cCaRandomRule
-
- */
-
-class cCaRandomRule {
+class cCaRandomRule extends cCARuleMaker {
 	/**
-	 *
 	 * @static
-	 * @returns {*}
+	 * @override
+	 * @returns {cCARule}
 	 */
 	static makeRule() {
 		cDebug.enter()
@@ -356,19 +356,11 @@ class cCaRandomRule {
 }
 
 //###############################################################################
-/**
- *
- *
- * @class cCARuleWolfram1DImporter
-
- */
-
-class cCARuleWolfram1DImporter {
+class cCARuleWolfram1DImporter extends cCARuleMaker {
 	/**
-	 *
 	 * @static
-	 * @param {*} piRule
-	 * @returns {*}
+	 * @override
+	 * @returns {cCARule}
 	 */
 	static makeRule(piRule) {
 		cDebug.enter()
@@ -419,13 +411,11 @@ class cCARuleWolfram1DImporter {
  * @class cCARuleLifeImporter
 
  */
-class cCARuleLifeImporter {
-	//* **************************************************************
+class cCARuleLifeImporter extends cCARuleMaker {
 	/**
-	 *
 	 * @static
-	 * @param {*} psInput
-	 * @returns {*}
+	 * @override
+	 * @returns {cCARule}
 	 */
 	static makeRule(psInput) {
 		cDebug.enter()
@@ -600,6 +590,3 @@ class cCARuleModifier {
 		return poRule
 	}
 }
-
-// var oTester = new cCARuleBinaryImporter();
-// oTester.test();
