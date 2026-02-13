@@ -63,7 +63,7 @@ class cCACanvasEvent extends cBaseEvent {
 	static actions = {
 		grid_status: 'CAGS',
 		set_grid: 'CASG',
-		import_grid: 'CAIG',
+		import: 'CAIM',
 	}
 
 	static notify = {

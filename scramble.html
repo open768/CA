@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
 	<!--**************************************************************************
 	Copyright (C) Chicken Katsu 2013-2024
@@ -19,26 +20,40 @@
 	**************************************************************************-->
 
 	<title>Cellular Automata Encryption</title>
-	<!-- 3rd party libraries (bean) -->
-	<script  src="https://cdnjs.cloudflare.com/ajax/libs/bean/1.0.15/bean.min.js"></script>
-	
-	<!-- 3rd party libraries (jquery) -->
-	<script  src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-	<script  src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
-	<script  src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
-	<script  src="https://cdnjs.cloudflare.com/ajax/libs/jcanvas/23.0.0/umd/jcanvas.min.js"></script>
-	<script  src="https://cdn.jsdelivr.net/npm/js-md5@0.8.3/build/md5.min.js"></script>
-	<script  src="https://www.gstatic.com/charts/loader.js"></script>
-	
-	<!-- stylesheets -->
-	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">	
-	<link rel="stylesheet" href="css/CA.css">
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css">
+	<!--**************************************************************************
+	Cellular Automata Simulator © 2013-2026 by chickenkatsu.co.uk ( 
+	is licensed under Attribution-NonCommercial-ShareAlike 4.0 International. 
+	To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-sa/4.0/
+	contact: https://github.com/open768/
 
-	<!-- my useful functions -->
+	For licenses that allow for commercial use please contact cluck@chickenkatsu.co.uk
+
+	USE AT YOUR OWN RISK - NO GUARANTEES OF ANY FORM ARE EITHER EXPRESSED OR IMPLIED
+	**************************************************************************-->
+	<!-- 3rd party libraries (w3c) -->
+	<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+	<link rel="icon" href="https://www.chickenkatsu.co.uk/images/chicken_icon.png" type="image/png">
+
+	<!-- 3rd party libraries (bean) -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/bean/1.0.15/bean.min.js"></script>
+
+	<!-- 3rd party libraries (jquery) -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+	<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jcanvas/23.0.0/umd/jcanvas.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/js-md5@0.8.3/build/md5.min.js"></script>
+	<script src="https://www.gstatic.com/charts/loader.js"></script>
+
+	<!-- stylesheets -->
+	<link rel="stylesheet" href="css/CA.css">
+	<link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+
+	<!-- jsinc functions -->
 	<script src="../jsinc/ck-inc/jquery/jquery.common.js"></script>
 	<script src="../jsinc/ck-inc/common.js"></script>
 	<script src="../jsinc/ck-inc/debug.js"></script>
+	<script src="../jsinc/ck-inc/event.js"></script>
 	<script src="../jsinc/ck-inc/converter.js"></script>
 	<script src="../jsinc/ck-inc/sparse.js"></script>
 
@@ -52,11 +67,17 @@
 	<script src="js/CA/cagridinit.js"></script>
 	<script src="js/CA/cagridimporter.js"></script>
 	<script src="js/CA/caimporter.js"></script>
-	<script src="js/CA/cascrambler.js"></script>
-	
+
 	<!-- widgets for page -->
+	<script src="js/secrets.js"></script>
 	<script src="js/widgets/components/cacanvas.js"></script>
 	<script src="js/widgets/components/cajson.js"></script>
+	<script src="js/widgets/components/caremotecontrol.js"></script>
+	<script src="js/widgets/components/castatus.js"></script>
+	<script src="js/widgets/components/cagridinit.js"></script>
+
+	<!-- scrambler widgets -->
+	<script src="js/CA/cascrambler.js"></script>
 </head>
 
 <body>
@@ -64,28 +85,26 @@
 	<div id="crypt"></div>
 
 	<script language="javascript">
-	function onJqueryLoad(){
-		if ( !$.widget) {
-				$.error("JQuery UI is missing")
-				return
+		function onJqueryLoad() {
+			cSecrets.add_googletag()
+			$("#scrambler").cascrambler({ name: "cascramble" });
 		}
-		$("#infopanel").show()
-		$("#scrambler").cascrambler({name:"cascramble"});
-	}
-	$(onJqueryLoad);
+		$()(onJqueryLoad);
 	</script>
 	<p>
-	<div class="ui-widget" id="infopanel" style="display:none">
+	<div class="w3-card" id="infopanel">
 		<div class="ui-widget-header">Notice</div>
 		<div class="ui-widget-content">
 			<p>
 				This page is to test the scrambler function that uses a CA to read its instructions from.
-				please copy a CA into the clipboard before proceeding 
+				please copy a CARB from <a href="index.html" target="index">index.html</a> into the clipboard before
+				proceeding
 			</p>
 		</div>
 	</div>
-	<DIV ID="scrambler">
+	<DIV ID="scrambler" class="w3-card">
 		scrambler will go here
 	</DIV>
 </body>
+
 </html>

@@ -16,9 +16,9 @@ class cCAJsonTypes {
 
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 class cCAJson {
-	grid = null
-	grid_name = null
-	create_button = false
+	/** @type {cCAGrid} */ grid = null
+	/** @type {string} */ grid_name = null
+	/** @type {boolean} */ create_button = false
 
 	//#################################################################
 	// # Constructor
@@ -33,9 +33,6 @@ class cCAJson {
 		oElement = this.element
 
 		// check dependencies
-		if (!bean)
-			$.error('bean class is missing! check includes')
-
 		if (!oElement.tabs)
 			$.error('tabs class is missing! check includes')
 
@@ -147,14 +144,14 @@ class cCAJson {
 			var oJson = JSON.parse(sJson)
 		} catch (e) {
 			alert('unable to import JSON')
-			return
+			throw e
 		}
 
 		// create the grid
-		var oGrid = cCAGridJSONImporter.populate(this.grid_name, oJson)
+		/** @type {cCAGrid} */ var oGrid = cCAGridJSONImporter.populate(this.grid_name, oJson)
 
-		// fire events to tell other controls there is a new rule and grid in town
-		cCACanvasEvent.fire_event(this.grid_name, cCACanvasEvent.actions.import_grid, oGrid)
+		// fire event to triiger the use of the imported grid
+		cCACanvasEvent.fire_event(this.grid_name, cCACanvasEvent.actions.import, oGrid)
 		cDebug.leave()
 	}
 

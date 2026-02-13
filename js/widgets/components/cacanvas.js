@@ -79,15 +79,16 @@ class cCACanvas {
 	// #################################################################`
 	_onCACanvasEvent(poEvent) {
 		switch (poEvent.action) {
-			case cCACanvasEvent.actions.import_grid:
-				cDebug.write('action: import grid')
-				var oGrid = poEvent.data
+			case cCACanvasEvent.actions.import:
+				cDebug.write('action: import')
+				/** @type {cCAGrid} */ var oGrid = poEvent.data
 				this._set_grid(oGrid)
-				// draw the grid
+				
+				// clear and draw the grid
 				this._on_grid_clear()
 				this._drawGrid(oGrid.get_changed_cells())
 
-				// rule has been set
+				// inform subscribers
 				cCARuleEvent.fire_event(this.grid_name, cCARuleEvent.actions.update_rule, oGrid.get_rule())
 		}
 	}
