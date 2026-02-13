@@ -38,8 +38,9 @@ class cCARemoteControls {
 		oElement.addClass('ui-widget')
 
 		// subscribe to CAEvents
-		cCARuleEvent.subscribe(this.grid_name, poEvent => this.onCARuleEvent(poEvent))
-		cCACanvasEvent.subscribe(this.grid_name, poEvent => this.onCACanvasEvent(poEvent))
+		cCARuleEvent.subscribe(this.grid_name, poEvent => this.onRuleEvent(poEvent))
+		cCACanvasEvent.subscribe(this.grid_name, poEvent => this.onCanvasEvent(poEvent))
+		cCAGridEvent.subscribe(this.grid_name, poEvent => this.onGridEvent(poEvent))
 
 		// put something in the widget
 		oElement.empty()
@@ -65,26 +66,30 @@ class cCARemoteControls {
 		cCAActionEvent.fire_event(this.grid_name, cCAActionEvent.actions.control, iAction)
 	}
 
-	//* ***************************************************************************
-	onCACanvasEvent(poEvent) {
+	//* **************************************************************
+	//* Events
+	//* **************************************************************
+	onCanvasEvent(poEvent) {
 		cDebug.enter()
-		switch (poEvent.action) {
-			case cCACanvasEvent.actions.set_grid:
-				this.grid_set = true
-				this._enable_buttons()
-				break
-			case cCACanvasEvent.notify.nochange:
-				setTimeout(() => this._enable_controls(false), 100) // stop
+		if (poEvent.action === cCACanvasEvent.actions.set_grid) {
+			this.grid_set = true
+			this._enable_buttons()
 		}
 		cDebug.leave()
 	}
 
 	//* ***************************************************************************
-	onCARuleEvent(poEvent) {
+	onRuleEvent(poEvent) {
 		if (poEvent.action === cCARuleEvent.actions.set_rule) {
 			this.rule_set = true
 			this._enable_buttons()
 		}
+	}
+
+	//* ***************************************************************************
+	onGridEvent(poEvent) {
+		if (poEvent.action === cCAGridEvent.actions.nochange) 
+			setTimeout(() => this._enable_controls(false), 100) // stop		
 	}
 
 	//* **************************************************************

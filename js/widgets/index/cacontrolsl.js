@@ -57,7 +57,7 @@ class cCAControlsL {
 		this._init()
 
 		// subscribe to CA Events
-		cCARuleEvent.subscribe(this.grid_name, poEvent => this._onCARuleEvent(poEvent))
+		cCARuleEvent.subscribe(this.grid_name, poEvent => this._onRuleEvent(poEvent))
 	}
 
 	//#################################################################
@@ -199,7 +199,7 @@ class cCAControlsL {
 	// #################################################################`
 
 	//* ****************************************************************************
-	_onCARuleEvent(poEvent) {
+	_onRuleEvent(poEvent) {
 		cDebug.enter()
 		switch (poEvent.action) {
 			case cCARuleEvent.actions.update_rule:

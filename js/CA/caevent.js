@@ -65,8 +65,4 @@ class cCACanvasEvent extends cBaseEvent {
 		set_grid: 'CASG',
 		import: 'CAIM',
 	}
-
-	static notify = {
-		nochange: 'CNNC',
-	}
 }

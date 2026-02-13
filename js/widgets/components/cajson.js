@@ -46,7 +46,7 @@ class cCAJson {
 		this._init()
 
 		// subscribe to CA Events
-		cCACanvasEvent.subscribe(this.grid_name, poEvent => this._onCACanvasEvent(poEvent))
+		cCACanvasEvent.subscribe(this.grid_name, poEvent => this._onCanvasEvent(poEvent))
 		cDebug.leave()
 	}
 
@@ -156,7 +156,7 @@ class cCAJson {
 	}
 
 	//* ****************************************************************
-	_onCACanvasEvent(poEvent) {
+	_onCanvasEvent(poEvent) {
 		cDebug.enter()
 		if (poEvent.action === cCACanvasEvent.actions.set_grid) {
 			cDebug.write('set_grid')

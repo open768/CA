@@ -69,15 +69,15 @@ class cCACanvas {
 
 		// subscribe to CAEvents (see #set_grid for subscribing to grid events)
 
-		cCAActionEvent.subscribe(this.grid_name, poEvent => this._onCAActionEvent(poEvent))
-		cCAGridEvent.subscribe(this.grid_name, poEvent => this._onCAGridEvent(poEvent))
-		cCACanvasEvent.subscribe(this.grid_name, poEvent => this._onCACanvasEvent(poEvent))
+		cCAActionEvent.subscribe(this.grid_name, poEvent => this._onActionEvent(poEvent))
+		cCAGridEvent.subscribe(this.grid_name, poEvent => this._onGridEvent(poEvent))
+		cCACanvasEvent.subscribe(this.grid_name, poEvent => this._onCanvasEvent(poEvent))
 	}
 
 	//#################################################################
 	// # events
 	// #################################################################`
-	_onCACanvasEvent(poEvent) {
+	_onCanvasEvent(poEvent) {
 		switch (poEvent.action) {
 			case cCACanvasEvent.actions.import:
 				cDebug.write('action: import')
@@ -93,7 +93,8 @@ class cCACanvas {
 		}
 	}
 
-	_onCAGridEvent(poEvent) {
+	//* ***************************************************************
+	_onGridEvent(poEvent) {
 		switch (poEvent.action) {
 			case cCAGridEvent.notify.done:
 				this._on_grid_done(poEvent.data)
@@ -102,18 +103,19 @@ class cCACanvas {
 				this._on_grid_clear()
 				break
 			case cCAGridEvent.notify.nochange:
-				alert('no change detected in grid')
-				cCACanvasEvent.fire_event(this.grid_name, cCACanvasEvent.notify.nochange, null)
+				var oData = poEvent.data
+				if (oData == null || !oData.from_canvas)
+					alert('no change detected in grid')
 				break
 			case cCAGridEvent.notify.repeatPattern:
 				alert('repeat pattern seen')
-				cCACanvasEvent.fire_event(this.grid_name, cCACanvasEvent.notify.nochange, null)
+				cCAGridEvent.fire_event(this.grid_name, cCAGridEvent.actions.nochange, {from_canvas:true})
 				break
 		}
 	}
 
 	//* ***************************************************************
-	_onCAActionEvent(poEvent) {
+	_onActionEvent(poEvent) {
 		var oElement = this.element
 		var oGrid
 
