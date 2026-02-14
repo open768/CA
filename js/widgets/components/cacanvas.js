@@ -264,6 +264,10 @@ class cCACanvas {
 
 	//* ***************************************************************
 	_set_grid(poGrid) {
+		if (this.grid !== null){
+			this.grid.active = false 
+			this.grid = null
+		}
 		this.grid = poGrid
 
 		// publish grid details to anyone interested - eg to export grid data, or start/stop the grid

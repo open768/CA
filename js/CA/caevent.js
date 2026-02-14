@@ -1,3 +1,7 @@
+class CAEventSubscriber {
+	/** @type {boolean} */ active = true
+}
+
 //###############################################################################
 class CAException {
 	/**

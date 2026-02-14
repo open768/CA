@@ -26,7 +26,7 @@ class cCAGridCell {
  *  It contains the cells and applies the rules to them.
  *  It also fires events as the grid changes.
  */
-class cCAGrid {
+class cCAGrid extends CAEventSubscriber {
 	//#######################################################################
 	// # instance variables
 	//#######################################################################
@@ -40,7 +40,6 @@ class cCAGrid {
 	/** @type {Array} */ history = []
 	/** @type {cCAStatus} */ counts = new cCAStatus()
 
-
 	static HISTORY_LEN = 40
 
 	/**
@@ -51,6 +50,7 @@ class cCAGrid {
 	 * @param {number} piCols
 	 */
 	constructor(psName, piRows, piCols) {
+		super()
 		if (!md5)
 			$.error('js-md5 library missing')
 		if (!psName)
@@ -71,6 +71,9 @@ class cCAGrid {
 	// # event handlers
 	//#######################################################################
 	onCARuleEvent(poEvent) {
+		if (!this.active)
+			return
+
 		switch (poEvent.action) {
 			case cCARuleEvent.actions.set_rule:
 				this.set_rule(poEvent.data)
@@ -82,6 +85,9 @@ class cCAGrid {
 	}
 
 	onCAActionEvent(poEvent) {
+		if (!this.active)
+			return
+		
 		switch (poEvent.action) {
 			case cCAActionEvent.actions.grid_init:
 				this._init(poEvent.data)
@@ -96,6 +102,9 @@ class cCAGrid {
 	 * @param {cCAGridEvent} poEvent
 	 */
 	onCAGridEvent(poEvent) {
+		if (!this.active)
+			return
+
 		switch (poEvent.action) {
 			case cCAGridEvent.notify.changedCellsConsumed:
 				this._onNotifyCellsConsumed()
