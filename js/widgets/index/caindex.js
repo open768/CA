@@ -31,7 +31,7 @@ class cIndexWidget extends cJQueryWidgetClass{
 
 		// set basic stuff
 		var oCell
-		var oTopContainer = $('<div>')
+		var oTopContainer = $('<div>') //this will contain 3 cells
 		// ----------------------------------------------------------------------------------
 		// left controls - rule configuration
 		oCell = $('<div>', { class: 'w3-cell w3-cell-top w3-container' })
@@ -43,8 +43,7 @@ class cIndexWidget extends cJQueryWidgetClass{
 		// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 		oCell = $('<div>', { class: 'w3-cell w3-cell-top w3-container' })
 		var oCanvasDiv = $('<SPAN>', {
-			title: 'this is where the magic happens',
-			id: 'canvas',
+			title: 'this is where the magic happens'
 		})
 		oCanvasDiv.cacanvas({
 			cols: oOptions.cols,
@@ -69,8 +68,7 @@ class cIndexWidget extends cJQueryWidgetClass{
 		// JSON panel
 		oCell = $('<div>', { class: 'w3-cell' })
 		var oJsonDiv = $('<DIV>', {
-			title: 'json will appear here',
-			id: 'JsonPanel',
+			title: 'json will appear here'
 		})
 		oJsonDiv.cajson({ grid_name: sCaName })
 		oCell.append(oJsonDiv)

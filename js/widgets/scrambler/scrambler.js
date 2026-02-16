@@ -4,9 +4,6 @@ class cScrambleWidget extends cJQueryWidgetClass {
 		super(poOptions, poElement)
 
 		// check for classes
-		if (typeof cCARule !== 'function')
-			$.error('missing cCARule class')
-
 		if (!bean)
 			$.error('missing bean class')
 
@@ -19,8 +16,8 @@ class cScrambleWidget extends cJQueryWidgetClass {
 		var oOptions = this.options
 		var oElement = this.element 
 
-		container = $('<div>')
-		
+		var top_container = $('<div>')
+
 		//this container has 
 		// *an input box - in which text to be scrambled can be entered
 		// *an output box - in which output of the scrambler goes
