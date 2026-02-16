@@ -1,3 +1,9 @@
+const SCRAMBLE_CONTROL_IDS = {
+	input_text_ID: 'txi',
+	output_text_ID: 'txo',
+	base64_rule_text_ID: 'txr',
+}
+
 class cScrambleWidget extends cJQueryWidgetClass {
 
 	constructor(poOptions, poElement){
@@ -12,20 +18,34 @@ class cScrambleWidget extends cJQueryWidgetClass {
 
 	}
 
+	//this container has 
+	// *an input box - in which text to be scrambled can be entered
+	// *an output box - in which output of the scrambler goes
+	// * a rule input box - in which the rule for cellular automaata can be pasted
+	// * two grids
+	//   - one for the status of the scrambling
+	//  - the other for the cellular auomata
+	// *a button - to trigger the scrambling and descrambling
 	init(){
 		var oOptions = this.options
 		var oElement = this.element 
 
-		var top_container = $('<div>')
+		//------------------------------------------input text
+		var oInputDiv = $('<div>', {class: 'w3-card'})
+		{
+			var oHeader = $('<header>', {class: 'w3-container w3-blue'})
+			oHeader.append($('<h3>').text('Scrambler Input'))
+			oInputDiv.append(oHeader)
 
-		//this container has 
-		// *an input box - in which text to be scrambled can be entered
-		// *an output box - in which output of the scrambler goes
-		// * a rule input box - in which the rule for cellular automaata can be pasted
-		// * two grids
-		//   - one for the status of the scrambling
-		//  - the other for the cellular auomata
-		// *a button - to trigger the scrambling and descrambling
+			var oInputText = $('<textarea>', {
+				id: SCRAMBLE_CONTROL_IDS.input_text_ID,
+				placeholder: 'Enter text to be scrambled here'
+			})
+			oInputDiv.append(oInputText)
+			oElement.append(oInputDiv)	
+		}
+		
+
 	}
 }
 

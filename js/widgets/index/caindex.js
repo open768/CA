@@ -30,50 +30,57 @@ class cIndexWidget extends cJQueryWidgetClass{
 		var sCaName = oOptions.name
 
 		// set basic stuff
-		var oCell
 		var oTopContainer = $('<div>') //this will contain 3 cells
+		{
 		// ----------------------------------------------------------------------------------
 		// left controls - rule configuration
-		oCell = $('<div>', { class: 'w3-cell w3-cell-top w3-container' })
-		var oLeftCtrlDiv = $('<DIV>', { width: 350, id: 'leftControl' })
-		oLeftCtrlDiv.cacontrolsl({ grid_name: sCaName })
-		oCell.append(oLeftCtrlDiv)
-		oTopContainer.append(oCell)
+			var oCell = $('<div>', { class: 'w3-cell w3-cell-top w3-container' })
+			{
+				var oLeftCtrlDiv = $('<DIV>', { width: 350, id: 'leftControl' })
+				oLeftCtrlDiv.cacontrolsl({ grid_name: sCaName })
+				oCell.append(oLeftCtrlDiv)
+				oTopContainer.append(oCell)
+			}
 
-		// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-		oCell = $('<div>', { class: 'w3-cell w3-cell-top w3-container' })
-		var oCanvasDiv = $('<SPAN>', {
-			title: 'this is where the magic happens'
-		})
-		oCanvasDiv.cacanvas({
-			cols: oOptions.cols,
-			rows: oOptions.rows,
-			cell_size: oOptions.cell_size,
-			grid_name: sCaName,
-		})
-		oCell.append(oCanvasDiv)
-		oTopContainer.append(oCell)
+			// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+			oCell = $('<div>', { class: 'w3-cell w3-cell-top w3-container' })
+			{
+				var oCanvasDiv = $('<SPAN>', {
+					title: 'this is where the magic happens'
+				})
+				oCanvasDiv.cacanvas({
+					cols: oOptions.cols,
+					rows: oOptions.rows,
+					cell_size: oOptions.cell_size,
+					grid_name: sCaName,
+				})
+				oCell.append(oCanvasDiv)
+				oTopContainer.append(oCell)
+			}
 
-		// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-		// right panel - grid initialisation, status and run controls
-		oCell = $('<div>', { class: 'w3-cell w3-cell-top w3-container' })
-		var oRightCtrlDiv = $('<DIV>', { width: 240, id: 'rightControl' })
-		oRightCtrlDiv.cacontrolsr({ grid_name: sCaName })
-		oCell.append(oRightCtrlDiv)
-		oTopContainer.append(oCell)
-		oElement.append(oTopContainer)		
-
+			// right panel - grid initialisation, status and run controls
+			oCell = $('<div>', { class: 'w3-cell w3-cell-top w3-container' })
+			{
+				var oRightCtrlDiv = $('<DIV>', { width: 240, id: 'rightControl' })
+				oRightCtrlDiv.cacontrolsr({ grid_name: sCaName })
+				oCell.append(oRightCtrlDiv)
+				oTopContainer.append(oCell)
+				oElement.append(oTopContainer)		
+			}
+		}
 		// ----------------------------------------------------------------------------------
 		var oBottomContainer = $('<div>', { class: 'w3-cell-row' })
+		{
 		// JSON panel
-		oCell = $('<div>', { class: 'w3-cell' })
-		var oJsonDiv = $('<DIV>', {
-			title: 'json will appear here'
-		})
-		oJsonDiv.cajson({ grid_name: sCaName })
-		oCell.append(oJsonDiv)
-		oBottomContainer.append(oCell)
-		oElement.append(oBottomContainer)
+			oCell = $('<div>', { class: 'w3-cell' })
+			var oJsonDiv = $('<DIV>', {
+				title: 'json will appear here'
+			})
+			oJsonDiv.cajson({ grid_name: sCaName })
+			oCell.append(oJsonDiv)
+			oBottomContainer.append(oCell)
+			oElement.append(oBottomContainer)
+		}
 
 		// check clipboard
 		cBrowser.get_clipboard_permissions(true)
