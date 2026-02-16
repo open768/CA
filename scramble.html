@@ -19,7 +19,7 @@
 
 	**************************************************************************-->
 
-	<title>Cellular Automata Encryption</title>
+	<title>Cellular Automata Scrambler</title>
 	<!--**************************************************************************
 	Cellular Automata Simulator © 2013-2026 by chickenkatsu.co.uk ( 
 	is licensed under Attribution-NonCommercial-ShareAlike 4.0 International. 
@@ -80,12 +80,6 @@
 	<script src="js/widgets/components/castatus.js"></script>
 	<script src="js/widgets/components/cagridinit.js"></script>
 
-</head>
-
-<body>
-	<h2>Cellular Automata scrambler</h2>
-	<div id="crypt"></div>
-
 	<script language="javascript">
 		function onJqueryLoad() {
 			cSecrets.add_googletag()
@@ -93,10 +87,15 @@
 		}
 		$(onJqueryLoad);
 	</script>
-	<p>
-	<div class="w3-card" id="infopanel">
-		<div class="w3-container w3-blue">Notice</div>
-		<div class="ui-widget-content">
+</head>
+
+<body>
+	<!-- ****************************************************************************** -->
+	<div class="w3-card">
+		<header class="w3-container w3-blue">
+			<h3>Cellular Automata scrambler</h3>
+		</header>
+		<div class="w3-container">
 			<p>
 				This page is to test the scrambler function that uses a CA to read its instructions from.
 				please copy a CARB from <a href="index.html" target="index">index.html</a> into the clipboard before
@@ -105,9 +104,32 @@
 		</div>
 	</div>
 
+	<!-- ****************************************************************************** -->
 	<DIV ID="scrambler" class="w3-container w3-margin">
 		scrambler will go here
 	</DIV>
+
+	<!-- ****************************************************************************** -->
+	<DIV class="w3-card-4 w3-sand">
+		<header class="w3-container w3-yellow">
+			<h3>Information</h3>
+		</header>
+		<div class="w3-container">
+			<ul>
+				<li>copy the rule into the clipboard and for the editor <a target=editor href="editor.html">Click
+						here</a></li>
+				<li>for documentation see <a href="https://github.com/open768/CA/blob/master/%5Bdoc%5D"
+						target="_new">this document</a>
+				<li>we're on <a href="https://github.com/open768/CA">Github</a>
+				<li>for more CA rules see <a target="mcell"
+						href="http://psoup.math.wisc.edu/mcell/ca_rules.html">http://psoup.math.wisc.edu/mcell/ca_rules.html</a>
+			</ul>
+		</div>
+		<footer class="w3-container w3-white">
+			<a href="https://www.chickenkatsu.co.uk" target="_blank"><img
+					src="https://www.chickenkatsu.co.uk/images/chicken_icon.png" border="0"> We are Chicken Katsu </a>
+		</footer>
+
 </body>
 
 </html>
