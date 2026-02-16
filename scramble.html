@@ -67,6 +67,10 @@
 	<script src="js/CA/cagridinit.js"></script>
 	<script src="js/CA/cagridimporter.js"></script>
 	<script src="js/CA/caimporter.js"></script>
+	<script src="js/CA/cascrambler.js"></script>
+
+	<!-- scrambler widgets -->
+	<script src="js/widgets/scrambler/scrambler.js"></script>
 
 	<!-- widgets for page -->
 	<script src="js/secrets.js"></script>
@@ -76,8 +80,6 @@
 	<script src="js/widgets/components/castatus.js"></script>
 	<script src="js/widgets/components/cagridinit.js"></script>
 
-	<!-- scrambler widgets -->
-	<script src="js/CA/cascrambler.js"></script>
 </head>
 
 <body>
@@ -87,7 +89,7 @@
 	<script language="javascript">
 		function onJqueryLoad() {
 			cSecrets.add_googletag()
-			$("#scrambler").cascrambler({ name: "cascramble" });
+			$("#scrambler").cascrambler({ base_name: "cascramble" });
 		}
 		$()(onJqueryLoad);
 	</script>

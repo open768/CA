@@ -7,27 +7,13 @@ https://creativecommons.org/licenses/by/4.0/legalcode
 For licenses that allow for commercial use please contact cluck@chickenkatsu.co.uk
 // USE AT YOUR OWN RISK - NO GUARANTEES OF ANY FORM ARE EITHER EXPRESSED OR IMPLIED
 **************************************************************************/
+class CAIndex{
+	options = null
+	element = null
 
-// %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-$.widget('ck.caindex', {
-	//#################################################################
-	// # Definition
-	//#################################################################
-	options: {
-		cols: 100,
-		rows: 100,
-		cell_size: 5,
-		name: null,
-	},
-
-	//#################################################################
-	// # Constructor
-	// #################################################################`
-	_create: function () {
-		var oOptions, oElement
-
-		oOptions = this.options
-		oElement = this.element
+	constructor(poOptions, poElement){
+		this.options = poOptions
+		this.element = poElement
 
 		// check for classes
 		if (typeof cCARule !== 'function')
@@ -36,17 +22,20 @@ $.widget('ck.caindex', {
 		if (!bean)
 			$.error('missing bean class')
 
-		if (!oOptions.name)
-			$.error('missing name')
+		if (!poOptions.name)
+			$.error('missing name')	
+
+		poElement.uniqueId()
+		poElement.empty()
+	}
+
+	init(){
+		var oOptions = this.options
+		var oElement = this.element
 
 		var sCaName = oOptions.name
 
 		// set basic stuff
-		oElement.uniqueId()
-
-		// machine has 3 child widgets: control panel and machine canvas, status
-		// widgets will subscribe and publish events themselves
-		oElement.empty()
 		var oCell
 		var oContainer = $('<div>')
 		// ----------------------------------------------------------------------------------
@@ -100,5 +89,26 @@ $.widget('ck.caindex', {
 
 		// ---------------informs subscribers that UI is ready -------------------------------
 		cCAActionEvent.fire_event(oOptions.name, cCAActionEvent.actions.ready, null)
+	}
+}
+
+// %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+$.widget('ck.caindex', {
+	//#################################################################
+	// # Definition
+	//#################################################################
+	options: {
+		cols: 100,
+		rows: 100,
+		cell_size: 5,
+		name: null,
 	},
+
+	//#################################################################
+	// # Constructor
+	// #################################################################`
+	_create: function () {
+		var oWidget = new CAIndex(this.options, this.element)	
+		oWidget.init()
+	}
 })

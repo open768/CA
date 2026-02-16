@@ -15,64 +15,20 @@ You the consumer of this application are entirely responsible for importing this
 
 **************************************************************************/
 /** Scrambler Events */
-class cCAScramblerEvent extends cCABaseEvent{
-	/**
-	 * Description placeholder
-	 * 
-	 *
-	 * @static
-	 * @type {string}
-	 */
-	static hook = "cascramev"
-	/**
-	 * Description placeholder
-	 * 
-	 *
-	 * @static
-	 * @type {{ general: string; progress: string; }}
-	 */
+class cCAScramblerEvent extends cBaseEvent{
+	static event_type_id = "cascramev"
+
 	static types = {
 		general: "G",
 		progress: "P"
 	}
 	
-	/**
-	 * Description placeholder
-	 * 
-	 *
-	 * @static
-	 * @type {{ status: string; }}
-	 */
 	static actions = {
 		status:"S"
 	}
-
-	/**
-	 * Description placeholder
-	 * 
-	 *
-	 * @param {*} poObject
-	 */
-	trigger(poObject){
-		bean.fire( poObject, this.constructor.hook, this)
-	}
 }
 
-/**
- * Description placeholder
- * 
- *
- * @class cCAScramblerTypes
- 
- */
 class cCAScramblerTypes{
-	/**
-	 * Description placeholder
-	 * 
-	 *
-	 * @static
-	 * @type {{ dormant: any; initialRuns: number; }}
-	 */
 	static status = {
 		dormant: null,
 		initialRuns: 1
@@ -116,9 +72,9 @@ class cCAScrambler{
 		var oThis = this /** @type cCAScrambler */
 
 		//subscribe to grid events
-		cCAEventHelper.subscribe_to_grid_events(this.grid.name, (poEvent)=>{
+		cCAGridEvent.subscribe(this.grid.name, poEvent=>
 			oThis.onCAGridEvent(poEvent)
-		})
+		)
 	}
 	
 	//*******************************************************************************
@@ -128,20 +84,13 @@ class cCAScrambler{
 	async perform_inital_runs(){
 		if (this.initial_runs_completed < this.inital_runs){
 			this.status = cCAScramblerTypes.status.initialRuns
-			var oActionEvent = new cCAActionEvent(this.grid.name, cCAGridTypes.actions.step)
+			var oActionEvent = new cCAActionEvent(this.grid.name, cCAActionEvent.actions.step)
 			oActionEvent.trigger()
 		}else
 			throw new Error("not implemented")
 	}
 	
 	//*******************************************************************************
-	/**
-	 * Description placeholder
-	 * 
-	 *
-	 * @async
-	 * @returns {*}
-	 */
 	async scramble(){ 
 		var oScramblerEvent = new cCAScramblerEvent( cCAScramblerEvent.types.general, cCAScramblerEvent.actions.status, "Started scrambler")
 		oScramblerEvent.trigger()
@@ -150,10 +99,7 @@ class cCAScrambler{
 		this.perform_inital_runs()
 	}
 
-	/**
-	 * Description
-	 * @param {cCAGridEvent} poEvent
-	 */
+	//*******************************************************************************
 	onCAGridEvent(poEvent){
 		cDebug.write(poEvent)
 		if (poEvent.action == cCAGridEvent.notify.done)
