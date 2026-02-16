@@ -1,5 +1,8 @@
 class CAEventSubscriber {
 	/** @type {boolean} */ active = true
+	unsubscribe() {
+		this.active = false
+	}
 }
 
 //###############################################################################

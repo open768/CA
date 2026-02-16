@@ -265,7 +265,7 @@ class cCACanvas {
 	//* ***************************************************************
 	_set_grid(poGrid) {
 		if (this.grid !== null){
-			this.grid.active = false 
+			this.grid.unsubscribe()
 			this.grid = null
 		}
 		this.grid = poGrid
