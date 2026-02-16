@@ -19,6 +19,8 @@ class cScrambleWidget extends cJQueryWidgetClass {
 		var oOptions = this.options
 		var oElement = this.element 
 
+		container = $('<div>')
+		
 		//this container has 
 		// *an input box - in which text to be scrambled can be entered
 		// *an output box - in which output of the scrambler goes
