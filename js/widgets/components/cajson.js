@@ -15,7 +15,7 @@ class cCAJsonTypes {
 }
 
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-class cCAJson {
+class cCAJson extends cJQueryWidgetClass {
 	/** @type {cCAGrid} */ grid = null
 	/** @type {string} */ grid_name = null
 	/** @type {boolean} */ create_button = false
@@ -24,8 +24,9 @@ class cCAJson {
 	// # Constructor
 	// #################################################################`
 	constructor(poOptions, poElement) {
+		super(poOptions, poElement)
+
 		cDebug.enter()
-		this.element = poElement
 		this.grid_name = poOptions.grid_name
 		this.create_button = poOptions.create_button
 
@@ -37,12 +38,10 @@ class cCAJson {
 			$.error('tabs class is missing! check includes')
 
 		// set basic stuff
-		oElement.uniqueId()
 		oElement.addClass('ui-widget')
 		$(oElement).tooltip()
 
 		// put something in the widget
-		oElement.empty()
 		this._init()
 
 		// subscribe to CA Events

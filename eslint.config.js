@@ -30,6 +30,12 @@ export default defineConfig([
 			}],
 			"no-unused-private-class-members": "warn",
 
+			// Prevent redeclaring base-class fields like `element`
+			"no-restricted-syntax": ["warn", {
+				"selector": "ClassDeclaration[superClass.name='cJQueryWidgetClass'] PropertyDefinition[key.name='element']",
+				"message": "Do not redeclare `element` in subclasses of cJQueryWidgetClass; it is set by the base class.",
+			}],
+
 			// 1) No trailing semicolons (auto-fixable)
 			// Note: core `semi` is deprecated from ESLint 8.53 but still works in ESLint 9;
 			// it may be removed in ESLint 11. For now this will auto-remove semicolons.

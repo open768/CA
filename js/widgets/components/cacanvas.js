@@ -15,7 +15,7 @@ uses Jcanvas https://github.com/caleb531/jcanvas/ https://projects.calebevans.me
 
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-class cCACanvas {
+class cCACanvas extends cJQueryWidgetClass {
 	//#################################################################
 	// # Definition
 	//#################################################################
@@ -46,7 +46,8 @@ class cCACanvas {
 	//#################################################################
 	// # Constructor
 	// #################################################################`
-	constructor(poOptions, poElement) {
+	constructor(poOptions, poElement)  {
+		super(poOptions, poElement)	
 		// check dependencies
 		if (!bean)
 			$.error('bean class is missing! check includes')
@@ -56,7 +57,6 @@ class cCACanvas {
 
 		this.interactive = poOptions.interactive
 
-		this.element = poElement
 		this.rows = poOptions.rows
 		this.cols = poOptions.cols
 		this.grid_name = poOptions.grid_name

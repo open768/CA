@@ -160,18 +160,13 @@ $.widget('ck.caeditwidget', {
 //#######################################################################
 //#
 //#######################################################################
-class cCAEditorWidget {
-	options = null
-	element = null
+class cCAEditorWidget extends cJQueryWidgetClass {
 	rule = null
 
 	//* ***************************************************************
 	constructor(poOptions, poElement) {
-		this.options = poOptions
-		this.element = poElement
+		super(poOptions, poElement)
 
-		// set basic stuff
-		poElement.uniqueId()
 
 		// -------------------------------------------------------------------
 		this._render()
@@ -198,7 +193,6 @@ class cCAEditorWidget {
 	_render() {
 		var oElement = this.element
 
-		oElement.empty()
 		oElement.addClass('ui-widget')
 
 		var oDiv, sID

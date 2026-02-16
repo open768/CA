@@ -7,13 +7,10 @@ https://creativecommons.org/licenses/by/4.0/legalcode
 For licenses that allow for commercial use please contact cluck@chickenkatsu.co.uk
 // USE AT YOUR OWN RISK - NO GUARANTEES OF ANY FORM ARE EITHER EXPRESSED OR IMPLIED
 **************************************************************************/
-class CAIndex{
-	options = null
-	element = null
+class cIndexWidget extends cJQueryWidgetClass{
 
 	constructor(poOptions, poElement){
-		this.options = poOptions
-		this.element = poElement
+		super(poOptions, poElement)
 
 		// check for classes
 		if (typeof cCARule !== 'function')
@@ -24,9 +21,6 @@ class CAIndex{
 
 		if (!poOptions.name)
 			$.error('missing name')	
-
-		poElement.uniqueId()
-		poElement.empty()
 	}
 
 	init(){
@@ -108,7 +102,7 @@ $.widget('ck.caindex', {
 	// # Constructor
 	// #################################################################`
 	_create: function () {
-		var oWidget = new CAIndex(this.options, this.element)	
+		var oWidget = new cIndexWidget(this.options, this.element)	
 		oWidget.init()
 	}
 })

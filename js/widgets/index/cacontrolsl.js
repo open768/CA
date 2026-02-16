@@ -19,20 +19,17 @@ const CONTROL_IDS = {
 
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 //* this could be broken down into smaller widgets
-class cCAControlsL {
+class cCAControlsL extends cJQueryWidgetClass {
 	/** @type cCAGrid */ grid = null
-
 	/** @type cCARule */ rule = null
-
-	element = null
 	/** @type string */ grid_name = null
 
 	//#################################################################
 	// # Constructor
 	// #################################################################`
 	constructor(poOptions, poElement) {
+		super(poOptions, poElement)
 		cDebug.enter()
-		this.element = poElement
 
 		var oElement = this.element
 		this.grid_name = poOptions.grid_name
@@ -53,7 +50,6 @@ class cCAControlsL {
 		$(oElement).tooltip()
 
 		// put something in the widget
-		oElement.empty()
 		this._init()
 
 		// subscribe to CA Events

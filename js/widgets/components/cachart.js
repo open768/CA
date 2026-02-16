@@ -30,27 +30,24 @@ class cCAChartTypes {
 //#################################################################
 // # Options
 //#################################################################
-class cCAChart {
+class cCAChart extends cJQueryWidgetClass {
 	runs = 0
 	vis_data = null
 	chart = null
-	element = null
 	grid_name = null
 
 	constructor(poOptions, poElement) {
+		super(poOptions, poElement)
 		// checks
 		if (!poOptions.grid_name)
 			$.error('grid name not provided')
 
 		// store the element
-		this.element = poElement
 		this.grid_name = poOptions.grid_name
 
 		var oElement = this.element
 
 		// basic stuff
-		oElement.empty()
-		oElement.uniqueId()
 		oElement.addClass('ui-widget')
 		oElement.width(poOptions.width)
 

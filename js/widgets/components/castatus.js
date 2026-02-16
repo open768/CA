@@ -18,8 +18,7 @@ class cCAStatusTypes {
 //###################################################################
 //#
 //###################################################################
-class cCAStatusWidget {
-	element = null
+class cCAStatusWidget extends cJQueryWidgetClass {
 	grid_name = null
 	HEAP_INTERVAL = 100
 	heap_timer_running = false
@@ -27,14 +26,11 @@ class cCAStatusWidget {
 
 	//* **************************************************************
 	constructor(poOptions, poElement) {
-		this.element = poElement
+		super(poOptions, poElement)
 		this.grid_name = poOptions.grid_name
 
-		var oElement = this.element
-
 		// set basic stuff
-		oElement.uniqueId()
-		oElement.addClass('ui-widget')
+		poElement.addClass('ui-widget')
 
 		// check dependencies
 		if (!bean)
@@ -45,7 +41,6 @@ class cCAStatusWidget {
 		cCAActionEvent.subscribe(this.grid_name, poEvent => this.onCAActionEvent(poEvent))
 
 		// put something in the widget
-		oElement.empty()
 		this._init()
 	}
 

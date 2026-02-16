@@ -11,23 +11,18 @@ For licenses that allow for commercial use please contact cluck@chickenkatsu.co.
 //###################################################################
 //#
 //###################################################################
-class cCAGridStateInit {
-	element = null
+class cCAGridStateInit extends cJQueryWidgetClass {
 	grid_name = null
 
 	//* **************************************************************
 	constructor(poOptions, poElement) {
-		this.element = poElement
+		super(poOptions, poElement)
 		this.grid_name = poOptions.grid_name
 
-		var oElement = this.element
-
 		// set basic stuff
-		oElement.uniqueId()
-		oElement.addClass('ui-widget')
+		poElement.addClass('ui-widget')
 
 		// put something in the widget
-		oElement.empty()
 		this._init()
 	}
 
