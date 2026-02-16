@@ -31,14 +31,14 @@ class cIndexWidget extends cJQueryWidgetClass{
 
 		// set basic stuff
 		var oCell
-		var oContainer = $('<div>')
+		var oTopContainer = $('<div>')
 		// ----------------------------------------------------------------------------------
 		// left controls - rule configuration
 		oCell = $('<div>', { class: 'w3-cell w3-cell-top w3-container' })
 		var oLeftCtrlDiv = $('<DIV>', { width: 350, id: 'leftControl' })
 		oLeftCtrlDiv.cacontrolsl({ grid_name: sCaName })
 		oCell.append(oLeftCtrlDiv)
-		oContainer.append(oCell)
+		oTopContainer.append(oCell)
 
 		// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 		oCell = $('<div>', { class: 'w3-cell w3-cell-top w3-container' })
@@ -53,7 +53,7 @@ class cIndexWidget extends cJQueryWidgetClass{
 			grid_name: sCaName,
 		})
 		oCell.append(oCanvasDiv)
-		oContainer.append(oCell)
+		oTopContainer.append(oCell)
 
 		// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 		// right panel - grid initialisation, status and run controls
@@ -61,12 +61,11 @@ class cIndexWidget extends cJQueryWidgetClass{
 		var oRightCtrlDiv = $('<DIV>', { width: 240, id: 'rightControl' })
 		oRightCtrlDiv.cacontrolsr({ grid_name: sCaName })
 		oCell.append(oRightCtrlDiv)
-		oContainer.append(oCell)
-		oContainer.append(oCell)
-		oElement.append(oContainer)
+		oTopContainer.append(oCell)
+		oElement.append(oTopContainer)		
 
 		// ----------------------------------------------------------------------------------
-		oContainer = $('<div>', { class: 'w3-cell-row' })
+		var oBottomContainer = $('<div>', { class: 'w3-cell-row' })
 		// JSON panel
 		oCell = $('<div>', { class: 'w3-cell' })
 		var oJsonDiv = $('<DIV>', {
@@ -75,8 +74,8 @@ class cIndexWidget extends cJQueryWidgetClass{
 		})
 		oJsonDiv.cajson({ grid_name: sCaName })
 		oCell.append(oJsonDiv)
-		oContainer.append(oCell)
-		oElement.append(oContainer)
+		oBottomContainer.append(oCell)
+		oElement.append(oBottomContainer)
 
 		// check clipboard
 		cBrowser.get_clipboard_permissions(true)
