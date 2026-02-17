@@ -39,8 +39,8 @@ class cIndexWidget extends cJQueryWidgetClass{
 				var oLeftCtrlDiv = $('<DIV>', { width: 350, id: 'leftControl' })
 				oLeftCtrlDiv.cacontrolsl({ grid_name: sCaName })
 				oCell.append(oLeftCtrlDiv)
-				oTopContainer.append(oCell)
 			}
+			oTopContainer.append(oCell)
 
 			// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 			oCell = $('<div>', { class: 'w3-cell w3-cell-top w3-container' })
@@ -55,8 +55,8 @@ class cIndexWidget extends cJQueryWidgetClass{
 					grid_name: sCaName,
 				})
 				oCell.append(oCanvasDiv)
-				oTopContainer.append(oCell)
 			}
+			oTopContainer.append(oCell)
 
 			// right panel - grid initialisation, status and run controls
 			oCell = $('<div>', { class: 'w3-cell w3-cell-top w3-container' })
@@ -65,22 +65,24 @@ class cIndexWidget extends cJQueryWidgetClass{
 				oRightCtrlDiv.cacontrolsr({ grid_name: sCaName })
 				oCell.append(oRightCtrlDiv)
 				oTopContainer.append(oCell)
-				oElement.append(oTopContainer)		
 			}
+			oElement.append(oTopContainer)		
 		}
 		// ----------------------------------------------------------------------------------
 		var oBottomContainer = $('<div>', { class: 'w3-cell-row' })
 		{
 		// JSON panel
 			oCell = $('<div>', { class: 'w3-cell' })
-			var oJsonDiv = $('<DIV>', {
-				title: 'json will appear here'
-			})
-			oJsonDiv.cajson({ grid_name: sCaName })
-			oCell.append(oJsonDiv)
+			{
+				var oJsonDiv = $('<DIV>', {
+					title: 'json will appear here'
+				})
+				oJsonDiv.cajson({ grid_name: sCaName })
+				oCell.append(oJsonDiv)
+			}
 			oBottomContainer.append(oCell)
-			oElement.append(oBottomContainer)
 		}
+		oElement.append(oBottomContainer)
 
 		// check clipboard
 		cBrowser.get_clipboard_permissions(true)
