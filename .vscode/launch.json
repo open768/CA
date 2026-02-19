@@ -19,6 +19,12 @@
         {
             "type": "chrome",
             "request": "launch",
+            "name": "scramble",
+            "file": "scramble.html",
+        },
+        {
+            "type": "chrome",
+            "request": "launch",
             "name": "test boredom",
             "file": "test/test-boredom.html"
         }

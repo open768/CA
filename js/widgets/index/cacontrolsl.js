@@ -35,14 +35,8 @@ class cCAControlsL extends cJQueryWidgetClass {
 		this.grid_name = poOptions.grid_name
 
 		// check dependencies
-		if (!bean)
-			$.error('bean class is missing! check includes')
-
 		if (!oElement.selectmenu)
 			$.error('selectmenu class is missing! check includes')
-
-		if (!cCARuleBase64Importer)
-			$.error('cCARuleBase64Importer class is missing! check includes')
 
 		// set basic stuff
 		oElement.addClass('ui-widget')
@@ -193,8 +187,6 @@ class cCAControlsL extends cJQueryWidgetClass {
 	//#################################################################
 	// # EVENTS
 	// #################################################################`
-
-	//* ****************************************************************************
 	_onRuleEvent(poEvent) {
 		cDebug.enter()
 		switch (poEvent.action) {
@@ -207,12 +199,13 @@ class cCAControlsL extends cJQueryWidgetClass {
 		cDebug.leave()
 	}
 
-	//* ***************************************************************************
+	//#################################################################
+	// # callbacks
+	// #################################################################`
 	_onSetRepeaterClick() {
 		var oElement = this.element
 
-		var sID = cJquery.child_ID(oElement, LEFT_CTRL_IDS.repeater_ID)
-		var oInput = $('#' + sID)
+		var oInput = cJquery.get_child(oElement, LEFT_CTRL_IDS.repeater_ID)
 		var sInput = oInput.val().trim()
 		if (sInput === '') {
 			alert('empty input string :-(')
@@ -230,8 +223,8 @@ class cCAControlsL extends cJQueryWidgetClass {
 	_onSetRuleClick() {
 		var oElement = this.element
 
-		var oTextArea = $('#' + cJquery.child_ID(oElement, LEFT_CTRL_IDS.rule_text_ID))
-		var oRuleTypeSelect = $('#' + cJquery.child_ID(oElement, LEFT_CTRL_IDS.rule_type_id))
+		var oTextArea = cJquery.get_child(oElement, LEFT_CTRL_IDS.rule_text_ID)
+		var oRuleTypeSelect = cJquery.get_child(oElement, LEFT_CTRL_IDS.rule_type_id)
 
 		if (!oRuleTypeSelect.val()) {
 			alert('choose a rule type to import')
@@ -259,7 +252,7 @@ class cCAControlsL extends cJQueryWidgetClass {
 					oRule = cCARuleBase64Importer.makeRule(oTextArea.val())
 
 					// set the boredom if chosen
-					var oBoredomList = $('#' + cJquery.child_ID(oElement, LEFT_CTRL_IDS.boredom_ID))
+					var oBoredomList = cJquery.get_child(oElement, LEFT_CTRL_IDS.boredom_ID)
 					if (!isNaN(oBoredomList.val()))
 						oRule.boredom_count = oBoredomList.val()
 					else
@@ -283,8 +276,8 @@ class cCAControlsL extends cJQueryWidgetClass {
 	_onTextareaChange() {
 		var oElement = this.element
 
-		var oTextArea = $('#' + cJquery.child_ID(oElement, LEFT_CTRL_IDS.rule_text_ID))
-		var oSelect = $('#' + cJquery.child_ID(oElement, LEFT_CTRL_IDS.rule_type_id))
+		var oTextArea = cJquery.get_child(oElement, LEFT_CTRL_IDS.rule_text_ID)
+		var oSelect = cJquery.get_child(oElement, LEFT_CTRL_IDS.rule_type_id)
 		var sSelected = oSelect.val()
 		if (sSelected) {
 			var iSelected = parseInt(sSelected)
@@ -300,8 +293,8 @@ class cCAControlsL extends cJQueryWidgetClass {
 	_onPresetsClick(poEvent) {
 		var oElement = this.element
 
-		var oTextArea = $('#' + cJquery.child_ID(oElement, LEFT_CTRL_IDS.rule_text_ID))
-		var oRulesSelect = $('#' + cJquery.child_ID(oElement, LEFT_CTRL_IDS.rule_type_id))
+		var oTextArea = cJquery.get_child(oElement, LEFT_CTRL_IDS.rule_text_ID)
+		var oRulesSelect = cJquery.get_child(oElement, LEFT_CTRL_IDS.rule_type_id)
 
 		var sPreset = $(poEvent.target).val()
 		if (!sPreset)
@@ -332,7 +325,7 @@ class cCAControlsL extends cJQueryWidgetClass {
 	// #################################################################`
 	_set_status(psText) {
 		var oElement = this.element
-		var oSpan = $('#' + cJquery.child_ID(oElement, LEFT_CTRL_IDS.status_ID))
+		var oSpan = cJquery.get_child(oElement, LEFT_CTRL_IDS.status_ID)
 		oSpan.html(psText)
 	}
 
@@ -345,12 +338,12 @@ class cCAControlsL extends cJQueryWidgetClass {
 		this.rule = poRule
 
 		// updatethe textarea with the rule and copy to clipboard
-		var oTextArea = $('#' + cJquery.child_ID(oElement, LEFT_CTRL_IDS.rule_text_ID))
+		var oTextArea = cJquery.get_child(oElement, LEFT_CTRL_IDS.rule_text_ID)
 		oTextArea.val(s64)
 		cBrowser.copy_to_clipboard(s64)
 
 		// update the rule type and trigger the rule set
-		var oSelect = $('#' + cJquery.child_ID(oElement, LEFT_CTRL_IDS.rule_type_id))
+		var oSelect = cJquery.get_child(oElement, LEFT_CTRL_IDS.rule_type_id)
 		oSelect.val(CARULE_TYPES.base64)
 		oSelect.selectmenu('refresh')
 		this._onSetRuleClick()

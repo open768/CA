@@ -33,12 +33,15 @@ class cScrambleWidget extends cJQueryWidgetClass {
 	//*************************************************************************
 	render(){
 
-		//------------------------------------------input text
 		this._render_inputs()
 		this._render_rule()
 		this._render_grids()
 		this._render_outputs()
 		this._render_importer()
+
+		cCAGridEvent.subscribe( this.options.name, poEvent => this.onGridEvent(poEvent))
+		cCACanvasEvent.subscribe( this.options.name, poEvent => this.onCanvasEvent(poEvent))
+		cCARuleEvent.subscribe( this.options.name,	 poEvent => this.onRuleEvent(poEvent))
 	}
 
 	//*************************************************************************
@@ -210,7 +213,7 @@ class cScrambleWidget extends cJQueryWidgetClass {
 	}
 
 	//*************************************************************************
-	//* event handlers
+	//* callbacks
 	//*************************************************************************
 	_onInputStepsBlur(){
 		var oElement = this.element
@@ -226,8 +229,42 @@ class cScrambleWidget extends cJQueryWidgetClass {
 		return bValid
 	}
 
+	//*************************************************************************
 	onClickScramble(){
 		alert("not implemented yet")
+	}
+
+	//*************************************************************************
+	//* event handlers
+	//*************************************************************************
+	onGridEvent( poEvent ){
+
+	}
+
+	//*************************************************************************
+	onCanvasEvent( poEvent ){
+
+	}
+
+	//*************************************************************************
+	onRuleEvent( poEvent ){
+		switch (poEvent.action) {
+			case cCARuleEvent.actions.update_rule:
+				cDebug.write('update_rule')
+				var oRule = poEvent.data
+				this._update_rule_text(oRule)
+				break
+		}
+	}
+
+	//*************************************************************************
+	//* privates
+	//*************************************************************************
+	_update_rule_text(poRule){
+		var oElement = this.element
+		var s64 = cCARuleBase64Exporter.export(poRule, CA_STATES.default_state)
+		var oTextArea = cJquery.get_child(oElement, SCRAMBLE_CONTROL_IDS.base64_rule_text_ID)
+		oTextArea.val(s64)
 	}
 }
 
