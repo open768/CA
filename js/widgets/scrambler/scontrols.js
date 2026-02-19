@@ -5,7 +5,7 @@ const SCRAMBLE_CONTROL_IDS = {
 	base64_rule_text_ID: 'd',
 }
 const SCRAMBLE_CONSTS={
-	MAX_INPUT_LENGTH: 200,
+	MAX_INPUT_LENGTH: null,
 	GRID_ROWS: 100,
 	GRID_COLS: 100,
 	CELL_SIZE:5,
@@ -157,10 +157,11 @@ class cScrambleWidget extends cJQueryWidgetClass {
 				oInputDiv.append(oHeader)
 			}
 
+			SCRAMBLE_CONSTS.MAX_INPUT_LENGTH = Math.floor(SCRAMBLE_CONSTS.GRID_ROWS * SCRAMBLE_CONSTS.GRID_COLS / cConverterEncodings.BASE64_BITS)
 			var sID = cJquery.child_ID(oElement, SCRAMBLE_CONTROL_IDS.input_text_ID)
 			var oInputText = $('<textarea>', {
 				id: sID,
-				placeholder: 'Enter text to be scrambled here, it must contain at most 200',
+				placeholder: 'Enter text to be scrambled here, it must contain at most ' + SCRAMBLE_CONSTS.MAX_INPUT_LENGTH + ' characters',
 				rows: 10,
 				style: "width: 100%;"
 			})
