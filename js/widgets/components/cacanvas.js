@@ -80,6 +80,9 @@ class cCACanvas extends cJQueryWidgetClass {
 	_onCanvasEvent(poEvent) {
 		switch (poEvent.action) {
 			case cCACanvasEvent.actions.import:
+				if (this.canvas == null)
+					$.error('canvas not initialised yet')
+				
 				cDebug.write('action: import')
 				/** @type {cCAGrid} */ var oGrid = poEvent.data
 				this._set_grid(oGrid)

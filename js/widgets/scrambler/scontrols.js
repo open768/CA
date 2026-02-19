@@ -39,9 +39,11 @@ class cScrambleWidget extends cJQueryWidgetClass {
 		this._render_outputs()
 		this._render_importer()
 
-		cCAGridEvent.subscribe( this.options.name, poEvent => this.onGridEvent(poEvent))
-		cCACanvasEvent.subscribe( this.options.name, poEvent => this.onCanvasEvent(poEvent))
-		cCARuleEvent.subscribe( this.options.name,	 poEvent => this.onRuleEvent(poEvent))
+		var sName = this.options.name
+		cCAGridEvent.subscribe( sName, poEvent => this.onGridEvent(poEvent))
+		cCACanvasEvent.subscribe( sName, poEvent => this.onCanvasEvent(poEvent))
+		cCARuleEvent.subscribe( sName,	 poEvent => this.onRuleEvent(poEvent))
+		cCAActionEvent.fire_event(sName, cCAActionEvent.actions.ready)
 	}
 
 	//*************************************************************************

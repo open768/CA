@@ -5,28 +5,22 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "index debug",
             "type": "chrome",
             "request": "launch",
-            "name": "index debug",
             "file": "index.html?debug",
         },
         {
+            "name": "index",
             "type": "chrome",
             "request": "launch",
-            "name": "index",
             "file": "index.html",
         },
         {
-            "type": "chrome",
-            "request": "launch",
             "name": "scramble",
-            "file": "scramble.html",
-        },
-        {
             "type": "chrome",
             "request": "launch",
-            "name": "test boredom",
-            "file": "test/test-boredom.html"
+            "file": "scramble.html?debug",
         }
     ]
 }
