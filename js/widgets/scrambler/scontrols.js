@@ -2,7 +2,7 @@ const SCRAMBLE_CONTROL_IDS = {
 	input_text_ID: 'a',
 	input_steps_ID: 'b',
 	output_text_ID: 'c',
-	base64_rule_text_ID: 'd',
+	rule_text_id: 'd',
 }
 const SCRAMBLE_CONSTS={
 	MAX_INPUT_LENGTH: null,
@@ -97,11 +97,11 @@ class cScrambleWidget extends cJQueryWidgetClass {
 				oRuleDiv.append(oHeader)
 			}
 
-			var sID = cJquery.child_ID(oElement, SCRAMBLE_CONTROL_IDS.base64_rule_text_ID)
+			var sID = cJquery.child_ID(oElement, SCRAMBLE_CONTROL_IDS.rule_text_id)
 			var oRuleText = $('<textarea>', {
 				id: sID,
 				placeholder: 'rule goes here',
-				rows: 10,
+				rows: 1,
 				style: "width: 100%;"
 			})
 			oRuleDiv.append(oRuleText)
@@ -265,7 +265,7 @@ class cScrambleWidget extends cJQueryWidgetClass {
 	_update_rule_text(poRule){
 		var oElement = this.element
 		var s64 = cCARuleBase64Exporter.export(poRule, CA_STATES.default_state)
-		var oTextArea = cJquery.get_child(oElement, SCRAMBLE_CONTROL_IDS.base64_rule_text_ID)
+		var oTextArea = cJquery.get_child(oElement, SCRAMBLE_CONTROL_IDS.rule_text_id)
 		oTextArea.val(s64)
 	}
 }
