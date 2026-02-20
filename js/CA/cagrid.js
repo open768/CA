@@ -87,7 +87,7 @@ class cCAGrid extends CAEventSubscriber {
 	onCAActionEvent(poEvent) {
 		if (!this.active)
 			return
-		
+
 		switch (poEvent.action) {
 			case cCAActionEvent.actions.grid_init:
 				this._init(poEvent.data)
@@ -119,8 +119,8 @@ class cCAGrid extends CAEventSubscriber {
 	// # methods
 	//#######################################################################
 	/**
-	 * 
-	 * @param {cCAStatus} poStatus 
+	 *
+	 * @param {cCAStatus} poStatus
 	 */
 	_update_counts(poStatus){
 		this.runData.active += poStatus.active
@@ -152,14 +152,14 @@ class cCAGrid extends CAEventSubscriber {
 
 	//* ***************************************************************
 	/**
-	 * 
+	 *
 	 * @returns {cCARule}
 	 */
 	get_rule() {
 		return this.rule
 	}
 
-	
+
 	//* ***************************************************************
 	/**
 	 * @returns {void}
@@ -210,6 +210,7 @@ class cCAGrid extends CAEventSubscriber {
 			oCell.value = iValue
 			this.runData.changed_cells.push(oCell)
 		}
+
 		return oCell
 	}
 
@@ -232,7 +233,7 @@ class cCAGrid extends CAEventSubscriber {
 
 	//* ***************************************************************
 	//* ***************************************************************
-	/**	
+	/**
 	 *  @returns {Array}
 	 */
 	get_changed_cells() {
@@ -267,6 +268,7 @@ class cCAGrid extends CAEventSubscriber {
 			default:
 				throw new CAException('action not recognised: ' + piAction)
 		}
+
 		cDebug.write('done action: ' + piAction)
 		cDebug.leave()
 	}
@@ -283,7 +285,7 @@ class cCAGrid extends CAEventSubscriber {
 
 		// apply rules
 		/** @type {boolean} */var bHasChanged
-		/** @type {cCACell} */ var oCell 
+		/** @type {cCACell} */ var oCell
 		for (var iRow = 1; iRow <= this.rows; iRow++)
 			for (var iCol = 1; iCol <= this.cols; iCol++) {
 				oCell = this.getCell(iRow, iCol, true)
@@ -353,6 +355,7 @@ class cCAGrid extends CAEventSubscriber {
 				if (oCell !== null)
 					oCell.rule = null
 			}
+
 		cDebug.leave()
 	}
 
@@ -385,6 +388,7 @@ class cCAGrid extends CAEventSubscriber {
 			this.runData.runs++
 			cCAActionEvent.fire_event(this.name, cCAActionEvent.actions.control, cCAActionEvent.control_actions.step)
 		}
+
 		cDebug.leave()
 	}
 
@@ -406,6 +410,7 @@ class cCAGrid extends CAEventSubscriber {
 			cCAGridEvent.fire_event(this.name, cCAGridEvent.notify.repeatPattern)
 			return
 		}
+
 		aHistory.push(sHash)
 	}
 
@@ -451,6 +456,7 @@ class cCAGrid extends CAEventSubscriber {
 					this._link_cell(oCell, CA_DIRECTIONS.northwest, iNr - 1, iNc - 1)
 				}
 			}
+
 		cDebug.write('completed cell linking')
 		cDebug.leave()
 	}

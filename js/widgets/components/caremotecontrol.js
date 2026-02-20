@@ -56,6 +56,7 @@ class cCARemoteControls extends cJQueryWidgetClass {
 				this._enable_controls(true)
 				break
 		}
+
 		cCAActionEvent.fire_event(this.grid_name, cCAActionEvent.actions.control, iAction)
 	}
 
@@ -68,6 +69,7 @@ class cCARemoteControls extends cJQueryWidgetClass {
 			this.grid_set = true
 			this._enable_buttons()
 		}
+
 		cDebug.leave()
 	}
 
@@ -81,8 +83,8 @@ class cCARemoteControls extends cJQueryWidgetClass {
 
 	//* ***************************************************************************
 	onGridEvent(poEvent) {
-		if (poEvent.action === cCAGridEvent.actions.nochange) 
-			setTimeout(() => this._enable_controls(false), 100) // stop		
+		if (poEvent.action === cCAGridEvent.actions.nochange)
+			setTimeout(() => this._enable_controls(false), 100) // stop
 	}
 
 	//* **************************************************************

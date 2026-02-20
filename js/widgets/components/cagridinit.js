@@ -57,6 +57,7 @@ class cCAGridStateInit extends cJQueryWidgetClass {
 			var oOption = $('<option>', { value: oItem.id }).append(oItem.label)
 			oSelect.append(oOption)
 		}
+
 		oDiv.append(oSelect)
 		oSelect.selectmenu({
 			select: poEvent => this.onInitClick(poEvent),

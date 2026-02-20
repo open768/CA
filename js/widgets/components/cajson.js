@@ -161,6 +161,7 @@ class cCAJson extends cJQueryWidgetClass {
 			cDebug.write('set_grid')
 			this.grid = poEvent.data
 		}
+
 		cDebug.leave()
 	}
 

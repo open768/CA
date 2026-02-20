@@ -62,6 +62,7 @@ class cCAIndexOps {
 
 			iTmp = iTmp >>> 1 // keep right shifting the value until nothing is left
 		}
+
 		return iCount
 	}
 

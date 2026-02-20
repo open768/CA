@@ -57,6 +57,7 @@ class cCARule {
 			var iRnd = Math.floor(Math.random() * 1.99)
 			oRule.set_output(CA_STATES.default_state, i, iRnd)
 		}
+
 		cDebug.leave()
 		return oRule
 	}
@@ -243,7 +244,7 @@ class cCARule {
 		// get the cell neighbour value
 		var iBitmap = poCell.getBitmap(this.neighbour_type)
 
-		if (iBitmap == 0) 
+		if (iBitmap == 0)
 			// cells that are completely isolated remain dead
 			poCell.evaluated.value = 0
 		else {

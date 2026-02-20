@@ -112,6 +112,7 @@ class cCAChart extends cJQueryWidgetClass {
 					cDebug.leave()
 					return
 				}
+
 				var oData = poEvent.data
 				if (!oData) {
 					cDebug.extra_debug('no data')
@@ -125,6 +126,7 @@ class cCAChart extends cJQueryWidgetClass {
 				this.runs++
 				break
 		}
+
 		cDebug.leave()
 	}
 
@@ -136,6 +138,7 @@ class cCAChart extends cJQueryWidgetClass {
 				cDebug.write('set_rule action')
 				this._clear_chart()
 		}
+
 		cDebug.leave()
 	}
 
@@ -147,6 +150,7 @@ class cCAChart extends cJQueryWidgetClass {
 				cDebug.write('grid_init action')
 				this._clear_chart()
 		}
+
 		cDebug.leave()
 	}
 

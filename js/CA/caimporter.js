@@ -256,6 +256,7 @@ class cCARuleObjExporter {
 			oState.rule = cCARuleBase64Exporter.export(poRule, iState)
 			oExport.states.push(oState)
 		}
+
 		oExport.boredom_count = poRule.boredom_count
 
 		cDebug.leave()
@@ -302,7 +303,7 @@ class cCARuleMaker{
    * @returns {cCARule}
    * @throws {Error} If not implemented by subclass.
    */
-	static  makeRule() {
+	static makeRule() {
 		throw new Error('Abstract method `makeRule()` must be implemented.')
 	}
 }
@@ -451,6 +452,7 @@ class cCARuleLifeImporter extends cCARuleMaker {
 
 			aBorn[iBornPos] = 1
 		}
+
 		for (var iSurvive = 0; iSurvive < sSurvive.length; iSurvive++) {
 			var iSurvivePos = parseInt(sSurvive.charAt(iSurvive))
 			if (iSurvivePos < 0 || iSurvivePos > CA_NEIGHBOURS.maximum)
@@ -562,6 +564,7 @@ class cCARuleModifier {
 					bMatches = true
 					break
 			}
+
 			if (!bMatches)
 				continue
 

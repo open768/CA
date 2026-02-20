@@ -51,6 +51,7 @@ class cCAGridInitialiser {
 			default:
 				throw new CAException('unknown init_type: ' + piInitType)
 		}
+
 		cDebug.leave()
 	}
 

@@ -79,6 +79,7 @@ class cCAControlsL extends cJQueryWidgetClass {
 			this._init_ruleentry(oContent)
 			this._init_boredom(oContent)
 		}
+
 		oElement.append(oContent)
 	}
 
@@ -104,7 +105,7 @@ class cCAControlsL extends cJQueryWidgetClass {
 		poContent.append(oSelect)
 		oSelect.selectmenu({
 			select: poEvent => this._onSetRuleClick()
-		})		
+		})
 	}
 
 	//* ****************************************************************************
@@ -196,6 +197,7 @@ class cCAControlsL extends cJQueryWidgetClass {
 				this._update_rule_text(oRule)
 				break
 		}
+
 		cDebug.leave()
 	}
 
@@ -211,6 +213,7 @@ class cCAControlsL extends cJQueryWidgetClass {
 			alert('empty input string :-(')
 			return
 		}
+
 		try {
 			var oRule = cCARuleRepeatBase64Importer.makeRule(sInput)
 			this._update_rule_text(oRule)
@@ -363,6 +366,7 @@ class cCAControlsL extends cJQueryWidgetClass {
 			oOption.append(oPreset.label)
 			poSelect.append(oOption)
 		}
+
 		oOption = $('<option>', { value: LEFT_CTRL_IDS.random_ID })
 		oOption.append('Random')
 		poSelect.append(oOption)

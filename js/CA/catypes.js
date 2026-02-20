@@ -33,7 +33,7 @@ const CA_STATES = {
 	up: 1,
 	down: 2,
 	reset: 3,
-	default_state : 1
+	default_state: 1
 }
 
 class CELL_DATA_KEYS extends cStaticClass{

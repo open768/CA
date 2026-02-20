@@ -263,6 +263,7 @@ class cCAEditorWidget extends cJQueryWidgetClass {
 			oOption = $('<option>', { value: oState.id }).append(oState.label)
 			oStateSelect.append(oOption)
 		}
+
 		oDiv.append(oStateSelect)
 
 		// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -274,6 +275,7 @@ class cCAEditorWidget extends cJQueryWidgetClass {
 			oOption = $('<option>', { value: oVerb.id }).append(oVerb.label)
 			oVerbSelect.append(oOption)
 		}
+
 		oDiv.append(oVerbSelect)
 
 		sID = cJquery.child_ID(oElement, cCAWidgetTypes.IDs.NEIGHBOUR_COUNT)
@@ -282,6 +284,7 @@ class cCAEditorWidget extends cJQueryWidgetClass {
 			oOption = $('<option>').append(i)
 			oCountSelect.append(oOption)
 		}
+
 		oDiv.append(oCountSelect)
 
 		// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -327,6 +330,7 @@ class cCAEditorWidget extends cJQueryWidgetClass {
 				iVal = 0
 				console.log(e.message)
 			}
+
 			var oSpan = $('<SPAN>').caeditwidget({
 				index: iIndex,
 				value: iVal,

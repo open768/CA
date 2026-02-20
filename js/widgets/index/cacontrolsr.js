@@ -11,7 +11,7 @@ For licenses that allow for commercial use please contact cluck@chickenkatsu.co.
 //###################################################################
 //#
 //###################################################################
-class cCAControlsR  extends cJQueryWidgetClass {
+class cCAControlsR extends cJQueryWidgetClass {
 	grid = null
 	grid_name = null
 

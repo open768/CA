@@ -1,15 +1,15 @@
 "use strict"
 /**************************************************************************
 Copyright (C) Chicken Katsu 2013-2024
-This code is protected by copyright under the terms of the 
+This code is protected by copyright under the terms of the
 Creative Commons Attribution 4.0 International License
 https://creativecommons.org/licenses/by/4.0/legalcode
 contact cluck@chickenkatsu.co.uk
 // USE AT YOUR OWN RISK - NO GUARANTEES OF ANY FORM ARE EITHER EXPRESSED OR IMPLIED
 
-Any Cryptography concepts demonstrated in this code are covered by the UK Govt Open General Export License for Cryptographic development 
-(see https://www.gov.uk/government/publications/open-general-export-licence-cryptographic-development) 
-and is not intended for any dual use as defined by the UK government license. 
+Any Cryptography concepts demonstrated in this code are covered by the UK Govt Open General Export License for Cryptographic development
+(see https://www.gov.uk/government/publications/open-general-export-licence-cryptographic-development)
+and is not intended for any dual use as defined by the UK government license.
 You the consumer of this code are solely and entirely responsible for importing this code into your own country..
 
 **************************************************************************/
@@ -21,9 +21,9 @@ class cCAScramblerEvent extends cBaseEvent{
 		general: "G",
 		progress: "P"
 	}
-	
+
 	static actions = {
-		status:"S"
+		status: "S"
 	}
 }
 
@@ -37,7 +37,7 @@ class cCAScramblerTypes{
 //#
 //###################################################################################
 /** class that performs data scrambling */
- 
+
 class cCAScrambler{
 	/** @type cCAGrid */ grid=null
 	/** @type number  */ inital_runs = -1
@@ -45,7 +45,7 @@ class cCAScrambler{
 	/** @type number  */ initial_runs_completed = 0
 	/** @type cCAScramblerTypes */ status = null
 
-	
+
 	/**
 	 * Description
 	 * @param {cCAGrid} poGrid	CA grid to use to generate Scrambler instructions
@@ -53,13 +53,13 @@ class cCAScrambler{
 	 * @param {string} psPlainTxt	the plaintext to scramble
 	 */
 	constructor(poGrid, piInitialRuns, psPlainTxt){
-		if (!poGrid) 
+		if (!poGrid)
 			$.error("Grid param, missing")
-		if (!poGrid.rule) 
+		if (!poGrid.rule)
 			$.error("no rule in the grid")
-		if (piInitialRuns<5) 
+		if (piInitialRuns<5)
 			$.error("initial runs invalid - must be at least 5")
-		if (!psPlainTxt) 
+		if (!psPlainTxt)
 			$.error("plaintext missing")
 
 		this.grid = poGrid
@@ -75,7 +75,7 @@ class cCAScrambler{
 			oThis.onCAGridEvent(poEvent)
 		)
 	}
-	
+
 	//*******************************************************************************
 	/**
 	 * performs the initial runs of the grid
@@ -88,9 +88,9 @@ class cCAScrambler{
 		}else
 			throw new Error("not implemented")
 	}
-	
+
 	//*******************************************************************************
-	async scramble(){ 
+	async scramble(){
 		var oScramblerEvent = new cCAScramblerEvent( cCAScramblerEvent.types.general, cCAScramblerEvent.actions.status, "Started scrambler")
 		oScramblerEvent.trigger()
 

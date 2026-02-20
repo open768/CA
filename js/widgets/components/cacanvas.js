@@ -46,8 +46,8 @@ class cCACanvas extends cJQueryWidgetClass {
 	//#################################################################
 	// # Constructor
 	// #################################################################`
-	constructor(poOptions, poElement)  {
-		super(poOptions, poElement)	
+	constructor(poOptions, poElement) {
+		super(poOptions, poElement)
 		// check dependencies
 
 		if (!poOptions.grid_name)
@@ -80,11 +80,11 @@ class cCACanvas extends cJQueryWidgetClass {
 			case cCACanvasEvent.actions.import:
 				if (this.canvas == null)
 					$.error('canvas not initialised yet')
-				
+
 				cDebug.write('action: import')
 				/** @type {cCAGrid} */ var oGrid = poEvent.data
 				this._set_grid(oGrid)
-				
+
 				// clear and draw the grid
 				this._on_grid_clear()
 				this._drawGrid(oGrid.get_changed_cells())
@@ -110,7 +110,7 @@ class cCACanvas extends cJQueryWidgetClass {
 				break
 			case cCAGridEvent.notify.repeatPattern:
 				alert('repeat pattern seen')
-				cCAGridEvent.fire_event(this.grid_name, cCAGridEvent.actions.nochange, {from_canvas:true})
+				cCAGridEvent.fire_event(this.grid_name, cCAGridEvent.actions.nochange, {from_canvas: true})
 				break
 		}
 	}
@@ -136,8 +136,10 @@ class cCACanvas extends cJQueryWidgetClass {
 					oElement.mousedown(poEvent => this._onMouseDown(poEvent))
 					this.mouse_events_set = true
 				}
+
 				break
 		}
+
 		cDebug.leave()
 	}
 
@@ -269,6 +271,7 @@ class cCACanvas extends cJQueryWidgetClass {
 			this.grid.unsubscribe()
 			this.grid = null
 		}
+
 		this.grid = poGrid
 
 		// publish grid details to anyone interested - eg to export grid data, or start/stop the grid
@@ -316,6 +319,7 @@ class cCACanvas extends cJQueryWidgetClass {
 			oCell = paChangedCells[i]
 			this._draw_cell(oCell)
 		}
+
 		cDebug.leave()
 	}
 

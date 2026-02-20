@@ -17,7 +17,7 @@ class cIndexWidget extends cJQueryWidgetClass{
 			$.error('missing cCARule class')
 
 		if (!poOptions.name)
-			$.error('missing name')	
+			$.error('missing name')
 	}
 
 	init(){
@@ -37,6 +37,7 @@ class cIndexWidget extends cJQueryWidgetClass{
 				oLeftCtrlDiv.cacontrolsl({ grid_name: sCaName })
 				oCell.append(oLeftCtrlDiv)
 			}
+
 			oTopContainer.append(oCell)
 
 			// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -53,6 +54,7 @@ class cIndexWidget extends cJQueryWidgetClass{
 				})
 				oCell.append(oCanvasDiv)
 			}
+
 			oTopContainer.append(oCell)
 
 			// right panel - grid initialisation, status and run controls
@@ -63,8 +65,10 @@ class cIndexWidget extends cJQueryWidgetClass{
 				oCell.append(oRightCtrlDiv)
 				oTopContainer.append(oCell)
 			}
-			oElement.append(oTopContainer)		
+
+			oElement.append(oTopContainer)
 		}
+
 		// ----------------------------------------------------------------------------------
 		var oBottomContainer = $('<div>', { class: 'w3-cell-row' })
 		{
@@ -77,8 +81,10 @@ class cIndexWidget extends cJQueryWidgetClass{
 				oJsonDiv.cajson({ grid_name: sCaName })
 				oCell.append(oJsonDiv)
 			}
+
 			oBottomContainer.append(oCell)
 		}
+
 		oElement.append(oBottomContainer)
 
 		// check clipboard
@@ -105,7 +111,7 @@ $.widget('ck.caindex', {
 	// # Constructor
 	// #################################################################`
 	_create: function () {
-		var oWidget = new cIndexWidget(this.options, this.element)	
+		var oWidget = new cIndexWidget(this.options, this.element)
 		oWidget.init()
 	}
 })
