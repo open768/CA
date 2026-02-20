@@ -54,7 +54,7 @@ class cCAGrid extends CAEventSubscriber {
 		if (!md5)
 			$.error('js-md5 library missing')
 		if (!psName)
-			throw new CAException('no grid name')
+			throw new CAException('no base name')
 		if (piRows == null || piCols == null)
 			throw new CAException('bad size information')
 

@@ -166,7 +166,7 @@ $.widget('ck.caremotecontrols', {
 		// checks
 		var oOptions = this.options
 		if (!oOptions.base_name)
-			$.error('grid name not provided')
+			$.error('base name not provided')
 
 		new cCARemoteControls(oOptions, this.element) // call class constructor
 	},

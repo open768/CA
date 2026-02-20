@@ -40,7 +40,7 @@ class cCAChart extends cJQueryWidgetClass {
 		super(poOptions, poElement)
 		// checks
 		if (!poOptions.base_name)
-			$.error('grid name not provided')
+			$.error('base name not provided')
 
 		// store the element
 		this.base_name = poOptions.base_name

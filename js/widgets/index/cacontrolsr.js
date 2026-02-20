@@ -87,7 +87,7 @@ $.widget('ck.cacontrolsr', {
 		// checks
 		var oOptions = this.options
 		if (!oOptions.base_name)
-			$.error('grid name not provided')
+			$.error('base name not provided')
 
 		new cCAControlsR(oOptions, this.element) // call widgetclass
 	},

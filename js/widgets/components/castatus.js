@@ -151,7 +151,7 @@ $.widget('ck.castatus', {
 		// checks
 		var oOptions = this.options
 		if (!oOptions.base_name)
-			$.error('grid name not provided')
+			$.error('base name not provided')
 
 		new cCAStatusWidget(oOptions, this.element) // call widget constructor
 	},

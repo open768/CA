@@ -384,7 +384,7 @@ $.widget('ck.cacontrolsl', {
 	_create: function () {
 		var oOptions = this.options
 		if (!oOptions.base_name)
-			$.error('grid name not provided')
+			$.error('base name not provided')
 
 		new cCAControlsL(oOptions, this.element) // call widget constructor
 	},
