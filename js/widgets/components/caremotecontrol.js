@@ -18,23 +18,23 @@ class cCARemoteControls extends cJQueryWidgetClass {
 		step: 'E',
 	}
 
-	grid_name = null
+	base_name = null
 	rule_set = false
 	grid_set = false
 
 	//* **************************************************************
 	constructor(poOptions, poElement) {
 		super(poOptions, poElement)
-		this.grid_name = poOptions.grid_name
+		this.base_name = poOptions.base_name
 		var oElement = poElement
 
 		// set basic stuff
 		oElement.addClass('ui-widget')
 
 		// subscribe to CAEvents
-		cCARuleEvent.subscribe(this.grid_name, poEvent => this.onRuleEvent(poEvent))
-		cCACanvasEvent.subscribe(this.grid_name, poEvent => this.onCanvasEvent(poEvent))
-		cCAGridEvent.subscribe(this.grid_name, poEvent => this.onGridEvent(poEvent))
+		cCARuleEvent.subscribe(this.base_name, poEvent => this.onRuleEvent(poEvent))
+		cCACanvasEvent.subscribe(this.base_name, poEvent => this.onCanvasEvent(poEvent))
+		cCAGridEvent.subscribe(this.base_name, poEvent => this.onGridEvent(poEvent))
 
 		// put something in the widget
 		this._init()
@@ -57,7 +57,7 @@ class cCARemoteControls extends cJQueryWidgetClass {
 				break
 		}
 
-		cCAActionEvent.fire_event(this.grid_name, cCAActionEvent.actions.control, iAction)
+		cCAActionEvent.fire_event(this.base_name, cCAActionEvent.actions.control, iAction)
 	}
 
 	//* **************************************************************
@@ -160,12 +160,12 @@ class cCARemoteControls extends cJQueryWidgetClass {
 //###################################################################
 $.widget('ck.caremotecontrols', {
 	options: {
-		grid_name: null,
+		base_name: null,
 	},
 	_create: function () {
 		// checks
 		var oOptions = this.options
-		if (!oOptions.grid_name)
+		if (!oOptions.base_name)
 			$.error('grid name not provided')
 
 		new cCARemoteControls(oOptions, this.element) // call class constructor

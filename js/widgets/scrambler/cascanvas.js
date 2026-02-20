@@ -1,10 +1,11 @@
 //#############################################################################
 class cCAScrambleCanvas extends cJQueryWidgetClass {
+	canvas = null
 	/*
 	 * this widget is responsible for drawing the contents of the underlying scrambler onto a canvas
 	 */
 	constructor(poOptions, poElement){
-		if (!poOptions.base_name_name )
+		if (!poOptions.base_name )
 			$.error("base_name option is required for cascramblecanvas" )
 
 		super(poOptions, poElement)
@@ -21,8 +22,8 @@ $.widget('ck.cascramblecanvas', {
 	},
 
 	_create: function () {
-		if (!this.options.grid_name )
-			$.error("grid_name option is required for cascramblecanvas" )
+		if (!this.options.base_name )
+			$.error("base_name option is required for cascramblecanvas" )
 		new cCAScrambleCanvas(this.options, this.element) // call the constructor of the class
 	},
 })

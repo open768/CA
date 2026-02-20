@@ -19,7 +19,7 @@ class cCAStatusTypes {
 //#
 //###################################################################
 class cCAStatusWidget extends cJQueryWidgetClass {
-	grid_name = null
+	base_name = null
 	HEAP_INTERVAL = 100
 	heap_timer_running = false
 	stop_heap_timer = false
@@ -27,14 +27,14 @@ class cCAStatusWidget extends cJQueryWidgetClass {
 	//* **************************************************************
 	constructor(poOptions, poElement) {
 		super(poOptions, poElement)
-		this.grid_name = poOptions.grid_name
+		this.base_name = poOptions.base_name
 
 		// set basic stuff
 		poElement.addClass('ui-widget')
 
 		// subscribe to CAEvents
-		cCACanvasEvent.subscribe(this.grid_name, poEvent => this.onCACanvasEvent(poEvent))
-		cCAActionEvent.subscribe(this.grid_name, poEvent => this.onCAActionEvent(poEvent))
+		cCACanvasEvent.subscribe(this.base_name, poEvent => this.onCACanvasEvent(poEvent))
+		cCAActionEvent.subscribe(this.base_name, poEvent => this.onCAActionEvent(poEvent))
 
 		// put something in the widget
 		this._init()
@@ -145,12 +145,12 @@ class cCAStatusWidget extends cJQueryWidgetClass {
 //###################################################################
 $.widget('ck.castatus', {
 	options: {
-		grid_name: null,
+		base_name: null,
 	},
 	_create: function () {
 		// checks
 		var oOptions = this.options
-		if (!oOptions.grid_name)
+		if (!oOptions.base_name)
 			$.error('grid name not provided')
 
 		new cCAStatusWidget(oOptions, this.element) // call widget constructor

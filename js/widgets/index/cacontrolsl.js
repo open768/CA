@@ -22,7 +22,7 @@ const LEFT_CTRL_IDS = {
 class cCAControlsL extends cJQueryWidgetClass {
 	/** @type cCAGrid */ grid = null
 	/** @type cCARule */ rule = null
-	/** @type string */ grid_name = null
+	/** @type string */ base_name = null
 
 	//#################################################################
 	// # Constructor
@@ -32,7 +32,7 @@ class cCAControlsL extends cJQueryWidgetClass {
 		cDebug.enter()
 
 		var oElement = this.element
-		this.grid_name = poOptions.grid_name
+		this.base_name = poOptions.base_name
 
 		// check dependencies
 		if (!oElement.selectmenu)
@@ -47,7 +47,7 @@ class cCAControlsL extends cJQueryWidgetClass {
 		this._init()
 
 		// subscribe to CA Events
-		cCARuleEvent.subscribe(this.grid_name, poEvent => this._onRuleEvent(poEvent))
+		cCARuleEvent.subscribe(this.base_name, poEvent => this._onRuleEvent(poEvent))
 	}
 
 	//#################################################################
@@ -262,7 +262,7 @@ class cCAControlsL extends cJQueryWidgetClass {
 						oRule.boredom_count = CACONSTS.NO_BOREDOM
 
 					// inform subscribers
-					cCARuleEvent.fire_event(this.grid_name, cCARuleEvent.actions.set_rule, oRule)
+					cCARuleEvent.fire_event(this.base_name, cCARuleEvent.actions.set_rule, oRule)
 
 
 					break
@@ -378,12 +378,12 @@ class cCAControlsL extends cJQueryWidgetClass {
 //###############################################################################
 $.widget('ck.cacontrolsl', {
 	options: {
-		grid_name: null,
+		base_name: null,
 	},
 
 	_create: function () {
 		var oOptions = this.options
-		if (!oOptions.grid_name)
+		if (!oOptions.base_name)
 			$.error('grid name not provided')
 
 		new cCAControlsL(oOptions, this.element) // call widget constructor

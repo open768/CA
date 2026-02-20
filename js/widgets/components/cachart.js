@@ -34,16 +34,16 @@ class cCAChart extends cJQueryWidgetClass {
 	runs = 0
 	vis_data = null
 	chart = null
-	grid_name = null
+	base_name = null
 
 	constructor(poOptions, poElement) {
 		super(poOptions, poElement)
 		// checks
-		if (!poOptions.grid_name)
+		if (!poOptions.base_name)
 			$.error('grid name not provided')
 
 		// store the element
-		this.grid_name = poOptions.grid_name
+		this.base_name = poOptions.base_name
 
 		var oElement = this.element
 
@@ -63,9 +63,9 @@ class cCAChart extends cJQueryWidgetClass {
 		this._clear_chart()
 
 		// subscribe to CAEvents
-		cCAActionEvent.subscribe(this.grid_name, poEvent => this.onCAActionEvent(poEvent))
-		cCARuleEvent.subscribe(this.grid_name, poEvent => this.onCARuleEvent(poEvent))
-		cCACanvasEvent.subscribe(this.grid_name, poEvent => this.onCACanvasEvent(poEvent))
+		cCAActionEvent.subscribe(this.base_name, poEvent => this.onCAActionEvent(poEvent))
+		cCARuleEvent.subscribe(this.base_name, poEvent => this.onCARuleEvent(poEvent))
+		cCACanvasEvent.subscribe(this.base_name, poEvent => this.onCACanvasEvent(poEvent))
 	}
 
 	//* ****************************************************************
@@ -172,7 +172,7 @@ $.widget('ck.cachart', {
 	options: {
 		width: 240,
 		height: 100,
-		grid_name: null,
+		base_name: null,
 	},
 
 	//* ****************************************************************

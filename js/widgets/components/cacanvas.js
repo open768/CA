@@ -25,7 +25,7 @@ class cCACanvas extends cJQueryWidgetClass {
 	interactive = false
 
 	grid = null
-	grid_name = null
+	base_name = null
 	canvas = null
 	cells_to_draw = 0
 	cells_drawn = 0
@@ -50,14 +50,14 @@ class cCACanvas extends cJQueryWidgetClass {
 		super(poOptions, poElement)
 		// check dependencies
 
-		if (!poOptions.grid_name)
+		if (!poOptions.base_name)
 			$.error('name must be provided')
 
 		this.interactive = poOptions.interactive
 
 		this.rows = poOptions.rows
 		this.cols = poOptions.cols
-		this.grid_name = poOptions.grid_name
+		this.base_name = poOptions.base_name
 		this.cell_size = poOptions.cell_size
 
 		// set basic stuff
@@ -67,9 +67,9 @@ class cCACanvas extends cJQueryWidgetClass {
 
 		// subscribe to CAEvents (see #set_grid for subscribing to grid events)
 
-		cCAActionEvent.subscribe(this.grid_name, poEvent => this._onActionEvent(poEvent))
-		cCAGridEvent.subscribe(this.grid_name, poEvent => this._onGridEvent(poEvent))
-		cCACanvasEvent.subscribe(this.grid_name, poEvent => this._onCanvasEvent(poEvent))
+		cCAActionEvent.subscribe(this.base_name, poEvent => this._onActionEvent(poEvent))
+		cCAGridEvent.subscribe(this.base_name, poEvent => this._onGridEvent(poEvent))
+		cCACanvasEvent.subscribe(this.base_name, poEvent => this._onCanvasEvent(poEvent))
 	}
 
 	//#################################################################
@@ -90,7 +90,7 @@ class cCACanvas extends cJQueryWidgetClass {
 				this._drawGrid(oGrid.get_changed_cells())
 
 				// inform subscribers
-				cCARuleEvent.fire_event(this.grid_name, cCARuleEvent.actions.update_rule, oGrid.get_rule())
+				cCARuleEvent.fire_event(this.base_name, cCARuleEvent.actions.update_rule, oGrid.get_rule())
 		}
 	}
 
@@ -110,7 +110,7 @@ class cCACanvas extends cJQueryWidgetClass {
 				break
 			case cCAGridEvent.notify.repeatPattern:
 				alert('repeat pattern seen')
-				cCAGridEvent.fire_event(this.grid_name, cCAGridEvent.actions.nochange, {from_canvas: true})
+				cCAGridEvent.fire_event(this.base_name, cCAGridEvent.actions.nochange, {from_canvas: true})
 				break
 		}
 	}
@@ -125,7 +125,7 @@ class cCACanvas extends cJQueryWidgetClass {
 			case cCAActionEvent.actions.ready:
 				cDebug.write('action: ready')
 				// associate a CA grid with the widget
-				oGrid = new cCAGrid(this.grid_name, this.rows, this.cols)
+				oGrid = new cCAGrid(this.base_name, this.rows, this.cols)
 				this._set_grid(oGrid)
 				// put something in the widget
 				this._initCanvas()
@@ -155,7 +155,7 @@ class cCACanvas extends cJQueryWidgetClass {
 
 			setTimeout(
 				// canvas needs to yield to allow image to be drawn
-				() => cCAGridEvent.fire_event(this.grid_name, cCAGridEvent.notify.changedCellsConsumed),
+				() => cCAGridEvent.fire_event(this.base_name, cCAGridEvent.notify.changedCellsConsumed),
 				this.CELL_LOAD_DELAY, // fudge factor to delay next grid cycle
 			)
 		}
@@ -202,7 +202,7 @@ class cCACanvas extends cJQueryWidgetClass {
 		var oRC = this._get_cell_rc_from_event(poEvent, true)
 		if (oRC) {
 			var oChangedCell = new cCAGridCell(oRC.row, oRC.col, 1)
-			cCAGridEvent.fire_event(this.grid_name, cCAGridEvent.actions.set_cell, oChangedCell)
+			cCAGridEvent.fire_event(this.base_name, cCAGridEvent.actions.set_cell, oChangedCell)
 		}
 	}
 
@@ -248,7 +248,7 @@ class cCACanvas extends cJQueryWidgetClass {
 		this._drawGrid(poData.changed_cells) // draw the changed cells
 
 		// tell consumers about status
-		cCACanvasEvent.fire_event(this.grid_name, cCACanvasEvent.actions.grid_status, poData)
+		cCACanvasEvent.fire_event(this.base_name, cCACanvasEvent.actions.grid_status, poData)
 
 		cDebug.leave()
 	}
@@ -275,7 +275,7 @@ class cCACanvas extends cJQueryWidgetClass {
 		this.grid = poGrid
 
 		// publish grid details to anyone interested - eg to export grid data, or start/stop the grid
-		cCACanvasEvent.fire_event(this.grid_name, cCACanvasEvent.actions.set_grid, poGrid)
+		cCACanvasEvent.fire_event(this.base_name, cCACanvasEvent.actions.set_grid, poGrid)
 	}
 
 	//* ***************************************************************
@@ -292,7 +292,7 @@ class cCACanvas extends cJQueryWidgetClass {
 		this.canvas = oCanvas
 
 		// initialise the grid
-		cCAActionEvent.fire_event(this.grid_name, cCAActionEvent.actions.grid_init, GRID_INIT_TYPES.block.id)
+		cCAActionEvent.fire_event(this.base_name, cCAActionEvent.actions.grid_init, GRID_INIT_TYPES.block.id)
 		cDebug.leave()
 	}
 
@@ -372,7 +372,7 @@ $.widget('ck.cacanvas', {
 		cols: 100,
 		rows: 100,
 		cell_size: 5,
-		grid_name: null,
+		base_name: null,
 		interactive: true,
 	},
 

@@ -12,12 +12,12 @@ For licenses that allow for commercial use please contact cluck@chickenkatsu.co.
 //#
 //###################################################################
 class cCAGridStateInit extends cJQueryWidgetClass {
-	grid_name = null
+	base_name = null
 
 	//* **************************************************************
 	constructor(poOptions, poElement) {
 		super(poOptions, poElement)
-		this.grid_name = poOptions.grid_name
+		this.base_name = poOptions.base_name
 
 		// set basic stuff
 		poElement.addClass('ui-widget')
@@ -33,7 +33,7 @@ class cCAGridStateInit extends cJQueryWidgetClass {
 		var iSelected = parseInt($(poEvent.target).val()) // selected value in pulldown
 
 		// ---------tell subscribers to init
-		cCAActionEvent.fire_event(this.grid_name, cCAActionEvent.actions.grid_init, iSelected)
+		cCAActionEvent.fire_event(this.base_name, cCAActionEvent.actions.grid_init, iSelected)
 	}
 
 	//* **************************************************************
@@ -71,12 +71,12 @@ class cCAGridStateInit extends cJQueryWidgetClass {
 //###################################################################
 $.widget('ck.cagridinit', {
 	options: {
-		grid_name: null,
+		base_name: null,
 	},
 	_create: function () {
 		// checks
 		var oOptions = this.options
-		if (!oOptions.grid_name)
+		if (!oOptions.base_name)
 			$.error('grid name not provided')
 
 		new cCAGridStateInit(oOptions, this.element) // call class constructor

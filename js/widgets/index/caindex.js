@@ -34,7 +34,7 @@ class cIndexWidget extends cJQueryWidgetClass{
 			var oCell = $('<div>', { class: 'w3-cell w3-cell-top w3-container' })
 			{
 				var oLeftCtrlDiv = $('<DIV>', { width: 350, id: 'leftControl' })
-				oLeftCtrlDiv.cacontrolsl({ grid_name: sCaName })
+				oLeftCtrlDiv.cacontrolsl({ base_name: sCaName })
 				oCell.append(oLeftCtrlDiv)
 			}
 
@@ -50,7 +50,7 @@ class cIndexWidget extends cJQueryWidgetClass{
 					cols: oOptions.cols,
 					rows: oOptions.rows,
 					cell_size: oOptions.cell_size,
-					grid_name: sCaName,
+					base_name: sCaName,
 				})
 				oCell.append(oCanvasDiv)
 			}
@@ -61,7 +61,7 @@ class cIndexWidget extends cJQueryWidgetClass{
 			oCell = $('<div>', { class: 'w3-cell w3-cell-top w3-container' })
 			{
 				var oRightCtrlDiv = $('<DIV>', { width: 240, id: 'rightControl' })
-				oRightCtrlDiv.cacontrolsr({ grid_name: sCaName })
+				oRightCtrlDiv.cacontrolsr({ base_name: sCaName })
 				oCell.append(oRightCtrlDiv)
 				oTopContainer.append(oCell)
 			}
@@ -78,7 +78,7 @@ class cIndexWidget extends cJQueryWidgetClass{
 				var oJsonDiv = $('<DIV>', {
 					title: 'json will appear here'
 				})
-				oJsonDiv.cajson({ grid_name: sCaName })
+				oJsonDiv.cajson({ base_name: sCaName })
 				oCell.append(oJsonDiv)
 			}
 

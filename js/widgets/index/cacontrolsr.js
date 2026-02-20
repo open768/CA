@@ -13,12 +13,12 @@ For licenses that allow for commercial use please contact cluck@chickenkatsu.co.
 //###################################################################
 class cCAControlsR extends cJQueryWidgetClass {
 	grid = null
-	grid_name = null
+	base_name = null
 
 	//* **************************************************************
 	constructor(poOptions, poElement) {
 		super(poOptions, poElement)
-		this.grid_name = poOptions.grid_name
+		this.base_name = poOptions.base_name
 
 		var oElement = this.element
 
@@ -53,25 +53,25 @@ class cCAControlsR extends cJQueryWidgetClass {
 
 		// --status-------------------------------------------------
 		oDiv = $('<DIV>')
-		oDiv.castatus({ grid_name: this.grid_name })
+		oDiv.castatus({ base_name: this.base_name })
 		oElement.append(oDiv)
 		oElement.append('<P>')
 
 		// ---chart----------------------------------------------------------
 		oDiv = $('<DIV>')
-		oDiv.cachart({ grid_name: this.grid_name })
+		oDiv.cachart({ base_name: this.base_name })
 		oElement.append(oDiv)
 		oElement.append('<P>')
 
 		// --initialise------------------------------------------------
 		oDiv = $('<DIV>')
-		oDiv.cagridinit({ grid_name: this.grid_name })
+		oDiv.cagridinit({ base_name: this.base_name })
 		oElement.append(oDiv)
 		oElement.append('<P>')
 
 		// --controls------------------------------------------------
 		oDiv = $('<DIV>', { class: 'ui-widget-header' })
-		oDiv.caremotecontrols({ grid_name: this.grid_name })
+		oDiv.caremotecontrols({ base_name: this.base_name })
 		oElement.append(oDiv)
 	}
 }
@@ -81,12 +81,12 @@ class cCAControlsR extends cJQueryWidgetClass {
 //###################################################################
 $.widget('ck.cacontrolsr', {
 	options: {
-		grid_name: null,
+		base_name: null,
 	},
 	_create: function () {
 		// checks
 		var oOptions = this.options
-		if (!oOptions.grid_name)
+		if (!oOptions.base_name)
 			$.error('grid name not provided')
 
 		new cCAControlsR(oOptions, this.element) // call widgetclass

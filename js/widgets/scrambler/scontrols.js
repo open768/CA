@@ -80,7 +80,7 @@ class cScrambleWidget extends cJQueryWidgetClass {
 						title: 'cellular automata grid - this is where the instructions are read from'
 					})
 					{
-						oCanvasSpan.cacanvas({grid_name: oOptions.name, cols: SCRAMBLE_CONSTS.GRID_COLS, rows: SCRAMBLE_CONSTS.GRID_ROWS, cell_size: SCRAMBLE_CONSTS.CELL_SIZE})
+						oCanvasSpan.cacanvas({base_name: oOptions.name, cols: SCRAMBLE_CONSTS.GRID_COLS, rows: SCRAMBLE_CONSTS.GRID_ROWS, cell_size: SCRAMBLE_CONSTS.CELL_SIZE})
 						oRightCell.append(oCanvasSpan)
 					}
 
@@ -133,7 +133,7 @@ class cScrambleWidget extends cJQueryWidgetClass {
 		var oJsonDiv = $('<div>', {class: 'w3-card w3-margin'})
 		{
 			oJsonDiv.text("This is where the importer goes")
-			oJsonDiv.cajson({ grid_name: oOptions.name , create_button: false})	//make into widget
+			oJsonDiv.cajson({ base_name: oOptions.name , create_button: false})	//make into widget
 
 		}
 

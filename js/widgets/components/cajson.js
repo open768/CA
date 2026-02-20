@@ -17,7 +17,7 @@ class cCAJsonTypes {
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 class cCAJson extends cJQueryWidgetClass {
 	/** @type {cCAGrid} */ grid = null
-	/** @type {string} */ grid_name = null
+	/** @type {string} */ base_name = null
 	/** @type {boolean} */ create_button = false
 
 	//#################################################################
@@ -27,7 +27,7 @@ class cCAJson extends cJQueryWidgetClass {
 		super(poOptions, poElement)
 
 		cDebug.enter()
-		this.grid_name = poOptions.grid_name
+		this.base_name = poOptions.base_name
 		this.create_button = poOptions.create_button
 
 		var oElement
@@ -45,7 +45,7 @@ class cCAJson extends cJQueryWidgetClass {
 		this._init()
 
 		// subscribe to CA Events
-		cCACanvasEvent.subscribe(this.grid_name, poEvent => this._onCanvasEvent(poEvent))
+		cCACanvasEvent.subscribe(this.base_name, poEvent => this._onCanvasEvent(poEvent))
 		cDebug.leave()
 	}
 
@@ -147,10 +147,10 @@ class cCAJson extends cJQueryWidgetClass {
 		}
 
 		// create the grid
-		/** @type {cCAGrid} */ var oGrid = cCAGridJSONImporter.populate(this.grid_name, oJson)
+		/** @type {cCAGrid} */ var oGrid = cCAGridJSONImporter.populate(this.base_name, oJson)
 
 		// fire event to triiger the use of the imported grid
-		cCACanvasEvent.fire_event(this.grid_name, cCACanvasEvent.actions.import, oGrid)
+		cCACanvasEvent.fire_event(this.base_name, cCACanvasEvent.actions.import, oGrid)
 		cDebug.leave()
 	}
 
@@ -188,12 +188,12 @@ class cCAJson extends cJQueryWidgetClass {
 //###############################################################################
 $.widget('ck.cajson', {
 	options: {
-		grid_name: null,
+		base_name: null,
 		create_button: true,
 	},
 	_create: function () {
 		var oOptions = this.options
-		if (!oOptions.grid_name)
+		if (!oOptions.base_name)
 			$.error('grid name not provided')
 
 		new cCAJson(oOptions, this.element) // call class constructor
