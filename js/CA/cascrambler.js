@@ -17,13 +17,9 @@ You the consumer of this code are solely and entirely responsible for importing 
 class cCAScramblerEvent extends cBaseEvent{
 	static event_type_id = "cascramev"
 
-	static types = {
-		general: "G",
-		progress: "P"
-	}
-
 	static actions = {
-		status: "S"
+		status: "S",
+		set_input: "SI",
 	}
 }
 

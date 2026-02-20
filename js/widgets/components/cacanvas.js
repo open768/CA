@@ -20,12 +20,7 @@ class cCACanvas extends cJQueryWidgetClass {
 	// # Definition
 	//#################################################################
 	CELL_LOAD_DELAY = 50 // fudge factor
-	rows = 100
-	cols = 100
-	interactive = false
-
 	grid = null
-	base_name = null
 	canvas = null
 	cells_to_draw = 0
 	cells_drawn = 0
@@ -56,12 +51,7 @@ class cCACanvas extends cJQueryWidgetClass {
 		if (!poOptions.base_name)
 			$.error('name must be provided')
 
-		this.interactive = poOptions.interactive
 
-		this.rows = poOptions.rows
-		this.cols = poOptions.cols
-		this.base_name = poOptions.base_name
-		this.cell_size = poOptions.cell_size
 
 		// set basic stuff
 		poElement.uniqueId()
@@ -70,16 +60,17 @@ class cCACanvas extends cJQueryWidgetClass {
 
 		// subscribe to CAEvents (see #set_grid for subscribing to grid events)
 
+
 		cCAActionEvent.subscribe(
-			this.base_name,
+			poOptions.base_name,
 			poEvent => this._onActionEvent(poEvent)
 		)
 		cCAGridEvent.subscribe(
-			this.base_name,
+			poOptions.base_name,
 			poEvent => this._onGridEvent(poEvent)
 		)
 		cCACanvasEvent.subscribe(
-			this.base_name,
+			poOptions.base_name,
 			poEvent => this._onCanvasEvent(poEvent)
 		)
 	}
@@ -88,6 +79,8 @@ class cCACanvas extends cJQueryWidgetClass {
 	// # events
 	// #################################################################`
 	_onCanvasEvent(poEvent) {
+		var oOptions = this.options
+
 		switch (poEvent.action) {
 			case cCACanvasEvent.actions.import:
 				if (this.canvas == null)
@@ -103,7 +96,7 @@ class cCACanvas extends cJQueryWidgetClass {
 
 				// inform subscribers
 				cCARuleEvent.fire_event(
-					this.base_name,
+					oOptions.base_name,
 					cCARuleEvent.actions.update_rule,
 					oGrid.get_rule()
 				)
@@ -112,6 +105,7 @@ class cCACanvas extends cJQueryWidgetClass {
 
 	//* ***************************************************************
 	_onGridEvent(poEvent) {
+		var oOptions = this.options
 		switch (poEvent.action) {
 			case cCAGridEvent.notify.done:
 				this._on_grid_done(poEvent.data)
@@ -127,7 +121,7 @@ class cCACanvas extends cJQueryWidgetClass {
 			case cCAGridEvent.notify.repeatPattern:
 				alert('repeat pattern seen')
 				cCAGridEvent.fire_event(
-					this.base_name,
+					oOptions.base_name,
 					cCAGridEvent.actions.nochange,
 					{
 						from_canvas: true
@@ -140,6 +134,7 @@ class cCACanvas extends cJQueryWidgetClass {
 	//* ***************************************************************
 	_onActionEvent(poEvent) {
 		var oElement = this.element
+		var oOptions = this.options
 		var oGrid
 
 		cDebug.enter()
@@ -148,9 +143,9 @@ class cCACanvas extends cJQueryWidgetClass {
 				cDebug.write('action: ready')
 				// associate a CA grid with the widget
 				oGrid = new cCAGrid(
-					this.base_name,
-					this.rows,
-					this.cols
+					oOptions.base_name,
+					oOptions.rows,
+					oOptions.cols
 				)
 				this._set_grid(oGrid)
 				// put something in the widget
@@ -171,6 +166,7 @@ class cCACanvas extends cJQueryWidgetClass {
 
 	//* ***************************************************************
 	_count_drawn_cells() {
+		var oOptions = this.options
 		// update the count of cells drawn
 		this.cells_drawn++
 
@@ -182,7 +178,7 @@ class cCACanvas extends cJQueryWidgetClass {
 			setTimeout(
 				// canvas needs to yield to allow image to be drawn
 				() => cCAGridEvent.fire_event(
-					this.base_name,
+					oOptions.base_name,
 					cCAGridEvent.notify.changedCellsConsumed
 				),
 				this.CELL_LOAD_DELAY, // fudge factor to delay next grid cycle
@@ -195,7 +191,7 @@ class cCACanvas extends cJQueryWidgetClass {
 		if (!this.grid)
 			return
 
-		if (!this.interactive)
+		if (!this.options.interactive)
 			return
 
 		this.mouse.is_down = true
@@ -204,7 +200,7 @@ class cCACanvas extends cJQueryWidgetClass {
 
 	//* ***************************************************************
 	_onMouseMove(poEvent) {
-		if (!this.interactive)
+		if (!this.options.interactive)
 			return
 
 		if (!this.grid)
@@ -239,7 +235,7 @@ class cCACanvas extends cJQueryWidgetClass {
 				1
 			)
 			cCAGridEvent.fire_event(
-				this.base_name,
+				this.options.base_name,
 				cCAGridEvent.actions.set_cell,
 				oChangedCell
 			)
@@ -249,22 +245,24 @@ class cCACanvas extends cJQueryWidgetClass {
 	//* ***************************************************************
 	_get_cell_rc_from_event(poEvent, pbChangedOnly) {
 		var oElement = this.element
-		var X = poEvent.offsetX - cJquery.get_padding_width(oElement) + this.cell_size
-		var Y = poEvent.offsetY - cJquery.get_padding_height(oElement) + this.cell_size
-		var ir = Math.trunc(Y / this.cell_size) + 1
-		var ic = Math.trunc(X / this.cell_size) + 1
+		var oOptions = this.options
+
+		var X = poEvent.offsetX - cJquery.get_padding_width(oElement) + oOptions.cell_size
+		var Y = poEvent.offsetY - cJquery.get_padding_height(oElement) + oOptions.cell_size
+		var ir = Math.trunc(Y / oOptions.cell_size) + 1
+		var ic = Math.trunc(X / oOptions.cell_size) + 1
 
 		if (ir < 1)
 			ir = 1
 
-		if (ir > this.rows)
-			ir = this.rows
+		if (ir > oOptions.rows)
+			ir = oOptions.rows
 
 		if (ic < 1)
 			ic = 1
 
-		if (ic > this.cols)
-			ir = this.cols
+		if (ic > oOptions.cols)
+			ir = oOptions.cols
 
 		var oRC = null
 		if (ir != this.last_mouse_pos.row || ic != this.last_mouse_pos.col) {
@@ -289,7 +287,7 @@ class cCACanvas extends cJQueryWidgetClass {
 
 		// tell consumers about status
 		cCACanvasEvent.fire_event(
-			this.base_name,
+			this.options.base_name,
 			cCACanvasEvent.actions.grid_status,
 			poData
 		)
@@ -320,7 +318,7 @@ class cCACanvas extends cJQueryWidgetClass {
 
 		// publish grid details to anyone interested - eg to export grid data, or start/stop the grid
 		cCACanvasEvent.fire_event(
-			this.base_name,
+			this.options.base_name,
 			cCACanvasEvent.actions.set_grid,
 			poGrid
 		)
@@ -330,24 +328,25 @@ class cCACanvas extends cJQueryWidgetClass {
 	_initCanvas() {
 		cDebug.enter()
 		var oElement = this.element
+		var oOptions = this.options
 
 		// create the html5 canvas to draw on
 		oElement.empty()
 		var oCanvas = $('<canvas>')
 		oCanvas.attr(
 			'width',
-			this.cols * this.cell_size
+			oOptions.cols * oOptions.cell_size
 		)
 		oCanvas.attr(
 			'height',
-			this.rows * this.cell_size
+			oOptions.rows * oOptions.cell_size
 		)
 		oElement.append(oCanvas)
 		this.canvas = oCanvas
 
 		// initialise the grid
 		cCAActionEvent.fire_event(
-			this.base_name,
+			oOptions.base_name,
 			cCAActionEvent.actions.grid_init,
 			GRID_INIT_TYPES.block.id
 		)
@@ -404,13 +403,14 @@ class cCACanvas extends cJQueryWidgetClass {
 	//* ***************************************************************
 	_draw_cell(poCell) {
 		var oCanvas = this.canvas
+		var oOptions = this.options
 
 		// -----------------coords of cell
 		var iRow, iCol
 		iRow = poCell.data.get(CELL_DATA_KEYS.row)
 		iCol = poCell.data.get(CELL_DATA_KEYS.col)
-		var iy = (iRow - 1) * this.cell_size
-		var ix = (iCol - 1) * this.cell_size
+		var iy = (iRow - 1) * oOptions.cell_size
+		var ix = (iCol - 1) * oOptions.cell_size
 
 		// ------------------draw
 		var sFill = poCell.value == 0 ? '#fff' : '#000'
@@ -418,8 +418,8 @@ class cCACanvas extends cJQueryWidgetClass {
 			fillStyle: sFill,
 			x: ix,
 			y: iy,
-			width: this.cell_size,
-			height: this.cell_size,
+			width: oOptions.cell_size,
+			height: oOptions.cell_size,
 			strokeStyle: 'transparent',
 		})
 		this._count_drawn_cells()
