@@ -30,6 +30,11 @@ export default defineConfig([
 			}],
 			"no-unused-private-class-members": "warn",
 
+			// Spacing: prevent extra/unnecessary spaces (auto-fixable where applicable)
+			"no-multi-spaces": "error",
+			"no-trailing-spaces": "error",
+			"@stylistic/key-spacing": ["error", { "beforeColon": false, "afterColon": true, "mode": "strict" }],
+
 			// Prevent redeclaring base-class fields like `element`
 			"no-restricted-syntax": ["warn", {
 				"selector": "ClassDeclaration[superClass.name='cJQueryWidgetClass'] PropertyDefinition[key.name='element']",
@@ -46,6 +51,10 @@ export default defineConfig([
 			// e.g., `if (x) doThing()` -> 
 			//       `if (x)\n  doThing()`
 			"nonblock-statement-body-position": ["error", "below"],// [3](https://eslint.org/docs/latest/rules/nonblock-statement-body-position)
+			// Require a blank line after control blocks (auto-fixable)
+			"padding-line-between-statements": ["error",
+				{ "blankLine": "always", "prev": "block-like", "next": "*" },
+			],
 
 			// Strongly recommended along with the above so fixes are unambiguous
 			// Require braces for all control statements (auto-fixable)

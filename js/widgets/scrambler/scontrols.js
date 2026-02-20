@@ -8,7 +8,7 @@ const SCRAMBLE_CONSTS={
 	MAX_INPUT_LENGTH: null,
 	GRID_ROWS: 100,
 	GRID_COLS: 100,
-	CELL_SIZE:5,
+	CELL_SIZE: 5,
 	BAD_INPUT_COLOUR: 'red',
 	MIN_STEPS: 5,
 	MAX_STEPS: 100
@@ -22,7 +22,7 @@ class cScrambleWidget extends cJQueryWidgetClass {
 		super(poOptions, poElement)
 
 		if (!poOptions.name)
-			$.error('missing name')	
+			$.error('missing name')
 
 	}
 
@@ -46,12 +46,12 @@ class cScrambleWidget extends cJQueryWidgetClass {
 
 	//*************************************************************************
 	/**
-	 * the grid area shows the current state of the scrambled data and the 
+	 * the grid area shows the current state of the scrambled data and the
 	 * cellular automata from where the scrambling rules are read
 	 */
 
 	_render_grids(){
-		var oElement = this.element 
+		var oElement = this.element
 		var oOptions = this.options
 		//------------------------------------------grids
 		var oGridDiv = $('<div>', {class: 'w3-card w3-margin'})
@@ -70,6 +70,7 @@ class cScrambleWidget extends cJQueryWidgetClass {
 					oLeftCell.text("This is where the scrambling happens")
 					oGridContainer.append(oLeftCell)
 				}
+
 				oGridDiv.append(oGridContainer)
 
 				//the right grid shows the cellular automata from where the scrambling rules are read
@@ -82,21 +83,24 @@ class cScrambleWidget extends cJQueryWidgetClass {
 						oCanvasSpan.cacanvas({grid_name: oOptions.name, cols: SCRAMBLE_CONSTS.GRID_COLS, rows: SCRAMBLE_CONSTS.GRID_ROWS, cell_size: SCRAMBLE_CONSTS.CELL_SIZE})
 						oRightCell.append(oCanvasSpan)
 					}
+
 					oGridContainer.append(oRightCell)
 				}
+
 				oGridDiv.append(oGridContainer)
 			}
+
 			oElement.append(oGridDiv)
 		}
 	}
 
 	//*************************************************************************
-	/* 
+	/*
 		the rule text is readonly, it is displayed for info only.
 		the user can change the rule by importing it from index.html
 	*/
 	_render_rule(){
-		var oElement = this.element 
+		var oElement = this.element
 		//------------------------------------------the rule
 		var oRuleDiv = $('<div>', {class: 'w3-card w3-margin'})
 		{
@@ -116,23 +120,24 @@ class cScrambleWidget extends cJQueryWidgetClass {
 			})
 			oRuleDiv.append(oRuleText)
 
-			oElement.append(oRuleDiv)	
-		}	
+			oElement.append(oRuleDiv)
+		}
 	}
 
 	//*************************************************************************
 	/* the importer is a common component that the user can use to import data from index.html */
 	_render_importer(){
 		var oOptions = this.options
-		var oElement = this.element 
+		var oElement = this.element
 		//------------------------------------------importer
 		var oJsonDiv = $('<div>', {class: 'w3-card w3-margin'})
 		{
 			oJsonDiv.text("This is where the importer goes")
-			oJsonDiv.cajson({ grid_name: oOptions.name , create_button:false})	//make into widget
+			oJsonDiv.cajson({ grid_name: oOptions.name , create_button: false})	//make into widget
 
 		}
-		oElement.append(oJsonDiv)	
+
+		oElement.append(oJsonDiv)
 
 	}
 
@@ -141,7 +146,7 @@ class cScrambleWidget extends cJQueryWidgetClass {
 	 * the output area will contain the scrambled text in base64 format
 	 */
 	_render_outputs(){
-		var oElement = this.element 
+		var oElement = this.element
 		var oOutputDiv = $('<div>', {class: 'w3-card w3-margin'})
 		{
 			var oHeader = $('<header>', {class: 'w3-container w3-blue'})
@@ -159,13 +164,13 @@ class cScrambleWidget extends cJQueryWidgetClass {
 			})
 			oOutputDiv.append(oOutputText)
 
-			oElement.append(oOutputDiv)	
-		}	
+			oElement.append(oOutputDiv)
+		}
 	}
 
 	//*************************************************************************
 	_render_inputs(){
-		var oElement = this.element 
+		var oElement = this.element
 
 		//------------------------------------------input text
 		var oInputDiv = $('<div>', {class: 'w3-card w3-margin'})
@@ -190,11 +195,11 @@ class cScrambleWidget extends cJQueryWidgetClass {
 				oInputDiv.append(oInputText)
 			}
 
-	
+
 			//number of initial CA steps to perform before reading the operations from the grid
 			var oStepsdiv = $('<div>', {class: 'w3-container'})
 			{
-				var oLabel = $('<label>', {class:"w3-text-blue"})
+				var oLabel = $('<label>', {class: "w3-text-blue"})
 				{
 					oLabel.text("Number of steps to scramble must an integer between " + SCRAMBLE_CONSTS.MIN_STEPS + " and " + SCRAMBLE_CONSTS.MAX_STEPS)
 					oStepsdiv.append(oLabel)
@@ -216,10 +221,11 @@ class cScrambleWidget extends cJQueryWidgetClass {
 					oStepsInput.on('blur input', () => this._onInputStepsBlur())
 					oStepsdiv.append(oStepsInput)
 				}
+
 				oInputDiv.append(oStepsdiv)
 			}
 
-			oElement.append(oInputDiv)	
+			oElement.append(oInputDiv)
 		}
 	}
 
@@ -234,8 +240,9 @@ class cScrambleWidget extends cJQueryWidgetClass {
 		var bValid = false
 		if (!sValue.includes('.')) {
 			var iValue = parseInt(sValue)
-			bValid =  iValue >= SCRAMBLE_CONSTS.MIN_STEPS && iValue <= SCRAMBLE_CONSTS.MAX_STEPS
+			bValid = iValue >= SCRAMBLE_CONSTS.MIN_STEPS && iValue <= SCRAMBLE_CONSTS.MAX_STEPS
 		}
+
 		oInput.css('border-color', bValid ? '' : SCRAMBLE_CONSTS.BAD_INPUT_COLOUR)
 		return bValid
 	}
@@ -289,7 +296,7 @@ $.widget('ck.cascrambler', {
 	},
 
 	_create: function () {
-		var oWidget = new cScrambleWidget(this.options, this.element)	
+		var oWidget = new cScrambleWidget(this.options, this.element)
 		oWidget.render()
 	}
 })
