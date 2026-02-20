@@ -43,7 +43,8 @@ class cScrambleWidget extends cJQueryWidgetClass {
 		cCAGridEvent.subscribe( sName, poEvent => this.onGridEvent(poEvent))
 		cCACanvasEvent.subscribe( sName, poEvent => this.onCanvasEvent(poEvent))
 		cCARuleEvent.subscribe( sName,	 poEvent => this.onRuleEvent(poEvent))
-		cCAActionEvent.fire_event(sName, cCAActionEvent.actions.ready)
+
+		cCAActionEvent.fire_event(sName, cCAActionEvent.actions.ready)	// sent ready event
 	}
 
 	//*************************************************************************
@@ -102,7 +103,8 @@ class cScrambleWidget extends cJQueryWidgetClass {
 				id: sID,
 				placeholder: 'rule goes here',
 				rows: 1,
-				style: "width: 100%;"
+				style: "width: 100%",
+				disabled: true
 			})
 			oRuleDiv.append(oRuleText)
 
