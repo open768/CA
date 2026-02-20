@@ -28,10 +28,6 @@ class cCARemoteControls extends cJQueryWidgetClass {
 		this.grid_name = poOptions.grid_name
 		var oElement = poElement
 
-		// check dependencies
-		if (!bean)
-			$.error('bean is missing , check includes')
-
 		// set basic stuff
 		oElement.addClass('ui-widget')
 

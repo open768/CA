@@ -32,10 +32,6 @@ class cCAStatusWidget extends cJQueryWidgetClass {
 		// set basic stuff
 		poElement.addClass('ui-widget')
 
-		// check dependencies
-		if (!bean)
-			$.error('bean is missing , chack includes')
-
 		// subscribe to CAEvents
 		cCACanvasEvent.subscribe(this.grid_name, poEvent => this.onCACanvasEvent(poEvent))
 		cCAActionEvent.subscribe(this.grid_name, poEvent => this.onCAActionEvent(poEvent))

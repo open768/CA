@@ -7,11 +7,10 @@ https://creativecommons.org/licenses/by/4.0/legalcode
 contact cluck@chickenkatsu.co.uk
 // USE AT YOUR OWN RISK - NO GUARANTEES OF ANY FORM ARE EITHER EXPRESSED OR IMPLIED
 
-Cryptography code demonstrated in this application is covered by the UK Govt 
-Open General Export License for Cryptographic development 
-(see https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/1101784/open-general-export-licence-cryptographic-development.pdf) 
-and is not intended for dual use as defined by this license. 
-You the consumer of this application are entirely responsible for importing this code into your own country. if you disagree please close this page.
+Any Cryptography concepts demonstrated in this code are covered by the UK Govt Open General Export License for Cryptographic development 
+(see https://www.gov.uk/government/publications/open-general-export-licence-cryptographic-development) 
+and is not intended for any dual use as defined by the UK government license. 
+You the consumer of this code are solely and entirely responsible for importing this code into your own country..
 
 **************************************************************************/
 /** Scrambler Events */

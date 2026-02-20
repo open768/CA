@@ -49,8 +49,6 @@ class cCACanvas extends cJQueryWidgetClass {
 	constructor(poOptions, poElement)  {
 		super(poOptions, poElement)	
 		// check dependencies
-		if (!bean)
-			$.error('bean class is missing! check includes')
 
 		if (!poOptions.grid_name)
 			$.error('name must be provided')

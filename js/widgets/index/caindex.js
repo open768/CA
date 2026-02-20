@@ -16,9 +16,6 @@ class cIndexWidget extends cJQueryWidgetClass{
 		if (typeof cCARule !== 'function')
 			$.error('missing cCARule class')
 
-		if (!bean)
-			$.error('missing bean class')
-
 		if (!poOptions.name)
 			$.error('missing name')	
 	}

@@ -26,9 +26,6 @@ class cCAControlsR  extends cJQueryWidgetClass {
 		oElement.addClass('ui-widget')
 
 		// check dependencies
-		if (!bean)
-			$.error('bean is missing , chack includes')
-
 		if (!oElement.cagridinit)
 			$.error('cainit is missing , chack includes')
 
