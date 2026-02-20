@@ -67,7 +67,11 @@ class cCAGridInitialiser {
 			for (var iCol = iStartCol; iCol <= poGrid.cols; iCol += iSize * 2)
 				for (var iDeltaR = 0; iDeltaR < iSize; iDeltaR++)
 					for (var iDeltaC = 0; iDeltaC < iSize; iDeltaC++)
-						poGrid.setCellValue(iRow + iDeltaR, iCol + iDeltaC, 1)
+						poGrid.setCellValue(
+							iRow + iDeltaR,
+							iCol + iDeltaC,
+							1
+						)
 
 			if (iStartCol == 1)
 				iStartCol = iSize + 1
@@ -85,15 +89,37 @@ class cCAGridInitialiser {
 		var iMidC = Math.floor(poGrid.cols / 2)
 		var iMidR = Math.floor(poGrid.rows / 2)
 
-		var iDiameter = Math.min(iMidC, iMidR) / 2
+		var iDiameter = Math.min(
+			iMidC,
+			iMidR
+		) / 2
 		var iDSq = iDiameter * iDiameter
 		for (var x = iDiameter; x >= 0; x--) {
-			var y = Math.sqrt(iDSq - Math.pow(x, 2))
+			var y = Math.sqrt(iDSq - Math.pow(
+				x,
+				2
+			))
 			y = Math.round(Math.abs(y))
-			poGrid.setCellValue(iMidR + y, iMidC - x, 1)
-			poGrid.setCellValue(iMidR - y, iMidC - x, 1)
-			poGrid.setCellValue(iMidR + y, iMidC + x, 1)
-			poGrid.setCellValue(iMidR - y, iMidC + x, 1)
+			poGrid.setCellValue(
+				iMidR + y,
+				iMidC - x,
+				1
+			)
+			poGrid.setCellValue(
+				iMidR - y,
+				iMidC - x,
+				1
+			)
+			poGrid.setCellValue(
+				iMidR + y,
+				iMidC + x,
+				1
+			)
+			poGrid.setCellValue(
+				iMidR - y,
+				iMidC + x,
+				1
+			)
 		}
 	}
 
@@ -106,12 +132,32 @@ class cCAGridInitialiser {
 		var iMidC = Math.floor(poGrid.cols / 2)
 		var iMidR = Math.floor(poGrid.rows / 2)
 
-		poGrid.setCellValue(iMidR, iMidC, 1)
+		poGrid.setCellValue(
+			iMidR,
+			iMidC,
+			1
+		)
 		for (var i = 1; i <= 4; i++) {
-			poGrid.setCellValue(iMidR + i, iMidC, 1)
-			poGrid.setCellValue(iMidR - i, iMidC, 1)
-			poGrid.setCellValue(iMidR, iMidC + i, 1)
-			poGrid.setCellValue(iMidR, iMidC - i, 1)
+			poGrid.setCellValue(
+				iMidR + i,
+				iMidC,
+				1
+			)
+			poGrid.setCellValue(
+				iMidR - i,
+				iMidC,
+				1
+			)
+			poGrid.setCellValue(
+				iMidR,
+				iMidC + i,
+				1
+			)
+			poGrid.setCellValue(
+				iMidR,
+				iMidC - i,
+				1
+			)
 		}
 	}
 
@@ -125,7 +171,11 @@ class cCAGridInitialiser {
 			if (iNr > poGrid.cols)
 				break
 
-			poGrid.setCellValue(iNr, iNr, 1)
+			poGrid.setCellValue(
+				iNr,
+				iNr,
+				1
+			)
 		}
 	}
 
@@ -143,10 +193,26 @@ class cCAGridInitialiser {
 			var dx = iStep
 			var dy = 10 - dx
 
-			poGrid.setCellValue(iMidRow - dy, iMidCol - dx, 1)
-			poGrid.setCellValue(iMidRow - dy, iMidCol + dx, 1)
-			poGrid.setCellValue(iMidRow + dy, iMidCol - dx, 1)
-			poGrid.setCellValue(iMidRow + dy, iMidCol + dx, 1)
+			poGrid.setCellValue(
+				iMidRow - dy,
+				iMidCol - dx,
+				1
+			)
+			poGrid.setCellValue(
+				iMidRow - dy,
+				iMidCol + dx,
+				1
+			)
+			poGrid.setCellValue(
+				iMidRow + dy,
+				iMidCol - dx,
+				1
+			)
+			poGrid.setCellValue(
+				iMidRow + dy,
+				iMidCol + dx,
+				1
+			)
 		}
 	}
 
@@ -158,7 +224,11 @@ class cCAGridInitialiser {
 		cDebug.write('init hline')
 		var iNr = Math.floor(poGrid.rows / 2)
 		for (var iNc = 1; iNc <= poGrid.cols; iNc++)
-			poGrid.setCellValue(iNr, iNc, 1)
+			poGrid.setCellValue(
+				iNr,
+				iNc,
+				1
+			)
 	}
 
 	//* ***************************************************************************
@@ -170,7 +240,11 @@ class cCAGridInitialiser {
 		for (var iNr = 1; iNr <= poGrid.rows; iNr++)
 			for (var iNc = 1; iNc <= poGrid.cols; iNc++) {
 				var iRnd = Math.round(Math.random())
-				poGrid.setCellValue(iNr, iNc, iRnd)
+				poGrid.setCellValue(
+					iNr,
+					iNc,
+					iRnd
+				)
 			}
 	}
 
@@ -187,7 +261,11 @@ class cCAGridInitialiser {
 		for (var iNc = 1; iNc <= poGrid.cols; iNc++) {
 			var fSin = Math.sin(iRad)
 			var iNr = iMidrow + Math.round(fSin * iMidrow)
-			poGrid.setCellValue(iNr, iNc, 1)
+			poGrid.setCellValue(
+				iNr,
+				iNc,
+				1
+			)
 			iRad += dRadian
 		}
 	}
@@ -200,7 +278,11 @@ class cCAGridInitialiser {
 		cDebug.write('init vline')
 		var iNc = Math.floor(poGrid.cols / 2)
 		for (var iNr = 1; iNr <= poGrid.cols; iNr++)
-			poGrid.setCellValue(iNr, iNc, 1)
+			poGrid.setCellValue(
+				iNr,
+				iNc,
+				1
+			)
 	}
 
 	//* ***************************************************************************
@@ -213,6 +295,10 @@ class cCAGridInitialiser {
 		var iMidR = Math.floor(poGrid.rows / 2)
 		for (var iNc = iMidC; iNc <= iMidC + 1; iNc++)
 			for (var iNr = iMidR; iNr <= iMidR + 1; iNr++)
-				poGrid.setCellValue(iNr, iNc, 1)
+				poGrid.setCellValue(
+					iNr,
+					iNc,
+					1
+				)
 	}
 }

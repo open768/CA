@@ -16,7 +16,10 @@ class cCAGridStateInit extends cJQueryWidgetClass {
 
 	//* **************************************************************
 	constructor(poOptions, poElement) {
-		super(poOptions, poElement)
+		super(
+			poOptions,
+			poElement
+		)
 		this.base_name = poOptions.base_name
 
 		// set basic stuff
@@ -33,7 +36,11 @@ class cCAGridStateInit extends cJQueryWidgetClass {
 		var iSelected = parseInt($(poEvent.target).val()) // selected value in pulldown
 
 		// ---------tell subscribers to init
-		cCAActionEvent.fire_event(this.base_name, cCAActionEvent.actions.grid_init, iSelected)
+		cCAActionEvent.fire_event(
+			this.base_name,
+			cCAActionEvent.actions.grid_init,
+			iSelected
+		)
 	}
 
 	//* **************************************************************
@@ -42,19 +49,42 @@ class cCAGridStateInit extends cJQueryWidgetClass {
 	_init() {
 		var oElement = this.element
 
-		var oDiv = $('<DIV>', { class: 'ui-widget-header' })
+		var oDiv = $(
+			'<DIV>',
+			{
+				class: 'ui-widget-header'
+			}
+		)
 		oDiv.append('initialise')
 		oElement.append(oDiv)
 
-		oDiv = $('<DIV>', { class: 'ui-widget-content' })
-		var oSelect = $('<SELECT>', {
-			width: 200,
-			title: 'choose a pattern to initialise the grid with',
-		})
-		oSelect.append($('<option>', { selected: 1, disabled: 1, value: -1 }).append('Initialise'))
+		oDiv = $(
+			'<DIV>',
+			{
+				class: 'ui-widget-content'
+			}
+		)
+		var oSelect = $(
+			'<SELECT>',
+			{
+				width: 200,
+				title: 'choose a pattern to initialise the grid with',
+			}
+		)
+		oSelect.append($(
+			'<option>',
+			{
+				selected: 1, disabled: 1, value: -1
+			}
+		).append('Initialise'))
 		for (var sName in GRID_INIT_TYPES) {
 			var oItem = GRID_INIT_TYPES[sName]
-			var oOption = $('<option>', { value: oItem.id }).append(oItem.label)
+			var oOption = $(
+				'<option>',
+				{
+					value: oItem.id
+				}
+			).append(oItem.label)
 			oSelect.append(oOption)
 		}
 
@@ -69,16 +99,22 @@ class cCAGridStateInit extends cJQueryWidgetClass {
 //###################################################################
 //#
 //###################################################################
-$.widget('ck.cagridinit', {
-	options: {
-		base_name: null,
-	},
-	_create: function () {
+$.widget(
+	'ck.cagridinit',
+	{
+		options: {
+			base_name: null,
+		},
+		_create: function () {
 		// checks
-		var oOptions = this.options
-		if (!oOptions.base_name)
-			$.error('base name not provided')
+			var oOptions = this.options
+			if (!oOptions.base_name)
+				$.error('base name not provided')
 
-		new cCAGridStateInit(oOptions, this.element) // call class constructor
-	},
-})
+			new cCAGridStateInit(
+				oOptions,
+				this.element
+			) // call class constructor
+		},
+	}
+)

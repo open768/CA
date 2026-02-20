@@ -22,7 +22,10 @@ class cCARuleBinaryExporter {
 	 */
 	static export(poRule, piState) {
 		cDebug.enter()
-		if (!cCommon.obj_is(poRule, 'cCARule'))
+		if (!cCommon.obj_is(
+			poRule,
+			'cCARule'
+		))
 			throw new CAException('export requires cCARule')
 
 		var sOut = ''
@@ -30,7 +33,10 @@ class cCARuleBinaryExporter {
 			throw new CAException('invalid state requested')
 
 		for (var i = 1; i <= CACONSTS.MAX_INPUTS; i++)
-			sOut = sOut + poRule.get_rule_output(piState, i)
+			sOut = sOut + poRule.get_rule_output(
+				piState,
+				i
+			)
 
 		cDebug.leave()
 		return sOut
@@ -58,7 +64,10 @@ class cCARuleBinaryImporter {
 			)
 
 		if (psInput.length > CACONSTS.MAX_INPUTS)
-			psInput = psInput.slice(0, CACONSTS.MAX_INPUTS - 1)
+			psInput = psInput.slice(
+				0,
+				CACONSTS.MAX_INPUTS - 1
+			)
 
 		// create  the rule
 		var oRule = new cCARule()
@@ -66,7 +75,11 @@ class cCARuleBinaryImporter {
 		oRule.has_state_transitions = false
 		for (var i = 1; i <= CACONSTS.MAX_INPUTS; i++) {
 			var ch = psInput.charAt(i - 1)
-			oRule.set_output(CA_STATES.default_state, i, parseInt(ch))
+			oRule.set_output(
+				CA_STATES.default_state,
+				i,
+				parseInt(ch)
+			)
 		}
 
 		cDebug.leave()
@@ -97,11 +110,17 @@ class cCARuleRepeatBase64Importer {
 		var iRepeat = Math.floor(CACONSTS.BASE64_LENGTH / sInput.length)
 		var s64 = sInput.repeat(iRepeat)
 		var iRemain = CACONSTS.BASE64_LENGTH - s64.length
-		s64 = s64 + sInput.slice(0, iRemain)
+		s64 = s64 + sInput.slice(
+			0,
+			iRemain
+		)
 		if (s64.length < CACONSTS.BASE64_LENGTH)
 			throw new CAException('base64 not long enough, must be ' + CACONSTS.BASE64_LENGTH + 'chars')
 
-		var sBin = cSimpleBase64.toBinary(s64, CACONSTS.MAX_INPUTS)
+		var sBin = cSimpleBase64.toBinary(
+			s64,
+			CACONSTS.MAX_INPUTS
+		)
 		var oRule = cCARuleBinaryImporter.makeRule(sBin)
 
 		cDebug.leave()
@@ -126,14 +145,20 @@ class cCARuleBase64Exporter {
 	static export(poRule, piState) {
 		cDebug.enter()
 
-		if (!cCommon.obj_is(poRule, 'cCARule'))
+		if (!cCommon.obj_is(
+			poRule,
+			'cCARule'
+		))
 			throw new CAException('export requires cCARule')
 
 		if (piState > poRule.stateRules.length)
 			throw new CAException('invalid state requested')
 
 		// a bit of a long way to go about it
-		var sBin = cCARuleBinaryExporter.export(poRule, piState) // convert rule to binary
+		var sBin = cCARuleBinaryExporter.export(
+			poRule,
+			piState
+		) // convert rule to binary
 		var sOut = cSimpleBase64.toBase64(sBin) // convert binary to base64string
 		if (sOut.length !== CACONSTS.BASE64_LENGTH)
 			throw new CAException('generated base64 is the wrong length')
@@ -164,7 +189,10 @@ class cCARuleBase64Importer {
 		if (!cConverterEncodings.isBase64(ps64))
 			throw new CAException('input must be base64  string')
 
-		var sBin = cSimpleBase64.toBinary(ps64, CACONSTS.MAX_INPUTS)
+		var sBin = cSimpleBase64.toBinary(
+			ps64,
+			CACONSTS.MAX_INPUTS
+		)
 		var oRule = cCARuleBinaryImporter.makeRule(sBin)
 
 		cDebug.leave()
@@ -246,14 +274,20 @@ class cCARuleObjExporter {
 	static export(poRule) {
 		cDebug.enter()
 
-		if (!cCommon.obj_is(poRule, 'cCARule'))
+		if (!cCommon.obj_is(
+			poRule,
+			'cCARule'
+		))
 			throw new CAException('export requires cCARule')
 
 		var oExport = new cCAExportedObj()
 		oExport.neighbour_type = poRule.neighbour_type
 		for (var iState = 1; iState <= poRule.stateRules.length; iState++) {
 			var oState = new cCAExportedState(iState)
-			oState.rule = cCARuleBase64Exporter.export(poRule, iState)
+			oState.rule = cCARuleBase64Exporter.export(
+				poRule,
+				iState
+			)
 			oExport.states.push(oState)
 		}
 
@@ -323,8 +357,15 @@ class cCaIdentityRule extends cCARuleMaker {
 		oRule.has_state_transitions = false
 
 		for (var i = 1; i <= CACONSTS.MAX_INPUTS; i++) {
-			var iCentre = cCAIndexOps.get_value(i, CA_DIRECTIONS.centre)
-			oRule.set_output(CA_STATES.default_state, i, iCentre)
+			var iCentre = cCAIndexOps.get_value(
+				i,
+				CA_DIRECTIONS.centre
+			)
+			oRule.set_output(
+				CA_STATES.default_state,
+				i,
+				iCentre
+			)
 		}
 
 		cDebug.leave()
@@ -348,7 +389,11 @@ class cCaRandomRule extends cCARuleMaker {
 
 		for (var i = 1; i <= CACONSTS.MAX_INPUTS; i++) {
 			var iRnd = Math.floor(Math.random() * 1.99)
-			oRule.set_output(CA_STATES.default_state, i, iRnd)
+			oRule.set_output(
+				CA_STATES.default_state,
+				i,
+				iRnd
+			)
 		}
 
 		cDebug.leave()
@@ -392,11 +437,18 @@ class cCARuleWolfram1DImporter extends cCARuleMaker {
 				var iNorthBits = cCAIndexOps.get_north_bits(iInput)
 				var iCentre
 				if (iNorthBits == 0)
-					iCentre = cCAIndexOps.get_value(iInput, CA_DIRECTIONS.centre)
+					iCentre = cCAIndexOps.get_value(
+						iInput,
+						CA_DIRECTIONS.centre
+					)
 				else
 					iCentre = aWolfram[iNorthBits]
 
-				oRule.set_output(CA_STATES.default_state, iInput, iCentre)
+				oRule.set_output(
+					CA_STATES.default_state,
+					iInput,
+					iCentre
+				)
 			}
 		}
 
@@ -468,7 +520,10 @@ class cCARuleLifeImporter extends cCARuleMaker {
 
 		// populate the rule
 		for (var i = 1; i <= CACONSTS.MAX_INPUTS; i++) {
-			var iCentre = cCAIndexOps.get_value(i, CA_DIRECTIONS.centre)
+			var iCentre = cCAIndexOps.get_value(
+				i,
+				CA_DIRECTIONS.centre
+			)
 			var iCount = cCAIndexOps.get_bit_count(i) - iCentre
 			var iNewValue
 
@@ -482,7 +537,11 @@ class cCARuleLifeImporter extends cCARuleMaker {
 				if (aBorn[iCount] == 1)
 					iNewValue = 1
 
-			oRule.set_output(CA_STATES.default_state, i, iNewValue)
+			oRule.set_output(
+				CA_STATES.default_state,
+				i,
+				iNewValue
+			)
 		}
 
 		cDebug.leave()
@@ -504,9 +563,15 @@ class cCAModifierTypes {
 	 * @type {{ at_least: { id: number; label: string; }; exactly: { id: number; label: string; }; at_most: { id: number; label: string; }; }}
 	 */
 	static verbs = {
-		at_least: { id: 1, label: 'At least' },
-		exactly: { id: 2, label: 'Exactly' },
-		at_most: { id: 3, label: 'At Most' },
+		at_least: {
+			id: 1, label: 'At least'
+		},
+		exactly: {
+			id: 2, label: 'Exactly'
+		},
+		at_most: {
+			id: 3, label: 'At Most'
+		},
 	}
 
 	/**
@@ -515,9 +580,15 @@ class cCAModifierTypes {
 	 * @type {{ one: { id: number; label: string; }; zero: { id: number; label: string; }; any: { id: number; label: string; }; }}
 	 */
 	static states = {
-		one: { id: 1, label: '1' },
-		zero: { id: 2, label: '0' },
-		any: { id: 3, label: 'any' },
+		one: {
+			id: 1, label: '1'
+		},
+		zero: {
+			id: 2, label: '0'
+		},
+		any: {
+			id: 3, label: 'any'
+		},
 	}
 }
 
@@ -540,7 +611,10 @@ class cCARuleModifier {
 	 * @returns {*}
 	 */
 	static modify_neighbours(poRule, piInState, piVerb, piCount, piOutState) {
-		if (!cCommon.obj_is(poRule, 'cCARule'))
+		if (!cCommon.obj_is(
+			poRule,
+			'cCARule'
+		))
 			throw new CAException('function requires cCARule')
 
 		if (piCount < 1 || piCount > 8)
@@ -550,7 +624,10 @@ class cCARuleModifier {
 			throw new CAException('invalid output state :' + piOutState)
 
 		for (var i = 1; i <= CACONSTS.MAX_INPUTS; i++) {
-			var iCentre = cCAIndexOps.get_value(i, CA_DIRECTIONS.centre)
+			var iCentre = cCAIndexOps.get_value(
+				i,
+				CA_DIRECTIONS.centre
+			)
 			// ---------------------------------------------------------------
 			var bMatches = false
 			switch (piInState) {
@@ -587,7 +664,11 @@ class cCARuleModifier {
 			}
 
 			if (bMatches)
-				poRule.set_output(CA_STATES.default_state, i, piOutState)
+				poRule.set_output(
+					CA_STATES.default_state,
+					i,
+					piOutState
+				)
 		}
 
 		return poRule

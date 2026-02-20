@@ -33,7 +33,11 @@ class cCACryptEvent extends cCABaseEvent{
 	 * @returns {null}
 	 */
 	static triggerStatus( psMessage){
-		var oCryptEvent = new cCACryptEvent(this.types.general, this.actions.status, psMessage)
+		var oCryptEvent = new cCACryptEvent(
+			this.types.general,
+			this.actions.status,
+			psMessage
+		)
 		oCryptEvent.trigger()
 	}
 }

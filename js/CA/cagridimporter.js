@@ -71,7 +71,10 @@ class cCAGridJSONExporter {
 	 */
 	static export(poGrid) {
 		cDebug.enter()
-		if (!cCommon.obj_is(poGrid, 'cCAGrid'))
+		if (!cCommon.obj_is(
+			poGrid,
+			'cCAGrid'
+		))
 			throw new CAException('param 1 is not cCAGrid')
 
 		var oRule = poGrid.get_rule()
@@ -101,7 +104,10 @@ class cCAGridJSONExporter {
 	 * @returns {string}
 	 */
 	static get_grid_base64(poGrid) {
-		if (!cCommon.obj_is(poGrid, 'cCAGrid'))
+		if (!cCommon.obj_is(
+			poGrid,
+			'cCAGrid'
+		))
 			throw new CAException('param 1 is not cCAGrid')
 
 		var oRule = poGrid.get_rule()
@@ -113,7 +119,11 @@ class cCAGridJSONExporter {
 
 		for (var iRow = 1; iRow <= poGrid.rows; iRow++)
 			for (var iCol = 1; iCol <= poGrid.cols; iCol++) {
-				var oCell = poGrid.getCell(iRow, iCol, true)
+				var oCell = poGrid.getCell(
+					iRow,
+					iCol,
+					true
+				)
 				sBin = sBin + oCell.value
 			}
 
@@ -147,23 +157,37 @@ class cCAGridJSONImporter {
 			throw new CAException('invalid object')
 
 		// -------------------------------------------------------------------
-		/** @type {cCAGrid}	 */ var oGrid = new cCAGrid(psName, poJson.grid.rows, poJson.grid.cols)
+		/** @type {cCAGrid}	 */ var oGrid = new cCAGrid(
+			psName,
+			poJson.grid.rows,
+			poJson.grid.cols
+		)
 
 		// -------------------------------------------------------------------
 		/** @type {cCARule}	 */ var oRule = cCARuleObjImporter.makeRule(poJson.rule)
-		oGrid.set_rule(oRule, false)
+		oGrid.set_rule(
+			oRule,
+			false
+		)
 
 		// -------------------------------------------------------------------
 		oGrid.create_cells()
 		var iBinLength = oGrid.rows * oGrid.cols
 		var s64 = poJson.grid.data
-		var sBin = cSimpleBase64.toBinary(s64, iBinLength) // convert base64 to binary - have to set expected bin length
+		var sBin = cSimpleBase64.toBinary(
+			s64,
+			iBinLength
+		) // convert base64 to binary - have to set expected bin length
 		var iIndex = 0
 
 		for (var iRow = 1; iRow <= oGrid.rows; iRow++)
 			for (var iCol = 1; iCol <= oGrid.cols; iCol++) {
 				var sBinDigit = sBin[iIndex]
-				oGrid.setCellValue(iRow, iCol, parseInt(sBinDigit))
+				oGrid.setCellValue(
+					iRow,
+					iCol,
+					parseInt(sBinDigit)
+				)
 				iIndex++
 			}
 

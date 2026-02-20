@@ -53,23 +53,51 @@ class CARULE_TYPES extends cStaticClass {
 }
 
 class CACONSTS extends cStaticClass {
-	static MAX_INPUTS = Math.pow(2, 9) - 1
-	static BASE64_LENGTH = Math.ceil((Math.pow(2, 9) - 1) / 6)
+	static MAX_INPUTS = Math.pow(
+		2,
+		9
+	) - 1
+	static BASE64_LENGTH = Math.ceil((Math.pow(
+		2,
+		9
+	) - 1) / 6)
 	static NO_BOREDOM = -1
 }
 
 class GRID_INIT_TYPES extends cStaticClass {
-	static blank = { id: 0, label: 'Blank' }
-	static block = { id: 1, label: 'Block' }
-	static checker = { id: 2, label: 'Checker' }
-	static circle = { id: 3, label: 'Circle' }
-	static cross = { id: 4, label: 'Cross' }
-	static diagonal = { id: 5, label: 'Diagonal' }
-	static diamond = { id: 6, label: 'Diamond' }
-	static horiz_line = { id: 7, label: 'H-Line' }
-	static sine = { id: 8, label: 'Sine' }
-	static random = { id: 9, label: 'Random' }
-	static vert_line = { id: 10, label: 'V-Line' }
+	static blank = {
+		id: 0, label: 'Blank'
+	}
+	static block = {
+		id: 1, label: 'Block'
+	}
+	static checker = {
+		id: 2, label: 'Checker'
+	}
+	static circle = {
+		id: 3, label: 'Circle'
+	}
+	static cross = {
+		id: 4, label: 'Cross'
+	}
+	static diagonal = {
+		id: 5, label: 'Diagonal'
+	}
+	static diamond = {
+		id: 6, label: 'Diamond'
+	}
+	static horiz_line = {
+		id: 7, label: 'H-Line'
+	}
+	static sine = {
+		id: 8, label: 'Sine'
+	}
+	static random = {
+		id: 9, label: 'Random'
+	}
+	static vert_line = {
+		id: 10, label: 'V-Line'
+	}
 }
 
 //###############################################################################

@@ -55,6 +55,17 @@ export default defineConfig([
 			"padding-line-between-statements": ["error",
 				{ "blankLine": "always", "prev": "block-like", "next": "*" },
 			],
+			// Require a newline after `{` in object/import/export braces
+			"@stylistic/object-curly-newline": ["error", {
+				"ObjectExpression": "always",
+				"ObjectPattern": "always",
+				"ImportDeclaration": "always",
+				"ExportDeclaration": "always",
+			}],
+			// Put each function call argument on its own line (puts `{` on its own line for object literals)
+			"@stylistic/function-call-argument-newline": ["error", "always"],
+			// When multiple arguments, put `(` and first argument on a new line
+			"@stylistic/function-paren-newline": ["error", "multiline-arguments"],
 
 			// Strongly recommended along with the above so fixes are unambiguous
 			// Require braces for all control statements (auto-fixable)

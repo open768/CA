@@ -24,7 +24,10 @@ class cCARemoteControls extends cJQueryWidgetClass {
 
 	//* **************************************************************
 	constructor(poOptions, poElement) {
-		super(poOptions, poElement)
+		super(
+			poOptions,
+			poElement
+		)
 		this.base_name = poOptions.base_name
 		var oElement = poElement
 
@@ -32,9 +35,18 @@ class cCARemoteControls extends cJQueryWidgetClass {
 		oElement.addClass('ui-widget')
 
 		// subscribe to CAEvents
-		cCARuleEvent.subscribe(this.base_name, poEvent => this.onRuleEvent(poEvent))
-		cCACanvasEvent.subscribe(this.base_name, poEvent => this.onCanvasEvent(poEvent))
-		cCAGridEvent.subscribe(this.base_name, poEvent => this.onGridEvent(poEvent))
+		cCARuleEvent.subscribe(
+			this.base_name,
+			poEvent => this.onRuleEvent(poEvent)
+		)
+		cCACanvasEvent.subscribe(
+			this.base_name,
+			poEvent => this.onCanvasEvent(poEvent)
+		)
+		cCAGridEvent.subscribe(
+			this.base_name,
+			poEvent => this.onGridEvent(poEvent)
+		)
 
 		// put something in the widget
 		this._init()
@@ -57,7 +69,11 @@ class cCARemoteControls extends cJQueryWidgetClass {
 				break
 		}
 
-		cCAActionEvent.fire_event(this.base_name, cCAActionEvent.actions.control, iAction)
+		cCAActionEvent.fire_event(
+			this.base_name,
+			cCAActionEvent.actions.control,
+			iAction
+		)
 	}
 
 	//* **************************************************************
@@ -84,7 +100,10 @@ class cCARemoteControls extends cJQueryWidgetClass {
 	//* ***************************************************************************
 	onGridEvent(poEvent) {
 		if (poEvent.action === cCAGridEvent.actions.nochange)
-			setTimeout(() => this._enable_controls(false), 100) // stop
+			setTimeout(
+				() => this._enable_controls(false),
+				100
+			) // stop
 	}
 
 	//* **************************************************************
@@ -100,14 +119,32 @@ class cCARemoteControls extends cJQueryWidgetClass {
 	 */
 	_enable_controls(pbRunning) {
 		var oElement = this.element
-		var sID = cJquery.child_ID(oElement, cCARemoteControls.buttonNames.play)
-		cJquery.enable_element(sID, !pbRunning)
+		var sID = cJquery.child_ID(
+			oElement,
+			cCARemoteControls.buttonNames.play
+		)
+		cJquery.enable_element(
+			sID,
+			!pbRunning
+		)
 
-		sID = cJquery.child_ID(oElement, cCARemoteControls.buttonNames.step)
-		cJquery.enable_element(sID, !pbRunning)
+		sID = cJquery.child_ID(
+			oElement,
+			cCARemoteControls.buttonNames.step
+		)
+		cJquery.enable_element(
+			sID,
+			!pbRunning
+		)
 
-		sID = cJquery.child_ID(oElement, cCARemoteControls.buttonNames.stop)
-		cJquery.enable_element(sID, pbRunning)
+		sID = cJquery.child_ID(
+			oElement,
+			cCARemoteControls.buttonNames.stop
+		)
+		cJquery.enable_element(
+			sID,
+			pbRunning
+		)
 	}
 
 	//* **************************************************************
@@ -117,27 +154,51 @@ class cCARemoteControls extends cJQueryWidgetClass {
 		var oThis = this // needed for closure
 
 		function _add_button(psID, psiIcon, psTitle, piAction) {
-			var sID = cJquery.child_ID(oElement, psID)
-			var oButton = $('<button>', {
-				width: '30px',
-				height: '30px',
-				id: sID,
-				title: psTitle,
+			var sID = cJquery.child_ID(
+				oElement,
+				psID
+			)
+			var oButton = $(
+				'<button>',
+				{
+					width: '30px',
+					height: '30px',
+					id: sID,
+					title: psTitle,
+				}
+			)
+			oButton.button({
+				icon: psiIcon, showLabel: false
 			})
-			oButton.button({ icon: psiIcon, showLabel: false })
-			cJquery.enable_element(oButton, false)
+			cJquery.enable_element(
+				oButton,
+				false
+			)
 			oButton.click(() => oThis.onClickControl(piAction)) // retain oThis in closure
 			oDiv.append(oButton)
 		}
 
 		// --widget header------------------------------------------------
-		cJquery.add_widget_header(oElement, 'controls')
+		cJquery.add_widget_header(
+			oElement,
+			'controls'
+		)
 
 		// ---widget body
-		oDiv = $('<DIV>', { class: 'ui-widget-content' })
+		oDiv = $(
+			'<DIV>',
+			{
+				class: 'ui-widget-content'
+			}
+		)
 
 		// --- stop button----------------------------------------
-		_add_button(cCARemoteControls.buttonNames.stop, 'ui-icon-stop', 'stop', cCAActionEvent.control_actions.stop)
+		_add_button(
+			cCARemoteControls.buttonNames.stop,
+			'ui-icon-stop',
+			'stop',
+			cCAActionEvent.control_actions.stop
+		)
 		_add_button(
 			cCARemoteControls.buttonNames.play,
 			'ui-icon-circle-triangle-e',
@@ -158,16 +219,22 @@ class cCARemoteControls extends cJQueryWidgetClass {
 //###################################################################
 //#
 //###################################################################
-$.widget('ck.caremotecontrols', {
-	options: {
-		base_name: null,
-	},
-	_create: function () {
+$.widget(
+	'ck.caremotecontrols',
+	{
+		options: {
+			base_name: null,
+		},
+		_create: function () {
 		// checks
-		var oOptions = this.options
-		if (!oOptions.base_name)
-			$.error('base name not provided')
+			var oOptions = this.options
+			if (!oOptions.base_name)
+				$.error('base name not provided')
 
-		new cCARemoteControls(oOptions, this.element) // call class constructor
-	},
-})
+			new cCARemoteControls(
+				oOptions,
+				this.element
+			) // call class constructor
+		},
+	}
+)

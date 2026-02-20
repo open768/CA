@@ -10,7 +10,10 @@ For licenses that allow for commercial use please contact cluck@chickenkatsu.co.
 class cIndexWidget extends cJQueryWidgetClass{
 
 	constructor(poOptions, poElement){
-		super(poOptions, poElement)
+		super(
+			poOptions,
+			poElement
+		)
 
 		// check for classes
 		if (typeof cCARule !== 'function')
@@ -31,21 +34,41 @@ class cIndexWidget extends cJQueryWidgetClass{
 		{
 		// ----------------------------------------------------------------------------------
 		// left controls - rule configuration
-			var oCell = $('<div>', { class: 'w3-cell w3-cell-top w3-container' })
+			var oCell = $(
+				'<div>',
+				{
+					class: 'w3-cell w3-cell-top w3-container'
+				}
+			)
 			{
-				var oLeftCtrlDiv = $('<DIV>', { width: 350, id: 'leftControl' })
-				oLeftCtrlDiv.cacontrolsl({ base_name: sCaName })
+				var oLeftCtrlDiv = $(
+					'<DIV>',
+					{
+						width: 350, id: 'leftControl'
+					}
+				)
+				oLeftCtrlDiv.cacontrolsl({
+					base_name: sCaName
+				})
 				oCell.append(oLeftCtrlDiv)
 			}
 
 			oTopContainer.append(oCell)
 
 			// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-			oCell = $('<div>', { class: 'w3-cell w3-cell-top w3-container' })
+			oCell = $(
+				'<div>',
+				{
+					class: 'w3-cell w3-cell-top w3-container'
+				}
+			)
 			{
-				var oCanvasDiv = $('<SPAN>', {
-					title: 'this is where the magic happens'
-				})
+				var oCanvasDiv = $(
+					'<SPAN>',
+					{
+						title: 'this is where the magic happens'
+					}
+				)
 				oCanvasDiv.cacanvas({
 					cols: oOptions.cols,
 					rows: oOptions.rows,
@@ -58,10 +81,22 @@ class cIndexWidget extends cJQueryWidgetClass{
 			oTopContainer.append(oCell)
 
 			// right panel - grid initialisation, status and run controls
-			oCell = $('<div>', { class: 'w3-cell w3-cell-top w3-container' })
+			oCell = $(
+				'<div>',
+				{
+					class: 'w3-cell w3-cell-top w3-container'
+				}
+			)
 			{
-				var oRightCtrlDiv = $('<DIV>', { width: 240, id: 'rightControl' })
-				oRightCtrlDiv.cacontrolsr({ base_name: sCaName })
+				var oRightCtrlDiv = $(
+					'<DIV>',
+					{
+						width: 240, id: 'rightControl'
+					}
+				)
+				oRightCtrlDiv.cacontrolsr({
+					base_name: sCaName
+				})
 				oCell.append(oRightCtrlDiv)
 				oTopContainer.append(oCell)
 			}
@@ -70,15 +105,30 @@ class cIndexWidget extends cJQueryWidgetClass{
 		}
 
 		// ----------------------------------------------------------------------------------
-		var oBottomContainer = $('<div>', { class: 'w3-cell-row' })
+		var oBottomContainer = $(
+			'<div>',
+			{
+				class: 'w3-cell-row'
+			}
+		)
 		{
 		// JSON panel
-			oCell = $('<div>', { class: 'w3-cell' })
+			oCell = $(
+				'<div>',
+				{
+					class: 'w3-cell'
+				}
+			)
 			{
-				var oJsonDiv = $('<DIV>', {
-					title: 'json will appear here'
+				var oJsonDiv = $(
+					'<DIV>',
+					{
+						title: 'json will appear here'
+					}
+				)
+				oJsonDiv.cajson({
+					base_name: sCaName
 				})
-				oJsonDiv.cajson({ base_name: sCaName })
 				oCell.append(oJsonDiv)
 			}
 
@@ -91,27 +141,37 @@ class cIndexWidget extends cJQueryWidgetClass{
 		cBrowser.get_clipboard_permissions(true)
 
 		// ---------------informs subscribers that UI is ready -------------------------------
-		cCAActionEvent.fire_event(oOptions.name, cCAActionEvent.actions.ready, null)
+		cCAActionEvent.fire_event(
+			oOptions.name,
+			cCAActionEvent.actions.ready,
+			null
+		)
 	}
 }
 
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-$.widget('ck.caindex', {
+$.widget(
+	'ck.caindex',
+	{
 	//#################################################################
 	// # Definition
 	//#################################################################
-	options: {
-		cols: 100,
-		rows: 100,
-		cell_size: 5,
-		name: null,
-	},
+		options: {
+			cols: 100,
+			rows: 100,
+			cell_size: 5,
+			name: null,
+		},
 
-	//#################################################################
-	// # Constructor
-	// #################################################################`
-	_create: function () {
-		var oWidget = new cIndexWidget(this.options, this.element)
-		oWidget.init()
+		//#################################################################
+		// # Constructor
+		// #################################################################`
+		_create: function () {
+			var oWidget = new cIndexWidget(
+				this.options,
+				this.element
+			)
+			oWidget.init()
+		}
 	}
-})
+)

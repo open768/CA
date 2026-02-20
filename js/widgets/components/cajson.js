@@ -24,7 +24,10 @@ class cCAJson extends cJQueryWidgetClass {
 	// # Constructor
 	// #################################################################`
 	constructor(poOptions, poElement) {
-		super(poOptions, poElement)
+		super(
+			poOptions,
+			poElement
+		)
 
 		cDebug.enter()
 		this.base_name = poOptions.base_name
@@ -45,7 +48,10 @@ class cCAJson extends cJQueryWidgetClass {
 		this._init()
 
 		// subscribe to CA Events
-		cCACanvasEvent.subscribe(this.base_name, poEvent => this._onCanvasEvent(poEvent))
+		cCACanvasEvent.subscribe(
+			this.base_name,
+			poEvent => this._onCanvasEvent(poEvent)
+		)
 		cDebug.leave()
 	}
 
@@ -58,28 +64,58 @@ class cCAJson extends cJQueryWidgetClass {
 
 		cDebug.enter()
 		oElement = this.element
-		sBodyID = cJquery.child_ID(oElement, cCAJsonTypes.body_id)
+		sBodyID = cJquery.child_ID(
+			oElement,
+			cCAJsonTypes.body_id
+		)
 
 		// -----------header----------------------------------------
-		oHeaderDiv = $('<DIV>', { class: 'ui-widget-header' })
+		oHeaderDiv = $(
+			'<DIV>',
+			{
+				class: 'ui-widget-header'
+			}
+		)
 		oHeaderDiv.append('Json')
 
-		var sButtonID = cJquery.child_ID(oElement, 'btnJson')
-		oButton = $('<button>', { ID: sButtonID }).append('+')
-		oButton.click(() => this._showHide(sButtonID, sBodyID))
+		var sButtonID = cJquery.child_ID(
+			oElement,
+			'btnJson'
+		)
+		oButton = $(
+			'<button>',
+			{
+				ID: sButtonID
+			}
+		).append('+')
+		oButton.click(() => this._showHide(
+			sButtonID,
+			sBodyID
+		))
 		oHeaderDiv.append(oButton)
 		oElement.append(oHeaderDiv)
 
 		// ----------------body-------------------------------------
-		oBodyDiv = $('<DIV>', { class: 'ui-widget-content', ID: sBodyID })
+		oBodyDiv = $(
+			'<DIV>',
+			{
+				class: 'ui-widget-content', ID: sBodyID
+			}
+		)
 
 		// ---------textbox
-		sID = cJquery.child_ID(oElement, cCAJsonTypes.textarea_id)
-		var oBox = $('<TEXTAREA>', {
-			ID: sID,
-			class: 'json',
-			title: 'Json goes here',
-		})
+		sID = cJquery.child_ID(
+			oElement,
+			cCAJsonTypes.textarea_id
+		)
+		var oBox = $(
+			'<TEXTAREA>',
+			{
+				ID: sID,
+				class: 'json',
+				title: 'Json goes here',
+			}
+		)
 		oBodyDiv.append(oBox)
 
 		// ---------buttons
@@ -132,7 +168,10 @@ class cCAJson extends cJQueryWidgetClass {
 		var oElement = this.element
 
 		// get the json
-		var sID = cJquery.child_ID(oElement, cCAJsonTypes.textarea_id)
+		var sID = cJquery.child_ID(
+			oElement,
+			cCAJsonTypes.textarea_id
+		)
 		var sJson = $('#' + sID).val()
 		if (sJson === '') {
 			alert('no JSON to import')
@@ -147,10 +186,17 @@ class cCAJson extends cJQueryWidgetClass {
 		}
 
 		// create the grid
-		/** @type {cCAGrid} */ var oGrid = cCAGridJSONImporter.populate(this.base_name, oJson)
+		/** @type {cCAGrid} */ var oGrid = cCAGridJSONImporter.populate(
+			this.base_name,
+			oJson
+		)
 
 		// fire event to triiger the use of the imported grid
-		cCACanvasEvent.fire_event(this.base_name, cCACanvasEvent.actions.import, oGrid)
+		cCACanvasEvent.fire_event(
+			this.base_name,
+			cCACanvasEvent.actions.import,
+			oGrid
+		)
 		cDebug.leave()
 	}
 
@@ -177,7 +223,10 @@ class cCAJson extends cJQueryWidgetClass {
 		var sJson = JSON.stringify(oObj)
 
 		// updatethe UI with JSON
-		var sID = cJquery.child_ID(oElement, cCAJsonTypes.textarea_id)
+		var sID = cJquery.child_ID(
+			oElement,
+			cCAJsonTypes.textarea_id
+		)
 		$('#' + sID).val(sJson)
 		cDebug.leave()
 	}
@@ -186,16 +235,22 @@ class cCAJson extends cJQueryWidgetClass {
 //###############################################################################
 // # widget
 //###############################################################################
-$.widget('ck.cajson', {
-	options: {
-		base_name: null,
-		create_button: true,
-	},
-	_create: function () {
-		var oOptions = this.options
-		if (!oOptions.base_name)
-			$.error('base name not provided')
+$.widget(
+	'ck.cajson',
+	{
+		options: {
+			base_name: null,
+			create_button: true,
+		},
+		_create: function () {
+			var oOptions = this.options
+			if (!oOptions.base_name)
+				$.error('base name not provided')
 
-		new cCAJson(oOptions, this.element) // call class constructor
-	},
-})
+			new cCAJson(
+				oOptions,
+				this.element
+			) // call class constructor
+		},
+	}
+)

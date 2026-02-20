@@ -18,7 +18,12 @@ class cCAChartTypes {
 
 		try {
 			google.charts
-				.load('current', { packages: ['corechart'] })
+				.load(
+					'current',
+					{
+						packages: ['corechart']
+					}
+				)
 				.then(poEvent => this.is_charts_loaded = true)
 		} catch (e) {
 			cDebug.write('unable to load Google charts: ' + e.msg)
@@ -37,7 +42,10 @@ class cCAChart extends cJQueryWidgetClass {
 	base_name = null
 
 	constructor(poOptions, poElement) {
-		super(poOptions, poElement)
+		super(
+			poOptions,
+			poElement
+		)
 		// checks
 		if (!poOptions.base_name)
 			$.error('base name not provided')
@@ -52,20 +60,38 @@ class cCAChart extends cJQueryWidgetClass {
 		oElement.width(poOptions.width)
 
 		// put something in the widget
-		cJquery.add_widget_header(oElement, 'Chart')
-		var oDiv = $('<DIV>', {
-			class: 'ui-widget-content',
-			id: cJquery.child_ID(oElement, 'chart'),
-		})
+		cJquery.add_widget_header(
+			oElement,
+			'Chart'
+		)
+		var oDiv = $(
+			'<DIV>',
+			{
+				class: 'ui-widget-content',
+				id: cJquery.child_ID(
+					oElement,
+					'chart'
+				),
+			}
+		)
 		oDiv.width(poOptions.width)
 		oDiv.height(poOptions.height)
 		oElement.append(oDiv)
 		this._clear_chart()
 
 		// subscribe to CAEvents
-		cCAActionEvent.subscribe(this.base_name, poEvent => this.onCAActionEvent(poEvent))
-		cCARuleEvent.subscribe(this.base_name, poEvent => this.onCARuleEvent(poEvent))
-		cCACanvasEvent.subscribe(this.base_name, poEvent => this.onCACanvasEvent(poEvent))
+		cCAActionEvent.subscribe(
+			this.base_name,
+			poEvent => this.onCAActionEvent(poEvent)
+		)
+		cCARuleEvent.subscribe(
+			this.base_name,
+			poEvent => this.onCARuleEvent(poEvent)
+		)
+		cCACanvasEvent.subscribe(
+			this.base_name,
+			poEvent => this.onCACanvasEvent(poEvent)
+		)
 	}
 
 	//* ****************************************************************
@@ -88,13 +114,29 @@ class cCAChart extends cJQueryWidgetClass {
 		// create the google data
 		var oData = new google.visualization.DataTable()
 		this.vis_data = oData
-		oData.addColumn('number', 'Run')
-		oData.addColumn('number', 'changed')
-		oData.addColumn('number', 'active')
-		oData.addColumn({ type: 'string', role: 'tooltip', p: { html: true } })
+		oData.addColumn(
+			'number',
+			'Run'
+		)
+		oData.addColumn(
+			'number',
+			'changed'
+		)
+		oData.addColumn(
+			'number',
+			'active'
+		)
+		oData.addColumn({
+			type: 'string', role: 'tooltip', p: {
+				html: true
+			}
+		})
 
 		// create the chart
-		var oChartElement = $('#' + cJquery.child_ID(oElement, 'chart'))
+		var oChartElement = $('#' + cJquery.child_ID(
+			oElement,
+			'chart'
+		))
 		this.chart = new google.visualization.LineChart(oChartElement[0])
 	}
 
@@ -156,7 +198,10 @@ class cCAChart extends cJQueryWidgetClass {
 
 	_clear_chart() {
 		var oElement = this.element
-		var oChartElement = $('#' + cJquery.child_ID(oElement, 'chart'))
+		var oChartElement = $('#' + cJquery.child_ID(
+			oElement,
+			'chart'
+		))
 		this.vis_data = null
 		this.chart = null
 		this.runs = 0
@@ -168,15 +213,21 @@ class cCAChart extends cJQueryWidgetClass {
 //#################################################################
 // # Options
 //#################################################################
-$.widget('ck.cachart', {
-	options: {
-		width: 240,
-		height: 100,
-		base_name: null,
-	},
+$.widget(
+	'ck.cachart',
+	{
+		options: {
+			width: 240,
+			height: 100,
+			base_name: null,
+		},
 
-	//* ****************************************************************
-	_create: function () {
-		new cCAChart(this.options, this.element) // call the class constructor
-	},
-})
+		//* ****************************************************************
+		_create: function () {
+			new cCAChart(
+				this.options,
+				this.element
+			) // call the class constructor
+		},
+	}
+)

@@ -180,6 +180,9 @@ class cCACell {
 		if (poCell == null)
 			throw new CAException('no neighbour cell provided')
 
-		this.neighbours.set(piDirection, poCell)
+		this.neighbours.set(
+			piDirection,
+			poCell
+		)
 	}
 }

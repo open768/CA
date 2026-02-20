@@ -62,9 +62,18 @@ class cCAGrid extends CAEventSubscriber {
 		this.cols = piCols
 		this.name = psName // gridname
 
-		cCAGridEvent.subscribe(this.name, poEvent => this.onCAGridEvent(poEvent))
-		cCAActionEvent.subscribe(this.name, poEvent => this.onCAActionEvent(poEvent))
-		cCARuleEvent.subscribe(this.name, poEvent => this.onCARuleEvent(poEvent))
+		cCAGridEvent.subscribe(
+			this.name,
+			poEvent => this.onCAGridEvent(poEvent)
+		)
+		cCAActionEvent.subscribe(
+			this.name,
+			poEvent => this.onCAActionEvent(poEvent)
+		)
+		cCARuleEvent.subscribe(
+			this.name,
+			poEvent => this.onCARuleEvent(poEvent)
+		)
 	}
 
 	//#######################################################################
@@ -168,12 +177,19 @@ class cCAGrid extends CAEventSubscriber {
 		cDebug.enter()
 
 		// clear out existing cells
-		this.cell_data = new cSparseArray(this.rows, this.cols)
+		this.cell_data = new cSparseArray(
+			this.rows,
+			this.cols
+		)
 
 		// create blank cells
 		for (var iNr = 1; iNr <= this.rows; iNr++)
 			for (var iNc = 1; iNc <= this.cols; iNc++)
-				this.setCellValue(iNr, iNc, 0)
+				this.setCellValue(
+					iNr,
+					iNc,
+					0
+				)
 
 		// reset instance state
 		this.runData.changed_cells = []
@@ -183,7 +199,10 @@ class cCAGrid extends CAEventSubscriber {
 		if (this.rule)
 			this._link_cells()
 
-		cCAGridEvent.fire_event(this.name, cCAGridEvent.notify.clear)
+		cCAGridEvent.fire_event(
+			this.name,
+			cCAGridEvent.notify.clear
+		)
 		cDebug.leave()
 	}
 
@@ -198,12 +217,26 @@ class cCAGrid extends CAEventSubscriber {
 		if (this.cell_data == null)
 			throw new CAException('grid not initialised')
 
-		var oCell = this.getCell(piRow, piCol, false)
+		var oCell = this.getCell(
+			piRow,
+			piCol,
+			false
+		)
 		if (oCell == null) {
 			oCell = new cCACell()
-			oCell.data.set(CELL_DATA_KEYS.row, piRow)
-			oCell.data.set(CELL_DATA_KEYS.col, piCol)
-			this.cell_data.set(piRow, piCol, oCell)
+			oCell.data.set(
+				CELL_DATA_KEYS.row,
+				piRow
+			)
+			oCell.data.set(
+				CELL_DATA_KEYS.col,
+				piCol
+			)
+			this.cell_data.set(
+				piRow,
+				piCol,
+				oCell
+			)
 		}
 
 		if (iValue !== oCell.value) {
@@ -224,9 +257,16 @@ class cCAGrid extends CAEventSubscriber {
 	getCell(piRow, piCol, pbCreate = false) {
 		if (this.cell_data == null)
 			return null
-		var oCell = this.cell_data.get(piRow, piCol)
+		var oCell = this.cell_data.get(
+			piRow,
+			piCol
+		)
 		if (pbCreate && oCell == null)
-			oCell = this.setCellValue(piRow, piCol, 0)
+			oCell = this.setCellValue(
+				piRow,
+				piCol,
+				0
+			)
 
 		return oCell
 	}
@@ -288,7 +328,11 @@ class cCAGrid extends CAEventSubscriber {
 		/** @type {cCACell} */ var oCell
 		for (var iRow = 1; iRow <= this.rows; iRow++)
 			for (var iCol = 1; iCol <= this.cols; iCol++) {
-				oCell = this.getCell(iRow, iCol, true)
+				oCell = this.getCell(
+					iRow,
+					iCol,
+					true
+				)
 				if (oCell.rule == null)	// if no rule is associated with a cell, set it here
 					oCell.rule = this.rule
 
@@ -305,7 +349,10 @@ class cCAGrid extends CAEventSubscriber {
 		if (iChangedLen == 0) {
 			this.running = false
 			cDebug.warn('no change detected in grid')
-			cCAGridEvent.fire_event(this.name, cCAGridEvent.notify.nochange)
+			cCAGridEvent.fire_event(
+				this.name,
+				cCAGridEvent.notify.nochange
+			)
 			return
 		}
 
@@ -333,7 +380,10 @@ class cCAGrid extends CAEventSubscriber {
 		this.runData = new cCARunData()
 		this.history = []
 		cDebug.write('initialising grid:' + piInitType)
-		cCAGridInitialiser.init(this, piInitType)
+		cCAGridInitialiser.init(
+			this,
+			piInitType
+		)
 		cDebug.write('done init grid: ' + piInitType)
 
 		this._informGridDone()
@@ -351,7 +401,10 @@ class cCAGrid extends CAEventSubscriber {
 		var oCell
 		for (var iNr = 1; iNr <= this.rows; iNr++)
 			for (var iNc = 1; iNc <= this.cols; iNc++) {
-				oCell = this.getCell(iNr, iNc)
+				oCell = this.getCell(
+					iNr,
+					iNc
+				)
 				if (oCell !== null)
 					oCell.rule = null
 			}
@@ -364,7 +417,11 @@ class cCAGrid extends CAEventSubscriber {
 	//#######################################################################
 	_informGridDone() {
 		// inform consumers that grid has executed
-		cCAGridEvent.fire_event(this.name, cCAGridEvent.notify.done, this.runData)
+		cCAGridEvent.fire_event(
+			this.name,
+			cCAGridEvent.notify.done,
+			this.runData
+		)
 	}
 
 	/**
@@ -373,7 +430,11 @@ class cCAGrid extends CAEventSubscriber {
 	 */
 	_onSetOneCellOnly(poCell) {
 		this.runData.clear_cell_counters()
-		this.setCellValue(poCell.row, poCell.col, poCell.value)
+		this.setCellValue(
+			poCell.row,
+			poCell.col,
+			poCell.value
+		)
 		this._informGridDone()
 	}
 
@@ -386,7 +447,11 @@ class cCAGrid extends CAEventSubscriber {
 		if (this.running) {
 			cDebug.write('running again')
 			this.runData.runs++
-			cCAActionEvent.fire_event(this.name, cCAActionEvent.actions.control, cCAActionEvent.control_actions.step)
+			cCAActionEvent.fire_event(
+				this.name,
+				cCAActionEvent.actions.control,
+				cCAActionEvent.control_actions.step
+			)
 		}
 
 		cDebug.leave()
@@ -407,7 +472,10 @@ class cCAGrid extends CAEventSubscriber {
 		if (aHistory.includes(sHash)) {
 			this.running = false
 			cDebug.warn('repeat pattern seen')
-			cCAGridEvent.fire_event(this.name, cCAGridEvent.notify.repeatPattern)
+			cCAGridEvent.fire_event(
+				this.name,
+				cCAGridEvent.notify.repeatPattern
+			)
 			return
 		}
 
@@ -444,16 +512,60 @@ class cCAGrid extends CAEventSubscriber {
 		cDebug.write('linking cells')
 		for (var iNr = 1; iNr <= this.rows; iNr++)
 			for (var iNc = 1; iNc <= this.cols; iNc++) {
-				var oCell = this.getCell(iNr, iNc, true) // create cells
-				this._link_cell(oCell, CA_DIRECTIONS.north, iNr - 1, iNc)
-				this._link_cell(oCell, CA_DIRECTIONS.east, iNr, iNc + 1)
-				this._link_cell(oCell, CA_DIRECTIONS.south, iNr + 1, iNc)
-				this._link_cell(oCell, CA_DIRECTIONS.west, iNr, iNc - 1)
+				var oCell = this.getCell(
+					iNr,
+					iNc,
+					true
+				) // create cells
+				this._link_cell(
+					oCell,
+					CA_DIRECTIONS.north,
+					iNr - 1,
+					iNc
+				)
+				this._link_cell(
+					oCell,
+					CA_DIRECTIONS.east,
+					iNr,
+					iNc + 1
+				)
+				this._link_cell(
+					oCell,
+					CA_DIRECTIONS.south,
+					iNr + 1,
+					iNc
+				)
+				this._link_cell(
+					oCell,
+					CA_DIRECTIONS.west,
+					iNr,
+					iNc - 1
+				)
 				if (iType == CA_NEIGHBOURS.eightway) {
-					this._link_cell(oCell, CA_DIRECTIONS.northeast, iNr - 1, iNc + 1)
-					this._link_cell(oCell, CA_DIRECTIONS.southeast, iNr + 1, iNc + 1)
-					this._link_cell(oCell, CA_DIRECTIONS.southwest, iNr + 1, iNc - 1)
-					this._link_cell(oCell, CA_DIRECTIONS.northwest, iNr - 1, iNc - 1)
+					this._link_cell(
+						oCell,
+						CA_DIRECTIONS.northeast,
+						iNr - 1,
+						iNc + 1
+					)
+					this._link_cell(
+						oCell,
+						CA_DIRECTIONS.southeast,
+						iNr + 1,
+						iNc + 1
+					)
+					this._link_cell(
+						oCell,
+						CA_DIRECTIONS.southwest,
+						iNr + 1,
+						iNc - 1
+					)
+					this._link_cell(
+						oCell,
+						CA_DIRECTIONS.northwest,
+						iNr - 1,
+						iNc - 1
+					)
 				}
 			}
 
@@ -478,7 +590,14 @@ class cCAGrid extends CAEventSubscriber {
 			iNc = 1
 
 		// get the neighbour
-		var oNeigh = this.getCell(iNr, iNc, true) // shouldnt need to create cells, but just in case
-		poCell.setNeighbour(piDirection, oNeigh)
+		var oNeigh = this.getCell(
+			iNr,
+			iNc,
+			true
+		) // shouldnt need to create cells, but just in case
+		poCell.setNeighbour(
+			piDirection,
+			oNeigh
+		)
 	}
 }

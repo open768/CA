@@ -8,22 +8,31 @@ class cCAScrambleCanvas extends cJQueryWidgetClass {
 		if (!poOptions.base_name )
 			$.error("base_name option is required for cascramblecanvas" )
 
-		super(poOptions, poElement)
+		super(
+			poOptions,
+			poElement
+		)
 	}
 }
 
 //#############################################################################
-$.widget('ck.cascramblecanvas', {
-	options: {
-		cols: 100,
-		rows: 100,
-		cell_size: 5,
-		base_name: null
-	},
+$.widget(
+	'ck.cascramblecanvas',
+	{
+		options: {
+			cols: 100,
+			rows: 100,
+			cell_size: 5,
+			base_name: null
+		},
 
-	_create: function () {
-		if (!this.options.base_name )
-			$.error("base_name option is required for cascramblecanvas" )
-		new cCAScrambleCanvas(this.options, this.element) // call the constructor of the class
-	},
-})
+		_create: function () {
+			if (!this.options.base_name )
+				$.error("base_name option is required for cascramblecanvas" )
+			new cCAScrambleCanvas(
+				this.options,
+				this.element
+			) // call the constructor of the class
+		},
+	}
+)

@@ -75,11 +75,20 @@ class cCAIndexOps {
 	 */
 	static get_north_bits(piIndex) {
 		var iVal = 0
-		iVal |= this.get_value(piIndex, CA_DIRECTIONS.northwest)
+		iVal |= this.get_value(
+			piIndex,
+			CA_DIRECTIONS.northwest
+		)
 		iVal <<= 1
-		iVal |= this.get_value(piIndex, CA_DIRECTIONS.north)
+		iVal |= this.get_value(
+			piIndex,
+			CA_DIRECTIONS.north
+		)
 		iVal <<= 1
-		iVal |= this.get_value(piIndex, CA_DIRECTIONS.northeast)
+		iVal |= this.get_value(
+			piIndex,
+			CA_DIRECTIONS.northeast
+		)
 		return iVal
 	}
 
@@ -92,11 +101,20 @@ class cCAIndexOps {
 	 */
 	static get_centre_bits(piIndex) {
 		var iVal = 0
-		iVal |= this.get_value(piIndex, CA_DIRECTIONS.west)
+		iVal |= this.get_value(
+			piIndex,
+			CA_DIRECTIONS.west
+		)
 		iVal <<= 1
-		iVal |= this.get_value(piIndex, CA_DIRECTIONS.centre)
+		iVal |= this.get_value(
+			piIndex,
+			CA_DIRECTIONS.centre
+		)
 		iVal <<= 1
-		iVal |= this.get_value(piIndex, CA_DIRECTIONS.east)
+		iVal |= this.get_value(
+			piIndex,
+			CA_DIRECTIONS.east
+		)
 		return iVal
 	}
 
@@ -109,11 +127,20 @@ class cCAIndexOps {
 	 */
 	static get_south_bits(piIndex) {
 		var iVal = 0
-		iVal |= this.get_value(piIndex, CA_DIRECTIONS.southwest)
+		iVal |= this.get_value(
+			piIndex,
+			CA_DIRECTIONS.southwest
+		)
 		iVal <<= 1
-		iVal |= this.get_value(piIndex, CA_DIRECTIONS.south)
+		iVal |= this.get_value(
+			piIndex,
+			CA_DIRECTIONS.south
+		)
 		iVal <<= 1
-		iVal |= this.get_value(piIndex, CA_DIRECTIONS.southeast)
+		iVal |= this.get_value(
+			piIndex,
+			CA_DIRECTIONS.southeast
+		)
 		return iVal
 	}
 }

@@ -17,7 +17,10 @@ class cCAControlsR extends cJQueryWidgetClass {
 
 	//* **************************************************************
 	constructor(poOptions, poElement) {
-		super(poOptions, poElement)
+		super(
+			poOptions,
+			poElement
+		)
 		this.base_name = poOptions.base_name
 
 		var oElement = this.element
@@ -53,25 +56,38 @@ class cCAControlsR extends cJQueryWidgetClass {
 
 		// --status-------------------------------------------------
 		oDiv = $('<DIV>')
-		oDiv.castatus({ base_name: this.base_name })
+		oDiv.castatus({
+			base_name: this.base_name
+		})
 		oElement.append(oDiv)
 		oElement.append('<P>')
 
 		// ---chart----------------------------------------------------------
 		oDiv = $('<DIV>')
-		oDiv.cachart({ base_name: this.base_name })
+		oDiv.cachart({
+			base_name: this.base_name
+		})
 		oElement.append(oDiv)
 		oElement.append('<P>')
 
 		// --initialise------------------------------------------------
 		oDiv = $('<DIV>')
-		oDiv.cagridinit({ base_name: this.base_name })
+		oDiv.cagridinit({
+			base_name: this.base_name
+		})
 		oElement.append(oDiv)
 		oElement.append('<P>')
 
 		// --controls------------------------------------------------
-		oDiv = $('<DIV>', { class: 'ui-widget-header' })
-		oDiv.caremotecontrols({ base_name: this.base_name })
+		oDiv = $(
+			'<DIV>',
+			{
+				class: 'ui-widget-header'
+			}
+		)
+		oDiv.caremotecontrols({
+			base_name: this.base_name
+		})
 		oElement.append(oDiv)
 	}
 }
@@ -79,16 +95,22 @@ class cCAControlsR extends cJQueryWidgetClass {
 //###################################################################
 //#
 //###################################################################
-$.widget('ck.cacontrolsr', {
-	options: {
-		base_name: null,
-	},
-	_create: function () {
+$.widget(
+	'ck.cacontrolsr',
+	{
+		options: {
+			base_name: null,
+		},
+		_create: function () {
 		// checks
-		var oOptions = this.options
-		if (!oOptions.base_name)
-			$.error('base name not provided')
+			var oOptions = this.options
+			if (!oOptions.base_name)
+				$.error('base name not provided')
 
-		new cCAControlsR(oOptions, this.element) // call widgetclass
-	},
-})
+			new cCAControlsR(
+				oOptions,
+				this.element
+			) // call widgetclass
+		},
+	}
+)
