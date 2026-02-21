@@ -131,9 +131,14 @@ class cScrambleWidget extends cJQueryWidgetClass {
 						}
 					)
 					{
-						oCanvasSpan.cacanvas({
-							base_name: oOptions.name, cols: SCRAMBLE_CONSTS.GRID_COLS, rows: SCRAMBLE_CONSTS.GRID_ROWS, cell_size: SCRAMBLE_CONSTS.CELL_SIZE
-						})
+						oCanvasSpan.cacanvas(
+							{
+								base_name: oOptions.name,
+								cols: SCRAMBLE_CONSTS.GRID_COLS, //TODO: dynamic rows and cols
+								rows: SCRAMBLE_CONSTS.GRID_ROWS,
+								cell_size: SCRAMBLE_CONSTS.CELL_SIZE
+							}
+						)
 						oRightCell.append(oCanvasSpan)
 					}
 
@@ -284,7 +289,10 @@ class cScrambleWidget extends cJQueryWidgetClass {
 			}
 
 			//the text to be scrambled
-			SCRAMBLE_CONSTS.MAX_INPUT_LENGTH = Math.floor(SCRAMBLE_CONSTS.GRID_ROWS * SCRAMBLE_CONSTS.GRID_COLS / cConverterEncodings.BASE64_BITS)
+			SCRAMBLE_CONSTS.MAX_INPUT_LENGTH = cCAScrambler.max_chars(
+				SCRAMBLE_CONSTS.GRID_ROWS,
+				SCRAMBLE_CONSTS.GRID_COLS
+			)
 			var sID = cJquery.child_ID(
 				oElement,
 				SCRAMBLE_CONTROL_IDS.input_text_ID

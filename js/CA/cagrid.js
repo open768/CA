@@ -30,7 +30,7 @@ class cCAGrid extends CAEventSubscriber {
 	//#######################################################################
 	// # instance variables
 	//#######################################################################
-	cell_data = null
+	/** @type {cSparseArray} */ cell_data = null
 	/** @type {string} */ name = null
 	/** @type {boolean} */ running = false
 	/** @type {number} */ rows = 0

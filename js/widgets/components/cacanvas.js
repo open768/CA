@@ -20,7 +20,7 @@ class cCACanvas extends cJQueryWidgetClass {
 	// # Definition
 	//#################################################################
 	CELL_LOAD_DELAY = 50 // fudge factor
-	grid = null
+	grid = null		/** @type {cCAGrid} */
 	canvas = null
 	cells_to_draw = 0
 	cells_drawn = 0

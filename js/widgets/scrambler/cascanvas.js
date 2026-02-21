@@ -1,8 +1,9 @@
 //#############################################################################
 class cCAScrambleCanvas extends cJQueryWidgetClass {
-	canvas = null
+	canvas = null /** @type {Jquery} */
 	rows = 100
 	cols = 100
+	_scrambler = null /** @type {cCAScrambler} */
 
 	/*
 	 * this widget is responsible for drawing the contents of the underlying scrambler onto a canvas
@@ -20,6 +21,14 @@ class cCAScrambleCanvas extends cJQueryWidgetClass {
 		super(
 			poOptions,
 			poElement
+		)
+
+		this.rows = poOptions.rows
+		this.cols = poOptions.cols
+		this._scrambler = new cCAScrambler(
+			poOptions.base_name,
+			poOptions.rows,
+			poOptions.cols
 		)
 
 		cCAActionEvent.subscribe(
@@ -53,6 +62,8 @@ class cCAScrambleCanvas extends cJQueryWidgetClass {
 		switch (poEvent.action) {
 			case cCAScramblerEvent.actions.set_input:
 				//populate the canvas and redraw
+				$.error("not implemented - set_input event received" )
+				this._scrambler.set_plaintext(poEvent.data)
 				break
 		}
 	}

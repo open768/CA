@@ -35,81 +35,36 @@ class cCAScramblerTypes{
 /** class that performs data scrambling */
 
 class cCAScrambler{
-	/** @type cCAGrid */ grid=null
+	/** @type {cSparseArray} */ _data=null
 	/** @type number  */ inital_runs = -1
 	/** @type string  */ plaintext = null
 	/** @type number  */ initial_runs_completed = 0
-	/** @type cCAScramblerTypes */ status = null
-
+	base_name = null
+	_rows=0
+	_cols=0
 
 	/**
-	 * Description
-	 * @param {cCAGrid} poGrid	CA grid to use to generate Scrambler instructions
-	 * @param {number} piInitialRuns	how many iterations to advance the CA grid before scrambling starts
-	 * @param {string} psPlainTxt	the plaintext to scramble
 	 */
-	constructor(poGrid, piInitialRuns, psPlainTxt){
-		if (!poGrid)
-			$.error("Grid param, missing")
-		if (!poGrid.rule)
-			$.error("no rule in the grid")
-		if (piInitialRuns<5)
-			$.error("initial runs invalid - must be at least 5")
-		if (!psPlainTxt)
-			$.error("plaintext missing")
-
-		this.grid = poGrid
-		this.plaintext = psPlainTxt
-		this.inital_runs = piInitialRuns
-		this.initial_runs_completed = 0
-		this.status = cCAScramblerTypes.status.dormant
-
-		var oThis = this /** @type cCAScrambler */
-
-		//subscribe to grid events
-		cCAGridEvent.subscribe(
-			this.grid.name,
-			poEvent=>
-				oThis.onCAGridEvent(poEvent)
+	constructor(base_name, rows,cols){
+		this.base_name = base_name
+		this._rows = rows
+		this._cols = cols
+		this._data = new cSparseArray(
+			rows,
+			cols
 		)
 	}
 
-	//*******************************************************************************
-	/**
-	 * performs the initial runs of the grid
-	 */
-	async perform_inital_runs(){
-		if (this.initial_runs_completed < this.inital_runs){
-			this.status = cCAScramblerTypes.status.initialRuns
-			var oActionEvent = new cCAActionEvent(
-				this.grid.name,
-				cCAActionEvent.actions.step
-			)
-			oActionEvent.trigger()
-		}else
-			throw new Error("not implemented")
+	_reset(){
+
 	}
 
-	//*******************************************************************************
-	async scramble(){
-		var oScramblerEvent = new cCAScramblerEvent(
-			cCAScramblerEvent.types.general,
-			cCAScramblerEvent.actions.status,
-			"Started scrambler"
-		)
-		oScramblerEvent.trigger()
-
-		this.initial_runs_completed = 0
-		this.perform_inital_runs()
+	static max_chars(rows, cols){
+		return Math.floor(rows * cols / cConverterEncodings.BASE64_BITS)
 	}
 
-	//*******************************************************************************
-	onCAGridEvent(poEvent){
-		cDebug.write(poEvent)
-		if (poEvent.action == cCAGridEvent.notify.done)
-			if (this.status == cCAScramblerTypes.status.initialRuns){
-				this.initial_runs_completed++
-				this.perform_inital_runs()
-			}
-	}
-}
+	set_plaintext(psText){	
+		this._reset()
+		this.plaintext = psText
+		
+
