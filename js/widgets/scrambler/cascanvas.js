@@ -8,13 +8,13 @@ class cCAScrambleCanvas extends cJQueryWidgetClass {
 	 */
 	constructor(poOptions, poElement){
 		if (!poOptions.base_name )
-			$.error("base_name  missing" )
+			throw new cCAScramblerException("base_name  missing" )
 		if (!poOptions.rows )
-			$.error("rows  missing" )
+			throw new cCAScramblerException("rows  missing" )
 		if (!poOptions.cols )
-			$.error("cols  missing" )
+			throw new cCAScramblerException("cols  missing" )
 		if (!poOptions.cell_size )
-			$.error("cell_size  missing" )
+			throw new cCAScramblerException("cell_size  missing" )
 
 		super(
 			poOptions,
@@ -92,7 +92,7 @@ class cCAScrambleCanvas extends cJQueryWidgetClass {
 	//********************************************************************
 	_clear_canvas(){
 		if (!this.canvas)
-			$.error("canvas not initialized - ready action not received?" )
+			throw new cCAScramblerException("canvas not initialized - ready action not received?" )
 
 		this.canvas.clearCanvas()
 	}
@@ -100,9 +100,9 @@ class cCAScrambleCanvas extends cJQueryWidgetClass {
 	//********************************************************************
 	_draw_canvas( ){
 		if (!this.canvas)
-			$.error("canvas not initialized - ready action not received?" )
+			throw new cCAScramblerException("canvas not initialized - ready action not received?" )
 		if (!this._scrambler)
-			$.error("scrambler not initialized" )
+			throw new cCAScramblerException("scrambler not initialized" )
 
 	}
 }
@@ -120,7 +120,7 @@ $.widget(
 
 		_create: function () {
 			if (!this.options.base_name )
-				$.error("base_name option is required for cascramblecanvas" )
+				throw new cCAScramblerException("base_name option is required for cascramblecanvas" )
 
 			new cCAScrambleCanvas(
 				this.options,
