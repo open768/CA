@@ -1,6 +1,6 @@
 //#############################################################################
 class cCAScrambleCanvas extends cJQueryWidgetClass {
-	canvas = null /** @type {Jquery} */
+	_canvas = null /** @type {Jquery} */
 	_scrambler = null /** @type {cCAScrambler} */
 
 	/*
@@ -83,27 +83,58 @@ class cCAScrambleCanvas extends cJQueryWidgetClass {
 			'height',
 			oOptions.rows * oOptions.cell_size
 		)
-		this.canvas = oCanvas
+		this._canvas = oCanvas
 		this._draw_canvas()
 
-		oElement.append(this.canvas)
+		oElement.append(this._canvas)
 	}
 
 	//********************************************************************
 	_clear_canvas(){
-		if (!this.canvas)
+		if (!this._canvas)
 			throw new cCAScramblerException("canvas not initialized - ready action not received?" )
 
-		this.canvas.clearCanvas()
+		this._canvas.clearCanvas()
 	}
 
 	//********************************************************************
 	_draw_canvas( ){
-		if (!this.canvas)
+		if (!this._canvas)
 			throw new cCAScramblerException("canvas not initialized - ready action not received?" )
 		if (!this._scrambler)
 			throw new cCAScramblerException("scrambler not initialized" )
 
+		var oOptions = this.options
+		for (var ir = 0; ir < oOptions.rows; ir++)
+			for (var ic = 0; ic < oOptions.cols; ic++) {
+				var iValue = this._scrambler.get(
+					ir,
+					ic
+				)
+				this._draw_cell(
+					iValue,
+					ir,
+					ic
+				)
+			}
+	}
+
+	//********************************************************************
+	_draw_cell(piValue, piRow, piCol){
+		var oOptions = this.options
+		var iy = piRow * oOptions.cell_size
+		var ix = piCol * oOptions.cell_size
+
+		// ------------------draw
+		var sFill = piValue ? '#000': '#fff'
+		this._canvas.drawRect({
+			fillStyle: sFill,
+			x: ix,
+			y: iy,
+			width: oOptions.cell_size,
+			height: oOptions.cell_size,
+			strokeStyle: 'transparent',
+		})
 	}
 }
 

@@ -52,6 +52,7 @@ class cCAScrambler{
 	_grid_index = {
 		row: 0, col: 0
 	}
+	static BITS_PER_CHAR = 8
 
 	constructor(base_name, rows,cols){
 		this.base_name = base_name
@@ -70,7 +71,7 @@ class cCAScrambler{
 		if (rows === undefined || cols === undefined)
 			throw new cCAScramblerException("rows and cols are required")
 
-		return Math.floor((rows * cols / cConverterEncodings.BASE64_BITS) - this.PREFIX.length - this.SUFFIX.length)
+		return Math.floor((rows * cols / cCAScrambler.BITS_PER_CHAR) - this.PREFIX.length - this.SUFFIX.length)
 	}
 
 	//********************************************************************
@@ -99,6 +100,18 @@ class cCAScrambler{
 		cCAScramblerEvent.fire_event(
 			this.base_name,
 			cCAScramblerEvent.actions.reset
+		)
+	}
+
+	/**
+	 * @param {number} piRow - starts at 0
+	 * @param {number} piCol - starts at 0
+	 * @returns {number}
+	 */
+	get(piRow, piCol){
+		return this._data.get(
+			piRow,
+			piCol
 		)
 	}
 
@@ -141,8 +154,10 @@ class cCAScrambler{
 		//get the binary representation of the character
 		var iAscii = psChar.charCodeAt(0)
 		var sBinary = cConverter.intToBinstr(iAscii)
+		if (sBinary.length > cCAScrambler.BITS_PER_CHAR)
+			throw new cCAScramblerException("character too long the number of bits allocated per character")
 		sBinary = sBinary.padStart(
-			cConverterEncodings.BASE64_BITS,
+			cCAScrambler.BITS_PER_CHAR,
 			"0"
 		)
 		var oGrid = this._data /** @type {cSparseArray} @ */
