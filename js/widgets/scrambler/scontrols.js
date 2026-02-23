@@ -1,5 +1,6 @@
 const SCRAMBLE_CONTROL_IDS = {
-	input_text_ID: 'a',
+	input_text_ID: 'a1',
+	input_text_status_ID: 'a2',
 	input_steps_ID: 'b',
 	output_text_ID: 'c',
 	rule_text_id: 'd',
@@ -307,8 +308,27 @@ class cScrambleWidget extends cJQueryWidgetClass {
 				}
 			)
 			{
-				//when the text area loses focus, and the text has changed, reset the scrambler
+				//when a key is pressed check how may keys are still available and change the border colour of the input accordingly
+				oInputText.on(
+					'blur input',
+					() => this._onInputChange()
+				)
 				oInputDiv.append(oInputText)
+			}
+
+			var sID = cJquery.child_ID(
+				oElement,
+				SCRAMBLE_CONTROL_IDS.input_text_status_ID
+			)
+			var oInputvalidation = $(
+				"<div>",
+				{
+					id: sID
+				}
+			)
+			{
+				oInputvalidation.html("<i>...please enter some text to scramble</i>")
+				oInputDiv.append(oInputvalidation)
 			}
 
 
@@ -414,6 +434,40 @@ class cScrambleWidget extends cJQueryWidgetClass {
 				this._update_rule_text(oRule)
 				break
 		}
+	}
+
+	//*************************************************************************
+	_onInputChange (){
+		var oElement = this.element
+		var iMax = cCAScrambler.max_chars(
+			this.options.rows,
+			this.options.cols
+		)
+
+		//get the input text
+		var oInput = cJquery.get_child(
+			oElement,
+			SCRAMBLE_CONTROL_IDS.input_text_ID
+		)
+
+		//check if text has a valid length
+		var sText = oInput.val()
+		var bValid = (sText.length <= iMax)
+		oInput.css(
+			'border-color',
+			bValid ? '' : SCRAMBLE_CONSTS.BAD_INPUT_COLOUR
+		)
+
+		//update status message
+		var oStatus = cJquery.get_child(
+			oElement,
+			SCRAMBLE_CONTROL_IDS.input_text_status_ID
+		)
+		if (bValid)
+			oStatus.html("<i>chars remaining:"+ (iMax - sText.length)+"</i>")
+		else
+			oStatus.html("<font color='red'>text too long " + sText.length+" - must be less than " + iMax + " characters</font>")
+
 	}
 
 	//*************************************************************************

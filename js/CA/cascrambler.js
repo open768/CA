@@ -42,6 +42,8 @@ class cCAScrambler{
 	base_name = null
 	_rows=0
 	_cols=0
+	static PREFIX = "#CAv1#["
+	static SUFFIX = "]#END#"
 
 	/**
 	 */
@@ -60,11 +62,15 @@ class cCAScrambler{
 	}
 
 	static max_chars(rows, cols){
-		return Math.floor(rows * cols / cConverterEncodings.BASE64_BITS)
+		if (rows === undefined || cols === undefined)
+			$.error("rows and cols are required")
+
+		return Math.floor(((rows * cols) - this.PREFIX.length - this.SUFFIX.length) / cConverterEncodings.BASE64_BITS)
 	}
 
-	set_plaintext(psText){	
+	set_plaintext(psText){
 		this._reset()
 		this.plaintext = psText
-		
+	}
+}
 
