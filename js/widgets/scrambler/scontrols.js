@@ -22,8 +22,8 @@ class cScrambleWidget extends cJQueryWidgetClass {
 			poElement
 		)
 
-		if (!poOptions.name)
-			$.error('missing name')
+		if (!poOptions.base_name)
+			$.error('missing base_name')
 
 	}
 
@@ -37,7 +37,7 @@ class cScrambleWidget extends cJQueryWidgetClass {
 		this._render_outputs()
 		this._render_importer()
 
-		var sName = this.options.name
+		var sName = this.options.base_name
 		cCAGridEvent.subscribe(
 			sName,
 			poEvent => this.onGridEvent(poEvent)
@@ -103,9 +103,9 @@ class cScrambleWidget extends cJQueryWidgetClass {
 					oLeftCell.text("This is where the scrambling happens")
 					oLeftCell.cascramblecanvas(
 						{
-							base_name: oOptions.name,
-							cols: SCRAMBLE_CONSTS.GRID_COLS,
-							rows: SCRAMBLE_CONSTS.GRID_ROWS,
+							base_name: oOptions.base_name,
+							cols: oOptions.cols,
+							rows: oOptions.rows,
 							cell_size: SCRAMBLE_CONSTS.CELL_SIZE
 						}
 					)
@@ -131,9 +131,9 @@ class cScrambleWidget extends cJQueryWidgetClass {
 					{
 						oCanvasSpan.cacanvas(
 							{
-								base_name: oOptions.name,
-								cols: SCRAMBLE_CONSTS.GRID_COLS, //TODO: dynamic rows and cols
-								rows: SCRAMBLE_CONSTS.GRID_ROWS,
+								base_name: oOptions.base_name,
+								rows: oOptions.rows,
+								cols: oOptions.cols,
 								cell_size: SCRAMBLE_CONSTS.CELL_SIZE
 							}
 						)
@@ -211,7 +211,7 @@ class cScrambleWidget extends cJQueryWidgetClass {
 		{
 			oJsonDiv.text("This is where the importer goes")
 			oJsonDiv.cajson({
-				base_name: oOptions.name , create_button: false
+				base_name: oOptions.base_name , create_button: false
 			})	//make into widget
 
 		}
@@ -488,11 +488,11 @@ class cScrambleWidget extends cJQueryWidgetClass {
 $.widget(
 	'ck.cascrambler',
 	{
-		options: {
+		options: {				//default options can be overriden when the widget is created
 			cols: 100,
 			rows: 100,
 			cell_size: 5,
-			name: null,
+			base_name: null			//always passed in
 		},
 
 		_create: function () {

@@ -99,8 +99,8 @@ $.widget(
 	'ck.cascramblecanvas',
 	{
 		options: {
-			cols: 100,
-			rows: 100,
+			cols: 0,
+			rows: 0,
 			cell_size: 5,
 			base_name: null
 		},
@@ -108,10 +108,11 @@ $.widget(
 		_create: function () {
 			if (!this.options.base_name )
 				$.error("base_name option is required for cascramblecanvas" )
+
 			new cCAScrambleCanvas(
 				this.options,
 				this.element
-			) // call the constructor of the class
+			)
 		},
 	}
 )
