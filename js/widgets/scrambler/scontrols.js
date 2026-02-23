@@ -6,9 +6,6 @@ const SCRAMBLE_CONTROL_IDS = {
 	rule_text_id: 'd',
 }
 const SCRAMBLE_CONSTS={
-	MAX_INPUT_LENGTH: null,
-	GRID_ROWS: 100,
-	GRID_COLS: 100,
 	CELL_SIZE: 5,
 	BAD_INPUT_COLOUR: 'red',
 	MIN_STEPS: 5,
@@ -290,9 +287,9 @@ class cScrambleWidget extends cJQueryWidgetClass {
 			}
 
 			//the text to be scrambled
-			SCRAMBLE_CONSTS.MAX_INPUT_LENGTH = cCAScrambler.max_chars(
-				SCRAMBLE_CONSTS.GRID_ROWS,
-				SCRAMBLE_CONSTS.GRID_COLS
+			var iMaxLen = cCAScrambler.max_chars(
+				this.options.rows,
+				this.options.cols
 			)
 			var sID = cJquery.child_ID(
 				oElement,
@@ -302,7 +299,7 @@ class cScrambleWidget extends cJQueryWidgetClass {
 				'<textarea>',
 				{
 					id: sID,
-					placeholder: 'Enter text to be scrambled here, it must contain at most ' + SCRAMBLE_CONSTS.MAX_INPUT_LENGTH + ' characters',
+					placeholder: 'Enter text to be scrambled here, it must contain at most ' + iMaxLen + ' characters',
 					rows: 10,
 					style: "width: 100%;"
 				}
