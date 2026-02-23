@@ -491,7 +491,7 @@ class cScrambleWidget extends cJQueryWidgetClass {
 
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 $.widget(
-	'ck.cascrambler',
+	'ck.cascontrols',
 	{
 		options: {				//default options can be overriden when the widget is created
 			cols: 100,
