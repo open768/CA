@@ -61,7 +61,7 @@ class cCAScrambleCanvas extends cJQueryWidgetClass {
 				break
 			case cCAScramblerEvent.actions.draw_grid:
 				this._clear_canvas()
-				this._draw_canvas()
+				this._draw_canvas( )
 		}
 	}
 
@@ -89,14 +89,21 @@ class cCAScrambleCanvas extends cJQueryWidgetClass {
 		oElement.append(this.canvas)
 	}
 
+	//********************************************************************
 	_clear_canvas(){
 		if (!this.canvas)
-
 			$.error("canvas not initialized - ready action not received?" )
+
+		this.canvas.clearCanvas()
 	}
-	_draw_canvas(){
+
+	//********************************************************************
+	_draw_canvas( ){
 		if (!this.canvas)
 			$.error("canvas not initialized - ready action not received?" )
+		if (!this._scrambler)
+			$.error("scrambler not initialized" )
+
 	}
 }
 

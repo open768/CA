@@ -70,15 +70,14 @@ class cCAScrambler{
 		if (rows === undefined || cols === undefined)
 			throw new cCAScramblerException("rows and cols are required")
 
-		return Math.floor(((rows * cols) - this.PREFIX.length - this.SUFFIX.length) / cConverterEncodings.BASE64_BITS)
+		return Math.floor((rows * cols / cConverterEncodings.BASE64_BITS) - this.PREFIX.length - this.SUFFIX.length)
 	}
 
 	//********************************************************************
 	//* event handlers
 	onScramblerEvent(poEvent){
-		// handle scrambler events here
 		switch(	poEvent.action){
-			case cCAScramblerEvent.actions.update_text:
+			case cCAScramblerEvent.actions.set_input:
 				this._set_plaintext(poEvent.data)
 				break
 		}
@@ -119,14 +118,15 @@ class cCAScrambler{
 		this.plaintext = psText
 		var sText = cCAScrambler.PREFIX + psText + cCAScrambler.SUFFIX
 		//for each character in the text, add to the grid
-		for (var i = 0; i < sText.length; i++)
-			this._add_char_to_grid(sText.charAt(i))
+		for (var i = 0; i < sText.length; i++){
+			var sChar = sText.charAt(i)
+			this._add_char_to_grid(sChar)
+		}
 
 		//tell consumers the grid has been updated and they should redraw
 		cCAScramblerEvent.fire_event(
 			this.base_name,
-			cCAScramblerEvent.actions.draw_grid,
-			self
+			cCAScramblerEvent.actions.draw_grid
 		)
 	}
 
@@ -139,7 +139,31 @@ class cCAScrambler{
 		if (psChar.length !== 1)
 			throw new cCAScramblerException("only single characters can be added to the grid")
 		//get the binary representation of the character
-		var sBinary = cConverterEncodings.char_to_binary(psChar)
+		var iAscii = psChar.charCodeAt(0)
+		var sBinary = cConverter.intToBinstr(iAscii)
+		sBinary = sBinary.padStart(
+			cConverterEncodings.BASE64_BITS,
+			"0"
+		)
+		var oGrid = this._data /** @type {cSparseArray} @ */
+		for (var i = 0; i < sBinary.length; i++){
+			var cBit = sBinary.charAt(i)
+			var iValue = (cBit === "1" ? 1 : 0)
+
+			oGrid.set(
+				this._grid_index.row,
+				this._grid_index.col++,
+				iValue
+			)
+
+			if (this._grid_index.col >= this._cols){
+				this._grid_index.col = 0
+				this._grid_index.row++
+
+				if (this._grid_index.row >= this._rows)
+					throw new cCAScramblerException("grid overflow - too much data for the grid size")
+			}
+		}
 	}
 }
 
