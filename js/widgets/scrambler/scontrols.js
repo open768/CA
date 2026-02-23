@@ -460,9 +460,14 @@ class cScrambleWidget extends cJQueryWidgetClass {
 			oElement,
 			SCRAMBLE_CONTROL_IDS.input_text_status_ID
 		)
-		if (bValid)
+		if (bValid){
 			oStatus.html("<i>chars remaining:"+ (iMax - sText.length)+"</i>")
-		else
+			cCAScramblerEvent.fire_event(
+				this.options.base_name,
+				cCAScramblerEvent.actions.set_input,
+				sText
+			)
+		}else
 			oStatus.html("<font color='red'>text too long " + sText.length+" - must be less than " + iMax + " characters</font>")
 
 	}

@@ -56,11 +56,12 @@ class cCAScrambleCanvas extends cJQueryWidgetClass {
 	 */
 	onScramblerEvent( poEvent ){
 		switch (poEvent.action) {
-			case cCAScramblerEvent.actions.set_input:
-				//populate the canvas and redraw
-				$.error("not implemented - set_input event received" )
-				this._scrambler.set_plaintext(poEvent.data)
+			case cCAScramblerEvent.actions.reset:
+				this._clear_canvas()
 				break
+			case cCAScramblerEvent.actions.draw_grid:
+				this._clear_canvas()
+				this._draw_canvas()
 		}
 	}
 
@@ -88,6 +89,11 @@ class cCAScrambleCanvas extends cJQueryWidgetClass {
 		oElement.append(this.canvas)
 	}
 
+	_clear_canvas(){
+		if (!this.canvas)
+
+			$.error("canvas not initialized - ready action not received?" )
+	}
 	_draw_canvas(){
 		if (!this.canvas)
 			$.error("canvas not initialized - ready action not received?" )
