@@ -71,63 +71,89 @@ class cCAJson extends cJQueryWidgetClass {
 
 		// -----------header----------------------------------------
 		oHeaderDiv = $(
-			'<DIV>',
+			'<header>',
 			{
-				class: 'ui-widget-header'
+				class: 'w3-container w3-blue'
 			}
 		)
-		oHeaderDiv.append('Json')
+		{
+			oHeaderDiv.append('<font size="+2">Json</font> ')
 
-		var sButtonID = cJquery.child_ID(
-			oElement,
-			'btnJson'
-		)
-		oButton = $(
-			'<button>',
+			var sButtonID = cJquery.child_ID(
+				oElement,
+				'btnJson'
+			)
+			oButton = $(
+				'<button>',
+				{
+					ID: sButtonID,
+					class: 'w3-button'
+				}
+			)
 			{
-				ID: sButtonID
+				oButton.append('+')
+				oButton.click(() => this._showHide(
+					sButtonID,
+					sBodyID
+				))
+				oHeaderDiv.append(oButton)
 			}
-		).append('+')
-		oButton.click(() => this._showHide(
-			sButtonID,
-			sBodyID
-		))
-		oHeaderDiv.append(oButton)
+		}
+
 		oElement.append(oHeaderDiv)
 
 		// ----------------body-------------------------------------
 		oBodyDiv = $(
 			'<DIV>',
 			{
-				class: 'ui-widget-content', ID: sBodyID
+				class: 'w3-container', ID: sBodyID
 			}
 		)
-
-		// ---------textbox
-		sID = cJquery.child_ID(
-			oElement,
-			cCAJsonTypes.textarea_id
-		)
-		var oBox = $(
-			'<TEXTAREA>',
+		{
+			// ---------textbox
+			sID = cJquery.child_ID(
+				oElement,
+				cCAJsonTypes.textarea_id
+			)
 			{
-				ID: sID,
-				class: 'json',
-				title: 'Json goes here',
+				var oBox = $(
+					'<TEXTAREA>',
+					{
+						ID: sID,
+						class: 'json',
+						title: 'Json goes here',
+					}
+				)
+				oBodyDiv.append(oBox)
 			}
-		)
-		oBodyDiv.append(oBox)
 
-		// ---------buttons
-		if (this.create_button) {
-			oButton = $('<button>').append('Create')
-			oButton.click(() => this._onClickExport())
-			oBodyDiv.append(oButton)
+			// ---------buttons
+			if (this.create_button) {
+				oButton = $(
+					'<button>',
+					{
+						class: 'w3-button'
+					}
+				)
+				{
+					oButton.append('Create')
+					oButton.click(() => this._onClickExport())
+					oBodyDiv.append(oButton)
+				}
+			}
+
+			oButton = $(
+				'<button>',
+				{
+					class: 'w3-button w3-purple'
+				}
+			)
+			{
+				oButton.append('Import')
+				oButton.click(() => this._onClickImport())
+				oBodyDiv.append(oButton)
+			}
 		}
-
-		oButton = $('<button>').append('import')
-		oButton.click(() => this._onClickImport())
-		oBodyDiv.append(oButton)
 
 		oElement.append(oBodyDiv)
 		oBodyDiv.hide()

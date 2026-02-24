@@ -36,10 +36,10 @@ class cScrambleWidget extends cJQueryWidgetClass {
 	//*************************************************************************
 	render(){
 		this._render_inputs()
+		this._render_importer()
 		this._render_rule()
 		this._render_grids()
 		this._render_outputs()
-		this._render_importer()
 
 		var sName = this.options.base_name
 		cCAGridEvent.subscribe(
