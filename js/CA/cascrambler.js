@@ -18,10 +18,10 @@ class cCAScramblerEvent extends cBaseEvent{
 	static event_type_id = "cascramev"
 
 	static actions = {
-		status: "A",
-		set_input: "B",
-		reset: "C",
-		draw_grid: "D"
+		status: "SEST",
+		set_input: "SESI",
+		reset: "SER",
+		draw_grid: "SED"
 	}
 
 	static control_actions = {
@@ -46,22 +46,26 @@ class cCAScramblerTypes{
 /** class that performs data scrambling */
 
 class cCAScrambler{
-	/** @type {cSparseArray} */ _data=null
-	/** @type number  */ inital_runs = -1
-	/** @type string  */ plaintext = null
-	/** @type number  */ initial_runs_completed = 0
-	base_name = null
-	_rows=0
-	_cols=0
 	static PREFIX = "#CAv1#["
 	static SUFFIX = "]#END#"
+	static BITS_PER_CHAR = 8
+
+	/** @type number  */ inital_runs = 0
+	/** @type string  */ plaintext = null
+	/** @type string  */ base_name = null
+
+	//-----------internal variables
+	_data = null	/** @type {cSparseArray} */
+	_initial_runs_completed = 0
+	_rows=0
+	_cols=0
 	_grid_index = {
 		row: 0, col: 0
 	}
 	_rule_is_set = false
 	_scrambling = false
-	static BITS_PER_CHAR = 8
 
+	//********************************************************************
 	constructor(base_name, rows,cols){
 		this.base_name = base_name
 		this._rows = rows
@@ -113,14 +117,10 @@ class cCAScrambler{
 	onActionEvent(poEvent){
 		switch(	poEvent.action){
 			case cCAScramblerEvent.control_actions.scramble:
-				if (this._scrambling)
-					throw new cCAScramblerException("already scrambling")
-				if (!this._rule_is_set)
-					throw new cCAScramblerException("a scrambling rule must be set on the grid")
-				if (!this.plaintext || this.plaintext.length === 0)
-					throw new cCAScramblerException("plaintext must be set")
 				if (!poEvent.data || !poEvent.data.inital_runs)
 					throw new cCAScramblerException("initial runs must be provided")
+
+				this.inital_runs = poEvent.data.inital_runs
 
 				this._scramble()
 				break
@@ -147,6 +147,20 @@ class cCAScrambler{
 	//********************************************************************
 	_scramble(){
 		cDebug.enter()
+		//---------------checks
+		if (this._scrambling)
+			throw new cCAScramblerException("already scrambling")
+		if (!this._rule_is_set)
+			throw new cCAScramblerException("a scrambling rule must be set on the grid")
+		if (!this.plaintext || this.plaintext.length === 0)
+			throw new cCAScramblerException("plaintext must be set")
+		if (this.inital_runs == null)
+			throw new cCAScramblerException("initial runs must be provided")
+
+		//---------------
+		this._scrambling = true
+		this._initial_runs_completed
+
 		this._scrambling = true
 	}
 
