@@ -4,6 +4,8 @@ const SCRAMBLE_CONTROL_IDS = {
 	input_steps_ID: 'b',
 	output_text_ID: 'c',
 	rule_text_id: 'd',
+	btn_scramble_ID: 'e',
+	btn_descramble_ID: 'f'
 }
 const SCRAMBLE_CONSTS={
 	CELL_SIZE: 5,
@@ -267,7 +269,6 @@ class cScrambleWidget extends cJQueryWidgetClass {
 	_render_inputs(){
 		var oElement = this.element
 
-		//------------------------------------------input text
 		var oInputDiv = $(
 			'<div>',
 			{
@@ -275,6 +276,7 @@ class cScrambleWidget extends cJQueryWidgetClass {
 			}
 		)
 		{
+			//--------------------header
 			var oHeader = $(
 				'<header>',
 				{
@@ -286,6 +288,7 @@ class cScrambleWidget extends cJQueryWidgetClass {
 				oInputDiv.append(oHeader)
 			}
 
+			//--------------------header
 			//the text to be scrambled
 			var iMaxLen = cCAScrambler.max_chars(
 				this.options.rows,
@@ -313,22 +316,24 @@ class cScrambleWidget extends cJQueryWidgetClass {
 				oInputDiv.append(oInputText)
 			}
 
+			//--------------------status
 			var sID = cJquery.child_ID(
 				oElement,
 				SCRAMBLE_CONTROL_IDS.input_text_status_ID
 			)
-			var oInputvalidation = $(
+			var oStatusDiv = $(
 				"<div>",
 				{
 					id: sID
 				}
 			)
 			{
-				oInputvalidation.html("<i>...please enter some text to scramble</i>")
-				oInputDiv.append(oInputvalidation)
+				oStatusDiv.html("<i>...please enter some text to scramble</i>")
+				oInputDiv.append(oStatusDiv)
 			}
 
 
+			//--------------------steps
 			//number of initial CA steps to perform before reading the operations from the grid
 			var oStepsdiv = $(
 				'<div>',
@@ -377,6 +382,37 @@ class cScrambleWidget extends cJQueryWidgetClass {
 				oInputDiv.append(oStepsdiv)
 			}
 
+			//--------------------header
+			var oFooter = $(
+				'<footer>',
+				{
+					class: 'w3-container w3-blue'
+				}
+			)
+			{
+				sID = cJquery.child_ID(
+					oElement,
+					SCRAMBLE_CONTROL_IDS.btn_scramble_ID
+				)
+				var oButton = $(
+					'<button>',
+					{
+						id: sID,
+						text: 'Scramble',
+						disabled: true,
+					}
+				)
+				{
+					oButton.on(
+						'click',
+						() => this._onClickScramble()
+					)
+					oFooter.append(oButton)
+				}
+
+				oInputDiv.append(oFooter)
+			}
+
 			oElement.append(oInputDiv)
 		}
 	}
@@ -402,11 +438,24 @@ class cScrambleWidget extends cJQueryWidgetClass {
 			'border-color',
 			bValid ? '' : SCRAMBLE_CONSTS.BAD_INPUT_COLOUR
 		)
+
 		return bValid
 	}
 
 	//*************************************************************************
-	onClickScramble(){
+	_onClickScramble(){
+		//check that there is text
+		var oElement = this.element
+		var oInput = cJquery.get_child(
+			oElement,
+			SCRAMBLE_CONTROL_IDS.input_text_ID
+		)
+		var sValue = oInput.val()
+		if (sValue.length == 0) {
+			alert("please enter some text to scramble")
+			return
+		}
+
 		alert("not implemented yet")
 	}
 
@@ -426,9 +475,20 @@ class cScrambleWidget extends cJQueryWidgetClass {
 	onRuleEvent( poEvent ){
 		switch (poEvent.action) {
 			case cCARuleEvent.actions.update_rule:
-				cDebug.write('update_rule')
+
+				//update the rule text
 				var oRule = poEvent.data
 				this._update_rule_text(oRule)
+
+				//enable button
+				var oButton = cJquery.get_child(
+					this.element,
+					SCRAMBLE_CONTROL_IDS.btn_scramble_ID
+				)
+				oButton.prop(
+					'disabled',
+					false
+				)
 				break
 		}
 	}
