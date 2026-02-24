@@ -59,8 +59,7 @@ class cCARemoteControls extends cJQueryWidgetClass {
 			return
 		}
 
-		var iAction = parseInt(piAction)
-		switch (iAction) {
+		switch (piAction) {
 			case cCAActionEvent.control_actions.stop:
 				this._enable_controls(false)
 				break
@@ -72,7 +71,7 @@ class cCARemoteControls extends cJQueryWidgetClass {
 		cCAActionEvent.fire_event(
 			this.base_name,
 			cCAActionEvent.actions.control,
-			iAction
+			piAction
 		)
 	}
 

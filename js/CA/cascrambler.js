@@ -117,7 +117,7 @@ class cCAScrambler{
 	onActionEvent(poEvent){
 		switch(	poEvent.action){
 			case cCAScramblerEvent.control_actions.scramble:
-				if (!poEvent.data || !poEvent.data.inital_runs)
+				if (!poEvent.data || poEvent.data.inital_runs == null)
 					throw new cCAScramblerException("initial runs must be provided")
 
 				this.inital_runs = poEvent.data.inital_runs
