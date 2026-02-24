@@ -1,6 +1,7 @@
 "use strict"
+
 /**************************************************************************
-Copyright (C) Chicken Katsu 2013-2024
+Copyright (C) Chicken Katsu 2013-2026
 This code is protected by copyright under the terms of the
 Creative Commons Attribution 4.0 International License
 https://creativecommons.org/licenses/by/4.0/legalcode
@@ -13,37 +14,6 @@ and is not intended for any dual use as defined by the UK government license.
 You the consumer of this code are solely and entirely responsible for importing this code into your own country..
 
 **************************************************************************/
-/** Scrambler Events */
-class cCAScramblerEvent extends cBaseEvent{
-	static event_type_id = "cascramev"
-
-	static actions = {
-		status: "SEST",
-		set_input: "SESI",
-		reset: "SER",
-		draw_grid: "SED"
-	}
-
-	static control_actions = {
-		scramble: "SEA"
-	}
-}
-
-
-class cCAScramblerException extends Error {
-}
-
-class cCAScramblerTypes{
-	static status = {
-		dormant: null,
-		initialRuns: 1
-	}
-}
-
-//###################################################################################
-//#
-//###################################################################################
-/** class that performs data scrambling */
 
 class cCAScrambler{
 	static PREFIX = "#CAv1#["
@@ -98,7 +68,7 @@ class cCAScrambler{
 	//********************************************************************
 	//* event handlers
 	//********************************************************************
-	onRuleEvent(poEvent){
+	async onRuleEvent(poEvent){
 		switch(	poEvent.action){
 			case cCARuleEvent.actions.update_rule:
 				this._rule_is_set = true
@@ -106,7 +76,7 @@ class cCAScrambler{
 	}
 
 	//********************************************************************
-	onScramblerEvent(poEvent){
+	async onScramblerEvent(poEvent){
 		switch(	poEvent.action){
 			case cCAScramblerEvent.actions.set_input:
 				this._set_plaintext(poEvent.data)
@@ -114,7 +84,7 @@ class cCAScrambler{
 		}
 	}
 	//********************************************************************
-	onActionEvent(poEvent){
+	async onActionEvent(poEvent){
 		switch(	poEvent.action){
 			case cCAScramblerEvent.control_actions.scramble:
 				if (!poEvent.data || poEvent.data.inital_runs == null)
@@ -156,6 +126,10 @@ class cCAScrambler{
 			throw new cCAScramblerException("plaintext must be set")
 		if (this.inital_runs == null)
 			throw new cCAScramblerException("initial runs must be provided")
+
+		//---------------
+		//check that the CA grid is suitable for scrambling
+		//add random junk to the end of the scrambler text until the grid is full
 
 		//---------------
 		this._scrambling = true
@@ -243,7 +217,7 @@ class cCAScrambler{
 				this._grid_index.col = 0
 				this._grid_index.row++
 
-				if (this._grid_index.row >= this._rows)
+				if (this._grid_index.row >= this._rows && this._grid_index.col > 0)
 					throw new cCAScramblerException("grid overflow - too much data for the grid size")
 			}
 		}
