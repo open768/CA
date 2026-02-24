@@ -18,12 +18,17 @@ class cCAScramblerEvent extends cBaseEvent{
 	static event_type_id = "cascramev"
 
 	static actions = {
-		status: "S",
-		set_input: "SI",
-		reset: "RE",
-		draw_grid: "DG"
+		status: "A",
+		set_input: "B",
+		reset: "C",
+		draw_grid: "D"
+	}
+
+	static control_actions = {
+		scramble: "SEA"
 	}
 }
+
 
 class cCAScramblerException extends Error {
 }
@@ -34,6 +39,7 @@ class cCAScramblerTypes{
 		initialRuns: 1
 	}
 }
+
 //###################################################################################
 //#
 //###################################################################################
@@ -52,6 +58,8 @@ class cCAScrambler{
 	_grid_index = {
 		row: 0, col: 0
 	}
+	_rule_is_set = false
+	_scrambling = false
 	static BITS_PER_CHAR = 8
 
 	constructor(base_name, rows,cols){
@@ -63,10 +71,19 @@ class cCAScrambler{
 			this.base_name,
 			poEvent=>this.onScramblerEvent(poEvent)
 		)
+		cCARuleEvent.subscribe(
+			this.base_name,
+			poEvent=>this.onRuleEvent(poEvent)
+		)
+		cCAActionEvent.subscribe(
+			this.base_name,
+			poEvent=>this.onActionEvent(poEvent)
+		)
 	}
 
 	//********************************************************************
 	//* static methods
+	//********************************************************************
 	static max_chars(rows, cols){
 		if (rows === undefined || cols === undefined)
 			throw new cCAScramblerException("rows and cols are required")
@@ -76,6 +93,15 @@ class cCAScrambler{
 
 	//********************************************************************
 	//* event handlers
+	//********************************************************************
+	onRuleEvent(poEvent){
+		switch(	poEvent.action){
+			case cCARuleEvent.actions.update_rule:
+				this._rule_is_set = true
+		}
+	}
+
+	//********************************************************************
 	onScramblerEvent(poEvent){
 		switch(	poEvent.action){
 			case cCAScramblerEvent.actions.set_input:
@@ -83,9 +109,48 @@ class cCAScrambler{
 				break
 		}
 	}
+	//********************************************************************
+	onActionEvent(poEvent){
+		switch(	poEvent.action){
+			case cCAScramblerEvent.control_actions.scramble:
+				if (this._scrambling)
+					throw new cCAScramblerException("already scrambling")
+				if (!this._rule_is_set)
+					throw new cCAScramblerException("a scrambling rule must be set on the grid")
+				if (!this.plaintext || this.plaintext.length === 0)
+					throw new cCAScramblerException("plaintext must be set")
+				if (!poEvent.data || !poEvent.data.inital_runs)
+					throw new cCAScramblerException("initial runs must be provided")
+
+				this._scramble()
+				break
+		}
+	}
 
 	//********************************************************************
-	// instance methods
+	// public methods
+	//********************************************************************
+	/**
+	 * @param {number} piRow - starts at 0
+	 * @param {number} piCol - starts at 0
+	 * @returns {number}
+	 */
+	get(piRow, piCol){
+		return this._data.get(
+			piRow,
+			piCol
+		)
+	}
+
+	//********************************************************************
+	// private methods
+	//********************************************************************
+	_scramble(){
+		cDebug.enter()
+		this._scrambling = true
+	}
+
+	//********************************************************************
 	_reset(){
 		this._data = new cSparseArray(
 			this._rows,
@@ -103,17 +168,6 @@ class cCAScrambler{
 		)
 	}
 
-	/**
-	 * @param {number} piRow - starts at 0
-	 * @param {number} piCol - starts at 0
-	 * @returns {number}
-	 */
-	get(piRow, piCol){
-		return this._data.get(
-			piRow,
-			piCol
-		)
-	}
 
 	//********************************************************************
 	_set_plaintext(psText){

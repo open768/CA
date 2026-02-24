@@ -24,15 +24,15 @@ class CAException {
 class cCAActionEvent extends cBaseEvent {
 	static event_type_id = 'CAAE'
 	static actions = {
-		ready: 'AAR',
-		grid_init: 'AAGI',
-		control: 'AAC',
+		ready: 'AER',
+		grid_init: 'AEGI',
+		control: 'AEC',
 	}
 
 	static control_actions = {
-		play: 1,
-		stop: 2,
-		step: 3,
+		play: "AEA",
+		stop: "AEB",
+		step: "AEC",
 	}
 }
 
@@ -41,9 +41,9 @@ class cCAActionEvent extends cBaseEvent {
 class cCARuleEvent extends cBaseEvent {
 	static event_type_id = 'CARE'
 	static actions = {
-		update_rule: 'RAU',
-		set_rule: 'RASE',
-		status: 'RAST',
+		update_rule: 'REU',
+		set_rule: 'RESR',
+		status: 'REST',
 	}
 }
 
@@ -52,24 +52,24 @@ class cCARuleEvent extends cBaseEvent {
 class cCAGridEvent extends cBaseEvent {
 	static event_type_id = 'CAGE'
 	static actions = {
-		init_grid: 'GAI',
-		set_cell: 'GAS',
+		init_grid: 'GEI',
+		set_cell: 'GES',
 	}
 
 	static notify = {
-		clear: 'GNC',
-		done: 'GND',
-		changedCellsConsumed: 'GNCCC',
-		nochange: 'GNNC',
-		repeatPattern: 'GNRP',
+		clear: 'GENC',
+		done: 'GEND',
+		changedCellsConsumed: 'GENCC',
+		nochange: 'GENNC',
+		repeatPattern: 'GENRP',
 	}
 }
 
 class cCACanvasEvent extends cBaseEvent {
 	static event_type_id = 'CACE'
 	static actions = {
-		grid_status: 'CAGS',
-		set_grid: 'CASG',
-		import: 'CAIM',
+		grid_status: 'CEG',
+		set_grid: 'CESG',
+		import: 'CEI',
 	}
 }

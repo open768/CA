@@ -18,6 +18,8 @@ const SCRAMBLE_CONSTS={
 //#############################################################################
 class cScrambleWidget extends cJQueryWidgetClass {
 
+	_initial_runs = 0
+
 	constructor(poOptions, poElement){
 		super(
 			poOptions,
@@ -427,11 +429,15 @@ class cScrambleWidget extends cJQueryWidgetClass {
 			SCRAMBLE_CONTROL_IDS.input_steps_ID
 		)
 
-		var sValue = oInput.val()
+		var sValue = oInput.val() /** @type {string} */
 		var bValid = false
-		if (!sValue.includes('.')) {
+
+		//check that the value is numeric
+		if ( cCommon.is_integer(sValue) ) {
 			var iValue = parseInt(sValue)
 			bValid = iValue >= SCRAMBLE_CONSTS.MIN_STEPS && iValue <= SCRAMBLE_CONSTS.MAX_STEPS
+			if (bValid)
+				this._initial_runs = iValue
 		}
 
 		oInput.css(
@@ -456,7 +462,13 @@ class cScrambleWidget extends cJQueryWidgetClass {
 			return
 		}
 
-		alert("not implemented yet")
+		cCAActionEvent.fire_event(
+			this.options.base_name,
+			cCAScramblerEvent.control_actions.scramble,
+			{
+				inital_runs: this._initial_runs
+			}
+		)
 	}
 
 	//*************************************************************************
