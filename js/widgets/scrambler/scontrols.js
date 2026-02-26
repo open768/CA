@@ -47,17 +47,13 @@ class cScrambleWidget extends cJQueryWidgetClass {
 	//*************************************************************************
 	_subscribe_to_events(){
 		var sName = this.options.base_name
-		cCAGridEvent.subscribe(
-			sName,
-			poEvent => this.onGridEvent(poEvent)
-		)
-		cCACanvasEvent.subscribe(
-			sName,
-			poEvent => this.onCanvasEvent(poEvent)
-		)
 		cCARuleEvent.subscribe(
 			sName,
 			poEvent => this.onRuleEvent(poEvent)
+		)
+		cCAScramblerEvent.subscribe(
+			sName,
+			poEvent => this.onScramblerEvent(poEvent)
 		)
 
 		cCAActionEvent.fire_event(
@@ -481,18 +477,14 @@ class cScrambleWidget extends cJQueryWidgetClass {
 	//*************************************************************************
 	/**
 	 *
-	 * @param {cCAGridEvent} poEvent
+	 * @param {cCAScramblerEvent} poEvent
 	 */
-	onGridEvent( poEvent ){
-
-	}
-
-	//*************************************************************************
-	/**
-	 *
-	 * @param {cCACanvasEvent} poEvent
-	 */
-	onCanvasEvent( poEvent ){
+	onScramblerEvent( poEvent ){
+		switch (poEvent.action ){
+			case cCAScramblerEvent.actions.error:
+				var eData = poEvent.data /** @type {cCAScramblerException} */
+				alert("An error occurred: " + eData.message)
+		}
 
 	}
 

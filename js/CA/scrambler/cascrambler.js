@@ -101,21 +101,7 @@ class cCAScrambler{
 	async onActionEvent(poEvent){
 		switch(	poEvent.action){
 			case cCAScramblerEvent.control_actions.scramble:
-				if (!poEvent.data || poEvent.data.inital_runs == null)
-					throw new cCAScramblerException("initial runs must be provided")
-
-				this.inital_runs = poEvent.data.inital_runs
-
-				try{
-					this._scramble()
-				}catch (e){
-					if (e instanceof cCAScramblerException)
-						console.error(e)
-					else
-						throw e
-
-				}
-
+				this._onActionScramble(poEvent.data)
 				break
 		}
 	}
@@ -150,6 +136,24 @@ class cCAScrambler{
 	//********************************************************************
 	// private methods
 	//********************************************************************
+	_onActionScramble(poData){
+		try{
+			if (!poData || poData.inital_runs == null)
+				throw new cCAScramblerException("initial runs must be provided")
+
+			this.inital_runs = poData.inital_runs
+			this._scramble()
+		} catch(err){
+			if (err instanceof cCAScramblerException)
+				cCAScramblerEvent.fire_event(
+					this.base_name,
+					cCAScramblerEvent.actions.error,
+					err
+				)
+			throw err
+		}
+	}
+
 	_scramble(){
 		cDebug.enter()
 		//---------------checks

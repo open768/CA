@@ -17,7 +17,7 @@ You the consumer of this application are entirely responsible for importing this
 
 //###############################################################################
 
-class cCACryptEvent extends cCABaseEvent{
+class cCACryptEvent extends cBaseEvent{
 	static types = {
 		general: "GNR"
 	}

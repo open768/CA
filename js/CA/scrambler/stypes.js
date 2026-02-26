@@ -18,7 +18,8 @@ class cCAScramblerEvent extends cBaseEvent{
 		status: "SEST",
 		set_input: "SESI",
 		reset: "SER",
-		draw_grid: "SED"
+		draw_grid: "SED",
+		error: "SERR"
 	}
 
 	static control_actions = {
