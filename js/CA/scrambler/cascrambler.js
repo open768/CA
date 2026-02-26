@@ -134,7 +134,7 @@ class cCAScrambler{
 	}
 
 	//********************************************************************
-	// private methods
+	// private scrambling methods
 	//********************************************************************
 	_onActionScramble(poData){
 		try{
@@ -154,7 +154,8 @@ class cCAScrambler{
 		}
 	}
 
-	_scramble(){
+	//********************************************************************
+	async _scramble(){
 		cDebug.enter()
 		//---------------checks
 		if (this.grid == null)
@@ -181,6 +182,8 @@ class cCAScrambler{
 		this._scrambling = true
 	}
 
+	//********************************************************************
+	// other scrambling methods
 	//********************************************************************
 	_reset(){
 		this._data = new cSparseArray(
