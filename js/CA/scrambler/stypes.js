@@ -14,8 +14,6 @@ You the consumer of this code are solely and entirely responsible for importing 
 
 /** Scrambler Events */
 class cCAScramblerEvent extends cBaseEvent{
-	static event_type_id = "cascramev"
-
 	static actions = {
 		status: "SEST",
 		set_input: "SESI",

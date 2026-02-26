@@ -18,8 +18,6 @@ You the consumer of this application are entirely responsible for importing this
 //###############################################################################
 
 class cCACryptEvent extends cCABaseEvent{
-	event_type_id = "CACRYEV"
-
 	static types = {
 		general: "GNR"
 	}

@@ -23,6 +23,7 @@ class cCAScrambler{
 	/** @type number  */ inital_runs = 0
 	/** @type string  */ plaintext = null
 	/** @type string  */ base_name = null
+	/** @type {cCAGrid} */ grid = null
 
 	//-----------internal variables
 	_data = null	/** @type {cSparseArray} */
@@ -53,6 +54,10 @@ class cCAScrambler{
 			this.base_name,
 			poEvent=>this.onActionEvent(poEvent)
 		)
+		cCACanvasEvent.subscribe(
+			this.base_name,
+			poEvent=>this.onCanvasEvent(poEvent)
+		)
 	}
 
 	//********************************************************************
@@ -68,6 +73,9 @@ class cCAScrambler{
 	//********************************************************************
 	//* event handlers
 	//********************************************************************
+	/**
+	 * @param {cCARuleEvent} poEvent
+	 */
 	async onRuleEvent(poEvent){
 		switch(	poEvent.action){
 			case cCARuleEvent.actions.update_rule:
@@ -76,6 +84,9 @@ class cCAScrambler{
 	}
 
 	//********************************************************************
+	/**
+	 * @param {cCAScramblerEvent} poEvent
+	 */
 	async onScramblerEvent(poEvent){
 		switch(	poEvent.action){
 			case cCAScramblerEvent.actions.set_input:
@@ -84,6 +95,9 @@ class cCAScrambler{
 		}
 	}
 	//********************************************************************
+	/**
+	 * @param {cCAActionEvent} poEvent
+	 */
 	async onActionEvent(poEvent){
 		switch(	poEvent.action){
 			case cCAScramblerEvent.control_actions.scramble:
@@ -92,10 +106,31 @@ class cCAScrambler{
 
 				this.inital_runs = poEvent.data.inital_runs
 
-				this._scramble()
+				try{
+					this._scramble()
+				}catch (e){
+					if (e instanceof cCAScramblerException)
+						console.error(e)
+					else
+						throw e
+
+				}
+
 				break
 		}
 	}
+
+	//********************************************************************
+	/**
+	 * @param {cCACanvasEvent} poEvent
+	 */
+	async onCanvasEvent(poEvent){
+		switch(	poEvent.action){
+			case cCACanvasEvent.actions.set_grid:
+				this.grid = poEvent.data
+		}
+	}
+
 
 	//********************************************************************
 	// public methods
@@ -118,6 +153,8 @@ class cCAScrambler{
 	_scramble(){
 		cDebug.enter()
 		//---------------checks
+		if (this.grid == null)
+			return
 		if (this._scrambling)
 			throw new cCAScramblerException("already scrambling")
 		if (!this._rule_is_set)
@@ -128,8 +165,10 @@ class cCAScrambler{
 			throw new cCAScramblerException("initial runs must be provided")
 
 		//---------------
-		//check that the CA grid is suitable for scrambling
 		//add random junk to the end of the scrambler text until the grid is full
+		this._fillup_input()
+
+		//check that the CA grid is suitable for scrambling
 
 		//---------------
 		this._scrambling = true
@@ -184,6 +223,36 @@ class cCAScrambler{
 			cCAScramblerEvent.actions.draw_grid
 		)
 	}
+
+	//********************************************************************
+	_fillup_input(){
+
+		var oIndex = this._grid_index
+
+		if (oIndex.row >= this._rows && oIndex.col >= this._cols)
+			return
+
+		var oData = this._data /** @type {cSparseArray} @ */
+		while (oIndex.row < this._rows){
+			while (oIndex.col < this._cols){
+				oData.set(
+					oIndex.row,
+					oIndex.col,
+					Math.random() < 0.5 ? 1 : 0
+				)
+				oIndex.col++
+			}
+
+			oIndex.col = 0
+			oIndex.row++
+		}
+
+		cCAScramblerEvent.fire_event(
+			this.base_name,
+			cCAScramblerEvent.actions.draw_grid
+		)
+	}
+
 
 	//********************************************************************
 	/**

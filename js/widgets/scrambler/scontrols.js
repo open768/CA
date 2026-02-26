@@ -41,6 +41,11 @@ class cScrambleWidget extends cJQueryWidgetClass {
 		this._render_grids()
 		this._render_outputs()
 
+		this._subscribe_to_events()
+	}
+
+	//*************************************************************************
+	_subscribe_to_events(){
 		var sName = this.options.base_name
 		cCAGridEvent.subscribe(
 			sName,
@@ -474,16 +479,28 @@ class cScrambleWidget extends cJQueryWidgetClass {
 	//*************************************************************************
 	//* event handlers
 	//*************************************************************************
+	/**
+	 *
+	 * @param {cCAGridEvent} poEvent
+	 */
 	onGridEvent( poEvent ){
 
 	}
 
 	//*************************************************************************
+	/**
+	 *
+	 * @param {cCACanvasEvent} poEvent
+	 */
 	onCanvasEvent( poEvent ){
 
 	}
 
 	//*************************************************************************
+	/**
+	 *
+	 * @param {cCARuleEvent} poEvent
+	 */
 	onRuleEvent( poEvent ){
 		switch (poEvent.action) {
 			case cCARuleEvent.actions.update_rule:

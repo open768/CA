@@ -22,7 +22,6 @@ class CAException {
 // subclasses of cBaseEvent for specific event types - these are the events that will be fired and listened for in the app
 //* **************************************************************************
 class cCAActionEvent extends cBaseEvent {
-	static event_type_id = 'CAAE'
 	static actions = {
 		ready: 'AER',
 		grid_init: 'AEGI',
@@ -39,7 +38,6 @@ class cCAActionEvent extends cBaseEvent {
 //* **************************************************************************
 
 class cCARuleEvent extends cBaseEvent {
-	static event_type_id = 'CARE'
 	static actions = {
 		update_rule: 'REU',
 		set_rule: 'RESR',
@@ -50,7 +48,6 @@ class cCARuleEvent extends cBaseEvent {
 //###############################################################################
 
 class cCAGridEvent extends cBaseEvent {
-	static event_type_id = 'CAGE'
 	static actions = {
 		init_grid: 'GEI',
 		set_cell: 'GES',
@@ -66,7 +63,6 @@ class cCAGridEvent extends cBaseEvent {
 }
 
 class cCACanvasEvent extends cBaseEvent {
-	static event_type_id = 'CACE'
 	static actions = {
 		grid_status: 'CEG',
 		set_grid: 'CESG',
