@@ -30,11 +30,11 @@ class cCAScrambler{
 	_initial_runs_completed = 0
 	_rows=0
 	_cols=0
+	_stage = cCAScramblerStages.NOT_RUNNING
 	_grid_index = {
 		row: 0, col: 0
 	}
 	_rule_is_set = false
-	_scrambling = false
 
 	//********************************************************************
 	constructor(base_name, rows,cols){
@@ -58,6 +58,10 @@ class cCAScrambler{
 			this.base_name,
 			poEvent=>this.onCanvasEvent(poEvent)
 		)
+		cCAGridEvent.subscribe(
+			this.base_name,
+			poEvent=>this.onGridEvent(poEvent)
+		)
 	}
 
 	//********************************************************************
@@ -67,7 +71,7 @@ class cCAScrambler{
 		if (rows === undefined || cols === undefined)
 			throw new cCAScramblerException("rows and cols are required")
 
-		return Math.floor((rows * cols / cCAScrambler.BITS_PER_CHAR) - this.PREFIX.length - this.SUFFIX.length)
+		return Math.floor(rows * cols / cCAScrambler.BITS_PER_CHAR) - this.PREFIX.length - this.SUFFIX.length
 	}
 
 	//********************************************************************
@@ -117,6 +121,24 @@ class cCAScrambler{
 		}
 	}
 
+	//********************************************************************
+	/**
+	 * @param {cCAGridEvent} poEvent
+	 */
+	async onGridEvent(poEvent){
+		if (this._stage !== cCAScramblerStages.INITIAL_RUNS)
+			return
+
+		switch(	poEvent.action){
+			case cCAGridEvent.notify.done:
+				break
+			case cCAGridEvent.notify.nochange:
+			case cCAGridEvent.notify.repeatPattern:
+				//something went wrong with the scrambling - stop and report an error
+				break
+		}
+	}
+
 
 	//********************************************************************
 	// public methods
@@ -160,8 +182,8 @@ class cCAScrambler{
 		//---------------checks
 		if (this.grid == null)
 			return
-		if (this._scrambling)
-			throw new cCAScramblerException("already scrambling")
+		if (this._stage !== cCAScramblerStages.NOT_RUNNING)
+			throw new cCAScramblerException("already running")
 		if (!this._rule_is_set)
 			throw new cCAScramblerException("a scrambling rule must be set on the grid")
 		if (!this.plaintext || this.plaintext.length === 0)
@@ -171,16 +193,29 @@ class cCAScrambler{
 
 		//---------------
 		//add random junk to the end of the scrambler text until the grid is full
+		this._stage = cCAScramblerStages.FILL_INPUT
 		this._fillup_input()
 
-		//check that the CA grid is suitable for scrambling
+		// TODO: - check that the CA grid is suitable for scrambling
+		this._stage = cCAScramblerStages.VALIDATE_GRID
 
 		//---------------
-		this._scrambling = true
-		this._initial_runs_completed
-
-		this._scrambling = true
+		this._stage = cCAScramblerStages.INITIAL_RUNS
+		this._initial_runs_completed = 0
+		this._do_initial_runs()
 	}
+
+	//********************************************************************
+	async _do_initial_runs(){
+		//step the CA grid
+		if (this.grid == null)
+			throw new cCAScramblerException("no grid set")
+		//step the grid
+		//consume data from the grid so that next step is ready to run
+		//FIXME: but the canvas is sending the consume response, the grid needs to be aware that multiple consumers are subscribed
+		//loop
+	}
+
 
 	//********************************************************************
 	// other scrambling methods

@@ -31,9 +31,18 @@ class cCAScramblerEvent extends cBaseEvent{
 class cCAScramblerException extends Error {
 }
 
-class cCAScramblerTypes{
+class cCAScramblerTypes extends cStaticClass{
 	static status = {
 		dormant: null,
 		initialRuns: 1
 	}
+}
+
+class cCAScramblerStages extends cStaticClass{
+	static NOT_RUNNING = "SSNR"
+	static INIT = "SSI"
+	static FILL_INPUT = "SSFI"
+	static VALIDATE_GRID = "SSVG"
+	static INITIAL_RUNS = "SSIR"
+	static SCRAMBLING = "SSS"
 }
