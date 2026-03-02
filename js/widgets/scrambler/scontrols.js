@@ -470,6 +470,17 @@ class cScrambleWidget extends cJQueryWidgetClass {
 			return
 		}
 
+		//disable button to prevent multiple clicks
+		var oButton = cJquery.get_child(
+			oElement,
+			SCRAMBLE_CONTROL_IDS.btn_scramble_ID
+		)
+		oButton.prop(
+			'disabled',
+			true
+		)
+
+		//fire the scramble event
 		cCAActionEvent.fire_event(
 			this.options.base_name,
 			cCAScramblerEvent.control_actions.scramble,
