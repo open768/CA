@@ -39,6 +39,8 @@ class cCAGrid extends CAEventSubscriber {
 	/** @type {cCARunData} */ runData = new cCARunData()
 	/** @type {Array} */ history = []
 	/** @type {cCAStatus} */ counts = new cCAStatus()
+	/** @type {number} */ _subscriber_count = 0
+	/** @type {number} */ _consumed_responses = 0
 
 	static HISTORY_LEN = 40
 
@@ -79,7 +81,7 @@ class cCAGrid extends CAEventSubscriber {
 	//#######################################################################
 	// # event handlers
 	//#######################################################################
-	onCARuleEvent(poEvent) {
+	async onCARuleEvent(poEvent) {
 		if (!this.active)
 			return
 
@@ -93,7 +95,7 @@ class cCAGrid extends CAEventSubscriber {
 		}
 	}
 
-	onCAActionEvent(poEvent) {
+	async onCAActionEvent(poEvent) {
 		if (!this.active)
 			return
 
@@ -110,16 +112,19 @@ class cCAGrid extends CAEventSubscriber {
 	/**
 	 * @param {cCAGridEvent} poEvent
 	 */
-	onCAGridEvent(poEvent) {
+	async onCAGridEvent(poEvent) {
 		if (!this.active)
 			return
 
 		switch (poEvent.action) {
 			case cCAGridEvent.notify.changedCellsConsumed:
-				this._onNotifyCellsConsumed()
+				this._on_notify_cells_consumed()
 				break
 			case cCAGridEvent.actions.set_cell:
 				this._onSetOneCellOnly(poEvent.data)
+				break
+			case cBaseEvent.base_actions.notify_subscription:
+				this._subscriber_count++
 				break
 		}
 	}
@@ -194,6 +199,7 @@ class cCAGrid extends CAEventSubscriber {
 		// reset instance state
 		this.runData.changed_cells = []
 		this.history = []
+		this._consumed_responses = 0
 
 		// link if there is a rule
 		if (this.rule)
@@ -416,6 +422,8 @@ class cCAGrid extends CAEventSubscriber {
 	// # events
 	//#######################################################################
 	_informGridDone() {
+		this._consumed_responses = 0
+
 		// inform consumers that grid has executed
 		cCAGridEvent.fire_event(
 			this.name,
@@ -440,18 +448,15 @@ class cCAGrid extends CAEventSubscriber {
 
 	/**
 	 */
-	_onNotifyCellsConsumed() {
+	_on_notify_cells_consumed() {
 		cDebug.enter()
 		this.runData.clear_cell_counters() // always clean out the changed cells
+		this._consumed_responses++
 
-		if (this.running) {
+		if (this.running && this._consumed_responses >= this._subscriber_count) {
 			cDebug.write('running again')
 			this.runData.runs++
-			cCAActionEvent.fire_event(
-				this.name,
-				cCAActionEvent.actions.control,
-				cCAActionEvent.control_actions.step
-			)
+			this._step()
 		}
 
 		cDebug.leave()
