@@ -130,11 +130,13 @@ class cCAScrambler{
 	 * @param {cCAGridEvent} poEvent
 	 */
 	async onGridEvent(poEvent){
-		if (this._stage !== cCAScramblerStages.INITIAL_RUNS)
+		if (this._stage == cCAScramblerStages.NOT_RUNNING)
 			return
 
 		switch(	poEvent.action){
 			case cCAGridEvent.notify.done:
+				if (this._stage !== cCAScramblerStages.FILL_INPUT)
+					throw new cCAScramblerException("unexpected stage " + this._stage + " for grid done")
 				this._initial_runs_completed++
 				this._do_step()
 
@@ -170,7 +172,7 @@ class cCAScrambler{
 			if (!poData || !poData.inital_runs)
 				throw new cCAScramblerException("initial runs must be provided")
 
-			this.inital_runs = poData.inital_runs
+			this.initial_runs = poData.inital_runs
 			this._scramble()
 		} catch(err){
 			if (err instanceof cCAScramblerException)
@@ -195,7 +197,7 @@ class cCAScrambler{
 			throw new cCAScramblerException("a scrambling rule must be set on the grid")
 		if (!this.plaintext || this.plaintext.length === 0)
 			throw new cCAScramblerException("plaintext must be set")
-		if (!this.inital_runs)
+		if (!this.initial_runs)
 			throw new cCAScramblerException("initial runs must be provided")
 
 		//---------------
@@ -210,7 +212,7 @@ class cCAScrambler{
 		if (this.grid == null)
 			throw new cCAScramblerException("no grid set")
 
-		if (this._initial_runs_completed < this.inital_runs)
+		if (this._initial_runs_completed < this.initial_runs)
 			//step the grid by sending an event
 			cCAActionEvent.fire_event(
 				this.base_name,
@@ -224,7 +226,7 @@ class cCAScrambler{
 
 	//********************************************************************
 	async _do_scramble(){
-		if (this._initial_runs_completed < this.inital_runs)
+		if (this._initial_runs_completed < this.initial_runs)
 			throw new cCAScramblerException("initial runs not completed")
 
 		this._stage = cCAScramblerStages.SCRAMBLING
@@ -252,7 +254,7 @@ class cCAScrambler{
 			this._rows,
 			this._cols
 		)
-		this.inital_runs = 0
+		this.initial_runs = 0
 		this.initial_runs_completed = 0
 		this._grid_index = {
 			row: 0, col: 0
