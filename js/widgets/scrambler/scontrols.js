@@ -464,7 +464,11 @@ class cScrambleWidget extends cJQueryWidgetClass {
 			return
 		}
 
-		this._onInputStepsBlur()
+		var bValid = this._onInputStepsBlur()
+		if (!bValid){
+			alert("please enter a valid number of initial steps")
+			return
+		}
 
 		cCAActionEvent.fire_event(
 			this.options.base_name,

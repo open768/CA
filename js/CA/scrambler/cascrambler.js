@@ -214,15 +214,15 @@ class cCAScrambler{
 		if (this.grid == null)
 			throw new cCAScramblerException("no grid set")
 
-		if (this._initial_runs_completed >= this.inital_runs)
-			this._do_scramble()
-		else
+		if (this._initial_runs_completed < this.inital_runs)
 			//step the grid by sending an event
 			cCAActionEvent.fire_event(
 				this.base_name,
 				cCAActionEvent.actions.control,
 				cCAActionEvent.control_actions.step
 			)
+		else
+			this._do_scramble()
 		// the grid done event will caLL this function
 	}
 
