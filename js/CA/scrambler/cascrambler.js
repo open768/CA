@@ -220,7 +220,8 @@ class cCAScrambler{
 			//step the grid by sending an event
 			cCAActionEvent.fire_event(
 				this.base_name,
-				cCAActionEvent.control_actions.step_grid
+				cCAActionEvent.actions.control,
+				cCAActionEvent.control_actions.step
 			)
 		// the grid done event will caLL this function
 	}

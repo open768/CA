@@ -451,6 +451,7 @@ class cScrambleWidget extends cJQueryWidgetClass {
 
 	//*************************************************************************
 	_onClickScramble(){
+
 		//check that there is text
 		var oElement = this.element
 		var oInput = cJquery.get_child(
@@ -462,6 +463,8 @@ class cScrambleWidget extends cJQueryWidgetClass {
 			alert("please enter some text to scramble")
 			return
 		}
+
+		this._onInputStepsBlur()
 
 		cCAActionEvent.fire_event(
 			this.options.base_name,

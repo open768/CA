@@ -8,19 +8,21 @@
             "name": "index debug",
             "type": "chrome",
             "request": "launch",
-            "file": "index.html?debug",
+            "file": "${workspaceFolder}/index.html?debug",
         },
         {
             "name": "index",
             "type": "chrome",
             "request": "launch",
-            "file": "index.html",
+            "file": "${workspaceFolder}/index.html",
         },
         {
-            "name": "scramble",
+            "name": "scrambler",
             "type": "chrome",
             "request": "launch",
-            "file": "scramble.html?debug",
+            "url": "${workspaceFolder}/scramble.html",
+            "skipFiles": [
+            ]
         }
     ]
 }
