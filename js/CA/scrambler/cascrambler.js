@@ -131,6 +131,9 @@ class cCAScrambler{
 
 		switch(	poEvent.action){
 			case cCAGridEvent.notify.done:
+				this._initial_runs_completed++
+				this._do_step()
+
 				break
 			case cCAGridEvent.notify.nochange:
 			case cCAGridEvent.notify.repeatPattern:
@@ -160,7 +163,7 @@ class cCAScrambler{
 	//********************************************************************
 	_onActionScramble(poData){
 		try{
-			if (!poData || poData.inital_runs == null)
+			if (!poData || !poData.inital_runs)
 				throw new cCAScramblerException("initial runs must be provided")
 
 			this.inital_runs = poData.inital_runs
@@ -202,18 +205,32 @@ class cCAScrambler{
 		//---------------
 		this._stage = cCAScramblerStages.INITIAL_RUNS
 		this._initial_runs_completed = 0
-		this._do_initial_runs()
+		this._do_step()
 	}
 
 	//********************************************************************
-	async _do_initial_runs(){
+	async _do_step(){
 		//step the CA grid
 		if (this.grid == null)
 			throw new cCAScramblerException("no grid set")
-		//step the grid
-		//consume data from the grid so that next step is ready to run
-		//FIXME: but the canvas is sending the consume response, the grid needs to be aware that multiple consumers are subscribed
-		//loop
+
+		if (this._initial_runs_completed >= this.inital_runs)
+			this._do_scramble()
+		else
+			//step the grid by sending an event
+			cCAActionEvent.fire_event(
+				this.base_name,
+				cCAActionEvent.control_actions.step_grid
+			)
+		// the grid done event will caLL this function
+	}
+
+	//********************************************************************
+	async _do_scramble(){
+		if (this._initial_runs_completed < this.inital_runs)
+			throw new cCAScramblerException("initial runs not completed")
+
+		this._stage = cCAScramblerStages.SCRAMBLING
 	}
 
 

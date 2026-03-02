@@ -35,8 +35,8 @@ class cScrambleWidget extends cJQueryWidgetClass {
 	//* rendering
 	//*************************************************************************
 	render(){
-		this._render_inputs()
 		this._render_importer()
+		this._render_inputs()
 		this._render_rule()
 		this._render_grids()
 		this._render_outputs()
