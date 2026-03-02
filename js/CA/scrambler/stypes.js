@@ -18,7 +18,7 @@ class cCAScramblerEvent extends cBaseEvent{
 		status: "SEST",
 		set_input: "SESI",
 		reset: "SER",
-		draw_grid: "SED",
+		draw_scrambler_grid: "SEDG",
 		error: "SERR"
 	}
 	static notify = {
@@ -39,6 +39,7 @@ class cCAScramblerTypes extends cStaticClass{
 		dormant: null,
 		initialRuns: 1
 	}
+	static STEP_DELAY_MS = 200
 }
 
 class cCAScramblerStages extends cStaticClass{
