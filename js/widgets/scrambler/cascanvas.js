@@ -44,7 +44,7 @@ class cCAScrambleCanvas extends cJQueryWidgetClass {
 	/**
 	 * @param {cCAActionEvent} poEvent
 	 */
-	onActionEvent( poEvent ){
+	async onActionEvent( poEvent ){
 		switch (poEvent.action) {
 			case cCAActionEvent.actions.ready:
 				this._init_canvas()
@@ -54,7 +54,7 @@ class cCAScrambleCanvas extends cJQueryWidgetClass {
 	/**
 	 * @param {cCAScramblerEvent} poEvent
 	 */
-	onScramblerEvent( poEvent ){
+	async onScramblerEvent( poEvent ){
 		switch (poEvent.action) {
 			case cCAScramblerEvent.actions.reset:
 				this._clear_canvas()
@@ -98,7 +98,7 @@ class cCAScrambleCanvas extends cJQueryWidgetClass {
 	}
 
 	//********************************************************************
-	_draw_canvas( ){
+	async _draw_canvas( ){
 		if (!this._canvas)
 			throw new cCAScramblerException("canvas not initialized - ready action not received?" )
 		if (!this._scrambler)
@@ -117,6 +117,11 @@ class cCAScrambleCanvas extends cJQueryWidgetClass {
 					ic
 				)
 			}
+
+		cCAScramblerEvent.fire_event(
+			this.options.base_name,
+			cCAScramblerEvent.notify.consumed
+		)
 	}
 
 	//********************************************************************

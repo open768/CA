@@ -96,6 +96,10 @@ class cCAScrambler{
 			case cCAScramblerEvent.actions.set_input:
 				this._set_plaintext(poEvent.data)
 				break
+			case cCAScramblerEvent.notify.consumed:
+				//the consumer has consumed the scrambled output and is ready for the next scramble
+				this._on_notify_consumed()
+				break
 		}
 	}
 	//********************************************************************
@@ -196,16 +200,8 @@ class cCAScrambler{
 
 		//---------------
 		//add random junk to the end of the scrambler text until the grid is full
-		this._stage = cCAScramblerStages.FILL_INPUT
 		this._fillup_input()
-
-		// TODO: - check that the CA grid is suitable for scrambling
-		this._stage = cCAScramblerStages.VALIDATE_GRID
-
-		//---------------
-		this._stage = cCAScramblerStages.INITIAL_RUNS
-		this._initial_runs_completed = 0
-		this._do_step()
+		//then wait for the consumer to respond before going to the next stage
 	}
 
 	//********************************************************************
@@ -232,6 +228,19 @@ class cCAScrambler{
 			throw new cCAScramblerException("initial runs not completed")
 
 		this._stage = cCAScramblerStages.SCRAMBLING
+	}
+
+	//********************************************************************
+	async _on_notify_consumed(){
+		switch (this._stage){
+			case cCAScramblerStages.FILL_INPUT:
+				this._do_step()
+				break
+			case cCAScramblerStages.NOT_RUNNING:
+				break
+			default:
+				throw new cCAScramblerException("unexpected stage " + this._stage + " for notify consumed")
+		}
 	}
 
 
@@ -287,24 +296,27 @@ class cCAScrambler{
 	//********************************************************************
 	_fillup_input(){
 
+		if (this._stage !== cCAScramblerStages.NOT_RUNNING)
+			throw new cCAScramblerException("incorrect stage fo filling input")
+		this._stage = cCAScramblerStages.FILL_INPUT
+
 		var oIndex = this._grid_index
 
-		if (oIndex.row >= this._rows && oIndex.col >= this._cols)
-			return
+		if (oIndex.row <= this._rows && oIndex.col < this._cols) {
+			var oData = this._data /** @type {cSparseArray} @ */
+			while (oIndex.row < this._rows){
+				while (oIndex.col < this._cols){
+					oData.set(
+						oIndex.row,
+						oIndex.col,
+						Math.random() < 0.5 ? 1 : 0
+					)
+					oIndex.col++
+				}
 
-		var oData = this._data /** @type {cSparseArray} @ */
-		while (oIndex.row < this._rows){
-			while (oIndex.col < this._cols){
-				oData.set(
-					oIndex.row,
-					oIndex.col,
-					Math.random() < 0.5 ? 1 : 0
-				)
-				oIndex.col++
+				oIndex.col = 0
+				oIndex.row++
 			}
-
-			oIndex.col = 0
-			oIndex.row++
 		}
 
 		cCAScramblerEvent.fire_event(

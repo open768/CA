@@ -21,6 +21,9 @@ class cCAScramblerEvent extends cBaseEvent{
 		draw_grid: "SED",
 		error: "SERR"
 	}
+	static notify = {
+		consumed: "SENC"
+	}
 
 	static control_actions = {
 		scramble: "SEA"
