@@ -191,7 +191,7 @@ class cCAScrambler{
 			throw new cCAScramblerException("a scrambling rule must be set on the grid")
 		if (!this.plaintext || this.plaintext.length === 0)
 			throw new cCAScramblerException("plaintext must be set")
-		if (this.inital_runs == null)
+		if (!this.inital_runs)
 			throw new cCAScramblerException("initial runs must be provided")
 
 		//---------------
@@ -242,7 +242,7 @@ class cCAScrambler{
 			this._rows,
 			this._cols
 		)
-		this.inital_runs = -1
+		this.inital_runs = 0
 		this.initial_runs_completed = 0
 		this._grid_index = {
 			row: 0, col: 0
