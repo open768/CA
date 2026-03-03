@@ -37,14 +37,17 @@ class cCARemoteControls extends cJQueryWidgetClass {
 		// subscribe to CAEvents
 		cCARuleEvent.subscribe(
 			this.base_name,
+			[cCARuleEvent.actions.set_rule],
 			poEvent => this.onRuleEvent(poEvent)
 		)
 		cCACanvasEvent.subscribe(
 			this.base_name,
+			[cCACanvasEvent.actions.set_grid],
 			poEvent => this.onCanvasEvent(poEvent)
 		)
 		cCAGridEvent.subscribe(
 			this.base_name,
+			[cCAGridEvent.notify.nochange],
 			poEvent => this.onGridEvent(poEvent)
 		)
 
@@ -98,7 +101,7 @@ class cCARemoteControls extends cJQueryWidgetClass {
 
 	//* ***************************************************************************
 	onGridEvent(poEvent) {
-		if (poEvent.action === cCAGridEvent.actions.nochange)
+		if (poEvent.action === cCAGridEvent.notify.nochange)
 			setTimeout(
 				() => this._enable_controls(false),
 				100

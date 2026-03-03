@@ -50,6 +50,7 @@ class cCAJson extends cJQueryWidgetClass {
 		// subscribe to CA Events
 		cCACanvasEvent.subscribe(
 			this.base_name,
+			[cCACanvasEvent.actions.set_grid],
 			poEvent => this._onCanvasEvent(poEvent)
 		)
 		cDebug.leave()

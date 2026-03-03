@@ -44,22 +44,27 @@ class cCAScrambler{
 		this._reset()
 		cCAScramblerEvent.subscribe(
 			this.base_name,
+			[cCAScramblerEvent.actions.set_input,cCAScramblerEvent.notify.consumed],
 			poEvent=>this.onScramblerEvent(poEvent)
 		)
 		cCARuleEvent.subscribe(
 			this.base_name,
+			[cCARuleEvent.actions.update_rule],
 			poEvent=>this.onRuleEvent(poEvent)
 		)
 		cCAActionEvent.subscribe(
 			this.base_name,
+			[cCAScramblerEvent.control_actions.scramble],
 			poEvent=>this.onActionEvent(poEvent)
 		)
 		cCACanvasEvent.subscribe(
 			this.base_name,
+			[cCACanvasEvent.actions.set_grid],
 			poEvent=>this.onCanvasEvent(poEvent)
 		)
 		cCAGridEvent.subscribe(
 			this.base_name,
+			[cCAGridEvent.notify.done,cCAGridEvent.notify.nochange,cCAGridEvent.notify.repeatPattern],
 			poEvent=>this.onGridEvent(poEvent)
 		)
 	}
@@ -80,7 +85,7 @@ class cCAScrambler{
 	/**
 	 * @param {cCARuleEvent} poEvent
 	 */
-	async onRuleEvent(poEvent){
+	onRuleEvent(poEvent){
 		switch(	poEvent.action){
 			case cCARuleEvent.actions.update_rule:
 				this._rule_is_set = true
@@ -91,14 +96,14 @@ class cCAScrambler{
 	/**
 	 * @param {cCAScramblerEvent} poEvent
 	 */
-	async onScramblerEvent(poEvent){
+	onScramblerEvent(poEvent){
 		switch(	poEvent.action){
 			case cCAScramblerEvent.actions.set_input:
 				this._set_plaintext(poEvent.data)
 				break
 			case cCAScramblerEvent.notify.consumed:
 				//the consumer has consumed the scrambled output and is ready for the next scramble
-				this._on_notify_consumed()
+				this._on_notify_scrambler_consumed()
 				break
 		}
 	}
@@ -106,7 +111,7 @@ class cCAScrambler{
 	/**
 	 * @param {cCAActionEvent} poEvent
 	 */
-	async onActionEvent(poEvent){
+	onActionEvent(poEvent){
 		switch(	poEvent.action){
 			case cCAScramblerEvent.control_actions.scramble:
 				this._onActionScramble(poEvent.data)
@@ -118,7 +123,7 @@ class cCAScrambler{
 	/**
 	 * @param {cCACanvasEvent} poEvent
 	 */
-	async onCanvasEvent(poEvent){
+	onCanvasEvent(poEvent){
 		switch(	poEvent.action){
 			case cCACanvasEvent.actions.set_grid:
 				this.grid = poEvent.data
@@ -129,13 +134,16 @@ class cCAScrambler{
 	/**
 	 * @param {cCAGridEvent} poEvent
 	 */
-	async onGridEvent(poEvent){
+	onGridEvent(poEvent){
 		if (this._stage == cCAScramblerStages.NOT_RUNNING)
 			return
 
+		if (this._stage != cCAScramblerStages.INITIAL_RUNS && this._stage != cCAScramblerStages.SCRAMBLING)
+			throw new cCAScramblerException("unexpected stage " + this._stage + " for grid done")
+
 		switch(	poEvent.action){
 			case cCAGridEvent.notify.done:
-				this._on_grid_notify_done()
+				this._on_ca_grid_notify_done()
 				break
 
 			case cCAGridEvent.notify.nochange:
@@ -237,7 +245,7 @@ class cCAScrambler{
 	}
 
 	//********************************************************************
-	async _on_notify_consumed(){
+	async _on_notify_scrambler_consumed(){
 		switch (this._stage){
 			case cCAScramblerStages.FILL_INPUT:
 				this._do_step()
@@ -250,17 +258,16 @@ class cCAScrambler{
 	}
 
 	//********************************************************************
-	_on_grid_notify_done(){
+	_on_ca_grid_notify_done(){
 		if (this._stage !== cCAScramblerStages.FILL_INPUT)
 			throw new cCAScramblerException("unexpected stage " + this._stage + " for grid done")
 
 		this._initial_runs_completed++
-		cCAGridEvent.fire_event(
-			this.base_name,
-			cCAGridEvent.notify.changedCellsConsumed
-		)
 
-		setTimeout(
+		//dont need to fire a cCAGridEvent.notify.changedCellsConsumed as the cacanvas will do that,
+		// just need to know that it has been done
+
+		setTimeout( //the set-timeout is a fudge
 			()=>this._do_step(),
 			cCAScramblerTypes.STEP_DELAY_MS
 		)

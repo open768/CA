@@ -63,14 +63,17 @@ class cCACanvas extends cJQueryWidgetClass {
 
 		cCAActionEvent.subscribe(
 			poOptions.base_name,
+			[cCAActionEvent.actions.ready],
 			poEvent => this._onActionEvent(poEvent)
 		)
 		cCAGridEvent.subscribe(
 			poOptions.base_name,
+			[cCAGridEvent.notify.done, cCAGridEvent.notify.clear, cCAGridEvent.notify.nochange, cCAGridEvent.notify.repeatPattern],
 			poEvent => this._onGridEvent(poEvent)
 		)
 		cCACanvasEvent.subscribe(
 			poOptions.base_name,
+			[cCACanvasEvent.actions.import],
 			poEvent => this._onCanvasEvent(poEvent)
 		)
 	}

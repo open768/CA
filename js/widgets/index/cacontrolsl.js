@@ -52,6 +52,7 @@ class cCAControlsL extends cJQueryWidgetClass {
 		// subscribe to CA Events
 		cCARuleEvent.subscribe(
 			this.base_name,
+			[cCARuleEvent.actions.update_rule],
 			poEvent => this._onRuleEvent(poEvent)
 		)
 	}

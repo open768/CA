@@ -38,10 +38,12 @@ class cCAStatusWidget extends cJQueryWidgetClass {
 		// subscribe to CAEvents
 		cCACanvasEvent.subscribe(
 			this.base_name,
+			[cCACanvasEvent.actions.grid_status],
 			poEvent => this.onCACanvasEvent(poEvent)
 		)
 		cCAActionEvent.subscribe(
 			this.base_name,
+			[cCAActionEvent.actions.control],
 			poEvent => this.onCAActionEvent(poEvent)
 		)
 

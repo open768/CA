@@ -49,10 +49,12 @@ class cScrambleWidget extends cJQueryWidgetClass {
 		var sName = this.options.base_name
 		cCARuleEvent.subscribe(
 			sName,
+			[cCARuleEvent.actions.update_rule],
 			poEvent => this.onRuleEvent(poEvent)
 		)
 		cCAScramblerEvent.subscribe(
 			sName,
+			[cCAScramblerEvent.actions.error],
 			poEvent => this.onScramblerEvent(poEvent)
 		)
 

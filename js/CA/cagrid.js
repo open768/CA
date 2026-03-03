@@ -39,7 +39,6 @@ class cCAGrid extends CAEventSubscriber {
 	/** @type {cCARunData} */ runData = new cCARunData()
 	/** @type {Array} */ history = []
 	/** @type {cCAStatus} */ counts = new cCAStatus()
-	/** @type {number} */ _subscriber_count = 0
 	/** @type {number} */ _consumed_responses = 0
 
 	static HISTORY_LEN = 40
@@ -66,14 +65,17 @@ class cCAGrid extends CAEventSubscriber {
 
 		cCAGridEvent.subscribe(
 			this.name,
+			[cCAGridEvent.notify.changedCellsConsumed,cCAGridEvent.actions.set_cell],
 			poEvent => this.onCAGridEvent(poEvent)
 		)
 		cCAActionEvent.subscribe(
 			this.name,
+			[cCAActionEvent.actions.grid_init, cCAActionEvent.actions.control],
 			poEvent => this.onCAActionEvent(poEvent)
 		)
 		cCARuleEvent.subscribe(
 			this.name,
+			[cCARuleEvent.actions.set_rule, cCARuleEvent.actions.status],
 			poEvent => this.onCARuleEvent(poEvent)
 		)
 	}
@@ -81,7 +83,7 @@ class cCAGrid extends CAEventSubscriber {
 	//#######################################################################
 	// # event handlers
 	//#######################################################################
-	async onCARuleEvent(poEvent) {
+	onCARuleEvent(poEvent) {
 		if (!this.active)
 			return
 
@@ -95,7 +97,7 @@ class cCAGrid extends CAEventSubscriber {
 		}
 	}
 
-	async onCAActionEvent(poEvent) {
+	onCAActionEvent(poEvent) {
 		if (!this.active)
 			return
 
@@ -112,7 +114,7 @@ class cCAGrid extends CAEventSubscriber {
 	/**
 	 * @param {cCAGridEvent} poEvent
 	 */
-	async onCAGridEvent(poEvent) {
+	onCAGridEvent(poEvent) {
 		if (!this.active)
 			return
 
@@ -122,9 +124,6 @@ class cCAGrid extends CAEventSubscriber {
 				break
 			case cCAGridEvent.actions.set_cell:
 				this._onSetOneCellOnly(poEvent.data)
-				break
-			case cBaseEvent.base_actions.notify_subscription:
-				this._subscriber_count++
 				break
 		}
 	}

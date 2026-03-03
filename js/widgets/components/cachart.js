@@ -82,14 +82,17 @@ class cCAChart extends cJQueryWidgetClass {
 		// subscribe to CAEvents
 		cCAActionEvent.subscribe(
 			this.base_name,
+			[cCAActionEvent.actions.grid_init],
 			poEvent => this.onCAActionEvent(poEvent)
 		)
 		cCARuleEvent.subscribe(
 			this.base_name,
+			[cCARuleEvent.actions.set_rule],
 			poEvent => this.onCARuleEvent(poEvent)
 		)
 		cCACanvasEvent.subscribe(
 			this.base_name,
+			[cCACanvasEvent.actions.grid_status],
 			poEvent => this.onCACanvasEvent(poEvent)
 		)
 	}
