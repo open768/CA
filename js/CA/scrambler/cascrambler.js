@@ -64,7 +64,7 @@ class cCAScrambler{
 		)
 		cCAGridEvent.subscribe(
 			this.base_name,
-			[cCAGridEvent.notify.done,cCAGridEvent.notify.nochange,cCAGridEvent.notify.repeatPattern],
+			[cCAGridEvent.notify.done,cCAGridEvent.notify.nochange,cCAGridEvent.notify.repeatPattern, cCAGridEvent.notify.allConsumersDone],
 			poEvent=>this.onGridEvent(poEvent)
 		)
 	}
@@ -146,6 +146,10 @@ class cCAScrambler{
 				this._on_ca_grid_notify_done()
 				break
 
+			case cCAGridEvent.notify.allConsumersDone:
+				this._on_ca_grid_notify_all_consumers_done()
+				break
+
 			case cCAGridEvent.notify.nochange:
 			case cCAGridEvent.notify.repeatPattern:
 				//something went wrong with the scrambling - stop and report an error
@@ -193,7 +197,7 @@ class cCAScrambler{
 	}
 
 	//********************************************************************
-	async _scramble(){
+	_scramble(){
 		cDebug.enter()
 		//---------------checks
 		if (this.grid == null)
@@ -214,7 +218,7 @@ class cCAScrambler{
 	}
 
 	//********************************************************************
-	async _do_step(){
+	_step(){
 		//step the CA grid
 		if (this.grid == null)
 			throw new cCAScramblerException("no grid set")
@@ -237,7 +241,7 @@ class cCAScrambler{
 	}
 
 	//********************************************************************
-	async _do_scramble(){
+	_do_scramble(){
 		if (this._stage !== cCAScramblerStages.SCRAMBLING)
 			throw new cCAScramblerException("incorrect stage for scrambling")
 
@@ -245,11 +249,14 @@ class cCAScrambler{
 	}
 
 	//********************************************************************
-	async _on_notify_scrambler_consumed(){
+	_on_notify_scrambler_consumed(){
 		switch (this._stage){
 			case cCAScramblerStages.FILL_INPUT:
-				this._do_step()
+				this._stage = cCAScramblerStages.INITIAL_RUNS
+				this._step()
 				break
+			case cCAScramblerStages.SCRAMBLING:
+				throw new cCAScramblerException("scrambling not implemented")
 			case cCAScramblerStages.NOT_RUNNING:
 				break
 			default:
@@ -258,18 +265,28 @@ class cCAScrambler{
 	}
 
 	//********************************************************************
+	_on_ca_grid_notify_all_consumers_done(){
+		if (this._stage !== cCAScramblerStages.INITIAL_RUNS)
+			throw new cCAScramblerException("unexpected stage " + this._stage + " for grid all consumers done")
+
+		this._stage = cCAScramblerStages.SCRAMBLING
+		setTimeout(
+			()=>this._scramble(),
+			cCAScramblerTypes.STEP_DELAY_MS
+		)
+	}
+
+	//********************************************************************
 	_on_ca_grid_notify_done(){
-		if (this._stage !== cCAScramblerStages.FILL_INPUT)
+		if (this._stage !== cCAScramblerStages.INITIAL_RUNS)
 			throw new cCAScramblerException("unexpected stage " + this._stage + " for grid done")
 
 		this._initial_runs_completed++
 
-		//dont need to fire a cCAGridEvent.notify.changedCellsConsumed as the cacanvas will do that,
-		// just need to know that it has been done
-
-		setTimeout( //the set-timeout is a fudge
-			()=>this._do_step(),
-			cCAScramblerTypes.STEP_DELAY_MS
+		// fire a cCAGridEvent.notify.changedCellsConsumed,
+		cCAGridEvent.fire_event(
+			this.base_name,
+			cCAGridEvent.notify.changedCellsConsumed
 		)
 	}
 

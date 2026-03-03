@@ -57,8 +57,12 @@ class cCAGridEvent extends cBaseEvent {
 		clear: 'GENC',
 		done: 'GEND',
 		changedCellsConsumed: 'GENCC',
+		allConsumersDone: 'GENCD',
 		nochange: 'GENNC',
 		repeatPattern: 'GENRP',
+	}
+	static done = {
+		cells_consumed: 'GEDDCC'
 	}
 }
 

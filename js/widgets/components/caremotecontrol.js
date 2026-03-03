@@ -166,7 +166,7 @@ class cCARemoteControls extends cJQueryWidgetClass {
 					width: '30px',
 					height: '30px',
 					id: sID,
-					title: psTitle,
+					title: psTitle
 				}
 			)
 			oButton.button({
