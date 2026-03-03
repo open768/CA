@@ -269,6 +269,7 @@ class cCAScrambler{
 		if (this._stage !== cCAScramblerStages.INITIAL_RUNS)
 			throw new cCAScramblerException("unexpected stage " + this._stage + " for grid all consumers done")
 
+		this._initial_runs_completed++
 		this._stage = cCAScramblerStages.SCRAMBLING
 		setTimeout(
 			()=>this._scramble(),
@@ -281,12 +282,11 @@ class cCAScrambler{
 		if (this._stage !== cCAScramblerStages.INITIAL_RUNS)
 			throw new cCAScramblerException("unexpected stage " + this._stage + " for grid done")
 
-		this._initial_runs_completed++
-
 		// fire a cCAGridEvent.notify.changedCellsConsumed,
 		cCAGridEvent.fire_event(
 			this.base_name,
-			cCAGridEvent.notify.changedCellsConsumed
+			cCAGridEvent.notify.changedCellsConsumed,
+			this.constructor.name
 		)
 	}
 

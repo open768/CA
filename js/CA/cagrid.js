@@ -120,7 +120,7 @@ class cCAGrid extends CAEventSubscriber {
 
 		switch (poEvent.action) {
 			case cCAGridEvent.notify.changedCellsConsumed:
-				this._on_notify_cells_consumed()
+				this._on_notify_cells_consumed(poEvent)
 				break
 			case cCAGridEvent.actions.set_cell:
 				this._onSetOneCellOnly(poEvent.data)
@@ -448,8 +448,10 @@ class cCAGrid extends CAEventSubscriber {
 
 	/**
 	 */
-	_on_notify_cells_consumed() {
+	_on_notify_cells_consumed(poEvent) {
 		cDebug.enter()
+		cDebug.write("consumer is " + poEvent.data)
+
 		this.runData.clear_cell_counters() // always clean out the changed cells
 		this._consumed_responses++
 
@@ -457,6 +459,14 @@ class cCAGrid extends CAEventSubscriber {
 			this.name,
 			cCAGridEvent.notify.done
 		)
+
+		if (iSubscriber_count >1 && this._consumed_responses >= iSubscriber_count)
+			cCAGridEvent.fire_event(
+				this.name,
+				cCAGridEvent.notify.allConsumersDone,
+				cCAGridEvent.done.cells_consumed
+			)
+
 
 		if (this.running && this._consumed_responses >= iSubscriber_count) {
 			cDebug.write('running again')

@@ -182,7 +182,9 @@ class cCACanvas extends cJQueryWidgetClass {
 				// canvas needs to yield to allow image to be drawn
 				() => cCAGridEvent.fire_event(
 					oOptions.base_name,
-					cCAGridEvent.notify.changedCellsConsumed
+					cCAGridEvent.notify.changedCellsConsumed,
+					this.constructor.name
+
 				),
 				this.CELL_LOAD_DELAY, // fudge factor to delay next grid cycle
 			)
