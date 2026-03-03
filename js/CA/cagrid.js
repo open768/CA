@@ -326,6 +326,7 @@ class cCAGrid extends CAEventSubscriber {
 
 		// reset counters
 		this.runData.clear_cell_counters()
+
 		cDebug.write('stepping')
 
 		// apply rules
@@ -452,7 +453,12 @@ class cCAGrid extends CAEventSubscriber {
 		this.runData.clear_cell_counters() // always clean out the changed cells
 		this._consumed_responses++
 
-		if (this.running && this._consumed_responses >= this._subscriber_count) {
+		var iSubscriber_count = cCAGridEvent.get_subscriber_count(
+			this.name,
+			cCAGridEvent.notify.done
+		)
+
+		if (this.running && this._consumed_responses >= iSubscriber_count) {
 			cDebug.write('running again')
 			this.runData.runs++
 			this._step()
