@@ -19,7 +19,7 @@ class cCACanvas extends cJQueryWidgetClass {
 	//#################################################################
 	// # Definition
 	//#################################################################
-	CELL_LOAD_DELAY = 50 // fudge factor
+	CELL_LOAD_DELAY = 50 // milliseconds - fudge factor to delay next grid cycle
 	grid = null		/** @type {cCAGrid} */
 	canvas = null
 	cells_to_draw = 0
@@ -169,7 +169,6 @@ class cCACanvas extends cJQueryWidgetClass {
 
 	//* ***************************************************************
 	_count_drawn_cells() {
-		var oOptions = this.options
 		// update the count of cells drawn
 		this.cells_drawn++
 
@@ -180,15 +179,21 @@ class cCACanvas extends cJQueryWidgetClass {
 
 			setTimeout(
 				// canvas needs to yield to allow image to be drawn
-				() => cCAGridEvent.fire_event(
-					oOptions.base_name,
-					cCAGridEvent.notify.changedCellsConsumed,
-					this.constructor.name
-
-				),
+				() => this._notify_cells_consumed(),
 				this.CELL_LOAD_DELAY, // fudge factor to delay next grid cycle
 			)
 		}
+	}
+
+	//* ***************************************************************
+	_notify_cells_consumed(){
+		var oOptions = this.options
+		cCAGridEvent.fire_event(
+			oOptions.base_name,
+			cCAGridEvent.notify.changedCellsConsumed,
+			this.constructor.name
+		)
+
 	}
 
 	//* ***************************************************************
