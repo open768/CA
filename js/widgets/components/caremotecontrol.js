@@ -47,7 +47,7 @@ class cCARemoteControls extends cJQueryWidgetClass {
 		)
 		cCAGridEvent.subscribe(
 			this.base_name,
-			[cCAGridEvent.notify.nochange],
+			[cCAGridEvent.notify.nochange, cCAGridEvent.notify.repeatPattern],
 			poEvent => this.onGridEvent(poEvent)
 		)
 
@@ -101,11 +101,11 @@ class cCARemoteControls extends cJQueryWidgetClass {
 
 	//* ***************************************************************************
 	onGridEvent(poEvent) {
-		if (poEvent.action === cCAGridEvent.notify.nochange)
-			setTimeout(
-				() => this._enable_controls(false),
-				100
-			) // stop
+		switch(poEvent.action){
+			case cCAGridEvent.notify.nochange:
+			case cCAGridEvent.notify.repeatPattern:
+				this._enable_controls(false)
+		}
 	}
 
 	//* **************************************************************

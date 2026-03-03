@@ -122,7 +122,7 @@ class cCAControlsL extends cJQueryWidgetClass {
 			{
 				id: sID,
 				width: 50,
-				title: 'how many times will a cell see a pattern before it gets bored',
+				title: 'how many times will a cell see the same neighbourhood before it gets bored and flips',
 				disabled: true,
 			}
 		)
