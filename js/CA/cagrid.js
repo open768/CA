@@ -450,7 +450,7 @@ class cCAGrid extends CAEventSubscriber {
 	 */
 	_on_notify_cells_consumed(poEvent) {
 		cDebug.enter()
-		cDebug.write("consumer is " + poEvent.data)
+		cDebug.write("grid notify consumer is " + poEvent.data)
 
 		this.runData.clear_cell_counters() // always clean out the changed cells
 		this._consumed_responses++

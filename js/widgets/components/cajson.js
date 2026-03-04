@@ -9,9 +9,9 @@ For licenses that allow for commercial use please contact cluck@chickenkatsu.co.
 **************************************************************************/
 
 class cCAJsonTypes {
-	static textarea_id = 'txt'
-	static tabs_id = 'tab'
-	static body_id = 'body'
+	static TEXTAREA_ID = 'txt'
+	static BODY_ID = 'body'
+	static BTN_ID = 'btn'
 }
 
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -67,7 +67,7 @@ class cCAJson extends cJQueryWidgetClass {
 		oElement = this.element
 		sBodyID = cJquery.child_ID(
 			oElement,
-			cCAJsonTypes.body_id
+			cCAJsonTypes.BODY_ID
 		)
 
 		// -----------header----------------------------------------
@@ -82,7 +82,7 @@ class cCAJson extends cJQueryWidgetClass {
 
 			var sButtonID = cJquery.child_ID(
 				oElement,
-				'btnJson'
+				cCAJsonTypes.BTN_ID
 			)
 			oButton = $(
 				'<button>',
@@ -93,11 +93,16 @@ class cCAJson extends cJQueryWidgetClass {
 			)
 			{
 				oButton.append('+')
-				oButton.click(() => this._showHide(
-					sButtonID,
-					sBodyID
-				))
+				oButton.on(
+					"click",
+					() => this._showHide()
+				)
 				oHeaderDiv.append(oButton)
+				//add the same click to the header
+				oHeaderDiv.on(
+					"click",
+					() => this._showHide()
+				)
 			}
 		}
 
@@ -114,7 +119,7 @@ class cCAJson extends cJQueryWidgetClass {
 			// ---------textbox
 			sID = cJquery.child_ID(
 				oElement,
-				cCAJsonTypes.textarea_id
+				cCAJsonTypes.TEXTAREA_ID
 			)
 			{
 				var oBox = $(
@@ -138,7 +143,10 @@ class cCAJson extends cJQueryWidgetClass {
 				)
 				{
 					oButton.append('Create')
-					oButton.click(() => this._onClickExport())
+					oButton.on(
+						"click",
+						() => this._onClickExport()
+					)
 					oBodyDiv.append(oButton)
 				}
 			}
@@ -151,7 +159,10 @@ class cCAJson extends cJQueryWidgetClass {
 			)
 			{
 				oButton.append('Import')
-				oButton.click(() => this._onClickImport())
+				oButton.on(
+					"click",
+					() => this._onClickImport()
+				)
 				oBodyDiv.append(oButton)
 			}
 		}
@@ -165,12 +176,28 @@ class cCAJson extends cJQueryWidgetClass {
 	//#################################################################
 	// # EVENTS
 	// #################################################################`
-	_showHide(sButtonID, sBodyID) {
-		var oBody = $('#' + sBodyID)
-		var oButton = $('#' + sButtonID)
-		var bVisible = oBody.is(':visible')
-		oBody.toggle(!bVisible)
-		oButton.text(bVisible ? '+' : '-')
+	_showHide() {
+		var oElement = this.element
+		var oBody = cJquery.get_child(
+			oElement,
+			cCAJsonTypes.BODY_ID
+		)
+
+		var oButton = cJquery.get_child(
+			oElement,
+			cCAJsonTypes.BTN_ID
+		)
+
+		if (oButton.text() === '-'){
+			oBody.hide()
+			oButton.text('+')
+		}else{
+			oBody.show()
+			oButton.text('-')
+		}
+
+		//prevent the click from doing anything else
+		return false
 	}
 
 	//* ****************************************************************
@@ -197,7 +224,7 @@ class cCAJson extends cJQueryWidgetClass {
 		// get the json
 		var sID = cJquery.child_ID(
 			oElement,
-			cCAJsonTypes.textarea_id
+			cCAJsonTypes.TEXTAREA_ID
 		)
 		var sJson = $('#' + sID).val()
 		if (sJson === '') {
@@ -252,7 +279,7 @@ class cCAJson extends cJQueryWidgetClass {
 		// updatethe UI with JSON
 		var sID = cJquery.child_ID(
 			oElement,
-			cCAJsonTypes.textarea_id
+			cCAJsonTypes.TEXTAREA_ID
 		)
 		$('#' + sID).val(sJson)
 		cDebug.leave()
