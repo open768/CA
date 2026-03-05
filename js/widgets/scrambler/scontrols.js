@@ -19,6 +19,7 @@ const SCRAMBLE_CONSTS={
 class cScrambleWidget extends cJQueryWidgetClass {
 
 	_initial_runs = 0
+	_rule_is_set = false
 
 	constructor(poOptions, poElement){
 		super(
@@ -477,10 +478,7 @@ class cScrambleWidget extends cJQueryWidgetClass {
 			oElement,
 			SCRAMBLE_CONTROL_IDS.btn_scramble_ID
 		)
-		oButton.prop(
-			'disabled',
-			true
-		)
+		cJquery.disable_element(oButton)
 
 		//fire the scramble event
 		cCAActionEvent.fire_event(
@@ -522,25 +520,54 @@ class cScrambleWidget extends cJQueryWidgetClass {
 				this._update_rule_text(oRule)
 
 				//enable button
-				var oButton = cJquery.get_child(
-					this.element,
-					SCRAMBLE_CONTROL_IDS.btn_scramble_ID
-				)
-				oButton.prop(
-					'disabled',
-					false
-				)
+				this._onInputChange()
 				break
+		}
+	}
+
+	//*************************************************************************
+	_invalid_input(psText, bInvalid = true){
+		var oElement = this.element
+
+		var oStatus = cJquery.get_child(
+			oElement,
+			SCRAMBLE_CONTROL_IDS.input_text_status_ID
+		)
+		var oButton = cJquery.get_child(
+			oElement,
+			SCRAMBLE_CONTROL_IDS.btn_scramble_ID
+		)
+		var oInput = cJquery.get_child(
+			oElement,
+			SCRAMBLE_CONTROL_IDS.input_text_ID
+		)
+
+		if (bInvalid){
+			oStatus.html("<font color='red'>" + psText + "</font>")
+			oInput.css(
+				'border-color',
+				SCRAMBLE_CONSTS.BAD_INPUT_COLOUR
+			)
+			cJquery.disable_element(oButton)
+		}else{
+			oStatus.html(psText )
+			oInput.css(
+				'border-color',
+				''
+			)
+			cJquery.enable_element(oButton)
 		}
 	}
 
 	//*************************************************************************
 	_onInputChange (){
 		var oElement = this.element
-		var iMax = cCAScrambler.max_chars(
-			this.options.rows,
-			this.options.cols
-		)
+
+		//a rule must be set
+		if (!this._rule_is_set){
+			this._invalid_input("set a rule first")
+			return
+		}
 
 		//get the input text
 		var oInput = cJquery.get_child(
@@ -548,28 +575,32 @@ class cScrambleWidget extends cJQueryWidgetClass {
 			SCRAMBLE_CONTROL_IDS.input_text_ID
 		)
 
-		//check if text has a valid length
+		//check if text is there
 		var sText = oInput.val()
-		var bValid = (sText.length <= iMax)
-		oInput.css(
-			'border-color',
-			bValid ? '' : SCRAMBLE_CONSTS.BAD_INPUT_COLOUR
-		)
+		if (!sText){
+			this._invalid_input("no text entered")
+			return
+		}
 
-		//update status message
-		var oStatus = cJquery.get_child(
-			oElement,
-			SCRAMBLE_CONTROL_IDS.input_text_status_ID
+		// check if text has valid length
+		var iMax = cCAScrambler.max_chars(
+			this.options.rows,
+			this.options.cols
 		)
-		if (bValid){
-			oStatus.html("<i>chars remaining:"+ (iMax - sText.length)+"</i>")
+		if (sText.length <= iMax){
+			//fire an event so that the scrambler grid updates
 			cCAScramblerEvent.fire_event(
 				this.options.base_name,
 				cCAScramblerEvent.actions.set_input,
 				sText
 			)
+			this._invalid_input(
+				"<i>chars remaining:"+ (iMax - sText.length)+"</i>",
+				false
+			)
 		}else
-			oStatus.html("<font color='red'>text too long " + sText.length+" - must be less than " + iMax + " characters</font>")
+			this._invalid_input("text too long " + sText.length+" - must be less than " + iMax + " characters")
+
 
 	}
 
@@ -587,6 +618,7 @@ class cScrambleWidget extends cJQueryWidgetClass {
 			SCRAMBLE_CONTROL_IDS.rule_text_id
 		)
 		oTextArea.val(s64)
+		this._rule_is_set = true
 	}
 }
 
