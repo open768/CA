@@ -65,7 +65,7 @@ class cCAGrid extends CAEventSubscriber {
 
 		cCAGridEvent.subscribe(
 			this.name,
-			[cCAGridEvent.notify.changedCellsConsumed,cCAGridEvent.actions.set_cell],
+			[cCAGridEvent.notify.changedCellsConsumed, cCAGridEvent.actions.set_cell],
 			poEvent => this.onCAGridEvent(poEvent)
 		)
 		cCAActionEvent.subscribe(
@@ -135,7 +135,7 @@ class cCAGrid extends CAEventSubscriber {
 	 *
 	 * @param {cCAStatus} poStatus
 	 */
-	_update_counts(poStatus){
+	_update_counts(poStatus) {
 		this.runData.active += poStatus.active
 		this.runData.inactive += poStatus.inactive
 		this.runData.changed += poStatus.changed
@@ -452,7 +452,6 @@ class cCAGrid extends CAEventSubscriber {
 		cDebug.enter()
 		cDebug.write("grid notify consumer is " + poEvent.data)
 
-		this.runData.clear_cell_counters() // always clean out the changed cells
 		this._consumed_responses++
 
 		var iSubscriber_count = cCAGridEvent.get_subscriber_count(
@@ -460,13 +459,20 @@ class cCAGrid extends CAEventSubscriber {
 			cCAGridEvent.notify.done
 		)
 
-		if (iSubscriber_count >1 && this._consumed_responses >= iSubscriber_count)
-			cCAGridEvent.fire_event(
-				this.name,
-				cCAGridEvent.notify.allConsumersDone,
-				cCAGridEvent.done.cells_consumed
-			)
+		if (iSubscriber_count > 1)
+			if (this._consumed_responses < iSubscriber_count) {
+				cDebug.write("consumed response: (" + poEvent.data + ") " + this._consumed_responses + " of " + iSubscriber_count)
+				return
+			}
 
+		cDebug.write("all consumers responses received: " + this._consumed_responses + " of " + iSubscriber_count)
+		cCAGridEvent.fire_event(
+			this.name,
+			cCAGridEvent.notify.allConsumersDone,
+			cCAGridEvent.done.cells_consumed
+		)
+
+		this.runData.clear_cell_counters() // clean out the changed cells
 
 		if (this.running && this._consumed_responses >= iSubscriber_count) {
 			cDebug.write('running again')

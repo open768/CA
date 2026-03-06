@@ -20,7 +20,7 @@
             "name": "scrambler",
             "type": "chrome",
             "request": "launch",
-            "url": "${workspaceFolder}/scramble.html",
+            "url": "${workspaceFolder}/scramble.html?debug",
         }
     ]
 }

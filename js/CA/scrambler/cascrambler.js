@@ -138,7 +138,7 @@ class cCAScrambler{
 		if (this._stage == cCAScramblerStages.NOT_RUNNING)
 			return
 
-		if (this._stage != cCAScramblerStages.INITIAL_RUNS && this._stage != cCAScramblerStages.SCRAMBLING)
+		if (this._stage !== cCAScramblerStages.INITIAL_RUNS && this._stage !== cCAScramblerStages.SCRAMBLING)
 			throw new cCAScramblerException("unexpected stage " + this._stage + " for grid done")
 
 		switch(	poEvent.action){
@@ -284,7 +284,7 @@ class cCAScrambler{
 			throw new cCAScramblerException("unexpected stage " + this._stage + " for grid done")
 
 		// fire a cCAGridEvent.notify.changedCellsConsumed,
-		cDebug.write("stepping")
+		cDebug.write("notify cells consumed")
 
 		cCAGridEvent.fire_event(
 			this.base_name,
