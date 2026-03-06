@@ -448,7 +448,6 @@ class cCAGrid extends CAEventSubscriber {
 	 */
 	_on_notify_cells_consumed(poEvent) {
 		cDebug.enter()
-		cDebug.write("grid notify consumer is " + poEvent.data)
 
 		this._consumed_responses++
 

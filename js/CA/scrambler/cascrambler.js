@@ -135,12 +135,6 @@ class cCAScrambler {
 	 * @param {cCAGridEvent} poEvent
 	 */
 	onGridEvent(poEvent) {
-		if (this._stage == cCAScramblerStages.NOT_RUNNING)
-			return
-
-		if (this._stage !== cCAScramblerStages.INITIAL_RUNS && this._stage !== cCAScramblerStages.SCRAMBLING)
-			throw new cCAScramblerException("unexpected stage " + this._stage + " for grid done")
-
 		switch (poEvent.action) {
 			case cCAGridEvent.notify.done:
 				this._on_ca_grid_notify_done()
@@ -271,7 +265,7 @@ class cCAScrambler {
 
 	//********************************************************************
 	_on_ca_grid_notify_all_consumers_done() {
-		cDebug.write("grid has nbotified scrambler that all consumers are done")
+		cDebug.write("grid has notified scrambler that all consumers are done")
 		switch (this._stage) {
 			case cCAScramblerStages.INITIAL_RUNS:
 				this._initial_runs_completed++
@@ -305,6 +299,7 @@ class cCAScrambler {
 	//********************************************************************
 	_on_ca_grid_notify_done() {
 		//always tell the grid to that changed cells have been consumed as the scrambler doesnt use this information
+		cDebug.write("scrambler got a notify done from the grid")
 		cCAGridEvent.fire_event(
 			this.base_name,
 			cCAGridEvent.notify.changedCellsConsumed,
