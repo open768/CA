@@ -89,7 +89,6 @@ class cCACanvas extends cJQueryWidgetClass {
 				if (this.canvas == null)
 					$.error('canvas not initialised yet')
 
-				cDebug.write('action: import')
 				/** @type {cCAGrid} */ var oGrid = poEvent.data
 				this._set_grid(oGrid)
 
@@ -143,7 +142,6 @@ class cCACanvas extends cJQueryWidgetClass {
 		cDebug.enter()
 		switch (poEvent.action) {
 			case cCAActionEvent.actions.ready:
-				cDebug.write('action: ready')
 				// associate a CA grid with the widget
 				oGrid = new cCAGrid(
 					oOptions.base_name,
@@ -177,16 +175,14 @@ class cCACanvas extends cJQueryWidgetClass {
 		// when all cells have been drawn, let the grid know that the cells have been consumed
 		if (this.cells_drawn > this.cells_to_draw)
 			$.error('drawn more cells than expected')
-		if (this.cells_drawn == this.cells_to_draw) {
+		if (this.cells_drawn == this.cells_to_draw)
 			// let the grid know that the canvas completed #drawing
-			cDebug.write('finished drawing')
-
 			setTimeout(
 				// canvas needs to yield to allow image to be drawn
 				() => this._notify_cells_consumed(),
 				this.CELL_LOAD_DELAY, // fudge factor to delay next grid cycle
 			)
-		}
+
 	}
 
 	//* ***************************************************************
@@ -313,10 +309,8 @@ class cCACanvas extends cJQueryWidgetClass {
 	_on_grid_clear() {
 		cDebug.enter()
 
-		if (this.canvas) {
-			cDebug.write('Clearing canvas')
+		if (this.canvas)
 			this.canvas.clearCanvas()
-		}
 
 		cDebug.leave()
 	}

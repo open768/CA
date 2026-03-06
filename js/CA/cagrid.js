@@ -293,7 +293,6 @@ class cCAGrid extends CAEventSubscriber {
 		if (this.rule == null)
 			throw new CAException('no rule set')
 
-		cDebug.write('running action: ' + piAction)
 		switch (piAction) {
 			case cCAActionEvent.control_actions.play:
 				if (this.running)
@@ -314,7 +313,6 @@ class cCAGrid extends CAEventSubscriber {
 				throw new CAException('action not recognised: ' + piAction)
 		}
 
-		cDebug.write('done action: ' + piAction)
 		cDebug.leave()
 	}
 
@@ -385,12 +383,12 @@ class cCAGrid extends CAEventSubscriber {
 
 		this.runData = new cCARunData()
 		this.history = []
-		cDebug.write('initialising grid:' + piInitType)
+
 		cCAGridInitialiser.init(
 			this,
 			piInitType
 		)
-		cDebug.write('done init grid: ' + piInitType)
+
 
 		this._informGridDone()
 		cDebug.leave()

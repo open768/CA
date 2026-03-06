@@ -64,7 +64,7 @@ class cCAScrambler {
 		)
 		cCAGridEvent.subscribe(
 			this.base_name,
-			[cCAGridEvent.notify.done, cCAGridEvent.notify.nochange, cCAGridEvent.notify.repeatPattern, cCAGridEvent.notify.allConsumersDone],
+			[cCAGridEvent.notify.nochange, cCAGridEvent.notify.repeatPattern, cCAGridEvent.notify.done, cCAGridEvent.notify.allConsumersDone],
 			poEvent => this.onGridEvent(poEvent)
 		)
 	}
@@ -153,7 +153,11 @@ class cCAScrambler {
 			case cCAGridEvent.notify.nochange:
 			case cCAGridEvent.notify.repeatPattern:
 				//something went wrong with the scrambling - stop and report an error
+				throw new cCAScramblerException("Cellular automata stopped unexpectedly")
 				break
+
+			default:
+				throw new cCAScramblerException("unexpected grid event " + poEvent.action )
 		}
 	}
 
@@ -226,14 +230,15 @@ class cCAScrambler {
 		if (this._stage !== cCAScramblerStages.INITIAL_RUNS)
 			throw new cCAScramblerException("unexpected stage " + this._stage + " for grid done")
 
-		if (this._initial_runs_completed < this.initial_runs)
+		if (this._initial_runs_completed < this.initial_runs){
 			//step the grid by sending an event
+			cDebug.write("stepping grid - " + this._initial_runs_completed + " of " + this.initial_runs)
 			cCAActionEvent.fire_event(
 				this.base_name,
 				cCAActionEvent.actions.control,
 				cCAActionEvent.control_actions.step
 			)
-		else {
+		}else {
 			this._stage = cCAScramblerStages.SCRAMBLING
 			this._do_scramble()
 		}
@@ -299,12 +304,7 @@ class cCAScrambler {
 
 	//********************************************************************
 	_on_ca_grid_notify_done() {
-		if (this._stage !== cCAScramblerStages.INITIAL_RUNS)
-			throw new cCAScramblerException("unexpected stage " + this._stage + " for grid done")
-
-		// fire a cCAGridEvent.notify.changedCellsConsumed,
-		cDebug.write("notify cells consumed")
-
+		//always tell the grid to that changed cells have been consumed as the scrambler doesnt use this information
 		cCAGridEvent.fire_event(
 			this.base_name,
 			cCAGridEvent.notify.changedCellsConsumed,
