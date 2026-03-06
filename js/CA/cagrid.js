@@ -422,7 +422,6 @@ class cCAGrid extends CAEventSubscriber {
 	_informGridDone() {
 		this._consumed_responses = 0
 
-		// inform consumers that grid has executed
 		cCAGridEvent.fire_event(
 			this.name,
 			cCAGridEvent.notify.done,

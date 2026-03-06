@@ -299,6 +299,7 @@ class cCAScrambler {
 	//********************************************************************
 	_on_ca_grid_notify_done() {
 		//always tell the grid to that changed cells have been consumed as the scrambler doesnt use this information
+		//and grid will be waiting for this event before continuing to the next step
 		cDebug.write("scrambler got a notify done from the grid")
 		cCAGridEvent.fire_event(
 			this.base_name,
