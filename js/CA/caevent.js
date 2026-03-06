@@ -5,18 +5,6 @@ class CAEventSubscriber {
 	}
 }
 
-//###############################################################################
-class CAException {
-	/**
-	 * Creates an instance of CAException.
-	 * @constructor
-	 * @param {string} psMessage
-	 */
-	constructor(psMessage) {
-		this.message = psMessage
-		this.name = 'CAException'
-	}
-}
 
 //* **************************************************************************
 // subclasses of cBaseEvent for specific event types - these are the events that will be fired and listened for in the app

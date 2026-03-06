@@ -10,6 +10,10 @@ For licenses that allow for commercial use please contact cluck@chickenkatsu.co.
 
 //###############################################################################
 
+//###############################################################################
+class CAException extends Error {
+}
+
 const CA_NEIGHBOURS = {
 	fourway: 0,
 	eightway: 1,
