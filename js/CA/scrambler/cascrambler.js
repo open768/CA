@@ -15,7 +15,7 @@ You the consumer of this code are solely and entirely responsible for importing 
 
 **************************************************************************/
 
-class cCAScrambler{
+class cCAScrambler {
 	static PREFIX = "#CAv1#["
 	static SUFFIX = "]#END#"
 	static BITS_PER_CHAR = 8
@@ -28,8 +28,8 @@ class cCAScrambler{
 	//-----------internal variables
 	_data = null	/** @type {cSparseArray} */
 	_initial_runs_completed = 0
-	_rows=0
-	_cols=0
+	_rows = 0
+	_cols = 0
 	_stage = cCAScramblerStages.NOT_RUNNING
 	_grid_index = {
 		row: 0, col: 0
@@ -37,42 +37,42 @@ class cCAScrambler{
 	_rule_is_set = false
 
 	//********************************************************************
-	constructor(base_name, rows,cols){
+	constructor(base_name, rows, cols) {
 		this.base_name = base_name
 		this._rows = rows
 		this._cols = cols
 		this._reset()
 		cCAScramblerEvent.subscribe(
 			this.base_name,
-			[cCAScramblerEvent.actions.set_input,cCAScramblerEvent.notify.consumed],
-			poEvent=>this.onScramblerEvent(poEvent)
+			[cCAScramblerEvent.actions.set_input, cCAScramblerEvent.notify.consumed],
+			poEvent => this.onScramblerEvent(poEvent)
 		)
 		cCARuleEvent.subscribe(
 			this.base_name,
 			[cCARuleEvent.actions.update_rule],
-			poEvent=>this.onRuleEvent(poEvent)
+			poEvent => this.onRuleEvent(poEvent)
 		)
 		cCAActionEvent.subscribe(
 			this.base_name,
 			[cCAScramblerEvent.control_actions.scramble],
-			poEvent=>this.onActionEvent(poEvent)
+			poEvent => this.onActionEvent(poEvent)
 		)
 		cCACanvasEvent.subscribe(
 			this.base_name,
 			[cCACanvasEvent.actions.set_grid],
-			poEvent=>this.onCanvasEvent(poEvent)
+			poEvent => this.onCanvasEvent(poEvent)
 		)
 		cCAGridEvent.subscribe(
 			this.base_name,
-			[cCAGridEvent.notify.done,cCAGridEvent.notify.nochange,cCAGridEvent.notify.repeatPattern, cCAGridEvent.notify.allConsumersDone],
-			poEvent=>this.onGridEvent(poEvent)
+			[cCAGridEvent.notify.done, cCAGridEvent.notify.nochange, cCAGridEvent.notify.repeatPattern, cCAGridEvent.notify.allConsumersDone],
+			poEvent => this.onGridEvent(poEvent)
 		)
 	}
 
 	//********************************************************************
 	//* static methods
 	//********************************************************************
-	static max_chars(rows, cols){
+	static max_chars(rows, cols) {
 		if (rows === undefined || cols === undefined)
 			throw new cCAScramblerException("rows and cols are required")
 
@@ -85,8 +85,8 @@ class cCAScrambler{
 	/**
 	 * @param {cCARuleEvent} poEvent
 	 */
-	onRuleEvent(poEvent){
-		switch(	poEvent.action){
+	onRuleEvent(poEvent) {
+		switch (poEvent.action) {
 			case cCARuleEvent.actions.update_rule:
 				this._rule_is_set = true
 		}
@@ -96,8 +96,8 @@ class cCAScrambler{
 	/**
 	 * @param {cCAScramblerEvent} poEvent
 	 */
-	onScramblerEvent(poEvent){
-		switch(	poEvent.action){
+	onScramblerEvent(poEvent) {
+		switch (poEvent.action) {
 			case cCAScramblerEvent.actions.set_input:
 				this._set_plaintext(poEvent.data)
 				break
@@ -111,8 +111,8 @@ class cCAScrambler{
 	/**
 	 * @param {cCAActionEvent} poEvent
 	 */
-	onActionEvent(poEvent){
-		switch(	poEvent.action){
+	onActionEvent(poEvent) {
+		switch (poEvent.action) {
 			case cCAScramblerEvent.control_actions.scramble:
 				this._onActionScramble(poEvent.data)
 				break
@@ -123,8 +123,8 @@ class cCAScrambler{
 	/**
 	 * @param {cCACanvasEvent} poEvent
 	 */
-	onCanvasEvent(poEvent){
-		switch(	poEvent.action){
+	onCanvasEvent(poEvent) {
+		switch (poEvent.action) {
 			case cCACanvasEvent.actions.set_grid:
 				this.grid = poEvent.data
 		}
@@ -134,14 +134,14 @@ class cCAScrambler{
 	/**
 	 * @param {cCAGridEvent} poEvent
 	 */
-	onGridEvent(poEvent){
+	onGridEvent(poEvent) {
 		if (this._stage == cCAScramblerStages.NOT_RUNNING)
 			return
 
 		if (this._stage !== cCAScramblerStages.INITIAL_RUNS && this._stage !== cCAScramblerStages.SCRAMBLING)
 			throw new cCAScramblerException("unexpected stage " + this._stage + " for grid done")
 
-		switch(	poEvent.action){
+		switch (poEvent.action) {
 			case cCAGridEvent.notify.done:
 				this._on_ca_grid_notify_done()
 				break
@@ -168,7 +168,7 @@ class cCAScrambler{
 	 * @param {number} piCol - starts at 0
 	 * @returns {number}
 	 */
-	get(piRow, piCol){
+	get(piRow, piCol) {
 		return this._data.get(
 			piRow,
 			piCol
@@ -178,14 +178,14 @@ class cCAScrambler{
 	//********************************************************************
 	// private scrambling methods
 	//********************************************************************
-	_onActionScramble(poData){
-		try{
+	_onActionScramble(poData) {
+		try {
 			if (!poData || !poData.inital_runs)
 				throw new cCAScramblerException("initial runs must be provided")
 
 			this.initial_runs = poData.inital_runs
 			this._scramble()
-		} catch(err){
+		} catch (err) {
 			if (err instanceof cCAScramblerException)
 				cCAScramblerEvent.fire_event(
 					this.base_name,
@@ -197,7 +197,7 @@ class cCAScrambler{
 	}
 
 	//********************************************************************
-	_scramble(){
+	_scramble() {
 		cDebug.enter()
 		//---------------checks
 		if (this.grid == null)
@@ -218,7 +218,7 @@ class cCAScrambler{
 	}
 
 	//********************************************************************
-	_step(){
+	_step() {
 		//step the CA grid
 		if (this.grid == null)
 			throw new cCAScramblerException("no grid set")
@@ -233,7 +233,7 @@ class cCAScrambler{
 				cCAActionEvent.actions.control,
 				cCAActionEvent.control_actions.step
 			)
-		else{
+		else {
 			this._stage = cCAScramblerStages.SCRAMBLING
 			this._do_scramble()
 		}
@@ -241,7 +241,7 @@ class cCAScrambler{
 	}
 
 	//********************************************************************
-	_do_scramble(){
+	_do_scramble() {
 		if (this._stage !== cCAScramblerStages.SCRAMBLING)
 			throw new cCAScramblerException("incorrect stage for scrambling")
 
@@ -249,8 +249,8 @@ class cCAScrambler{
 	}
 
 	//********************************************************************
-	_on_notify_scrambler_consumed(){
-		switch (this._stage){
+	_on_notify_scrambler_consumed() {
+		switch (this._stage) {
 			case cCAScramblerStages.FILL_INPUT:
 				this._stage = cCAScramblerStages.INITIAL_RUNS
 				this._step()
@@ -265,21 +265,40 @@ class cCAScrambler{
 	}
 
 	//********************************************************************
-	_on_ca_grid_notify_all_consumers_done(){
-		if (this._stage !== cCAScramblerStages.INITIAL_RUNS)
-			throw new cCAScramblerException("unexpected stage " + this._stage + " for grid all consumers done")
-		cDebug.write("all consumers done")
+	_on_ca_grid_notify_all_consumers_done() {
+		cDebug.write("grid has nbotified scrambler that all consumers are done")
+		switch (this._stage) {
+			case cCAScramblerStages.INITIAL_RUNS:
+				this._initial_runs_completed++
+				if (this._initial_runs_completed >= this.initial_runs) {
+					//start scrambling
+					cDebug.write("initial runs completed - starting scrambling")
+					this._stage = cCAScramblerStages.SCRAMBLING
+					this._do_scramble()
+				} else{
+					cDebug.write("stepping again - " + this._initial_runs_completed + " of " + this.initial_runs)
+					//step the grid again
+					setTimeout(
+						() => this._step(),
+						cCAScramblerTypes.STEP_DELAY_MS
+					)
+				}
 
-		this._initial_runs_completed++
-		this._stage = cCAScramblerStages.SCRAMBLING
-		setTimeout(
-			()=>this._scramble(),
-			cCAScramblerTypes.STEP_DELAY_MS
-		)
+				break
+
+			case cCAScramblerStages.SCRAMBLING:
+				throw new cCAScramblerException("scrambling not implemented")
+			case cCAScramblerStages.NOT_RUNNING:
+				break
+			default:
+				throw new cCAScramblerException("unexpected stage " + this._stage + " for grid all consumers done")
+		}
+
+
 	}
 
 	//********************************************************************
-	_on_ca_grid_notify_done(){
+	_on_ca_grid_notify_done() {
 		if (this._stage !== cCAScramblerStages.INITIAL_RUNS)
 			throw new cCAScramblerException("unexpected stage " + this._stage + " for grid done")
 
@@ -296,7 +315,7 @@ class cCAScrambler{
 	//********************************************************************
 	// other scrambling methods
 	//********************************************************************
-	_reset(){
+	_reset() {
 		this._data = new cSparseArray(
 			this._rows,
 			this._cols
@@ -315,7 +334,7 @@ class cCAScrambler{
 
 
 	//********************************************************************
-	_set_plaintext(psText){
+	_set_plaintext(psText) {
 
 		//checkthe length of the text against the grid size
 		if (psText.length > cCAScrambler.max_chars(
@@ -330,7 +349,7 @@ class cCAScrambler{
 		this.plaintext = psText
 		var sText = cCAScrambler.PREFIX + psText + cCAScrambler.SUFFIX
 		//for each character in the text, add to the grid
-		for (var i = 0; i < sText.length; i++){
+		for (var i = 0; i < sText.length; i++) {
 			var sChar = sText.charAt(i)
 			this._add_char_to_grid(sChar)
 		}
@@ -343,7 +362,7 @@ class cCAScrambler{
 	}
 
 	//********************************************************************
-	_fillup_input(){
+	_fillup_input() {
 
 		if (this._stage !== cCAScramblerStages.NOT_RUNNING)
 			throw new cCAScramblerException("incorrect stage fo filling input")
@@ -353,8 +372,8 @@ class cCAScrambler{
 
 		if (oIndex.row <= this._rows && oIndex.col < this._cols) {
 			var oData = this._data /** @type {cSparseArray} @ */
-			while (oIndex.row < this._rows){
-				while (oIndex.col < this._cols){
+			while (oIndex.row < this._rows) {
+				while (oIndex.col < this._cols) {
 					oData.set(
 						oIndex.row,
 						oIndex.col,
@@ -381,7 +400,7 @@ class cCAScrambler{
 	 *
 	 * @param {string} psChar
 	 */
-	_add_char_to_grid(psChar){
+	_add_char_to_grid(psChar) {
 		if (psChar.length !== 1)
 			throw new cCAScramblerException("only single characters can be added to the grid")
 		//get the binary representation of the character
@@ -394,7 +413,7 @@ class cCAScrambler{
 			"0"
 		)
 		var oGrid = this._data /** @type {cSparseArray} @ */
-		for (var i = 0; i < sBinary.length; i++){
+		for (var i = 0; i < sBinary.length; i++) {
 			var cBit = sBinary.charAt(i)
 			var iValue = (cBit === "1" ? 1 : 0)
 
@@ -404,7 +423,7 @@ class cCAScrambler{
 				iValue
 			)
 
-			if (this._grid_index.col >= this._cols){
+			if (this._grid_index.col >= this._cols) {
 				this._grid_index.col = 0
 				this._grid_index.row++
 

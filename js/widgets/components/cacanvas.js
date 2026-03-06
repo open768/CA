@@ -171,9 +171,13 @@ class cCACanvas extends cJQueryWidgetClass {
 	_count_drawn_cells() {
 		// update the count of cells drawn
 		this.cells_drawn++
+		if (!this.cells_to_draw)
+			$.error('cells_to_draw count not set')
 
 		// when all cells have been drawn, let the grid know that the cells have been consumed
-		if (this.cells_drawn >= this.cells_to_draw) {
+		if (this.cells_drawn > this.cells_to_draw)
+			$.error('drawn more cells than expected')
+		if (this.cells_drawn == this.cells_to_draw) {
 			// let the grid know that the canvas completed #drawing
 			cDebug.write('finished drawing')
 
@@ -381,6 +385,8 @@ class cCACanvas extends cJQueryWidgetClass {
 			cDebug.warn('no changed cells - nothing to draw')
 			return
 		}
+
+		this.cells_to_draw = paChangedCells.length
 
 		for (var i = 0; i < paChangedCells.length; i++) {
 			oCell = paChangedCells[i]

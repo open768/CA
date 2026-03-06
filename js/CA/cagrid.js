@@ -459,11 +459,15 @@ class cCAGrid extends CAEventSubscriber {
 			cCAGridEvent.notify.done
 		)
 
-		if (iSubscriber_count > 1)
+		if (iSubscriber_count > 1){
 			if (this._consumed_responses < iSubscriber_count) {
 				cDebug.write("consumed response: (" + poEvent.data + ") " + this._consumed_responses + " of " + iSubscriber_count)
 				return
 			}
+
+			if (this._consumed_responses > iSubscriber_count)
+				cDebug.error("more consumed responses than subscribers: " + this._consumed_responses + " of " + iSubscriber_count)
+		}
 
 		cDebug.write("all consumers responses received: " + this._consumed_responses + " of " + iSubscriber_count)
 		cCAGridEvent.fire_event(
@@ -474,7 +478,7 @@ class cCAGrid extends CAEventSubscriber {
 
 		this.runData.clear_cell_counters() // clean out the changed cells
 
-		if (this.running && this._consumed_responses >= iSubscriber_count) {
+		if (this.running ) {
 			cDebug.write('running again')
 			this.runData.runs++
 			this._step()
