@@ -246,9 +246,9 @@ class cCAJson extends cJQueryWidgetClass {
 		)
 
 		// fire event to triiger the use of the imported grid
-		cCACanvasEvent.fire_event(
+		cCAActionEvent.fire_event(
 			this.base_name,
-			cCACanvasEvent.actions.import,
+			cCAActionEvent.notify.import_grid,
 			oGrid
 		)
 		cDebug.leave()

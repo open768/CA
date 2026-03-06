@@ -421,7 +421,7 @@ class cCAGrid extends CAEventSubscriber {
 	//#######################################################################
 	_informGridDone() {
 		this._consumed_responses = 0
-
+		cDebug.write("sending cCAGridEvent.notify.done")
 		cCAGridEvent.fire_event(
 			this.name,
 			cCAGridEvent.notify.done,
@@ -456,7 +456,7 @@ class cCAGrid extends CAEventSubscriber {
 		)
 
 		if (iSubscriber_count > 1){
-			if (this._consumed_responses < iSubscriber_count) {
+			if (this._consumed_responses <= iSubscriber_count) {
 				cDebug.write("consumed response: (" + poEvent.data + ") " + this._consumed_responses + " of " + iSubscriber_count)
 				return
 			}

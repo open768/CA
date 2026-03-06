@@ -11,15 +11,19 @@ class CAEventSubscriber {
 //* **************************************************************************
 class cCAActionEvent extends cBaseEvent {
 	static actions = {
-		ready: 'AER',
-		grid_init: 'AEGI',
-		control: 'AEC',
+		ready: 'AEAR',
+		grid_init: 'AEAGI',
+		control: 'AEAC',
+	}
+
+	static notify = {
+		import_grid: 'AENIG',
 	}
 
 	static control_actions = {
-		play: "AEA",
-		stop: "AEB",
-		step: "AEC",
+		play: "AECAP",
+		stop: "AECAS1",
+		step: "AECAS2",
 	}
 }
 

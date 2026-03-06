@@ -54,7 +54,7 @@ class cCAScrambler {
 		)
 		cCAActionEvent.subscribe(
 			this.base_name,
-			[cCAScramblerEvent.control_actions.scramble],
+			[cCAScramblerEvent.control_actions.scramble, cCAActionEvent.notify.import_grid],
 			poEvent => this.onActionEvent(poEvent)
 		)
 		cCACanvasEvent.subscribe(
@@ -116,6 +116,13 @@ class cCAScrambler {
 			case cCAScramblerEvent.control_actions.scramble:
 				this._onActionScramble(poEvent.data)
 				break
+			case cCAActionEvent.notify.import_grid:
+				cCAGridEvent.fire_event(
+					this.base_name,
+					cCAGridEvent.notify.changedCellsConsumed,
+					this.constructor.name
+				)
+				break
 		}
 	}
 
@@ -137,10 +144,12 @@ class cCAScrambler {
 	onGridEvent(poEvent) {
 		switch (poEvent.action) {
 			case cCAGridEvent.notify.done:
+				cDebug.write("scrambler received cCAGridEvent.notify.done")
 				this._on_ca_grid_notify_done()
 				break
 
 			case cCAGridEvent.notify.allConsumersDone:
+				cDebug.write("cCAGridEvent.notify.allConsumersDone")
 				this._on_ca_grid_notify_all_consumers_done()
 				break
 
@@ -182,7 +191,7 @@ class cCAScrambler {
 				throw new cCAScramblerException("initial runs must be provided")
 
 			this.initial_runs = poData.inital_runs
-			this._scramble()
+			this._begin_scramble_process()
 		} catch (err) {
 			if (err instanceof cCAScramblerException)
 				cCAScramblerEvent.fire_event(
@@ -195,7 +204,7 @@ class cCAScrambler {
 	}
 
 	//********************************************************************
-	_scramble() {
+	_begin_scramble_process() {
 		cDebug.enter()
 		//---------------checks
 		if (this.grid == null)
@@ -216,29 +225,7 @@ class cCAScrambler {
 	}
 
 	//********************************************************************
-	_step() {
-		//step the CA grid
-		if (this.grid == null)
-			throw new cCAScramblerException("no grid set")
-
-		if (this._stage !== cCAScramblerStages.INITIAL_RUNS)
-			throw new cCAScramblerException("unexpected stage " + this._stage + " for grid done")
-
-		if (this._initial_runs_completed < this.initial_runs){
-			//step the grid by sending an event
-			cDebug.write("stepping grid - " + this._initial_runs_completed + " of " + this.initial_runs)
-			cCAActionEvent.fire_event(
-				this.base_name,
-				cCAActionEvent.actions.control,
-				cCAActionEvent.control_actions.step
-			)
-		}else {
-			this._stage = cCAScramblerStages.SCRAMBLING
-			this._do_scramble()
-		}
-		// the grid done event will caLL this function
-	}
-
+	//* scramble methods
 	//********************************************************************
 	_do_scramble() {
 		if (this._stage !== cCAScramblerStages.SCRAMBLING)
@@ -263,6 +250,8 @@ class cCAScrambler {
 		}
 	}
 
+	//********************************************************************
+	// on_ca_grid
 	//********************************************************************
 	_on_ca_grid_notify_all_consumers_done() {
 		cDebug.write("grid has notified scrambler that all consumers are done")
@@ -306,6 +295,30 @@ class cCAScrambler {
 			cCAGridEvent.notify.changedCellsConsumed,
 			this.constructor.name
 		)
+	}
+
+	//********************************************************************
+	_step() {
+		//step the CA grid
+		if (this.grid == null)
+			throw new cCAScramblerException("no grid set")
+
+		if (this._stage !== cCAScramblerStages.INITIAL_RUNS)
+			throw new cCAScramblerException("unexpected stage " + this._stage + " for grid done")
+
+		if (this._initial_runs_completed < this.initial_runs){
+			//step the grid by sending an event
+			cDebug.write("stepping grid - " + this._initial_runs_completed + " of " + this.initial_runs)
+			cCAActionEvent.fire_event(
+				this.base_name,
+				cCAActionEvent.actions.control,
+				cCAActionEvent.control_actions.step
+			)
+		}else {
+			this._stage = cCAScramblerStages.SCRAMBLING
+			this._do_scramble()
+		}
+		// the grid done event will caLL this function
 	}
 
 	//********************************************************************
