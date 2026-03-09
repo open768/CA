@@ -80,7 +80,7 @@ class cCACanvas extends cJQueryWidgetClass {
 		var oOptions = this.options
 		switch (poEvent.action) {
 			case cCAGridEvent.notify.done:
-				cDebug.write("canvas received cCAGridEvent.notify.done")
+				cDebug.write("<<canvas received cCAGridEvent.notify.done")
 				this._on_grid_done(poEvent.data)
 				break
 			case cCAGridEvent.notify.clear:
@@ -88,13 +88,13 @@ class cCACanvas extends cJQueryWidgetClass {
 				this._on_grid_clear()
 				break
 			case cCAGridEvent.notify.nochange:
-				cDebug.write("canvas received cCAGridEvent.notify.nochange")
+				cDebug.write("<<canvas received cCAGridEvent.notify.nochange")
 				var oData = poEvent.data
 				if (oData == null || !oData.from_canvas)
 					alert('no change detected in grid')
 				break
 			case cCAGridEvent.notify.repeatPattern:
-				cDebug.write("canvas received cCAGridEvent.notify.repeatPattern")
+				cDebug.write("<< canvas received cCAGridEvent.notify.repeatPattern")
 				alert('repeat pattern seen')
 				cCAGridEvent.fire_event(
 					oOptions.base_name,
@@ -111,12 +111,11 @@ class cCACanvas extends cJQueryWidgetClass {
 	_onActionEvent(poEvent) {
 		var oElement = this.element
 		var oOptions = this.options
-		var oGrid
 
 		cDebug.enter()
 		switch (poEvent.action) {
 			case cCAActionEvent.notify.import_grid:
-				cDebug.write("canvas received cCAActionEvent.notify.import_grid")
+				cDebug.write("<< canvas received cCAActionEvent.notify.import_grid")
 				if (this._canvas == null)
 					$.error('canvas not initialised yet')
 
@@ -136,6 +135,7 @@ class cCACanvas extends cJQueryWidgetClass {
 				break
 
 			case cCAActionEvent.actions.ready:
+				cDebug.write("<< canvas received cCAActionEvent.actions.ready")
 				// associate a CA grid with the widget
 				oGrid = new cCAGrid(
 					oOptions.base_name,
@@ -181,7 +181,7 @@ class cCACanvas extends cJQueryWidgetClass {
 
 	//* ***************************************************************
 	_notify_cells_consumed(){
-		cDebug.write("canvas sending cCAGridEvent.notify.changedCellsConsumed")
+		cDebug.write(">> canvas sending cCAGridEvent.notify.changedCellsConsumed")
 		var oOptions = this.options
 		cCAGridEvent.fire_event(
 			oOptions.base_name,

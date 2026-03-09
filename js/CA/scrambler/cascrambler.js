@@ -144,12 +144,12 @@ class cCAScrambler {
 	onGridEvent(poEvent) {
 		switch (poEvent.action) {
 			case cCAGridEvent.notify.done:
-				cDebug.write("scrambler received cCAGridEvent.notify.done")
+				cDebug.write("<< scrambler received cCAGridEvent.notify.done")
 				this._on_ca_grid_notify_done()
 				break
 
 			case cCAGridEvent.notify.allConsumersDone:
-				cDebug.write("cCAGridEvent.notify.allConsumersDone")
+				cDebug.write("<< scrambler received cCAGridEvent.notify.allConsumersDone")
 				this._on_ca_grid_notify_all_consumers_done()
 				break
 
@@ -254,7 +254,6 @@ class cCAScrambler {
 	// on_ca_grid
 	//********************************************************************
 	_on_ca_grid_notify_all_consumers_done() {
-		cDebug.write("grid has notified scrambler that all consumers are done")
 		switch (this._stage) {
 			case cCAScramblerStages.INITIAL_RUNS:
 				this._initial_runs_completed++

@@ -21,6 +21,13 @@
             "type": "chrome",
             "request": "launch",
             "url": "${workspaceFolder}/scramble.html?debug",
+            "skipFiles": [
+                "**/*.min.js",
+                "**/ajax.googleapis.com/**",
+                "**/cdnjs.cloudflare.com/**",
+                "**/jquery*.js",
+                "**/bean*.js",
+            ]
         }
     ]
 }

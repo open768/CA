@@ -120,6 +120,7 @@ class cCAGrid extends CAEventSubscriber {
 
 		switch (poEvent.action) {
 			case cCAGridEvent.notify.changedCellsConsumed:
+				cDebug.write("<< grid got  cCAGridEvent.notify.changedCellsConsumed")
 				this._on_notify_cells_consumed(poEvent)
 				break
 			case cCAGridEvent.actions.set_cell:
@@ -204,6 +205,7 @@ class cCAGrid extends CAEventSubscriber {
 		if (this.rule)
 			this._link_cells()
 
+		cDebug.write(">> grid sending cCAGridEvent.notify.clear")
 		cCAGridEvent.fire_event(
 			this.name,
 			cCAGridEvent.notify.clear
@@ -352,7 +354,7 @@ class cCAGrid extends CAEventSubscriber {
 		this.runData.changed = iChangedLen
 		if (iChangedLen == 0) {
 			this.running = false
-			cDebug.warn('no change detected in grid')
+			cDebug.warn('>> grid sending cCAGridEvent.notify.nochange')
 			cCAGridEvent.fire_event(
 				this.name,
 				cCAGridEvent.notify.nochange
@@ -421,7 +423,7 @@ class cCAGrid extends CAEventSubscriber {
 	//#######################################################################
 	_informGridDone() {
 		this._consumed_responses = 0
-		cDebug.write("sending cCAGridEvent.notify.done")
+		cDebug.write(">>sending cCAGridEvent.notify.done")
 		cCAGridEvent.fire_event(
 			this.name,
 			cCAGridEvent.notify.done,
@@ -449,23 +451,30 @@ class cCAGrid extends CAEventSubscriber {
 		cDebug.enter()
 
 		this._consumed_responses++
+		var sConsumer = poEvent.data
 
+		cDebug.write("<< grid consumed response from: " + sConsumer)
 		var iSubscriber_count = cCAGridEvent.get_subscriber_count(
 			this.name,
 			cCAGridEvent.notify.done
 		)
 
 		if (iSubscriber_count > 1){
-			if (this._consumed_responses <= iSubscriber_count) {
-				cDebug.write("consumed response: (" + poEvent.data + ") " + this._consumed_responses + " of " + iSubscriber_count)
+			if (this._consumed_responses > iSubscriber_count){
+				cDebug.write("🤔more consumed responses than subscribers: " + this._consumed_responses + " of " + iSubscriber_count)
+				cDebug.error("❌ ignoring extra responses from " + sConsumer)
 				return
 			}
 
-			if (this._consumed_responses > iSubscriber_count)
-				cDebug.error("more consumed responses than subscribers: " + this._consumed_responses + " of " + iSubscriber_count)
+			if (this._consumed_responses < iSubscriber_count) {
+				cDebug.write("<< grid consumed response: (" + sConsumer + ") " + this._consumed_responses + " of " + iSubscriber_count)
+				return
+			}
+
+			cDebug.write("✅ all consumers responses received: " + this._consumed_responses + " of " + iSubscriber_count)
 		}
 
-		cDebug.write("all consumers responses received: " + this._consumed_responses + " of " + iSubscriber_count)
+		cDebug.write(">> grid sending cCAGridEvent.notify.allConsumersDone")
 		cCAGridEvent.fire_event(
 			this.name,
 			cCAGridEvent.notify.allConsumersDone,
@@ -497,7 +506,7 @@ class cCAGrid extends CAEventSubscriber {
 		var sHash = this._changed_cells_hash()
 		if (aHistory.includes(sHash)) {
 			this.running = false
-			cDebug.warn('repeat pattern seen')
+			cDebug.warn('>> grid sending cCAGridEvent.notify.repeatPattern')
 			cCAGridEvent.fire_event(
 				this.name,
 				cCAGridEvent.notify.repeatPattern
