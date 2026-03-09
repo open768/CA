@@ -117,6 +117,10 @@ class cCAScrambler {
 				this._onActionScramble(poEvent.data)
 				break
 			case cCAActionEvent.notify.import_grid:
+				//the grid has been imported and is ready for scrambling - start the scrambling process
+				cDebug.write("<< scrambler got cCAActionEvent.notify.import_grid")
+				return
+				cDebug.write(">> scrambler sending cCAGridEvent.notify.changedCellsConsumed after import grid")
 				cCAGridEvent.fire_event(
 					this.base_name,
 					cCAGridEvent.notify.changedCellsConsumed,
@@ -288,7 +292,7 @@ class cCAScrambler {
 	_on_ca_grid_notify_done() {
 		//always tell the grid to that changed cells have been consumed as the scrambler doesnt use this information
 		//and grid will be waiting for this event before continuing to the next step
-		cDebug.write("scrambler got a notify done from the grid")
+		cDebug.write(">> scrambler sending cCAGridEvent.notify.changedCellsConsumed")
 		cCAGridEvent.fire_event(
 			this.base_name,
 			cCAGridEvent.notify.changedCellsConsumed,

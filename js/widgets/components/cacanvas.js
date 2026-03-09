@@ -119,25 +119,30 @@ class cCACanvas extends cJQueryWidgetClass {
 				if (this._canvas == null)
 					$.error('canvas not initialised yet')
 
-				/** @type {cCAGrid} */ var oGrid = poEvent.data
-				this._set_grid(oGrid)
+				/** @type {cCAGrid} */ var oNewGrid = poEvent.data
+				this._set_grid(oNewGrid)
 
-				// clear and draw the grid
+				// clear the canvas
 				this._on_grid_clear()
-				this._drawGrid(oGrid.get_changed_cells())
+
+				//trigger a redraw of the grid
+				cCAActionEvent.fire_event(
+					oOptions.base_name,
+					cCAActionEvent.actions.force_grid_redraw
+				)
 
 				// inform subscribers
 				cCARuleEvent.fire_event(
 					oOptions.base_name,
 					cCARuleEvent.actions.update_rule,
-					oGrid.get_rule()
+					oNewGrid.get_rule()
 				)
 				break
 
 			case cCAActionEvent.actions.ready:
 				cDebug.write("<< canvas received cCAActionEvent.actions.ready")
 				// associate a CA grid with the widget
-				oGrid = new cCAGrid(
+				var oGrid = new cCAGrid(
 					oOptions.base_name,
 					oOptions.rows,
 					oOptions.cols

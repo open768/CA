@@ -14,6 +14,7 @@ class cCAActionEvent extends cBaseEvent {
 		ready: 'AEAR',
 		grid_init: 'AEAGI',
 		control: 'AEAC',
+		force_grid_redraw: 'AEAFGR',
 	}
 
 	static notify = {
@@ -42,7 +43,7 @@ class cCARuleEvent extends cBaseEvent {
 class cCAGridEvent extends cBaseEvent {
 	static actions = {
 		init_grid: 'GEI',
-		set_cell: 'GES',
+		set_cell: 'GES'
 	}
 
 	static notify = {
@@ -51,7 +52,7 @@ class cCAGridEvent extends cBaseEvent {
 		changedCellsConsumed: 'GENCC',
 		allConsumersDone: 'GENCD',
 		nochange: 'GENNC',
-		repeatPattern: 'GENRP',
+		repeatPattern: 'GENRP'
 	}
 	static done = {
 		cells_consumed: 'GEDDCC'

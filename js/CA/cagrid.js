@@ -66,24 +66,24 @@ class cCAGrid extends CAEventSubscriber {
 		cCAGridEvent.subscribe(
 			this.name,
 			[cCAGridEvent.notify.changedCellsConsumed, cCAGridEvent.actions.set_cell],
-			poEvent => this.onCAGridEvent(poEvent)
+			poEvent => this.onGridEvent(poEvent)
 		)
 		cCAActionEvent.subscribe(
 			this.name,
-			[cCAActionEvent.actions.grid_init, cCAActionEvent.actions.control],
-			poEvent => this.onCAActionEvent(poEvent)
+			[cCAActionEvent.actions.grid_init, cCAActionEvent.actions.control, cCAActionEvent.actions.force_grid_redraw],
+			poEvent => this.onActionEvent(poEvent)
 		)
 		cCARuleEvent.subscribe(
 			this.name,
 			[cCARuleEvent.actions.set_rule, cCARuleEvent.actions.status],
-			poEvent => this.onCARuleEvent(poEvent)
+			poEvent => this.onRuleEvent(poEvent)
 		)
 	}
 
 	//#######################################################################
 	// # event handlers
 	//#######################################################################
-	onCARuleEvent(poEvent) {
+	onRuleEvent(poEvent) {
 		if (!this.active)
 			return
 
@@ -97,7 +97,7 @@ class cCAGrid extends CAEventSubscriber {
 		}
 	}
 
-	onCAActionEvent(poEvent) {
+	onActionEvent(poEvent) {
 		if (!this.active)
 			return
 
@@ -108,13 +108,16 @@ class cCAGrid extends CAEventSubscriber {
 			case cCAActionEvent.actions.control:
 				this._on_control_action(poEvent.data)
 				break
+			case cCAActionEvent.actions.force_grid_redraw:
+				this._on_force_grid_redraw()
+				break
 		}
 	}
 
 	/**
 	 * @param {cCAGridEvent} poEvent
 	 */
-	onCAGridEvent(poEvent) {
+	onGridEvent(poEvent) {
 		if (!this.active)
 			return
 
@@ -318,6 +321,28 @@ class cCAGrid extends CAEventSubscriber {
 		cDebug.leave()
 	}
 
+	_on_force_grid_redraw() {
+		cDebug.enter()
+
+		this.runData.clear_cell_counters()
+
+		//mark all cells as changed
+		for (var iRow = 1; iRow <= this.rows; iRow++)
+			for (var iCol = 1; iCol <= this.cols; iCol++) {
+				var oCell = this.getCell(
+					iRow,
+					iCol
+				)
+				if (oCell !== null)
+					this.runData.changed_cells.push(oCell)
+			}
+
+		this.runData.changed = this.runData.changed_cells.length
+		this._informGridDone()
+
+		cDebug.leave()
+	}
+
 	//* ***************************************************************
 	_step() {
 		// cant step until changed_cells are consumed
@@ -461,7 +486,7 @@ class cCAGrid extends CAEventSubscriber {
 
 		if (iSubscriber_count > 1){
 			if (this._consumed_responses > iSubscriber_count){
-				cDebug.write("🤔more consumed responses than subscribers: " + this._consumed_responses + " of " + iSubscriber_count)
+				cDebug.warn("🤔more consumed responses than subscribers: " + this._consumed_responses + " of " + iSubscriber_count)
 				cDebug.error("❌ ignoring extra responses from " + sConsumer)
 				return
 			}

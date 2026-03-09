@@ -246,6 +246,7 @@ class cCAJson extends cJQueryWidgetClass {
 		)
 
 		// fire event to triiger the use of the imported grid
+		cDebug.write(">> cajson sending cCAActionEvent.notify.import_grid")
 		cCAActionEvent.fire_event(
 			this.base_name,
 			cCAActionEvent.notify.import_grid,
