@@ -208,7 +208,6 @@ class cCAGrid extends CAEventSubscriber {
 		if (this.rule)
 			this._link_cells()
 
-		cDebug.write(">> grid sending cCAGridEvent.notify.clear")
 		cCAGridEvent.fire_event(
 			this.name,
 			cCAGridEvent.notify.clear
@@ -379,7 +378,6 @@ class cCAGrid extends CAEventSubscriber {
 		this.runData.changed = iChangedLen
 		if (iChangedLen == 0) {
 			this.running = false
-			cDebug.warn('>> grid sending cCAGridEvent.notify.nochange')
 			cCAGridEvent.fire_event(
 				this.name,
 				cCAGridEvent.notify.nochange
@@ -531,7 +529,6 @@ class cCAGrid extends CAEventSubscriber {
 		var sHash = this._changed_cells_hash()
 		if (aHistory.includes(sHash)) {
 			this.running = false
-			cDebug.warn('>> grid sending cCAGridEvent.notify.repeatPattern')
 			cCAGridEvent.fire_event(
 				this.name,
 				cCAGridEvent.notify.repeatPattern

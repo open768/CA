@@ -54,7 +54,7 @@ class cCAScrambler {
 		)
 		cCAActionEvent.subscribe(
 			this.base_name,
-			[cCAScramblerEvent.control_actions.scramble, cCAActionEvent.notify.import_grid],
+			[cCAScramblerEvent.control_actions.scramble],
 			poEvent => this.onActionEvent(poEvent)
 		)
 		cCACanvasEvent.subscribe(
@@ -115,17 +115,6 @@ class cCAScrambler {
 		switch (poEvent.action) {
 			case cCAScramblerEvent.control_actions.scramble:
 				this._onActionScramble(poEvent.data)
-				break
-			case cCAActionEvent.notify.import_grid:
-				//the grid has been imported and is ready for scrambling - start the scrambling process
-				cDebug.write("<< scrambler got cCAActionEvent.notify.import_grid")
-				return
-				cDebug.write(">> scrambler sending cCAGridEvent.notify.changedCellsConsumed after import grid")
-				cCAGridEvent.fire_event(
-					this.base_name,
-					cCAGridEvent.notify.changedCellsConsumed,
-					this.constructor.name
-				)
 				break
 		}
 	}
