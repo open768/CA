@@ -15,7 +15,7 @@ You the consumer of this code are solely and entirely responsible for importing 
 
 **************************************************************************/
 
-class cCAScrambler {
+class cCAScrambler extends cEventSubscriber{
 	static PREFIX = "#CAv1#["
 	static SUFFIX = "]#END#"
 	static BITS_PER_CHAR = 8
@@ -38,6 +38,7 @@ class cCAScrambler {
 
 	//********************************************************************
 	constructor(base_name, rows, cols) {
+		super()
 		this.base_name = base_name
 		this._rows = rows
 		this._cols = cols
@@ -222,7 +223,9 @@ class cCAScrambler {
 		if (this._stage !== cCAScramblerStages.SCRAMBLING)
 			throw new cCAScramblerException("incorrect stage for scrambling")
 
-		throw new cCAScramblerException("NOT IMPLEMENTED YET")
+		//read the ca grid and convert into a set of operations to perform on the grid to scramble it
+		var oReader = new cScramblerOpReader(this.base_name)
+		oReader.read_grid()
 	}
 
 	//********************************************************************

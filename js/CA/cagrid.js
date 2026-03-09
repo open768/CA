@@ -26,7 +26,7 @@ class cCAGridCell {
  *  It contains the cells and applies the rules to them.
  *  It also fires events as the grid changes.
  */
-class cCAGrid extends CAEventSubscriber {
+class cCAGrid extends cEventSubscriber {
 	//#######################################################################
 	// # instance variables
 	//#######################################################################
@@ -65,7 +65,7 @@ class cCAGrid extends CAEventSubscriber {
 
 		cCAGridEvent.subscribe(
 			this.name,
-			[cCAGridEvent.notify.changedCellsConsumed, cCAGridEvent.actions.set_cell],
+			[cCAGridEvent.notify.changedCellsConsumed, cCAGridEvent.actions.set_cell, cCAGridEvent.actions.get_grid],
 			poEvent => this.onGridEvent(poEvent)
 		)
 		cCAActionEvent.subscribe(
@@ -131,6 +131,15 @@ class cCAGrid extends CAEventSubscriber {
 
 			case cCAGridEvent.actions.set_cell:
 				this._onSetOneCellOnly(poEvent.data)
+				break
+
+			case cCAGridEvent.actions.get_grid:
+				cCAGridEvent.fire_event(
+					this.name,
+					cCAGridEvent.notify.grid_data,
+					this
+				)
+
 				break
 		}
 	}

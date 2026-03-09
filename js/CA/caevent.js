@@ -1,10 +1,3 @@
-class CAEventSubscriber {
-	/** @type {boolean} */ active = true
-	unsubscribe() {
-		this.active = false
-	}
-}
-
 //* **************************************************************************
 // subclasses of cBaseEvent for specific event types - these are the events that will be fired and listened for in the app
 //* **************************************************************************
@@ -42,7 +35,8 @@ class cCARuleEvent extends cBaseEvent {
 class cCAGridEvent extends cBaseEvent {
 	static actions = {
 		init_grid: 'GEI',
-		set_cell: 'GES'
+		set_cell: 'GES',
+		get_grid: 'GEGG'
 	}
 
 	static notify = {
@@ -51,8 +45,10 @@ class cCAGridEvent extends cBaseEvent {
 		changedCellsConsumed: 'GENCC',
 		allConsumersDone: 'GENCD',
 		nochange: 'GENNC',
-		repeatPattern: 'GENRP'
+		repeatPattern: 'GENRP',
+		grid: 'GEGD'
 	}
+
 	static done = {
 		cells_consumed: 'GEDDCC'
 	}

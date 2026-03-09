@@ -1,3 +1,5 @@
+"use strict"
+
 const SCRAMBLE_CONTROL_IDS = {
 	input_text_ID: 'a1',
 	input_text_status_ID: 'a2',
@@ -451,7 +453,7 @@ class cScrambleWidget extends cJQueryWidgetClass {
 	}
 
 	//*************************************************************************
-	async_onClickScramble(){
+	async _onClickScramble(){
 
 		//check that there is text
 		var oElement = this.element
