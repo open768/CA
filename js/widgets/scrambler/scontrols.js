@@ -424,7 +424,7 @@ class cScrambleWidget extends cJQueryWidgetClass {
 	//*************************************************************************
 	//* callbacks
 	//*************************************************************************
-	_onInputStepsBlur(){
+	async _onInputStepsBlur(){
 		var oElement = this.element
 		var oInput = cJquery.get_child(
 			oElement,
@@ -451,7 +451,7 @@ class cScrambleWidget extends cJQueryWidgetClass {
 	}
 
 	//*************************************************************************
-	_onClickScramble(){
+	async_onClickScramble(){
 
 		//check that there is text
 		var oElement = this.element
@@ -495,7 +495,7 @@ class cScrambleWidget extends cJQueryWidgetClass {
 	 *
 	 * @param {cCAScramblerEvent} poEvent
 	 */
-	onScramblerEvent( poEvent ){
+	async onScramblerEvent( poEvent ){
 		switch (poEvent.action ){
 			case cCAScramblerEvent.actions.error:
 				var eData = poEvent.data /** @type {cCAScramblerException} */
@@ -509,7 +509,7 @@ class cScrambleWidget extends cJQueryWidgetClass {
 	 *
 	 * @param {cCARuleEvent} poEvent
 	 */
-	onRuleEvent( poEvent ){
+	async onRuleEvent( poEvent ){
 		switch (poEvent.action) {
 			case cCARuleEvent.actions.update_rule:
 
@@ -523,6 +523,7 @@ class cScrambleWidget extends cJQueryWidgetClass {
 		}
 	}
 
+	//*************************************************************************
 	//*************************************************************************
 	_invalid_input(psText, bInvalid = true){
 		var oElement = this.element

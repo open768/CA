@@ -85,7 +85,7 @@ class cCAScrambler {
 	/**
 	 * @param {cCARuleEvent} poEvent
 	 */
-	onRuleEvent(poEvent) {
+	async onRuleEvent(poEvent) {
 		switch (poEvent.action) {
 			case cCARuleEvent.actions.update_rule:
 				this._rule_is_set = true
@@ -96,7 +96,7 @@ class cCAScrambler {
 	/**
 	 * @param {cCAScramblerEvent} poEvent
 	 */
-	onScramblerEvent(poEvent) {
+	async onScramblerEvent(poEvent) {
 		switch (poEvent.action) {
 			case cCAScramblerEvent.actions.set_input:
 				this._set_plaintext(poEvent.data)
@@ -112,7 +112,7 @@ class cCAScrambler {
 	/**
 	 * @param {cCAActionEvent} poEvent
 	 */
-	onActionEvent(poEvent) {
+	async onActionEvent(poEvent) {
 		switch (poEvent.action) {
 			case cCAScramblerEvent.control_actions.scramble:
 				this._onActionScramble(poEvent.data)
@@ -124,7 +124,7 @@ class cCAScrambler {
 	/**
 	 * @param {cCACanvasEvent} poEvent
 	 */
-	onCanvasEvent(poEvent) {
+	async onCanvasEvent(poEvent) {
 		switch (poEvent.action) {
 			case cCACanvasEvent.actions.set_grid:
 				this.grid = poEvent.data
@@ -135,7 +135,7 @@ class cCAScrambler {
 	/**
 	 * @param {cCAGridEvent} poEvent
 	 */
-	onGridEvent(poEvent) {
+	async onGridEvent(poEvent) {
 		switch (poEvent.action) {
 			case cCAGridEvent.notify.done:
 				this._on_ca_grid_notify_done()

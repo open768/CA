@@ -83,7 +83,7 @@ class cCAGrid extends CAEventSubscriber {
 	//#######################################################################
 	// # event handlers
 	//#######################################################################
-	onRuleEvent(poEvent) {
+	async onRuleEvent(poEvent) {
 		if (!this.active)
 			return
 
@@ -98,7 +98,7 @@ class cCAGrid extends CAEventSubscriber {
 		}
 	}
 
-	onActionEvent(poEvent) {
+	async onActionEvent(poEvent) {
 		if (!this.active)
 			return
 
@@ -120,7 +120,7 @@ class cCAGrid extends CAEventSubscriber {
 	/**
 	 * @param {cCAGridEvent} poEvent
 	 */
-	onGridEvent(poEvent) {
+	async onGridEvent(poEvent) {
 		if (!this.active)
 			return
 

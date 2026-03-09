@@ -73,7 +73,7 @@ class cCACanvas extends cJQueryWidgetClass {
 	//#################################################################
 	// # events
 	// #################################################################`
-	_onGridEvent(poEvent) {
+	async _onGridEvent(poEvent) {
 		var oOptions = this.options
 		switch (poEvent.action) {
 			case cCAGridEvent.notify.done:
@@ -104,7 +104,7 @@ class cCACanvas extends cJQueryWidgetClass {
 	}
 
 	//* ***************************************************************
-	_onActionEvent(poEvent) {
+	async _onActionEvent(poEvent) {
 		var oElement = this.element
 		var oOptions = this.options
 

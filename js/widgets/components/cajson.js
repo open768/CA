@@ -246,7 +246,6 @@ class cCAJson extends cJQueryWidgetClass {
 		)
 
 		// fire event to triiger the use of the imported grid
-		cDebug.write(">> cajson sending cCAActionEvent.notify.import_grid")
 		cCAActionEvent.fire_event(
 			this.base_name,
 			cCAActionEvent.notify.import_grid,
@@ -256,7 +255,7 @@ class cCAJson extends cJQueryWidgetClass {
 	}
 
 	//* ****************************************************************
-	_onCanvasEvent(poEvent) {
+	async _onCanvasEvent(poEvent) {
 		cDebug.enter()
 		if (poEvent.action === cCACanvasEvent.actions.set_grid)
 			this.grid = poEvent.data

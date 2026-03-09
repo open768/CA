@@ -83,17 +83,17 @@ class cCAChart extends cJQueryWidgetClass {
 		cCAActionEvent.subscribe(
 			this.base_name,
 			[cCAActionEvent.actions.grid_init],
-			poEvent => this.onCAActionEvent(poEvent)
+			poEvent => this.onActionEvent(poEvent)
 		)
 		cCARuleEvent.subscribe(
 			this.base_name,
 			[cCARuleEvent.actions.set_rule],
-			poEvent => this.onCARuleEvent(poEvent)
+			poEvent => this.onRuleEvent(poEvent)
 		)
 		cCACanvasEvent.subscribe(
 			this.base_name,
 			[cCACanvasEvent.actions.grid_status],
-			poEvent => this.onCACanvasEvent(poEvent)
+			poEvent => this.onCanvasEvent(poEvent)
 		)
 	}
 
@@ -146,7 +146,7 @@ class cCAChart extends cJQueryWidgetClass {
 	//* ****************************************************************
 	// # events
 	//* ****************************************************************
-	onCACanvasEvent(poEvent) {
+	async onCanvasEvent(poEvent) {
 		cDebug.enter()
 		switch (poEvent.action) {
 			case cCACanvasEvent.actions.grid_status:
@@ -176,7 +176,7 @@ class cCAChart extends cJQueryWidgetClass {
 	}
 
 	//* ****************************************************************
-	onCARuleEvent(poEvent) {
+	async onRuleEvent(poEvent) {
 		cDebug.enter()
 		switch (poEvent.action) {
 			case cCARuleEvent.actions.set_rule:
@@ -188,7 +188,7 @@ class cCAChart extends cJQueryWidgetClass {
 	}
 
 	//* ****************************************************************
-	onCAActionEvent(poEvent) {
+	async onActionEvent(poEvent) {
 		cDebug.enter()
 		switch (poEvent.action) {
 			case cCAActionEvent.actions.grid_init:
@@ -199,6 +199,9 @@ class cCAChart extends cJQueryWidgetClass {
 		cDebug.leave()
 	}
 
+	//* ****************************************************************
+	//* private methods
+	//* ****************************************************************
 	_clear_chart() {
 		var oElement = this.element
 		var oChartElement = $('#' + cJquery.child_ID(
