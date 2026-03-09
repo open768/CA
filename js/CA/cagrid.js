@@ -123,7 +123,6 @@ class cCAGrid extends CAEventSubscriber {
 
 		switch (poEvent.action) {
 			case cCAGridEvent.notify.changedCellsConsumed:
-				cDebug.write("<< grid got  cCAGridEvent.notify.changedCellsConsumed")
 				this._on_notify_cells_consumed(poEvent)
 				break
 			case cCAGridEvent.actions.set_cell:
@@ -446,7 +445,6 @@ class cCAGrid extends CAEventSubscriber {
 	//#######################################################################
 	_informGridDone() {
 		this._consumed_responses = 0
-		cDebug.write(">>sending cCAGridEvent.notify.done")
 		cCAGridEvent.fire_event(
 			this.name,
 			cCAGridEvent.notify.done,
@@ -476,7 +474,6 @@ class cCAGrid extends CAEventSubscriber {
 		this._consumed_responses++
 		var sConsumer = poEvent.data
 
-		cDebug.write("<< grid consumed response from: " + sConsumer)
 		var iSubscriber_count = cCAGridEvent.get_subscriber_count(
 			this.name,
 			cCAGridEvent.notify.done
@@ -489,15 +486,10 @@ class cCAGrid extends CAEventSubscriber {
 				return
 			}
 
-			if (this._consumed_responses < iSubscriber_count) {
-				cDebug.write("<< grid consumed response: (" + sConsumer + ") " + this._consumed_responses + " of " + iSubscriber_count)
+			if (this._consumed_responses < iSubscriber_count)
 				return
-			}
-
-			cDebug.write("✅ all consumers responses received: " + this._consumed_responses + " of " + iSubscriber_count)
 		}
 
-		cDebug.write(">> grid sending cCAGridEvent.notify.allConsumersDone")
 		cCAGridEvent.fire_event(
 			this.name,
 			cCAGridEvent.notify.allConsumersDone,

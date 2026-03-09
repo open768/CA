@@ -137,12 +137,10 @@ class cCAScrambler {
 	onGridEvent(poEvent) {
 		switch (poEvent.action) {
 			case cCAGridEvent.notify.done:
-				cDebug.write("<< scrambler received cCAGridEvent.notify.done")
 				this._on_ca_grid_notify_done()
 				break
 
 			case cCAGridEvent.notify.allConsumersDone:
-				cDebug.write("<< scrambler received cCAGridEvent.notify.allConsumersDone")
 				this._on_ca_grid_notify_all_consumers_done()
 				break
 
@@ -281,7 +279,6 @@ class cCAScrambler {
 	_on_ca_grid_notify_done() {
 		//always tell the grid to that changed cells have been consumed as the scrambler doesnt use this information
 		//and grid will be waiting for this event before continuing to the next step
-		cDebug.write(">> scrambler sending cCAGridEvent.notify.changedCellsConsumed")
 		cCAGridEvent.fire_event(
 			this.base_name,
 			cCAGridEvent.notify.changedCellsConsumed,
