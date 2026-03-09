@@ -367,10 +367,12 @@ class cCAControlsL extends cJQueryWidgetClass {
 					oRule = cCARuleLifeImporter.makeRule(oTextArea.val())
 					this._update_rule_text(oRule)
 					break
+
 				case CARULE_TYPES.wolfram1d:
 					oRule = cCARuleWolfram1DImporter.makeRule(oTextArea.val())
 					this._update_rule_text(oRule)
 					break
+
 				case CARULE_TYPES.base64:
 					oRule = cCARuleBase64Importer.makeRule(oTextArea.val())
 
@@ -391,8 +393,8 @@ class cCAControlsL extends cJQueryWidgetClass {
 						oRule
 					)
 
-
 					break
+
 				default:
 					throw new CAException('unknown rule type')
 			}
@@ -455,6 +457,7 @@ class cCAControlsL extends cJQueryWidgetClass {
 					oRulesSelect.selectmenu('refresh')
 					this._onSetRuleClick()
 					break
+
 				default:
 					alert('unknown rule type: ' + oRuleJson.type)
 					throw new CAException('not implemented')

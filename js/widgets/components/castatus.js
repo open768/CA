@@ -100,6 +100,7 @@ class cCAStatusWidget extends cJQueryWidgetClass {
 						)
 
 					break
+
 				case cCAActionEvent.control_actions.stop:
 					this.stop_heap_timer = true // stop watching heap when stop pressed, or CA stops
 			}

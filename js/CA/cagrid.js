@@ -91,6 +91,7 @@ class cCAGrid extends CAEventSubscriber {
 			case cCARuleEvent.actions.set_rule:
 				this.set_rule(poEvent.data)
 				break
+
 			case cCARuleEvent.actions.status:
 				this._update_counts(poEvent.data)
 				break
@@ -105,9 +106,11 @@ class cCAGrid extends CAEventSubscriber {
 			case cCAActionEvent.actions.grid_init:
 				this._init(poEvent.data)
 				break
+
 			case cCAActionEvent.actions.control:
 				this._on_control_action(poEvent.data)
 				break
+
 			case cCAActionEvent.actions.force_grid_redraw:
 				this._on_force_grid_redraw()
 				break
@@ -125,6 +128,7 @@ class cCAGrid extends CAEventSubscriber {
 			case cCAGridEvent.notify.changedCellsConsumed:
 				this._on_notify_cells_consumed(poEvent)
 				break
+
 			case cCAGridEvent.actions.set_cell:
 				this._onSetOneCellOnly(poEvent.data)
 				break
@@ -174,7 +178,6 @@ class cCAGrid extends CAEventSubscriber {
 	get_rule() {
 		return this.rule
 	}
-
 
 	//* ***************************************************************
 	/**
@@ -304,14 +307,17 @@ class cCAGrid extends CAEventSubscriber {
 				this._step()
 				this.runData.runs = 1
 				break
+
 			case cCAActionEvent.control_actions.stop:
 				if (!this.running)
 					throw new CAException('CA is not running')
 				this.running = false
 				break
+
 			case cCAActionEvent.control_actions.step:
 				this._step()
 				break
+
 			default:
 				throw new CAException('action not recognised: ' + piAction)
 		}
@@ -412,7 +418,6 @@ class cCAGrid extends CAEventSubscriber {
 			this,
 			piInitType
 		)
-
 
 		this._informGridDone()
 		cDebug.leave()

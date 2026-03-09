@@ -42,7 +42,6 @@ class cComplexityChecks {
 			? cComplexityChecks.DEFAULT_BLOCK_SIZE
 			: poOptions.block_size
 
-
 		//----------------run tests
 		var otest_frequency = this.test_frequency(alpha)
 		var otest_block_frequency = this.test_block_frequency(
@@ -107,7 +106,6 @@ class cComplexityChecks {
 			for (var j = 0; j < piBlockSize; j++)
 				if (this._binary[iStart + j] === '1')
 					iOnes++
-
 
 			var pi = iOnes / piBlockSize
 			fSum += Math.pow(
@@ -291,4 +289,3 @@ class cComplexityChecks {
 		return Math.exp(-x + a * Math.log(x) - gln) * h
 	}
 }
-

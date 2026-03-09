@@ -10,30 +10,39 @@ class cCAIndexOps {
 			case CA_DIRECTIONS.northwest:
 				iVal = 256
 				break
+
 			case CA_DIRECTIONS.north:
 				iVal = 128
 				break
+
 			case CA_DIRECTIONS.northeast:
 				iVal = 64
 				break
+
 			case CA_DIRECTIONS.west:
 				iVal = 32
 				break
+
 			case CA_DIRECTIONS.centre:
 				iVal = 16
 				break
+
 			case CA_DIRECTIONS.east:
 				iVal = 8
 				break
+
 			case CA_DIRECTIONS.southwest:
 				iVal = 4
 				break
+
 			case CA_DIRECTIONS.south:
 				iVal = 2
 				break
+
 			case CA_DIRECTIONS.southeast:
 				iVal = 1
 				break
+
 			default:
 				throw new CAException('unknown direction ' + piDirection)
 		}

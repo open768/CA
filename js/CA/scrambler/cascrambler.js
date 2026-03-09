@@ -101,6 +101,7 @@ class cCAScrambler {
 			case cCAScramblerEvent.actions.set_input:
 				this._set_plaintext(poEvent.data)
 				break
+
 			case cCAScramblerEvent.notify.consumed:
 				//the consumer has consumed the scrambled output and is ready for the next scramble
 				this._on_notify_scrambler_consumed()
@@ -141,10 +142,12 @@ class cCAScrambler {
 				break
 
 			case cCAGridEvent.notify.allConsumersDone:
+				cDebug.write("<<scrambler recevived cCAGridEvent.notify.allConsumersDone")
 				this._on_ca_grid_notify_all_consumers_done()
 				break
 
 			case cCAGridEvent.notify.nochange:
+
 			case cCAGridEvent.notify.repeatPattern:
 				//something went wrong with the scrambling - stop and report an error
 				throw new cCAScramblerException("Cellular automata stopped unexpectedly")
@@ -154,9 +157,6 @@ class cCAScrambler {
 				throw new cCAScramblerException("unexpected grid event " + poEvent.action )
 		}
 	}
-
-
-
 
 	//********************************************************************
 	// public methods
@@ -232,10 +232,13 @@ class cCAScrambler {
 				this._stage = cCAScramblerStages.INITIAL_RUNS
 				this._step()
 				break
+
 			case cCAScramblerStages.SCRAMBLING:
 				throw new cCAScramblerException("scrambling not implemented")
+
 			case cCAScramblerStages.NOT_RUNNING:
 				break
+
 			default:
 				throw new cCAScramblerException("unexpected stage " + this._stage + " for notify consumed")
 		}
@@ -253,25 +256,23 @@ class cCAScrambler {
 					cDebug.write("initial runs completed - starting scrambling")
 					this._stage = cCAScramblerStages.SCRAMBLING
 					this._do_scramble()
-				} else{
-					cDebug.write("stepping again - " + this._initial_runs_completed + " of " + this.initial_runs)
+				} else
 					//step the grid again
 					setTimeout(
 						() => this._step(),
 						cCAScramblerTypes.STEP_DELAY_MS
 					)
-				}
-
 				break
 
 			case cCAScramblerStages.SCRAMBLING:
 				throw new cCAScramblerException("scrambling not implemented")
+
 			case cCAScramblerStages.NOT_RUNNING:
 				break
+
 			default:
 				throw new cCAScramblerException("unexpected stage " + this._stage + " for grid all consumers done")
 		}
-
 
 	}
 
@@ -329,7 +330,6 @@ class cCAScrambler {
 			cCAScramblerEvent.actions.reset
 		)
 	}
-
 
 	//********************************************************************
 	_set_plaintext(psText) {
@@ -392,7 +392,6 @@ class cCAScrambler {
 		//next stage of scrambling will be triggered by the subscriber firing a notify_consumed event
 	}
 
-
 	//********************************************************************
 	/**
 	 *
@@ -431,4 +430,3 @@ class cCAScrambler {
 		}
 	}
 }
-

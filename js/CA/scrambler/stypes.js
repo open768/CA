@@ -30,7 +30,6 @@ class cCAScramblerEvent extends cBaseEvent{
 	}
 }
 
-
 class cCAScramblerException extends Error {
 }
 

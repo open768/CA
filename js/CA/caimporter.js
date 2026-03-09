@@ -634,9 +634,11 @@ class cCARuleModifier {
 				case cCAModifierTypes.states.one.id:
 					bMatches = iCentre == 1
 					break
+
 				case cCAModifierTypes.states.zero.id:
 					bMatches = iCentre == 0
 					break
+
 				case cCAModifierTypes.states.any.id:
 					bMatches = true
 					break
@@ -653,12 +655,15 @@ class cCARuleModifier {
 				case cCAModifierTypes.verbs.at_least.id:
 					bMatches = iCount >= piCount
 					break
+
 				case cCAModifierTypes.verbs.exactly.id:
 					bMatches = piCount == iCount
 					break
+
 				case cCAModifierTypes.verbs.at_most.id:
 					bMatches = iCount <= piCount
 					break
+
 				default:
 					throw new CAException('invalid verb')
 			}

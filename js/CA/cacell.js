@@ -147,6 +147,7 @@ class cCACell {
 			case CA_NEIGHBOURS.eightway:
 				iValue = this.get8Bitmap()
 				break
+
 			case CA_NEIGHBOURS.fourway:
 				// -------------------------------------------------------
 				iValue = oHash.get(CA_DIRECTIONS.northwest).value
@@ -163,6 +164,7 @@ class cCACell {
 				iValue <<= 1
 				iValue |= oHash.get(CA_DIRECTIONS.south).value
 				break
+
 			default:
 				throw new CAException('unknown neighbour type: ' + piNeighbourType)
 		}

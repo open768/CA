@@ -25,5 +25,3 @@ class cCACryptTypes{
 	static input_name = "CRinput"
 	static output_name = "CROutput"
 }
-
-

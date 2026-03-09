@@ -261,7 +261,6 @@ class cCAJson extends cJQueryWidgetClass {
 		if (poEvent.action === cCACanvasEvent.actions.set_grid)
 			this.grid = poEvent.data
 
-
 		cDebug.leave()
 	}
 

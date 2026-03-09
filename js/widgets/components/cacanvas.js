@@ -51,15 +51,12 @@ class cCACanvas extends cJQueryWidgetClass {
 		if (!poOptions.base_name)
 			$.error('name must be provided')
 
-
-
 		// set basic stuff
 		poElement.uniqueId()
 		poElement.addClass('ui-widget') // css
 		poElement.addClass('CACanvas') // css
 
 		// subscribe to CAEvents (see #set_grid for subscribing to grid events)
-
 
 		cCAActionEvent.subscribe(
 			poOptions.base_name,
@@ -82,14 +79,17 @@ class cCACanvas extends cJQueryWidgetClass {
 			case cCAGridEvent.notify.done:
 				this._on_grid_done(poEvent.data)
 				break
+
 			case cCAGridEvent.notify.clear:
 				this._on_grid_clear()
 				break
+
 			case cCAGridEvent.notify.nochange:
 				var oData = poEvent.data
 				if (oData == null || !oData.from_canvas)
 					alert('no change detected in grid')
 				break
+
 			case cCAGridEvent.notify.repeatPattern:
 				alert('repeat pattern seen')
 				cCAGridEvent.fire_event(

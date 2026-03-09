@@ -338,7 +338,6 @@ class cScrambleWidget extends cJQueryWidgetClass {
 				oInputDiv.append(oStatusDiv)
 			}
 
-
 			//--------------------steps
 			//number of initial CA steps to perform before reading the operations from the grid
 			var oStepsdiv = $(
@@ -358,7 +357,6 @@ class cScrambleWidget extends cJQueryWidgetClass {
 					oLabel.text("Number of steps to scramble must an integer between " + SCRAMBLE_CONSTS.MIN_STEPS + " and " + SCRAMBLE_CONSTS.MAX_STEPS)
 					oStepsdiv.append(oLabel)
 				}
-
 
 				sID = cJquery.child_ID(
 					oElement,
@@ -600,7 +598,6 @@ class cScrambleWidget extends cJQueryWidgetClass {
 			)
 		}else
 			this._invalid_input("text too long " + sText.length+" - must be less than " + iMax + " characters")
-
 
 	}
 

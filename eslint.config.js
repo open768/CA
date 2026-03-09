@@ -54,7 +54,9 @@ export default defineConfig([
 			// Require a blank line after control blocks (auto-fixable)
 			"padding-line-between-statements": ["error",
 				{ "blankLine": "always", "prev": "block-like", "next": "*" },
+				{ "blankLine": "always", "prev": "*", "next": ["case", "default"] },
 			],
+			"no-multiple-empty-lines": ["error", { "max": 1, "maxEOF": 0, "maxBOF": 0 }],
 			// Require a newline after `{` in object/import/export braces
 			"@stylistic/object-curly-newline": ["error", {
 				"ObjectExpression": "always",

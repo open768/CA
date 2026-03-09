@@ -5,7 +5,6 @@ class CAEventSubscriber {
 	}
 }
 
-
 //* **************************************************************************
 // subclasses of cBaseEvent for specific event types - these are the events that will be fired and listened for in the app
 //* **************************************************************************

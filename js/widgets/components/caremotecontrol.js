@@ -66,6 +66,7 @@ class cCARemoteControls extends cJQueryWidgetClass {
 			case cCAActionEvent.control_actions.stop:
 				this._enable_controls(false)
 				break
+
 			case cCAActionEvent.control_actions.play:
 				this._enable_controls(true)
 				break
@@ -103,6 +104,7 @@ class cCARemoteControls extends cJQueryWidgetClass {
 	onGridEvent(poEvent) {
 		switch(poEvent.action){
 			case cCAGridEvent.notify.nochange:
+
 			case cCAGridEvent.notify.repeatPattern:
 				this._enable_controls(false)
 		}

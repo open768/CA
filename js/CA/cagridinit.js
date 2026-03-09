@@ -17,36 +17,47 @@ class cCAGridInitialiser {
 		switch (piInitType) {
 			case GRID_INIT_TYPES.blank.id:
 				break
+
 			case GRID_INIT_TYPES.block.id:
 				this.init_block(poGrid)
 				break
+
 			case GRID_INIT_TYPES.checker.id:
 				this.init_checker(poGrid)
 				break
+
 			case GRID_INIT_TYPES.circle.id:
 				this.init_circle(poGrid)
 				break
+
 			case GRID_INIT_TYPES.cross.id:
 				this.init_cross(poGrid)
 				break
+
 			case GRID_INIT_TYPES.diagonal.id:
 				this.init_diagonal(poGrid)
 				break
+
 			case GRID_INIT_TYPES.diamond.id:
 				this.init_diamond(poGrid)
 				break
+
 			case GRID_INIT_TYPES.horiz_line.id:
 				this.init_horiz_line(poGrid)
 				break
+
 			case GRID_INIT_TYPES.random.id:
 				this.init_random(poGrid)
 				break
+
 			case GRID_INIT_TYPES.sine.id:
 				this.init_sine(poGrid)
 				break
+
 			case GRID_INIT_TYPES.vert_line.id:
 				this.init_vert_line(poGrid)
 				break
+
 				// --------------------------------------------------------
 			default:
 				throw new CAException('unknown init_type: ' + piInitType)

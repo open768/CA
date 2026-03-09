@@ -61,6 +61,7 @@ class cCAScrambleCanvas extends cJQueryWidgetClass {
 			case cCAScramblerEvent.actions.reset:
 				this._clear_canvas()
 				break
+
 			case cCAScramblerEvent.actions.draw_scrambler_grid:
 				this._clear_canvas()
 				this._draw_canvas( )

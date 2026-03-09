@@ -186,7 +186,6 @@ class cCAEditorWidget extends cJQueryWidgetClass {
 			poElement
 		)
 
-
 		// -------------------------------------------------------------------
 		this._render()
 
