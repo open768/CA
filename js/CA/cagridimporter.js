@@ -57,6 +57,58 @@ class cCAGridExported {
 }
 
 //* ************************************************************************
+class cCAGridBase64Exporter {
+	static get_grid_base64(poGrid) {
+		if (!cCommon.obj_is(
+			poGrid,
+			'cCAGrid'
+		))
+			throw new CAException('param 1 is not cCAGrid')
+
+		var oRule = poGrid.get_rule()
+		if (oRule.stateRules.length > 1)
+			throw new CAException('rules can only have 1 state')
+
+		var sBin = cCAGridBinaryExporter.get_grid_binary(poGrid)
+		var s64 = cSimpleBase64.toBase64(sBin)
+		return s64
+	}
+}
+
+class cCAGridBinaryExporter {
+	//* ************************************************************************
+	static get_grid_binary(poGrid){
+		if (!cCommon.obj_is(
+			poGrid,
+			'cCAGrid'
+		))
+			throw new CAException('param 1 is not cCAGrid')
+
+		var oRule = poGrid.get_rule()
+		if (oRule.stateRules.length > 1)
+			throw new CAException('rules can only have 1 state')
+
+		var sBin = ''
+
+		for (var iRow = 1; iRow <= poGrid.rows; iRow++)
+			for (var iCol = 1; iCol <= poGrid.cols; iCol++) {
+				var oCell = poGrid.getCell(
+					iRow,
+					iCol,
+					true
+				)
+				sBin = sBin + oCell.value
+			}
+
+		var iBinLength = poGrid.rows * poGrid.cols
+		if (sBin.length !== iBinLength)
+			throw new CAException('wrong binary length')
+
+		return sBin
+	}
+}
+
+//* ************************************************************************
 /**
  * exports a cCAGrid as  JSON
  * @class cCAGridJSONExporter
@@ -91,7 +143,7 @@ class cCAGridJSONExporter {
 		oObj.grid.cols = poGrid.cols
 
 		// todo
-		oObj.grid.data = this.get_grid_base64(poGrid)
+		oObj.grid.data = cCAGridBase64Exporter.get_grid_base64(poGrid)
 		cDebug.leave()
 		return oObj
 	}
@@ -103,37 +155,7 @@ class cCAGridJSONExporter {
 	 * @param {cCAGrid} poGrid
 	 * @returns {string}
 	 */
-	static get_grid_base64(poGrid) {
-		if (!cCommon.obj_is(
-			poGrid,
-			'cCAGrid'
-		))
-			throw new CAException('param 1 is not cCAGrid')
 
-		var oRule = poGrid.get_rule()
-		if (oRule.stateRules.length > 1)
-			throw new CAException('rules can only have 1 state')
-
-		var sBin = ''
-		/** @type {string}	 */ var s64 = null
-
-		for (var iRow = 1; iRow <= poGrid.rows; iRow++)
-			for (var iCol = 1; iCol <= poGrid.cols; iCol++) {
-				var oCell = poGrid.getCell(
-					iRow,
-					iCol,
-					true
-				)
-				sBin = sBin + oCell.value
-			}
-
-		var iBinLength = poGrid.rows * poGrid.cols
-		if (sBin.length !== iBinLength)
-			throw new CAException('wrong binary length')
-
-		s64 = cSimpleBase64.toBase64(sBin)
-		return s64
-	}
 }
 
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

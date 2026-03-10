@@ -24,7 +24,7 @@ class cCAChartTypes {
 						packages: ['corechart']
 					}
 				)
-				.then((poEvent) => this.is_charts_loaded = true)
+				.then(poEvent => this.is_charts_loaded = true)
 		} catch (e) {
 			cDebug.write('unable to load Google charts: ' + e.msg)
 		}
@@ -40,6 +40,7 @@ class cCAChart extends cJQueryWidgetClass {
 	vis_data = null
 	chart = null
 	base_name = null
+	CHART_ID = "GC"
 
 	constructor(poOptions, poElement) {
 		super(
@@ -70,7 +71,7 @@ class cCAChart extends cJQueryWidgetClass {
 				class: 'ui-widget-content',
 				id: cJquery.child_ID(
 					oElement,
-					'chart'
+					this.CHART_ID
 				),
 			}
 		)
@@ -135,10 +136,9 @@ class cCAChart extends cJQueryWidgetClass {
 			}
 		})
 
-		// create the chart
 		var oChartElement = cJquery.get_child(
 			oElement,
-			'chart'
+			this.CHART_ID
 		)
 		this.chart = new google.visualization.LineChart(oChartElement[0])
 	}
@@ -199,14 +199,14 @@ class cCAChart extends cJQueryWidgetClass {
 		cDebug.leave()
 	}
 
-	//* ****************************************************************
-	//* private methods
-	//* ****************************************************************
 	_clear_chart() {
+		if (!this.chart)
+			return
+
 		var oElement = this.element
 		var oChartElement = cJquery.get_child(
 			oElement,
-			'chart'
+			this.CHART_ID
 		)
 		this.vis_data = null
 		this.chart = null
