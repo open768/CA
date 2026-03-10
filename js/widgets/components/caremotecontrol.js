@@ -82,7 +82,7 @@ class cCARemoteControls extends cJQueryWidgetClass {
 	//* **************************************************************
 	//* Events
 	//* **************************************************************
-	onCanvasEvent(poEvent) {
+	async onCanvasEvent(poEvent) {
 		cDebug.enter()
 		if (poEvent.action === cCACanvasEvent.actions.set_grid) {
 			this.grid_set = true
@@ -93,7 +93,7 @@ class cCARemoteControls extends cJQueryWidgetClass {
 	}
 
 	//* ***************************************************************************
-	onRuleEvent(poEvent) {
+	async onRuleEvent(poEvent) {
 		if (poEvent.action === cCARuleEvent.actions.set_rule) {
 			this.rule_set = true
 			this._enable_buttons()
@@ -101,7 +101,7 @@ class cCARemoteControls extends cJQueryWidgetClass {
 	}
 
 	//* ***************************************************************************
-	onGridEvent(poEvent) {
+	async onGridEvent(poEvent) {
 		switch(poEvent.action){
 			case cCAGridEvent.notify.nochange:
 

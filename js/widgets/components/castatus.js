@@ -39,12 +39,12 @@ class cCAStatusWidget extends cJQueryWidgetClass {
 		cCACanvasEvent.subscribe(
 			this.base_name,
 			[cCACanvasEvent.actions.grid_status],
-			poEvent => this.onCACanvasEvent(poEvent)
+			poEvent => this.onCanvasEvent(poEvent)
 		)
 		cCAActionEvent.subscribe(
 			this.base_name,
 			[cCAActionEvent.actions.control],
-			poEvent => this.onCAActionEvent(poEvent)
+			poEvent => this.onActionEvent(poEvent)
 		)
 
 		// put something in the widget
@@ -60,10 +60,10 @@ class cCAStatusWidget extends cJQueryWidgetClass {
 		cDebug.write('heap timer running')
 
 		// display the heap used
-		var oTarget = $('#' + cJquery.child_ID(
+		var oTarget =cJquery.get_child(
 			oElement,
 			cCAStatusTypes.HEAP_ID
-		))
+		)
 		var iHeapBytes = await cBrowser.getHeapMemoryUsed()
 		var sHeapValue = cCommon.bytesToSize(iHeapBytes)
 		oTarget.html(sHeapValue)
@@ -86,7 +86,7 @@ class cCAStatusWidget extends cJQueryWidgetClass {
 	//* ***************************************************************************
 	//*
 	//* ***************************************************************************
-	onCAActionEvent(poEvent) {
+	async onActionEvent(poEvent) {
 		if (poEvent.action == cCAActionEvent.actions.control) {
 			var iAction = poEvent.data
 			switch (iAction) {
@@ -108,7 +108,7 @@ class cCAStatusWidget extends cJQueryWidgetClass {
 	}
 
 	//* ***************************************************************************
-	onCACanvasEvent(poEvent) {
+	async onCanvasEvent(poEvent) {
 		var oElement = this.element
 		var oTarget
 
@@ -117,20 +117,20 @@ class cCAStatusWidget extends cJQueryWidgetClass {
 				if (!poEvent.data)
 					return
 
-				oTarget = $('#' + cJquery.child_ID(
+				oTarget =cJquery.get_child(
 					oElement,
 					cCAStatusTypes.ACTIVE_ID
-				))
+				)
 				oTarget.html(poEvent.data.active)
-				oTarget = $('#' + cJquery.child_ID(
+				oTarget =cJquery.get_child(
 					oElement,
 					cCAStatusTypes.CHANGED_ID
-				))
+				)
 				oTarget.html(poEvent.data.changed)
-				oTarget = $('#' + cJquery.child_ID(
+				oTarget =cJquery.get_child(
 					oElement,
 					cCAStatusTypes.RUNS_ID
-				))
+				)
 				oTarget.html(poEvent.data.runs)
 		}
 	}

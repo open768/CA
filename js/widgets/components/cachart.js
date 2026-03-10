@@ -24,7 +24,7 @@ class cCAChartTypes {
 						packages: ['corechart']
 					}
 				)
-				.then(poEvent => this.is_charts_loaded = true)
+				.then((poEvent) => this.is_charts_loaded = true)
 		} catch (e) {
 			cDebug.write('unable to load Google charts: ' + e.msg)
 		}
@@ -136,10 +136,10 @@ class cCAChart extends cJQueryWidgetClass {
 		})
 
 		// create the chart
-		var oChartElement = $('#' + cJquery.child_ID(
+		var oChartElement = cJquery.get_child(
 			oElement,
 			'chart'
-		))
+		)
 		this.chart = new google.visualization.LineChart(oChartElement[0])
 	}
 
@@ -204,10 +204,10 @@ class cCAChart extends cJQueryWidgetClass {
 	//* ****************************************************************
 	_clear_chart() {
 		var oElement = this.element
-		var oChartElement = $('#' + cJquery.child_ID(
+		var oChartElement = cJquery.get_child(
 			oElement,
 			'chart'
-		))
+		)
 		this.vis_data = null
 		this.chart = null
 		this.runs = 0
