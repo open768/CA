@@ -16,6 +16,7 @@ export default defineConfig([
 				bean: "readonly",
 				md5: "readonly",
 				google: "readonly",
+				jsbitstream: "readonly",
 			},
 		},
 		plugins: {

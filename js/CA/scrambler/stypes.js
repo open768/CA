@@ -47,5 +47,6 @@ class cCAScramblerStages extends cStaticClass{
 	static FILL_INPUT = "SSFI"
 	static VALIDATE_GRID = "SSVG"
 	static INITIAL_RUNS = "SSIR"
+	static IMPORTING_OPS = "SSIO"
 	static SCRAMBLING = "SSS"
 }

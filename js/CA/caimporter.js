@@ -222,10 +222,10 @@ class cCAExportedState {
 /**
  *
  *
- * @class cCAExportedObj
+ * @class cCAExportedRule
 
  */
-class cCAExportedObj {
+class cCAExportedRule {
 	version = 1.0
 	neighbour_type = null
 	boredom_count = null
@@ -269,7 +269,7 @@ class cCARuleObjExporter {
 	 *
 	 * @static
 	 * @param {cCARule} poRule
-	 * @returns {cCAExportedObj}
+	 * @returns {cCAExportedRule}
 	 */
 	static export(poRule) {
 		cDebug.enter()
@@ -280,7 +280,7 @@ class cCARuleObjExporter {
 		))
 			throw new CAException('export requires cCARule')
 
-		var oExport = new cCAExportedObj()
+		var oExport = new cCAExportedRule()
 		oExport.neighbour_type = poRule.neighbour_type
 		for (var iState = 1; iState <= poRule.stateRules.length; iState++) {
 			var oState = new cCAExportedState(iState)
@@ -309,14 +309,14 @@ class cCARuleObjImporter {
 	/**
 	 *
 	 * @static
-	 * @param {cCAExportedObj} poObj
+	 * @param {cCAExportedRule} poObj
 	 * @returns {*}
 	 */
 	static makeRule(poObj) {
 		cDebug.enter()
 
-		if (!cCAExportedObj.is_valid_obj(poObj))
-			throw new CAException('import requires cCAExportedObj')
+		if (!cCAExportedRule.is_valid_obj(poObj))
+			throw new CAException('import requires cCAExportedRule')
 
 		var oRule = cCARuleBase64Importer.makeRule(poObj.states[0].rule)
 		oRule.neighbour_type = poObj.neighbour_type

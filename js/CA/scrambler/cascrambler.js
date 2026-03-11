@@ -219,13 +219,14 @@ class cCAScrambler extends cEventSubscriber{
 	//********************************************************************
 	//* scramble methods
 	//********************************************************************
-	_do_scramble() {
-		if (this._stage !== cCAScramblerStages.SCRAMBLING)
+	_import_grid() {
+		if (this._stage !== cCAScramblerStages.IMPORTING_OPS)
 			throw new cCAScramblerException("incorrect stage for scrambling")
 
 		//read the ca grid and convert into a set of operations to perform on the grid to scramble it
 		var oReader = new cScramblerOpReader(this.base_name)
-		oReader.read_grid()
+		oReader.import_grid()
+
 	}
 
 	//********************************************************************
@@ -257,8 +258,8 @@ class cCAScrambler extends cEventSubscriber{
 				if (this._initial_runs_completed >= this.initial_runs) {
 					//start scrambling
 					cDebug.write("initial runs completed - starting scrambling")
-					this._stage = cCAScramblerStages.SCRAMBLING
-					this._do_scramble()
+					this._stage = cCAScramblerStages.IMPORTING_OPS
+					this._import_grid()
 				} else
 					//step the grid again
 					setTimeout(
@@ -308,8 +309,8 @@ class cCAScrambler extends cEventSubscriber{
 				cCAActionEvent.control_actions.step
 			)
 		}else {
-			this._stage = cCAScramblerStages.SCRAMBLING
-			this._do_scramble()
+			this._stage = cCAScramblerStages.IMPORTING_OPS
+			this._import_grid()
 		}
 		// the grid done event will caLL this function
 	}

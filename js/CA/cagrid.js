@@ -136,7 +136,7 @@ class cCAGrid extends cEventSubscriber {
 			case cCAGridEvent.actions.get_grid:
 				cCAGridEvent.fire_event(
 					this.name,
-					cCAGridEvent.notify.grid_data,
+					cCAGridEvent.notify.grid,
 					this
 				)
 

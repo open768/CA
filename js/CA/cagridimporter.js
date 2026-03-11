@@ -16,21 +16,12 @@ For licenses that allow for commercial use please contact cluck@chickenkatsu.co.
  * @class cCAGridExported
  */
 class cCAGridExported {
-	/**
-	 *
-	 * @type {number}
-	 */
 	version = 1
-	/**
-	 *
-	 * @type {{ rows: number; cols: number; data: any; }}
-	 */
 	grid = {
 		rows: 0,
 		cols: 0,
 		data: null,
 	}
-
 	/** @type {cCARule}	 */ rule = null
 
 	/**
@@ -75,6 +66,49 @@ class cCAGridBase64Exporter {
 	}
 }
 
+//* ************************************************************************
+/**
+ * exports a cCAGrid as a bitstream
+ * see: https://github.com/KonradKiss/JSBitStream
+ * see: https://cdn.jsdelivr.net/npm/jsbitstream/jsbitstream.js
+ *
+ * @param {cCAGrid} poGrid
+ * @returns {jsbitstream}
+ */
+class cCAGridBitStreamExporter {
+	static get_grid_bitstream(poGrid) {
+		if (!cCommon.obj_is(
+			poGrid,
+			'cCAGrid'
+		))
+			throw new CAException('param 1 is not cCAGrid')
+
+		var oRule = poGrid.get_rule()
+		if (oRule.stateRules.length > 1)
+			throw new CAException('rules can only have 1 state')
+
+		var oStream = new jsbitstream()
+
+		for (var iRow = 1; iRow <= poGrid.rows; iRow++)
+			for (var iCol = 1; iCol <= poGrid.cols; iCol++) {
+				var oCell = poGrid.getCell(
+					iRow,
+					iCol,
+					true
+				)
+				oStream.writeFlag(oCell.value === 0?false:true)
+			}
+
+		return oStream
+	}
+}
+
+//* ************************************************************************
+/**
+ * a simple exporter that creates a binary string of the grid data
+ * TODO: this is not efficient, but it is simple and works for now
+ * TODO: in future convert to a bit array
+ */
 class cCAGridBinaryExporter {
 	//* ************************************************************************
 	static get_grid_binary(poGrid){
@@ -129,23 +163,24 @@ class cCAGridJSONExporter {
 		))
 			throw new CAException('param 1 is not cCAGrid')
 
-		var oRule = poGrid.get_rule()
+		var oRule = poGrid.get_rule() /** @type {cCARule}*/
 
 		if (!oRule)
 			throw new CAException('no rule set!')
 
-		var oObj = new cCAGridExported()
-		// get the rule from the grid
-		oObj.rule = cCARuleObjExporter.export(oRule)
+		var oExport = new cCAGridExported()
+		{
+			var oRuleExport = cCARuleObjExporter.export( oRule) /** @type {cCAExportedRule} */
+			oExport.rule = oRuleExport
 
-		// get the status of the cells from the grid
-		oObj.grid.rows = poGrid.rows
-		oObj.grid.cols = poGrid.cols
+			// get the status of the cells from the grid
+			oExport.grid.rows = poGrid.rows
+			oExport.grid.cols = poGrid.cols
+			oExport.grid.data = cCAGridBase64Exporter.get_grid_base64(poGrid)
+		}
 
-		// todo
-		oObj.grid.data = cCAGridBase64Exporter.get_grid_base64(poGrid)
 		cDebug.leave()
-		return oObj
+		return oExport
 	}
 
 	//* ************************************************************************
