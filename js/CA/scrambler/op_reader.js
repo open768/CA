@@ -106,6 +106,7 @@ class cOpDefs extends cStaticClass{
 		])
 	}
 }
+cOpDefs.init()
 
 //############################################################
 //#
