@@ -27,34 +27,35 @@ class cOpDefs extends cStaticClass{
 
 	//*********************************************************************
 	static init(){
+		var iOPiD = 0
 		this.IDS = {
 			LINE: {
-				id: 0, name: "line"
+				id: iOPiD++, name: "line"
 			},
 			TRANSLATE: {
-				id: 1, name: "translate"
+				id: iOPiD++ , name: "translate"
 			},
 			SQUARE: {
-				id: 2, name: "square"
+				id: iOPiD++, name: "square"
 			},
 			TRANSLATE_CELL: {
-				id: 3, name: "translate_cell"
+				id: iOPiD++, name: "translate_cell"
 			},
 			UNZIP: {
-				id: 4, name: "unzip"
+				id: iOPiD++, name: "unzip"
 			},
 			REFLECTION: {
-				id: 5, name: "reflection"
+				id: iOPiD++, name: "reflection"
 			},
 			TRANSPOSE: {
-				id: 6, name: "transpose"
+				id: iOPiD++, name: "transpose"
 			},
 			SKEW: {
-				id: 7, name: "skew"
+				id: iOPiD++, name: "skew"
 			},
 			/* TODO: phase 2 - implement block operations
 				BLOCK: {
-					id: 8, name: "block"
+					id: iOPiD++, name: "block"
 				}
 			*/
 		}
@@ -64,24 +65,25 @@ class cOpDefs extends cStaticClass{
 		this.OP_ID_BITS = cCommon.intBitSize(this.MAX_OP_ID)
 
 		//---------------------------------------------------------------------
+		var iParamID = 0
 		this.PARAMS = {
 			ROWCOL: {
-				id: 0,name: "row or col", max: 1
+				id: iParamID++,name: "row or col", max: 1
 			},
 			INDEX: {
-				id: 1,name: "index", max: 200
+				id: iParamID++,name: "index", max: 200
 			},
 			ROW: {
-				id: 2,name: "row", max: 200
+				id: iParamID++,name: "row", max: 200
 			},
 			COL: {
-				id: 3,name: "col", max: 200
+				id: iParamID++	,name: "col", max: 200
 			},
 			DIRECTION: {
-				id: 4,name: "direction", max: 1
+				id: iParamID++,name: "direction", max: 1
 			},
 			DISTANCE: {
-				id: 5,name: "distance", max: 200
+				id: iParamID++	,name: "distance", max: 200
 			}
 		}
 
