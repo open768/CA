@@ -76,6 +76,11 @@ class cCAGridBase64Exporter {
  * @returns {jsbitstream}
  */
 class cCAGridBitStreamExporter {
+	/**
+	 *
+	 * @param {*} poGrid
+	 * @returns {jsbitstream}
+	 */
 	static get_grid_bitstream(poGrid) {
 		if (!cCommon.obj_is(
 			poGrid,
@@ -214,14 +219,15 @@ class cCAGridJSONImporter {
 			throw new CAException('invalid object')
 
 		// -------------------------------------------------------------------
-		/** @type {cCAGrid}	 */ var oGrid = new cCAGrid(
-			psName,
-			poJson.grid.rows,
+		var oGrid = new cCAGrid(		/** @type {cCAGrid}	 */
+			psName,					// @ts-expect-error
+			poJson.grid.rows,		// @ts-expect-error
 			poJson.grid.cols
 		)
 
 		// -------------------------------------------------------------------
-		/** @type {cCARule}	 */ var oRule = cCARuleObjImporter.makeRule(poJson.rule)
+		// 	@ts-expect-error
+		var oRule = cCARuleObjImporter.makeRule(poJson.rule) 		/** @type {cCARule}	 */
 		oGrid.set_rule(
 			oRule,
 			false
@@ -230,6 +236,7 @@ class cCAGridJSONImporter {
 		// -------------------------------------------------------------------
 		oGrid.create_cells()
 		var iBinLength = oGrid.rows * oGrid.cols
+		// @ts-expect-error
 		var s64 = poJson.grid.data
 		var sBin = cSimpleBase64.toBinary(
 			s64,
