@@ -60,7 +60,7 @@ class cOpDefs extends cStaticClass{
 		])
 
 		//---------------------------------------------------------------------
-		this.MAX_OP_ID = this.IDS.SKEW.id
+		this.MAX_OP_ID = cOpConsts.SKEW_OP
 		this.OP_ID_BITS = cCommon.intBitSize(this.MAX_OP_ID)
 
 		//---------------------------------------------------------------------
