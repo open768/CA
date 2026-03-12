@@ -500,7 +500,7 @@ class cScrambleWidget extends cJQueryWidgetClass {
 	async onScramblerEvent( poEvent ){
 		switch (poEvent.action ){
 			case cCAScramblerEvent.actions.error:
-				var eData = poEvent.data /** @type {cCAScramblerException} */
+				var eData = poEvent.data /** @type {eCAScramblerException} */
 				alert("An error occurred: " + eData.message)
 		}
 

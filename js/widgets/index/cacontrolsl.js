@@ -396,7 +396,7 @@ class cCAControlsL extends cJQueryWidgetClass {
 					break
 
 				default:
-					throw new CAException('unknown rule type')
+					throw new eCAException('unknown rule type')
 			}
 		} catch (e) {
 			alert('something went wrong:\n' + e.message)
@@ -460,7 +460,7 @@ class cCAControlsL extends cJQueryWidgetClass {
 
 				default:
 					alert('unknown rule type: ' + oRuleJson.type)
-					throw new CAException('not implemented')
+					throw new eCAException('not implemented')
 			}
 		}
 	}

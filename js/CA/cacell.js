@@ -57,7 +57,7 @@ class cCACell {
 		// just calls the rules apply method. the benefit of doing it this way is
 		// that each cell could have a different rule.
 		if (this.rule == null)
-			throw new CAException('no rule defined')
+			throw new eCAException('no rule defined')
 
 		var bHasChanged = this.rule.evaluateCell(this)
 		return bHasChanged
@@ -166,7 +166,7 @@ class cCACell {
 				break
 
 			default:
-				throw new CAException('unknown neighbour type: ' + piNeighbourType)
+				throw new eCAException('unknown neighbour type: ' + piNeighbourType)
 		}
 
 		return iValue
@@ -180,7 +180,7 @@ class cCACell {
 	 */
 	setNeighbour(piDirection, poCell) {
 		if (poCell == null)
-			throw new CAException('no neighbour cell provided')
+			throw new eCAException('no neighbour cell provided')
 
 		this.neighbours.set(
 			piDirection,

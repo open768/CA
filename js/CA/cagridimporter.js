@@ -54,11 +54,11 @@ class cCAGridBase64Exporter {
 			poGrid,
 			'cCAGrid'
 		))
-			throw new CAException('param 1 is not cCAGrid')
+			throw new eCAException('param 1 is not cCAGrid')
 
 		var oRule = poGrid.get_rule()
 		if (oRule.stateRules.length > 1)
-			throw new CAException('rules can only have 1 state')
+			throw new eCAException('rules can only have 1 state')
 
 		var sBin = cCAGridBinaryExporter.get_grid_binary(poGrid)
 		var s64 = cSimpleBase64.toBase64(sBin)
@@ -86,11 +86,11 @@ class cCAGridBitStreamExporter {
 			poGrid,
 			'cCAGrid'
 		))
-			throw new CAException('param 1 is not cCAGrid')
+			throw new eCAException('param 1 is not cCAGrid')
 
 		var oRule = poGrid.get_rule()
 		if (oRule.stateRules.length > 1)
-			throw new CAException('rules can only have 1 state')
+			throw new eCAException('rules can only have 1 state')
 
 		var oStream = new jsbitstream()
 
@@ -121,11 +121,11 @@ class cCAGridBinaryExporter {
 			poGrid,
 			'cCAGrid'
 		))
-			throw new CAException('param 1 is not cCAGrid')
+			throw new eCAException('param 1 is not cCAGrid')
 
 		var oRule = poGrid.get_rule()
 		if (oRule.stateRules.length > 1)
-			throw new CAException('rules can only have 1 state')
+			throw new eCAException('rules can only have 1 state')
 
 		var sBin = ''
 
@@ -141,7 +141,7 @@ class cCAGridBinaryExporter {
 
 		var iBinLength = poGrid.rows * poGrid.cols
 		if (sBin.length !== iBinLength)
-			throw new CAException('wrong binary length')
+			throw new eCAException('wrong binary length')
 
 		return sBin
 	}
@@ -166,12 +166,12 @@ class cCAGridJSONExporter {
 			poGrid,
 			'cCAGrid'
 		))
-			throw new CAException('param 1 is not cCAGrid')
+			throw new eCAException('param 1 is not cCAGrid')
 
 		var oRule = poGrid.get_rule() /** @type {cCARule}*/
 
 		if (!oRule)
-			throw new CAException('no rule set!')
+			throw new eCAException('no rule set!')
 
 		var oExport = new cCAGridExported()
 		{
@@ -216,7 +216,7 @@ class cCAGridJSONImporter {
 	 */
 	static populate(psName, poJson) {
 		if (!cCAGridExported.is_valid_obj(poJson))
-			throw new CAException('invalid object')
+			throw new eCAException('invalid object')
 
 		// -------------------------------------------------------------------
 		var oGrid = new cCAGrid(		/** @type {cCAGrid}	 */

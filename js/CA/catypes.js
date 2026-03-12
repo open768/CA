@@ -11,7 +11,7 @@ For licenses that allow for commercial use please contact cluck@chickenkatsu.co.
 //###############################################################################
 
 //###############################################################################
-class CAException extends Error {
+class eCAException extends Error {
 }
 
 const CA_NEIGHBOURS = {

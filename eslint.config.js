@@ -6,7 +6,7 @@ import stylistic from "@stylistic/eslint-plugin"
 
 export default defineConfig([
 	{
-		ignores: ["eslint.config.js"],
+		ignores: ["eslint.config.js", "node_modules/"],
 		files: ["./**/*.js"],
 		languageOptions: {
 			ecmaVersion: "latest",

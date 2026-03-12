@@ -55,9 +55,9 @@ class cCAGrid extends cEventSubscriber {
 		if (!md5)
 			$.error('js-md5 library missing')
 		if (!psName)
-			throw new CAException('no base name')
+			throw new eCAException('no base name')
 		if (piRows == null || piCols == null)
-			throw new CAException('bad size information')
+			throw new eCAException('bad size information')
 
 		this.rows = piRows
 		this.cols = piCols
@@ -235,7 +235,7 @@ class cCAGrid extends cEventSubscriber {
 	 */
 	setCellValue(piRow, piCol, iValue) {
 		if (this.cell_data == null)
-			throw new CAException('grid not initialised')
+			throw new eCAException('grid not initialised')
 
 		var oCell = this.getCell(
 			piRow,
@@ -306,12 +306,12 @@ class cCAGrid extends cEventSubscriber {
 	_on_control_action(piAction) {
 		cDebug.enter()
 		if (this.rule == null)
-			throw new CAException('no rule set')
+			throw new eCAException('no rule set')
 
 		switch (piAction) {
 			case cCAActionEvent.control_actions.play:
 				if (this.running)
-					throw new CAException('CA is allready running')
+					throw new eCAException('CA is allready running')
 				this.running = true
 				this._step()
 				this.runData.runs = 1
@@ -319,7 +319,7 @@ class cCAGrid extends cEventSubscriber {
 
 			case cCAActionEvent.control_actions.stop:
 				if (!this.running)
-					throw new CAException('CA is not running')
+					throw new eCAException('CA is not running')
 				this.running = false
 				break
 
@@ -328,7 +328,7 @@ class cCAGrid extends cEventSubscriber {
 				break
 
 			default:
-				throw new CAException('action not recognised: ' + piAction)
+				throw new eCAException('action not recognised: ' + piAction)
 		}
 
 		cDebug.leave()
@@ -360,7 +360,7 @@ class cCAGrid extends cEventSubscriber {
 	_step() {
 		// cant step until changed_cells are consumed
 		if (this.runData.changed_cells.length > 0)
-			throw new CAException('changed cells must be consumed before stepping')
+			throw new eCAException('changed cells must be consumed before stepping')
 
 		// reset counters
 		this.runData.clear_cell_counters()
@@ -418,7 +418,7 @@ class cCAGrid extends cEventSubscriber {
 	_init(piInitType) {
 		cDebug.enter()
 		if (this.running)
-			throw new CAException('cant init when running')
+			throw new eCAException('cant init when running')
 
 		this.runData = new cCARunData()
 		this.history = []

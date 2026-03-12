@@ -89,7 +89,7 @@ class cCARule {
 	 */
 	set_output(piState, piBitmap, piValue) {
 		if (piState < 1)
-			throw new CAException('invalid state')
+			throw new eCAException('invalid state')
 
 		if (piState > this.stateRules.length)
 			this.create_state(piState) // create a new state if the state is unknown
@@ -103,7 +103,7 @@ class cCARule {
 	 */
 	set_boredom(piBoredom) {
 		if (piBoredom != CACONSTS.NO_BOREDOM && piBoredom < 2)
-			throw new CAException('boredom must be at least 2')
+			throw new eCAException('boredom must be at least 2')
 
 		this.boredom_count = piBoredom
 	}
@@ -121,7 +121,7 @@ class cCARule {
 		// cells must have neighbours - 0 doesnt become 1
 
 		if (piState > this.stateRules.length)
-			throw new CAException('invalid state requested - too big')
+			throw new eCAException('invalid state requested - too big')
 
 		try {
 			var iOutput = this.stateRules[piState - 1].outputs[piBitmap] // TBD should be using a method
@@ -145,7 +145,7 @@ class cCARule {
 			return
 		// dont create existing states
 		if (!this.has_state_transitions && piState !== CA_STATES.default_state)
-			throw new CAException('state not possible without state transitions enabled')
+			throw new eCAException('state not possible without state transitions enabled')
 
 		var oStateRule = new cCAStateRule()
 		oStateRule.neighbour_type = this.neighbour_type
@@ -161,13 +161,13 @@ class cCARule {
 	 */
 	set_nextState(piInState, piPattern, piNextState) {
 		if (!this.has_state_transitions)
-			throw new CAException('no state transitions possible')
+			throw new eCAException('no state transitions possible')
 
 		if (piInState > this.stateRules.length)
-			throw new CAException('invalid input state ')
+			throw new eCAException('invalid input state ')
 
 		if (piNextState > this.stateRules.length)
-			throw new CAException('invalid next state ')
+			throw new eCAException('invalid next state ')
 
 		this.stateRules[piInState - 1].nextStates[piPattern] = piNextState // TBD should be using a method
 	}
@@ -184,10 +184,10 @@ class cCARule {
 			return piInState
 
 		if (!this.has_state_transitions)
-			throw new CAException('no state transitions possible')
+			throw new eCAException('no state transitions possible')
 
 		if (piInState > this.stateRules.length)
-			throw new CAException('invalid state requested')
+			throw new eCAException('invalid state requested')
 
 		var iOutState = this.stateRules[piInState - 1].nextStates[piPattern] // TBD should be using a method
 		return iOutState
@@ -272,7 +272,7 @@ class cCARule {
 	 */
 	evaluateCell(poCell) {
 		if (poCell == null)
-			throw new CAException('no cell provided')
+			throw new eCAException('no cell provided')
 
 		var oStatus = new cCAStatus()
 		// get the cell neighbour value

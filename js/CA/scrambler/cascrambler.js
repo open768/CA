@@ -75,7 +75,7 @@ class cCAScrambler extends cEventSubscriber{
 	//********************************************************************
 	static max_chars(rows, cols) {
 		if (rows === undefined || cols === undefined)
-			throw new cCAScramblerException("rows and cols are required")
+			throw new eCAScramblerException("rows and cols are required")
 
 		return Math.floor(rows * cols / cCAScrambler.BITS_PER_CHAR) - this.PREFIX.length - this.SUFFIX.length
 	}
@@ -151,11 +151,10 @@ class cCAScrambler extends cEventSubscriber{
 
 			case cCAGridEvent.notify.repeatPattern:
 				//something went wrong with the scrambling - stop and report an error
-				throw new cCAScramblerException("Cellular automata stopped unexpectedly")
-				break
+				throw new eCAScramblerException("Cellular automata stopped unexpectedly")
 
 			default:
-				throw new cCAScramblerException("unexpected grid event " + poEvent.action )
+				throw new eCAScramblerException("unexpected grid event " + poEvent.action )
 		}
 	}
 
@@ -180,12 +179,12 @@ class cCAScrambler extends cEventSubscriber{
 	_onActionScramble(poData) {
 		try {
 			if (!poData || !poData.inital_runs)
-				throw new cCAScramblerException("initial runs must be provided")
+				throw new eCAScramblerException("initial runs must be provided")
 
 			this.initial_runs = poData.inital_runs
 			this._begin_scramble_process()
 		} catch (err) {
-			if (err instanceof cCAScramblerException)
+			if (err instanceof eCAScramblerException)
 				cCAScramblerEvent.fire_event(
 					this.base_name,
 					cCAScramblerEvent.actions.error,
@@ -202,13 +201,13 @@ class cCAScrambler extends cEventSubscriber{
 		if (this.grid == null)
 			return
 		if (this._stage !== cCAScramblerStages.NOT_RUNNING)
-			throw new cCAScramblerException("already running")
+			throw new eCAScramblerException("already running")
 		if (!this._rule_is_set)
-			throw new cCAScramblerException("a scrambling rule must be set on the grid")
+			throw new eCAScramblerException("a scrambling rule must be set on the grid")
 		if (!this.plaintext || this.plaintext.length === 0)
-			throw new cCAScramblerException("plaintext must be set")
+			throw new eCAScramblerException("plaintext must be set")
 		if (!this.initial_runs)
-			throw new cCAScramblerException("initial runs must be provided")
+			throw new eCAScramblerException("initial runs must be provided")
 
 		//---------------
 		//add random junk to the end of the scrambler text until the grid is full
@@ -221,7 +220,7 @@ class cCAScrambler extends cEventSubscriber{
 	//********************************************************************
 	_import_grid() {
 		if (this._stage !== cCAScramblerStages.IMPORTING_OPS)
-			throw new cCAScramblerException("incorrect stage for scrambling")
+			throw new eCAScramblerException("incorrect stage for scrambling")
 
 		//read the ca grid and convert into a set of operations to perform on the grid to scramble it
 		var oReader = new cScramblerOpReader(this.base_name)
@@ -238,13 +237,13 @@ class cCAScrambler extends cEventSubscriber{
 				break
 
 			case cCAScramblerStages.SCRAMBLING:
-				throw new cCAScramblerException("scrambling not implemented")
+				throw new eCAScramblerException("scrambling not implemented")
 
 			case cCAScramblerStages.NOT_RUNNING:
 				break
 
 			default:
-				throw new cCAScramblerException("unexpected stage " + this._stage + " for notify consumed")
+				throw new eCAScramblerException("unexpected stage " + this._stage + " for notify consumed")
 		}
 	}
 
@@ -269,13 +268,13 @@ class cCAScrambler extends cEventSubscriber{
 				break
 
 			case cCAScramblerStages.SCRAMBLING:
-				throw new cCAScramblerException("scrambling not implemented")
+				throw new eCAScramblerException("scrambling not implemented")
 
 			case cCAScramblerStages.NOT_RUNNING:
 				break
 
 			default:
-				throw new cCAScramblerException("unexpected stage " + this._stage + " for grid all consumers done")
+				throw new eCAScramblerException("unexpected stage " + this._stage + " for grid all consumers done")
 		}
 
 	}
@@ -295,10 +294,10 @@ class cCAScrambler extends cEventSubscriber{
 	_step() {
 		//step the CA grid
 		if (this.grid == null)
-			throw new cCAScramblerException("no grid set")
+			throw new eCAScramblerException("no grid set")
 
 		if (this._stage !== cCAScramblerStages.INITIAL_RUNS)
-			throw new cCAScramblerException("unexpected stage " + this._stage + " for grid done")
+			throw new eCAScramblerException("unexpected stage " + this._stage + " for grid done")
 
 		if (this._initial_runs_completed < this.initial_runs){
 			//step the grid by sending an event
@@ -343,7 +342,7 @@ class cCAScrambler extends cEventSubscriber{
 			this._rows,
 			this._cols
 		))
-			throw new cCAScramblerException("text too long for the grid size")
+			throw new eCAScramblerException("text too long for the grid size")
 
 		this._reset()
 
@@ -367,7 +366,7 @@ class cCAScrambler extends cEventSubscriber{
 	_fillup_input() {
 
 		if (this._stage !== cCAScramblerStages.NOT_RUNNING)
-			throw new cCAScramblerException("incorrect stage fo filling input")
+			throw new eCAScramblerException("incorrect stage fo filling input")
 		this._stage = cCAScramblerStages.FILL_INPUT
 
 		var oIndex = this._grid_index
@@ -403,12 +402,12 @@ class cCAScrambler extends cEventSubscriber{
 	 */
 	_add_char_to_grid(psChar) {
 		if (psChar.length !== 1)
-			throw new cCAScramblerException("only single characters can be added to the grid")
+			throw new eCAScramblerException("only single characters can be added to the grid")
 		//get the binary representation of the character
 		var iAscii = psChar.charCodeAt(0)
 		var sBinary = cConverter.intToBinstr(iAscii)
 		if (sBinary.length > cCAScrambler.BITS_PER_CHAR)
-			throw new cCAScramblerException("character too long the number of bits allocated per character")
+			throw new eCAScramblerException("character too long the number of bits allocated per character")
 		sBinary = sBinary.padStart(
 			cCAScrambler.BITS_PER_CHAR,
 			"0"
@@ -429,7 +428,7 @@ class cCAScrambler extends cEventSubscriber{
 				this._grid_index.row++
 
 				if (this._grid_index.row >= this._rows && this._grid_index.col > 0)
-					throw new cCAScramblerException("grid overflow - too much data for the grid size")
+					throw new eCAScramblerException("grid overflow - too much data for the grid size")
 			}
 		}
 	}
