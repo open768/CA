@@ -38,7 +38,7 @@ class cCAScramblerTypes extends cStaticClass{
 		dormant: null,
 		initialRuns: 1
 	}
-	static STEP_DELAY_MS = 100
+	static STEP_DELAY_MS = 50
 }
 
 class cCAScramblerStages extends cStaticClass{

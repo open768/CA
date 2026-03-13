@@ -61,10 +61,11 @@ class cOpDefs extends cStaticClass{
 
 		//---------------------------------------------------------------------
 		this.MAX_OP_ID = cOpConsts.SKEW_OP
-		this.OP_ID_BITS = cCommon.intBitSize(this.MAX_OP_ID)
+		this.OP_ID_BITS = cReadBitHelper.get_bit_length(this.MAX_OP_ID)
 
 		//---------------------------------------------------------------------
-		var i200bits = cCommon.intBitSize(200)
+		var i200bits = cReadBitHelper.get_bit_length(200)
+
 		this.PARAMS = new Map([
 			[cOpConsts.ROWCOL_PARAM, {
 				name: "row or col", max: 1, bits: 1
@@ -112,6 +113,59 @@ cOpDefs.init()
 class cTranformOp {
 	opcode = null		/** @type {number} */
 	params = null		/** @type {Map<number, number>} */
+}
+
+//############################################################
+//#
+//############################################################
+class cReadBitHelper {
+	bitstream = null /** @type {jsbitstream} */
+
+	constructor(poBitStream){
+		this.bitstream = poBitStream
+	}
+
+	static get_bit_length(piValue){
+		var iLength = cCommon.intBitSize(piValue)
+
+		// adjust ilength upwards to the nearest of 4, 8 16,32 etc for more efficient storage
+		if (iLength <= 4)
+			iLength = 4
+		else if (iLength <= 8)
+			iLength = 8
+		else if (iLength <= 16)
+			iLength = 16
+		else
+			iLength = 32
+
+		return iLength
+	}
+
+	read_number(piLength){
+		if (this.bitstream.size() < piLength)
+			throw new eScramblerOpReaderException("not enough bits available")
+
+		switch(piLength){
+			case 1:
+				var bValue = this.bitstream.readFlag()
+				return bValue ? 1 : 0
+
+			case 4:
+				return this.bitstream.readU4(4)
+
+			case 8:
+				return this.bitstream.readU8(8)
+
+			case 16:
+				return this.bitstream.readU16(16)
+
+			case 32:
+				return this.bitstream.readU32(32)
+
+			default:
+				throw new eScramblerOpReaderException("unsupported bit length: " + piLength)
+		}
+	}
 }
 
 //############################################################
@@ -180,10 +234,11 @@ class cScramblerOpReader extends cEventSubscriber{
 	 */
 	_read_ops(poBitStream){
 		var aOps = []
+		var oBit_helper = new cReadBitHelper(poBitStream)
 		while (poBitStream.size() > 0){
 
 			//read the opcode
-			var iop_code = poBitStream.read_bits(cOpDefs.OP_ID_BITS)
+			var iop_code = oBit_helper.read_number(cOpDefs.OP_ID_BITS)
 			if (iop_code > cOpDefs.MAX_OP_ID)
 				iop_code = iop_code % cOpDefs.MAX_OP_ID //wrap around if invalid opcode
 
@@ -198,12 +253,9 @@ class cScramblerOpReader extends cEventSubscriber{
 				for (var iParam of aParamDefs){
 					// get param definition
 					var oParam = cOpDefs.PARAMS.get(iParam)
-					var iParam_bits = oParam.bits
-					if (poBitStream.bits_available() < iParam_bits)
-						throw new eScramblerOpReaderException("not enough bits available")
 
 					//read param value
-					var iValue = poBitStream.read_bits(iParam_bits)
+					var iValue = oBit_helper.read_number(oParam.bits)
 
 					//update map
 					oParams.set(

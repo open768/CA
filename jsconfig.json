@@ -7,7 +7,6 @@
 		"baseUrl": "."
 	},
 	"include": [
-		"**/*",
 		"**/*.js",
 		"globals.d.ts",
 		"../jsinc/**/*.js"
