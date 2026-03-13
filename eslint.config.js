@@ -3,10 +3,13 @@
 import { defineConfig } from "eslint/config"
 // @ts-ignore
 import stylistic from "@stylistic/eslint-plugin"
+// @ts-ignore
+import jsdoc from "eslint-plugin-jsdoc"
 
 export default defineConfig([
 	{
-		ignores: ["eslint.config.js", "node_modules/"],
+		ignores: ["eslint.config.js", "node_modules/" ],
+
 		files: ["./**/*.js"],
 		languageOptions: {
 			ecmaVersion: "latest",
@@ -21,6 +24,7 @@ export default defineConfig([
 		},
 		plugins: {
 			"@stylistic": stylistic,
+			jsdoc,
 		},
 		...stylistic.configs.recommended,
 		rules: {
@@ -77,6 +81,7 @@ export default defineConfig([
 			"@stylistic/brace-style": ["error", "1tbs", { "allowSingleLine": false }], // [5](https://eslint.style/rules/default/brace-style)
 			// Enforce consistent indentation (auto-fixable)
 			"@stylistic/indent": ["error", "tab", { "SwitchCase": 1 }], // [6](https://eslint.style/rules/default/indent)
+			"jsdoc/check-alignment": "error",
 		},
 	},
 ])

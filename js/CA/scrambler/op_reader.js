@@ -175,12 +175,12 @@ class cScramblerOpReader extends cEventSubscriber{
 	//* private methods
 	//******************************************************************
 	/**
-	 *
+	 * for jsbitstream see: https://github.com/KonradKiss/JSBitStream
 	 * @param {jsbitstream} poBitStream
 	 */
 	_read_ops(poBitStream){
 		var aOps = []
-		while (poBitStream.bits_available() > 0){
+		while (poBitStream.size() > 0){
 
 			//read the opcode
 			var iop_code = poBitStream.read_bits(cOpDefs.OP_ID_BITS)
@@ -188,9 +188,9 @@ class cScramblerOpReader extends cEventSubscriber{
 				iop_code = iop_code % cOpDefs.MAX_OP_ID //wrap around if invalid opcode
 
 			//create the object
-			var oOp = new cTranformOp()
+			var oTransform_op = new cTranformOp()
 			{
-				oOp.opcode = iop_code
+				oTransform_op.opcode = iop_code
 
 				//populate params and values
 				var oParams = new Map
@@ -198,22 +198,22 @@ class cScramblerOpReader extends cEventSubscriber{
 				for (var iParam of aParamDefs){
 					// get param definition
 					var oParam = cOpDefs.PARAMS.get(iParam)
-					var ibits = oParam.bits
-					if (poBitStream.bits_available() < ibits)
+					var iParam_bits = oParam.bits
+					if (poBitStream.bits_available() < iParam_bits)
 						throw new eScramblerOpReaderException("not enough bits available")
 
 					//read param value
-					var iValue = poBitStream.read_bits(ibits)
+					var iValue = poBitStream.read_bits(iParam_bits)
 
 					//update map
 					oParams.set(
 						iParam,
 						iValue
 					)
-					oOp.params = oParams
+					oTransform_op.params = oParams
 				}
 
-				aOps.push(oOp)
+				aOps.push(oTransform_op)
 			}
 		}
 	}
