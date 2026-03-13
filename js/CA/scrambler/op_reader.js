@@ -1,6 +1,7 @@
 "use strict"
 
 class eScramblerOpReaderException extends Error {}
+class eOpReaderBitsExhausted extends Error {}
 
 //############################################################
 //# initialise the operations and their parameters.
@@ -121,10 +122,19 @@ class cTranformOp {
 class cReadBitHelper {
 	bitstream = null /** @type {jsbitstream} */
 
+	/**
+	 *
+	 * @param {jsbitstream} poBitStream
+	 */
 	constructor(poBitStream){
 		this.bitstream = poBitStream
 	}
 
+	/**
+	 *
+	 * @param {number} piValue
+	 * @returns {number}
+	 */
 	static get_bit_length(piValue){
 		var iLength = cCommon.intBitSize(piValue)
 
@@ -141,11 +151,18 @@ class cReadBitHelper {
 		return iLength
 	}
 
-	read_number(piLength){
-		if (this.bitstream.size() < piLength)
-			throw new eScramblerOpReaderException("not enough bits available")
+	/**
+	 *
+	 * @param {number} piBitLength
+	 * @throws {eOpReaderBitsExhausted} if not enough bits available in the stream
+	 * @throws {eScramblerOpReaderException} if unsupported bit length requested
+	 * @returns {number}
+	 */
+	read_number(piBitLength){
+		if (this.bitstream.size() < piBitLength)
+			throw new eOpReaderBitsExhausted("not enough bits available")
 
-		switch(piLength){
+		switch(piBitLength){
 			case 1:
 				var bValue = this.bitstream.readFlag()
 				return bValue ? 1 : 0
@@ -163,7 +180,7 @@ class cReadBitHelper {
 				return this.bitstream.readU32(32)
 
 			default:
-				throw new eScramblerOpReaderException("unsupported bit length: " + piLength)
+				throw new eScramblerOpReaderException("unsupported bit length: " + piBitLength)
 		}
 	}
 }
@@ -175,6 +192,10 @@ class cScramblerOpReader extends cEventSubscriber{
 	basename = null
 	_ops = null
 
+	/**
+	 *
+	 * @param {string} psBaseName
+	 */
 	constructor(psBaseName){
 		super()
 		this.basename = psBaseName
