@@ -332,11 +332,11 @@ class cCARuleObjImporter {
 //###############################################################################
 class cCARuleMaker{
 	/**
-   * @abstract
-   * @static
-   * @returns {cCARule}
-   * @throws {Error} If not implemented by subclass.
-   */
+	 * @abstract
+	 * @static
+	 * @returns {cCARule}
+	 * @throws {Error} If not implemented by subclass.
+	 */
 	static makeRule() {
 		throw new Error('Abstract method `makeRule()` must be implemented.')
 	}
