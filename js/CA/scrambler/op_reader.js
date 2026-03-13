@@ -62,10 +62,10 @@ class cOpDefs extends cStaticClass{
 
 		//---------------------------------------------------------------------
 		this.MAX_OP_ID = cOpConsts.SKEW_OP
-		this.OP_ID_BITS = cReadBitHelper.get_bit_length(this.MAX_OP_ID)
+		this.OP_ID_BITS = cBitStreamHelper.get_bit_length(this.MAX_OP_ID)
 
 		//---------------------------------------------------------------------
-		var i200bits = cReadBitHelper.get_bit_length(200)
+		var i200bits = cBitStreamHelper.get_bit_length(200)
 
 		this.PARAMS = new Map([
 			[cOpConsts.ROWCOL_PARAM, {
@@ -119,7 +119,7 @@ class cTranformOp {
 //############################################################
 //#
 //############################################################
-class cReadBitHelper {
+class cBitStreamHelper {
 	bitstream = null /** @type {jsbitstream} */
 
 	/**
@@ -131,12 +131,13 @@ class cReadBitHelper {
 	}
 
 	/**
-	 *
-	 * @param {number} piValue
+	 * returns the bitlength required to store a value up to piMaxValue,
+	 *  adjusted upwards to the nearest of 4, 8 16,32
+	 * @param {number} piMaxValue
 	 * @returns {number}
 	 */
-	static get_bit_length(piValue){
-		var iLength = cCommon.intBitSize(piValue)
+	static get_bit_length(piMaxValue){
+		var iLength = cCommon.intBitSize(piMaxValue)
 
 		// adjust ilength upwards to the nearest of 4, 8 16,32 etc for more efficient storage
 		if (iLength <= 4)
@@ -145,8 +146,10 @@ class cReadBitHelper {
 			iLength = 8
 		else if (iLength <= 16)
 			iLength = 16
-		else
+		else if (iLength <= 32)
 			iLength = 32
+		else
+			throw new eScramblerOpReaderException("unsupported bit length: " + iLength)
 
 		return iLength
 	}
@@ -158,30 +161,35 @@ class cReadBitHelper {
 	 * @throws {eScramblerOpReaderException} if unsupported bit length requested
 	 * @returns {number}
 	 */
-	read_number(piBitLength){
+	read_number(piBitLength, piMaxValue){
 		if (this.bitstream.size() < piBitLength)
 			throw new eOpReaderBitsExhausted("not enough bits available")
 
+		var iValue = null
 		switch(piBitLength){
 			case 1:
 				var bValue = this.bitstream.readFlag()
-				return bValue ? 1 : 0
+				iValue = (bValue ? 1 : 0)
 
 			case 4:
-				return this.bitstream.readU4(4)
+				iValue = this.bitstream.readU4(4)
 
 			case 8:
-				return this.bitstream.readU8(8)
+				iValue = this.bitstream.readU8(8)
 
 			case 16:
-				return this.bitstream.readU16(16)
+				iValue = this.bitstream.readU16(16)
 
 			case 32:
-				return this.bitstream.readU32(32)
+				iValue = this.bitstream.readU32(32)
 
 			default:
 				throw new eScramblerOpReaderException("unsupported bit length: " + piBitLength)
 		}
+
+		if (iValue > piMaxValue)
+			iValue = iValue % (piMaxValue + 1) //wrap around if value exceeds max
+		return iValue
 	}
 }
 
@@ -255,7 +263,7 @@ class cScramblerOpReader extends cEventSubscriber{
 	 */
 	_read_ops(poBitStream){
 		var aOps = []
-		var oBit_helper = new cReadBitHelper(poBitStream)
+		var oBit_helper = new cBitStreamHelper(poBitStream)
 		while (poBitStream.size() > 0){
 
 			//read the opcode
@@ -276,7 +284,10 @@ class cScramblerOpReader extends cEventSubscriber{
 					var oParam = cOpDefs.PARAMS.get(iParam)
 
 					//read param value
-					var iValue = oBit_helper.read_number(oParam.bits)
+					var iValue = oBit_helper.read_number(
+						oParam.bits,
+						oParam.max
+					)
 
 					//update map
 					oParams.set(
