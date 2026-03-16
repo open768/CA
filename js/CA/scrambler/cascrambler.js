@@ -246,6 +246,8 @@ class cCAScrambler extends cEventSubscriber{
 		var oReader = new cScramblerOpReader(this.base_name)
 		oReader.import_grid()
 
+		//next stage of scrambling will be triggered by the reader firing a notify_imported event once it has finished reading the grid and converting to operations
+		cDebug.error("processing scrambling operations not implemented")
 	}
 
 	//********************************************************************
@@ -276,7 +278,7 @@ class cCAScrambler extends cEventSubscriber{
 				this._initial_runs_completed++
 				if (this._initial_runs_completed >= this.initial_runs) {
 				//start scrambling
-					cDebug.write("initial runs completed - starting scrambling")
+					cDebug.write("initial runs completed - starting import")
 					this._stage = cCAScramblerStages.IMPORTING_OPS
 					this._import_grid()
 				} else

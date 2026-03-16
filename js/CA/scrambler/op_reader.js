@@ -195,13 +195,11 @@ class cRandomnessChecker extends cStaticClass{
 		var iCoeffOfVariation = iStdDev / iMean
 
 		if (iCoeffOfVariation > this.MAX_DEVIATION) {
-			cDebug.write(
-				"Not random enough: CoV" + 				iCoeffOfVariation.toFixed(3) + 				"> threshold"
-				+ 				this.MAX_DEVIATION
-			)
+			cDebug.write("Not random enough: CoV" + iCoeffOfVariation.toFixed(3) + "> threshold"	+ this.MAX_DEVIATION)
 			return false
 		}
 
+		cDebug.write("Randomness check passed: CoV" + iCoeffOfVariation.toFixed(3) + "<= threshold"	+ this.MAX_DEVIATION)
 		return true
 	}
 
@@ -249,7 +247,7 @@ class cScramblerOpReader extends cEventSubscriber{
 			case cCAGridEvent.notify.grid:
 				cDebug.write("got grid data, now convert to operations")
 				var oGrid = poEvent.data /** @type {cCAGrid} */
-				this._on_got_grid(oGrid)
+				this._process_grid(oGrid)
 
 		}
 	}
@@ -259,14 +257,14 @@ class cScramblerOpReader extends cEventSubscriber{
 	 *
 	 * @param {cCAGrid} poGrid
 	 */
-	_on_got_grid(poGrid){
+	_process_grid(poGrid){
 		//check class is correct
 		if (!(poGrid instanceof cCAGrid))
 			throw new eCAScramblerException("grid data is not cCAGrid")
 
 		//convert the grid to binary
 		/** @type {jsbitstream} */ var oBitStream = cCAGridBitStreamExporter.get_grid_bitstream(poGrid)
-		if (!this._check_randomness(oBitStream))
+		if (!cRandomnessChecker.check_randomness(oBitStream))
 			throw new eCAScramblerException("grid data is not random enough to be converted to operations")
 		oBitStream.reset_offset()
 		this._read_ops(oBitStream)
