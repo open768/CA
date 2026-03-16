@@ -111,7 +111,7 @@ class cOpDefs extends cStaticClass{
 }
 cOpDefs.init()
 
-class cTranformOp {
+class cTransformOp {
 	opcode = null		/** @type {number} */
 	params = null		/** @type {Map<number, number>} */
 }
@@ -258,6 +258,7 @@ class cScramblerOpReader extends cEventSubscriber{
 	 * @param {cCAGrid} poGrid
 	 */
 	_process_grid(poGrid){
+		var aOps = null
 		try{
 		//check class is correct
 			if (!(poGrid instanceof cCAGrid))
@@ -278,7 +279,7 @@ class cScramblerOpReader extends cEventSubscriber{
 			if (oBitStream.size() !== poGrid.rows * poGrid.cols)
 				throw new eCAScramblerException("bitstream length does not match grid size")
 
-			this._read_ops(oBitStream)
+			var aOps = this._read_ops(oBitStream)
 		} catch (e) {
 			if (e instanceof eCAScramblerException) {
 				cDebug.write("Error processing grid: " + e.message)
@@ -291,6 +292,8 @@ class cScramblerOpReader extends cEventSubscriber{
 
 			throw e
 		}
+
+		return aOps
 	}
 
 	//******************************************************************
@@ -302,46 +305,53 @@ class cScramblerOpReader extends cEventSubscriber{
 	_read_ops(poBitStream){
 		var aOps = []
 		var oBit_helper = new cBitStreamHelper(poBitStream)
-		while (poBitStream.size() > 0)
-			try {
-				//read the opcode
-				var iop_code = oBit_helper.read_number(cOpDefs.OP_ID_BITS)
-				if (iop_code > cOpDefs.MAX_OP_ID)
-					iop_code = iop_code % cOpDefs.MAX_OP_ID //wrap around if invalid opcode
+		while (poBitStream.size() > cOpDefs.OP_ID_BITS){
+			//read the opcode
+			var iop_code = oBit_helper.read_number(cOpDefs.OP_ID_BITS)
+			if (iop_code > cOpDefs.MAX_OP_ID)
+				iop_code = iop_code % cOpDefs.MAX_OP_ID //wrap around if invalid opcode
 
-				//create the object
-				var oTransform_op = new cTranformOp()
-				{
-					oTransform_op.opcode = iop_code
+			//create the object
+			var oTransform_op = new cTransformOp()
+			{
+				oTransform_op.opcode = iop_code
+				var aParamDefs = cOpDefs.DEFS.get(iop_code)
+				//check that there is anough bits left to read the params
+				var iBitsRequired = aParamDefs.reduce(
+					(piSum, piParam) => {
+						var oParam = cOpDefs.PARAMS.get(piParam)
+						return piSum + oParam.bits
+					},
+					0
+				)
+				if (poBitStream.size() < iBitsRequired)
+					break //not enough bits left
 
-					//populate params and values
-					var oParams = new Map
-					var aParamDefs = cOpDefs.DEFS.get(iop_code)
-					for (var iParam of aParamDefs){
-						// get param definition
-						var oParam = cOpDefs.PARAMS.get(iParam)
+				//populate params and values
+				var oParams = new Map()
+				for (var iParam of aParamDefs){
+					// get param definition
+					var oParam = cOpDefs.PARAMS.get(iParam)
 
-						//read param value
-						var iValue = oBit_helper.read_number(
-							oParam.bits,
-							oParam.max
-						)
+					//read param value
+					var iValue = oBit_helper.read_number(
+						oParam.bits,
+						oParam.max
+					)
 
-						//update map
-						oParams.set(
-							iParam,
-							iValue
-						)
-						oTransform_op.params = oParams
-					}
-
-					aOps.push(oTransform_op)
+					//update map
+					oParams.set(
+						iParam,
+						iValue
+					)
+					oTransform_op.params = oParams
 				}
-			} catch (e) {
-				if (e instanceof eOpReaderBitsExhausted)
-					break
 
-				throw e
+				aOps.push(oTransform_op)
 			}
+		}
+
+		return aOps
+
 	}
 }
