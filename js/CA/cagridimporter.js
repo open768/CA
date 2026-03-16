@@ -176,6 +176,7 @@ class cCAGridJSONExporter {
 		var oExport = new cCAGridExported()
 		{
 			var oRuleExport = cCARuleObjExporter.export( oRule) /** @type {cCAExportedRule} */
+			//@ts-expect-error
 			oExport.rule = oRuleExport
 
 			// get the status of the cells from the grid
