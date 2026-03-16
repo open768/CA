@@ -58,7 +58,7 @@ class cCAGridInitialiser {
 				this.init_vert_line(poGrid)
 				break
 
-				// --------------------------------------------------------
+			// --------------------------------------------------------
 			default:
 				throw new eCAException('unknown init_type: ' + piInitType)
 		}

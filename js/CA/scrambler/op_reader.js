@@ -62,10 +62,10 @@ class cOpDefs extends cStaticClass{
 
 		//---------------------------------------------------------------------
 		this.MAX_OP_ID = cOpConsts.SKEW_OP
-		this.OP_ID_BITS = cBitStreamHelper.get_bit_length(this.MAX_OP_ID)
+		this.OP_ID_BITS = cCommon.intBitSize(this.MAX_OP_ID)
 
 		//---------------------------------------------------------------------
-		var i200bits = cBitStreamHelper.get_bit_length(200)
+		var i200bits = cCommon.intBitSize(200)
 
 		this.PARAMS = new Map([
 			[cOpConsts.ROWCOL_PARAM, {
@@ -131,30 +131,6 @@ class cBitStreamHelper {
 	}
 
 	/**
-	 * returns the bitlength required to store a value up to piMaxValue,
-	 *  adjusted upwards to the nearest of 4, 8 16,32
-	 * @param {number} piMaxValue
-	 * @returns {number}
-	 */
-	static get_bit_length(piMaxValue){
-		var iLength = cCommon.intBitSize(piMaxValue)
-
-		// adjust ilength upwards to the nearest of 4, 8 16,32 etc for more efficient storage
-		if (iLength <= 4)
-			iLength = 4
-		else if (iLength <= 8)
-			iLength = 8
-		else if (iLength <= 16)
-			iLength = 16
-		else if (iLength <= 32)
-			iLength = 32
-		else
-			throw new eScramblerOpReaderException("unsupported bit length: " + iLength)
-
-		return iLength
-	}
-
-	/**
 	 *
 	 * @param {number} piBitLength
 	 * @throws {eOpReaderBitsExhausted} if not enough bits available in the stream
@@ -165,32 +141,70 @@ class cBitStreamHelper {
 		if (this.bitstream.size() < piBitLength)
 			throw new eOpReaderBitsExhausted("not enough bits available")
 
-		var iValue = null
-		switch(piBitLength){
-			case 1:
-				var bValue = this.bitstream.readFlag()
-				iValue = (bValue ? 1 : 0)
-
-			case 4:
-				iValue = this.bitstream.readU4(4)
-
-			case 8:
-				iValue = this.bitstream.readU8(8)
-
-			case 16:
-				iValue = this.bitstream.readU16(16)
-
-			case 32:
-				iValue = this.bitstream.readU32(32)
-
-			default:
-				throw new eScramblerOpReaderException("unsupported bit length: " + piBitLength)
-		}
+		var iValue = this.bitstream.readUBits(piBitLength)
 
 		if (iValue > piMaxValue)
 			iValue = iValue % (piMaxValue + 1) //wrap around if value exceeds max
 		return iValue
 	}
+}
+
+class cRandomnessChecker extends cStaticClass{
+	static MAX_DEVIATION = 0.2 // allow 20% deviation from expected
+	/**
+	 *reads u4 numbers and checks distribution
+	 * @param {jsbitstream} poBitStream
+	 */
+	static check_randomness(poBitStream){
+		//check that the pobitstream is a jsbitstream
+		if (!(poBitStream instanceof jsbitstream))
+			throw new eScramblerOpReaderException("randomness checker requires a jsbitstream")
+
+		var oMap = new Map
+		while	(poBitStream.size() > 4){
+			var iValue = poBitStream.readU4()
+			if (oMap.has(iValue))
+				oMap.set(
+					iValue,
+					oMap.get(iValue) + 1
+				)
+			else
+				oMap.set(
+					iValue,
+					1
+				)
+		}
+
+		//work out the mean of the values
+		var aCounts = Array.from(oMap.values())
+		var iTotal = aCounts.reduce(
+			(piAccumulator, piValue) => piAccumulator + piValue,
+			0
+		) // total of the values read
+		var iMean = iTotal / aCounts.length
+
+		//work out avg std devlation
+		var iTotalVariance = aCounts.reduce(
+			(piSum, piValue) => piSum + (piValue - iMean) ** 2,
+			0
+		) //works out the total variance of the frequencies
+		var iAvgVariance = iTotalVariance / aCounts.length
+		var iStdDev = Math.sqrt(iAvgVariance)
+
+		// coefficient of variation: stddev relative to mean (0 = perfect uniform, higher = more skewed)
+		var iCoeffOfVariation = iStdDev / iMean
+
+		if (iCoeffOfVariation > this.MAX_DEVIATION) {
+			cDebug.write(
+				"Not random enough: CoV" + 				iCoeffOfVariation.toFixed(3) + 				"> threshold"
+				+ 				this.MAX_DEVIATION
+			)
+			return false
+		}
+
+		return true
+	}
+
 }
 
 //############################################################
@@ -241,6 +255,7 @@ class cScramblerOpReader extends cEventSubscriber{
 	}
 
 	/** *****************************************************************
+	 * for jsbitstream see: https://github.com/KonradKiss/JSBitStream
 	 *
 	 * @param {cCAGrid} poGrid
 	 */
@@ -251,6 +266,9 @@ class cScramblerOpReader extends cEventSubscriber{
 
 		//convert the grid to binary
 		/** @type {jsbitstream} */ var oBitStream = cCAGridBitStreamExporter.get_grid_bitstream(poGrid)
+		if (!this._check_randomness(oBitStream))
+			throw new eCAScramblerException("grid data is not random enough to be converted to operations")
+		oBitStream.reset_offset()
 		this._read_ops(oBitStream)
 	}
 
@@ -258,7 +276,6 @@ class cScramblerOpReader extends cEventSubscriber{
 	//* private methods
 	//******************************************************************
 	/**
-	 * for jsbitstream see: https://github.com/KonradKiss/JSBitStream
 	 * @param {jsbitstream} poBitStream
 	 */
 	_read_ops(poBitStream){

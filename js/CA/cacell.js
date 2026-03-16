@@ -149,7 +149,7 @@ class cCACell {
 				break
 
 			case CA_NEIGHBOURS.fourway:
-				// -------------------------------------------------------
+			// -------------------------------------------------------
 				iValue = oHash.get(CA_DIRECTIONS.northwest).value
 				iValue <<= 1
 				iValue |= oHash.get(CA_DIRECTIONS.north).value

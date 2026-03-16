@@ -135,7 +135,7 @@ class cCACanvas extends cJQueryWidgetClass {
 				break
 
 			case cCAActionEvent.actions.ready:
-				// associate a CA grid with the widget
+			// associate a CA grid with the widget
 				var oGrid = new cCAGrid(
 					oOptions.base_name,
 					oOptions.rows,
@@ -145,7 +145,7 @@ class cCACanvas extends cJQueryWidgetClass {
 				// put something in the widget
 				this._initCanvas()
 				if (!this.mouse_events_set) {
-					// only set #mouse event handler once
+				// only set #mouse event handler once
 					oElement.mouseup(() => this._onMouseUp())
 					oElement.mousemove(poEvent => this._onMouseMove(poEvent))
 					oElement.mousedown(poEvent => this._onMouseDown(poEvent))

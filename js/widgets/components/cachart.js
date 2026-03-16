@@ -150,7 +150,7 @@ class cCAChart extends cJQueryWidgetClass {
 		cDebug.enter()
 		switch (poEvent.action) {
 			case cCACanvasEvent.actions.grid_status:
-				// add the data to the data structure and draw
+			// add the data to the data structure and draw
 				cDebug.write('status action')
 				if (!cCAChartTypes.is_charts_loaded) {
 					cDebug.extra_debug('still waiting for google charts')

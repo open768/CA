@@ -101,7 +101,7 @@ class cCAGridBitStreamExporter {
 					iCol,
 					true
 				)
-				oStream.writeFlag(oCell.value === 0?false:true)
+				oStream.writeFlag(oCell.value === 0 ? false : true)
 			}
 
 		return oStream

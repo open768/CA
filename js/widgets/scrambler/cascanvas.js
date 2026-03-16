@@ -134,7 +134,7 @@ class cCAScrambleCanvas extends cJQueryWidgetClass {
 		var ix = piCol * oOptions.cell_size
 
 		// ------------------draw
-		var sFill = piValue ? '#000': '#fff'
+		var sFill = piValue ? '#000' : '#fff'
 		this._canvas.drawRect({
 			fillStyle: sFill,
 			x: ix,

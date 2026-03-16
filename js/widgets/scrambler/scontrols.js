@@ -9,7 +9,7 @@ const SCRAMBLE_CONTROL_IDS = {
 	btn_scramble_ID: 'e',
 	btn_descramble_ID: 'f'
 }
-const SCRAMBLE_CONSTS={
+const SCRAMBLE_CONSTS = {
 	CELL_SIZE: 5,
 	BAD_INPUT_COLOUR: 'red',
 	MIN_STEPS: 5,
@@ -596,11 +596,11 @@ class cScrambleWidget extends cJQueryWidgetClass {
 				sText
 			)
 			this._invalid_input(
-				"<i>chars remaining:"+ (iMax - sText.length)+"</i>",
+				"<i>chars remaining:" + (iMax - sText.length) + "</i>",
 				false
 			)
 		}else
-			this._invalid_input("text too long " + sText.length+" - must be less than " + iMax + " characters")
+			this._invalid_input("text too long " + sText.length + " - must be less than " + iMax + " characters")
 
 	}
 

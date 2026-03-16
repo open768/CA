@@ -145,7 +145,7 @@ class cCAControlsL extends cJQueryWidgetClass {
 					value: i
 				}
 			).append(i + ' times'))
-		for (var i = 10; i <= 100; i+=10)
+		for (var i = 10; i <= 100; i += 10)
 			oSelect.append($(
 				'<option>',
 				{

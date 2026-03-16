@@ -60,7 +60,7 @@ class cCAStatusWidget extends cJQueryWidgetClass {
 		cDebug.write('heap timer running')
 
 		// display the heap used
-		var oTarget =cJquery.get_child(
+		var oTarget = cJquery.get_child(
 			oElement,
 			cCAStatusTypes.HEAP_ID
 		)
@@ -117,17 +117,17 @@ class cCAStatusWidget extends cJQueryWidgetClass {
 				if (!poEvent.data)
 					return
 
-				oTarget =cJquery.get_child(
+				oTarget = cJquery.get_child(
 					oElement,
 					cCAStatusTypes.ACTIVE_ID
 				)
 				oTarget.html(poEvent.data.active)
-				oTarget =cJquery.get_child(
+				oTarget = cJquery.get_child(
 					oElement,
 					cCAStatusTypes.CHANGED_ID
 				)
 				oTarget.html(poEvent.data.changed)
-				oTarget =cJquery.get_child(
+				oTarget = cJquery.get_child(
 					oElement,
 					cCAStatusTypes.RUNS_ID
 				)

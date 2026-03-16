@@ -104,7 +104,7 @@ class cCAScrambler extends cEventSubscriber{
 				break
 
 			case cCAScramblerEvent.notify.consumed:
-				//the consumer has consumed the scrambled output and is ready for the next scramble
+			//the consumer has consumed the scrambled output and is ready for the next scramble
 				this._on_notify_scrambler_consumed()
 				break
 		}
@@ -150,12 +150,32 @@ class cCAScrambler extends cEventSubscriber{
 			case cCAGridEvent.notify.nochange:
 
 			case cCAGridEvent.notify.repeatPattern:
-				//something went wrong with the scrambling - stop and report an error
+			//something went wrong with the scrambling - stop and report an error
 				throw new eCAScramblerException("Cellular automata stopped unexpectedly")
 
 			default:
 				throw new eCAScramblerException("unexpected grid event " + poEvent.action )
 		}
+	}
+
+	//********************************************************************
+	// reset  methods
+	//********************************************************************
+	_reset() {
+		this._data = new cSparseArray(
+			this._rows,
+			this._cols
+		)
+		this.initial_runs = 0
+		this.initial_runs_completed = 0
+		this._grid_index = {
+			row: 0, col: 0
+		}
+
+		cCAScramblerEvent.fire_event(
+			this.base_name,
+			cCAScramblerEvent.actions.reset
+		)
 	}
 
 	//********************************************************************
@@ -248,19 +268,19 @@ class cCAScrambler extends cEventSubscriber{
 	}
 
 	//********************************************************************
-	// on_ca_grid
+	// grid operation methods
 	//********************************************************************
 	_on_ca_grid_notify_all_consumers_done() {
 		switch (this._stage) {
 			case cCAScramblerStages.INITIAL_RUNS:
 				this._initial_runs_completed++
 				if (this._initial_runs_completed >= this.initial_runs) {
-					//start scrambling
+				//start scrambling
 					cDebug.write("initial runs completed - starting scrambling")
 					this._stage = cCAScramblerStages.IMPORTING_OPS
 					this._import_grid()
 				} else
-					//step the grid again
+				//step the grid again
 					setTimeout(
 						() => this._step(),
 						cCAScramblerTypes.STEP_DELAY_MS
@@ -315,24 +335,8 @@ class cCAScrambler extends cEventSubscriber{
 	}
 
 	//********************************************************************
-	// other scrambling methods
+	// other methods
 	//********************************************************************
-	_reset() {
-		this._data = new cSparseArray(
-			this._rows,
-			this._cols
-		)
-		this.initial_runs = 0
-		this.initial_runs_completed = 0
-		this._grid_index = {
-			row: 0, col: 0
-		}
-
-		cCAScramblerEvent.fire_event(
-			this.base_name,
-			cCAScramblerEvent.actions.reset
-		)
-	}
 
 	//********************************************************************
 	_set_plaintext(psText) {
@@ -407,7 +411,7 @@ class cCAScrambler extends cEventSubscriber{
 		var iAscii = psChar.charCodeAt(0)
 		var sBinary = cConverter.intToBinstr(iAscii)
 		if (sBinary.length > cCAScrambler.BITS_PER_CHAR)
-			throw new eCAScramblerException("character too long the number of bits allocated per character")
+			throw new eCAScramblerException("character too long for the number of bits allocated per character")
 		sBinary = sBinary.padStart(
 			cCAScrambler.BITS_PER_CHAR,
 			"0"
