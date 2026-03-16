@@ -316,6 +316,7 @@ class cScrambleWidget extends cJQueryWidgetClass {
 				}
 			)
 			{
+				oInputText.val("the text to be scrambled goes here")
 				//when a key is pressed check how may keys are still available and change the border colour of the input accordingly
 				oInputText.on(
 					'blur input',

@@ -104,6 +104,9 @@ class cCAGridBitStreamExporter {
 				oStream.writeFlag(oCell.value === 0 ? false : true)
 			}
 
+		if (oStream.size() !== poGrid.rows * poGrid.cols)
+			throw new eCAException('bitstream length does not match grid size')
+
 		return oStream
 	}
 }

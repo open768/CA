@@ -258,16 +258,38 @@ class cScramblerOpReader extends cEventSubscriber{
 	 * @param {cCAGrid} poGrid
 	 */
 	_process_grid(poGrid){
+		try{
 		//check class is correct
-		if (!(poGrid instanceof cCAGrid))
-			throw new eCAScramblerException("grid data is not cCAGrid")
+			if (!(poGrid instanceof cCAGrid))
+				throw new eCAScramblerException("grid data is not cCAGrid")
 
-		//convert the grid to binary
-		/** @type {jsbitstream} */ var oBitStream = cCAGridBitStreamExporter.get_grid_bitstream(poGrid)
-		if (!cRandomnessChecker.check_randomness(oBitStream))
-			throw new eCAScramblerException("grid data is not random enough to be converted to operations")
-		oBitStream.reset_offset()
-		this._read_ops(oBitStream)
+			//convert the grid to binary
+			/** @type {jsbitstream} */ var oBitStream = cCAGridBitStreamExporter.get_grid_bitstream(poGrid)
+
+			//the bitstream should have the same length as the grid (1 bit per cell)
+			if (oBitStream.size() !== poGrid.rows * poGrid.cols)
+				throw new eCAScramblerException("bitstream length does not match grid size")
+
+			if (!cRandomnessChecker.check_randomness(oBitStream))
+				throw new eCAScramblerException("grid data is not random enough to be converted to operations")
+
+			oBitStream.reset_offset()
+			if (oBitStream.size() !== poGrid.rows * poGrid.cols)
+				throw new eCAScramblerException("bitstream length does not match grid size")
+
+			this._read_ops(oBitStream)
+		} catch (e) {
+			if (e instanceof eCAScramblerException) {
+				cDebug.write("Error processing grid: " + e.message)
+				cCAScramblerEvent.fire_event(
+					this.basename,
+					cCAScramblerEvent.actions.error,
+					e.message
+				)
+			}
+
+			throw e
+		}
 	}
 
 	//******************************************************************
@@ -279,41 +301,46 @@ class cScramblerOpReader extends cEventSubscriber{
 	_read_ops(poBitStream){
 		var aOps = []
 		var oBit_helper = new cBitStreamHelper(poBitStream)
-		while (poBitStream.size() > 0){
+		while (poBitStream.size() > 0)
+			try {
+				//read the opcode
+				var iop_code = oBit_helper.read_number(cOpDefs.OP_ID_BITS)
+				if (iop_code > cOpDefs.MAX_OP_ID)
+					iop_code = iop_code % cOpDefs.MAX_OP_ID //wrap around if invalid opcode
 
-			//read the opcode
-			var iop_code = oBit_helper.read_number(cOpDefs.OP_ID_BITS)
-			if (iop_code > cOpDefs.MAX_OP_ID)
-				iop_code = iop_code % cOpDefs.MAX_OP_ID //wrap around if invalid opcode
+				//create the object
+				var oTransform_op = new cTranformOp()
+				{
+					oTransform_op.opcode = iop_code
 
-			//create the object
-			var oTransform_op = new cTranformOp()
-			{
-				oTransform_op.opcode = iop_code
+					//populate params and values
+					var oParams = new Map
+					var aParamDefs = cOpDefs.DEFS.get(iop_code)
+					for (var iParam of aParamDefs){
+						// get param definition
+						var oParam = cOpDefs.PARAMS.get(iParam)
 
-				//populate params and values
-				var oParams = new Map
-				var aParamDefs = cOpDefs.DEFS.get(iop_code)
-				for (var iParam of aParamDefs){
-					// get param definition
-					var oParam = cOpDefs.PARAMS.get(iParam)
+						//read param value
+						var iValue = oBit_helper.read_number(
+							oParam.bits,
+							oParam.max
+						)
 
-					//read param value
-					var iValue = oBit_helper.read_number(
-						oParam.bits,
-						oParam.max
-					)
+						//update map
+						oParams.set(
+							iParam,
+							iValue
+						)
+						oTransform_op.params = oParams
+					}
 
-					//update map
-					oParams.set(
-						iParam,
-						iValue
-					)
-					oTransform_op.params = oParams
+					aOps.push(oTransform_op)
 				}
+			} catch (e) {
+				if (e instanceof eOpReaderBitsExhausted)
+					break
 
-				aOps.push(oTransform_op)
+				throw e
 			}
-		}
 	}
 }

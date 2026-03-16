@@ -247,7 +247,6 @@ class cCAScrambler extends cEventSubscriber{
 		oReader.import_grid()
 
 		//next stage of scrambling will be triggered by the reader firing a notify_imported event once it has finished reading the grid and converting to operations
-		cDebug.error("processing scrambling operations not implemented")
 	}
 
 	//********************************************************************
