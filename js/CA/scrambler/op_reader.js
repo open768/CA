@@ -270,10 +270,11 @@ class cScramblerOpReader extends cEventSubscriber{
 			if (oBitStream.size() !== poGrid.rows * poGrid.cols)
 				throw new eCAScramblerException("bitstream length does not match grid size")
 
+			oBitStream.backup_data()
 			if (!cRandomnessChecker.check_randomness(oBitStream))
 				throw new eCAScramblerException("grid data is not random enough to be converted to operations")
 
-			oBitStream.reset_offset()
+			oBitStream.restore_data()
 			if (oBitStream.size() !== poGrid.rows * poGrid.cols)
 				throw new eCAScramblerException("bitstream length does not match grid size")
 
