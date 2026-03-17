@@ -109,7 +109,7 @@ class cCAScrambler extends cEventSubscriber{
 				break
 
 			case cCAScramblerEvent.notify.imported_ops:
-				cDebug.write("received imported operations - not implemented")
+				this._on_notify_imported_ops( poEvent.data )
 				break
 		}
 	}
@@ -151,7 +151,7 @@ class cCAScrambler extends cEventSubscriber{
 				break
 
 			case cCAGridEvent.notify.nochange, cCAGridEvent.notify.repeatPattern:
-			//something went wrong with the scrambling - stop and report an error
+				//something went wrong with the scrambling - stop and report an error
 				throw new eCAScramblerException("Cellular automata stopped unexpectedly")
 
 			default:
@@ -248,6 +248,20 @@ class cCAScrambler extends cEventSubscriber{
 		oReader.import_grid()
 
 		//next stage of scrambling will be triggered by the reader firing a notify_imported event once it has finished reading the grid and converting to operations
+	}
+
+	//********************************************************************
+	/**
+	 *
+	 * @param {Array<cTransformOp>} paOps
+	 */
+	_on_notify_imported_ops( paOps) {
+		//this function will be called once the operations have been imported and are ready to be executed to perform the scrambling
+		if (this._stage !== cCAScramblerStages.IMPORTING_OPS)
+			throw new eCAScramblerException("incorrect stage for importing ops")
+
+		this._stage = cCAScramblerStages.SCRAMBLING
+		cDebug.error("scrambling - not implemented")
 	}
 
 	//********************************************************************
