@@ -365,7 +365,7 @@ class cCAGrid extends cEventSubscriber {
 		// reset counters
 		this.runData.clear_cell_counters()
 
-		cDebug.write('stepping')
+		cDebug.extra_debug('stepping')
 
 		// apply rules
 		/** @type {boolean} */var bHasChanged

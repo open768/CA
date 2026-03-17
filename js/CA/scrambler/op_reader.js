@@ -149,6 +149,9 @@ class cBitStreamHelper {
 	}
 }
 
+//############################################################
+//#
+//############################################################
 class cRandomnessChecker extends cStaticClass{
 	static MAX_DEVIATION = 0.2 // allow 20% deviation from expected
 	/**
@@ -243,6 +246,9 @@ class cScramblerOpReader extends cEventSubscriber{
 	//* Events
 	//******************************************************************
 	async onGridEvent(poEvent){
+		if (!this.active)
+			return
+
 		switch (poEvent.action){
 			case cCAGridEvent.notify.grid:
 				cDebug.write("got grid data, now convert to operations")
@@ -289,6 +295,7 @@ class cScramblerOpReader extends cEventSubscriber{
 				cCAScramblerEvent.notify.imported_ops,
 				aOps
 			)
+			this.active = false
 
 		} catch (e) {
 			if (e instanceof eCAScramblerException) {

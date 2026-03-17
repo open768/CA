@@ -147,13 +147,10 @@ class cCAScrambler extends cEventSubscriber{
 				break
 
 			case cCAGridEvent.notify.allConsumersDone:
-				cDebug.write("<<scrambler recevived cCAGridEvent.notify.allConsumersDone")
 				this._on_ca_grid_notify_all_consumers_done()
 				break
 
-			case cCAGridEvent.notify.nochange:
-
-			case cCAGridEvent.notify.repeatPattern:
+			case cCAGridEvent.notify.nochange, cCAGridEvent.notify.repeatPattern:
 			//something went wrong with the scrambling - stop and report an error
 				throw new eCAScramblerException("Cellular automata stopped unexpectedly")
 
