@@ -15,6 +15,74 @@ You the consumer of this code are solely and entirely responsible for importing 
 
 **************************************************************************/
 
+//####################################################################################################
+//#
+//####################################################################################################
+class cCAScramblerData extends cSparseArray{
+	index = {
+		row: 0, col: 0
+	}
+
+	fill_with_random_bits(){
+		var oIndex = this.index
+
+		if (oIndex.row <= this.rows && oIndex.col < this.cols)
+			while (oIndex.row < this.rows) {
+				while (oIndex.col < this.cols) {
+					this.set(
+						oIndex.row,
+						oIndex.col,
+						Math.random() < 0.5 ? 1 : 0
+					)
+					oIndex.col++
+				}
+
+				oIndex.col = 0
+				oIndex.row++
+			}
+
+	}
+	//********************************************************************
+	/**
+	 *
+	 * @param {string} psChar
+	 */
+	add_char_to_data(psChar) {
+		if (psChar.length !== 1)
+			throw new eCAScramblerException("only single characters can be added")
+		//get the binary representation of the character
+		var iAscii = psChar.charCodeAt(0)
+		var sBinary = cConverter.intToBinstr(iAscii)
+		if (sBinary.length > cCAScrambler.BITS_PER_CHAR)
+			throw new eCAScramblerException("character too long for the number of bits allocated per character")
+		sBinary = sBinary.padStart(
+			cCAScrambler.BITS_PER_CHAR,
+			"0"
+		)
+		for (var i = 0; i < sBinary.length; i++) {
+			var cBit = sBinary.charAt(i)
+			var iValue = (cBit === "1" ? 1 : 0)
+
+			this.set(
+				this.index.row,
+				this.index.col++,
+				iValue
+			)
+
+			if (this.index.col >= this.cols) {
+				this.index.col = 0
+				this.index.row++
+
+				if (this.index.row >= this.rows && this.index.col > 0)
+					throw new eCAScramblerException("overflow - too much data for scrambler size")
+			}
+		}
+	}
+}
+
+//####################################################################################################
+//#
+//####################################################################################################
 class cCAScrambler extends cEventSubscriber{
 	static PREFIX = "#CAv1#["
 	static SUFFIX = "]#END#"
@@ -26,14 +94,12 @@ class cCAScrambler extends cEventSubscriber{
 	/** @type {cCAGrid} */ grid = null
 
 	//-----------internal variables
-	_data = null	/** @type {cSparseArray} */
+	_data = null	/** @type {cCAScramblerData} */
 	_initial_runs_completed = 0
 	_rows = 0
 	_cols = 0
 	_stage = cCAScramblerStages.NOT_RUNNING
-	_grid_index = {
-		row: 0, col: 0
-	}
+
 	_rule_is_set = false
 
 	//********************************************************************
@@ -163,15 +229,12 @@ class cCAScrambler extends cEventSubscriber{
 	// reset  methods
 	//********************************************************************
 	_reset() {
-		this._data = new cSparseArray(
+		this._data = new cCAScramblerData(
 			this._rows,
 			this._cols
 		)
 		this.initial_runs = 0
 		this.initial_runs_completed = 0
-		this._grid_index = {
-			row: 0, col: 0
-		}
 
 		cCAScramblerEvent.fire_event(
 			this.base_name,
@@ -224,7 +287,7 @@ class cCAScrambler extends cEventSubscriber{
 		if (this._stage !== cCAScramblerStages.NOT_RUNNING)
 			throw new eCAScramblerException("already running")
 		if (!this._rule_is_set)
-			throw new eCAScramblerException("a scrambling rule must be set on the grid")
+			throw new eCAScramblerException("a CA rule must be set before scrambling")
 		if (!this.plaintext || this.plaintext.length === 0)
 			throw new eCAScramblerException("plaintext must be set")
 		if (!this.initial_runs)
@@ -232,7 +295,7 @@ class cCAScrambler extends cEventSubscriber{
 
 		//---------------
 		//add random junk to the end of the scrambler text until the grid is full
-		this._fillup_input()
+		this._fillup_data()
 		//then wait for the consumer to respond before going to the next stage
 	}
 
@@ -243,11 +306,12 @@ class cCAScrambler extends cEventSubscriber{
 		if (this._stage !== cCAScramblerStages.IMPORTING_OPS)
 			throw new eCAScramblerException("incorrect stage for scrambling")
 
-		//read the ca grid and convert into a set of operations to perform on the grid to scramble it
+		//read the ca grid and convert into a set of operations to perform on the data  to scramble it
 		var oReader = new cScramblerOpReader(this.base_name)
 		oReader.import_grid()
 
-		//next stage of scrambling will be triggered by the reader firing a notify_imported event once it has finished reading the grid and converting to operations
+		//next stage of scrambling will be triggered by the reader firing a notify_imported event
+		// once it has finished reading the grid and converting to operations
 	}
 
 	//********************************************************************
@@ -369,10 +433,10 @@ class cCAScrambler extends cEventSubscriber{
 		//convert text into binary format and populate the grid
 		this.plaintext = psText
 		var sText = cCAScrambler.PREFIX + psText + cCAScrambler.SUFFIX
-		//for each character in the text, add to the grid
+		//for each character in the text, add to the data
 		for (var i = 0; i < sText.length; i++) {
 			var sChar = sText.charAt(i)
-			this._add_char_to_grid(sChar)
+			this._data.add_char_to_data(sChar)
 		}
 
 		//tell consumers the grid has been updated and they should redraw
@@ -383,30 +447,13 @@ class cCAScrambler extends cEventSubscriber{
 	}
 
 	//********************************************************************
-	_fillup_input() {
+	_fillup_data() {
 
 		if (this._stage !== cCAScramblerStages.NOT_RUNNING)
 			throw new eCAScramblerException("incorrect stage fo filling input")
 		this._stage = cCAScramblerStages.FILL_INPUT
 
-		var oIndex = this._grid_index
-
-		if (oIndex.row <= this._rows && oIndex.col < this._cols) {
-			var oData = this._data /** @type {cSparseArray} @ */
-			while (oIndex.row < this._rows) {
-				while (oIndex.col < this._cols) {
-					oData.set(
-						oIndex.row,
-						oIndex.col,
-						Math.random() < 0.5 ? 1 : 0
-					)
-					oIndex.col++
-				}
-
-				oIndex.col = 0
-				oIndex.row++
-			}
-		}
+		this._data.fill_with_random_bits()
 
 		cCAScramblerEvent.fire_event(
 			this.base_name,
@@ -415,41 +462,4 @@ class cCAScrambler extends cEventSubscriber{
 		//next stage of scrambling will be triggered by the subscriber firing a notify_consumed event
 	}
 
-	//********************************************************************
-	/**
-	 *
-	 * @param {string} psChar
-	 */
-	_add_char_to_grid(psChar) {
-		if (psChar.length !== 1)
-			throw new eCAScramblerException("only single characters can be added to the grid")
-		//get the binary representation of the character
-		var iAscii = psChar.charCodeAt(0)
-		var sBinary = cConverter.intToBinstr(iAscii)
-		if (sBinary.length > cCAScrambler.BITS_PER_CHAR)
-			throw new eCAScramblerException("character too long for the number of bits allocated per character")
-		sBinary = sBinary.padStart(
-			cCAScrambler.BITS_PER_CHAR,
-			"0"
-		)
-		var oGrid = this._data /** @type {cSparseArray} @ */
-		for (var i = 0; i < sBinary.length; i++) {
-			var cBit = sBinary.charAt(i)
-			var iValue = (cBit === "1" ? 1 : 0)
-
-			oGrid.set(
-				this._grid_index.row,
-				this._grid_index.col++,
-				iValue
-			)
-
-			if (this._grid_index.col >= this._cols) {
-				this._grid_index.col = 0
-				this._grid_index.row++
-
-				if (this._grid_index.row >= this._rows && this._grid_index.col > 0)
-					throw new eCAScramblerException("grid overflow - too much data for the grid size")
-			}
-		}
-	}
 }

@@ -74,26 +74,24 @@ class cRandomnessChecker extends cStaticClass{
 		var iTotal = aCounts.reduce(
 			(piAccumulator, piValue) => piAccumulator + piValue,
 			0
-		) // total of the values read
+		)
 		var iMean = iTotal / aCounts.length
 
 		//work out avg std devlation
 		var iTotalVariance = aCounts.reduce(
 			(piSum, piValue) => piSum + (piValue - iMean) ** 2,
 			0
-		) //works out the total variance of the frequencies
+		)
 		var iAvgVariance = iTotalVariance / aCounts.length
 		var iStdDev = Math.sqrt(iAvgVariance)
-
-		// coefficient of variation: stddev relative to mean (0 = perfect uniform, higher = more skewed)
 		var iCoeffOfVariation = iStdDev / iMean
 
 		if (iCoeffOfVariation > this.MAX_DEVIATION) {
-			cDebug.write("Not random enough: CoV" + iCoeffOfVariation.toFixed(3) + "> threshold"	+ this.MAX_DEVIATION)
+			cDebug.write("Not random enough: " + iCoeffOfVariation.toFixed(3) + " > threshold "	+ this.MAX_DEVIATION)
 			return false
 		}
 
-		cDebug.write("Randomness check passed: CoV" + iCoeffOfVariation.toFixed(3) + "<= threshold"	+ this.MAX_DEVIATION)
+		cDebug.write("Randomness check passed: " + iCoeffOfVariation.toFixed(3) + " <= threshold "	+ this.MAX_DEVIATION)
 		return true
 	}
 
