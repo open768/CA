@@ -22,7 +22,8 @@ class cCAScramblerEvent extends cBaseEvent{
 		error: "SERR"
 	}
 	static notify = {
-		consumed: "SENC"
+		consumed: "SENC",
+		imported_ops: "SEIO",
 	}
 
 	static control_actions = {

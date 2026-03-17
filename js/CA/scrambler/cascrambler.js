@@ -45,7 +45,7 @@ class cCAScrambler extends cEventSubscriber{
 		this._reset()
 		cCAScramblerEvent.subscribe(
 			this.base_name,
-			[cCAScramblerEvent.actions.set_input, cCAScramblerEvent.notify.consumed],
+			[cCAScramblerEvent.actions.set_input, cCAScramblerEvent.notify.consumed, cCAScramblerEvent.notify.imported_ops],
 			poEvent => this.onScramblerEvent(poEvent)
 		)
 		cCARuleEvent.subscribe(
@@ -106,6 +106,10 @@ class cCAScrambler extends cEventSubscriber{
 			case cCAScramblerEvent.notify.consumed:
 			//the consumer has consumed the scrambled output and is ready for the next scramble
 				this._on_notify_scrambler_consumed()
+				break
+
+			case cCAScramblerEvent.notify.imported_ops:
+				cDebug.write("received imported operations - not implemented")
 				break
 		}
 	}

@@ -258,7 +258,6 @@ class cScramblerOpReader extends cEventSubscriber{
 	 * @param {cCAGrid} poGrid
 	 */
 	_process_grid(poGrid){
-		var aOps = null
 		try{
 		//check class is correct
 			if (!(poGrid instanceof cCAGrid))
@@ -271,15 +270,26 @@ class cScramblerOpReader extends cEventSubscriber{
 			if (oBitStream.size() !== poGrid.rows * poGrid.cols)
 				throw new eCAScramblerException("bitstream length does not match grid size")
 
+			//check randomness
 			oBitStream.backup_data()
 			if (!cRandomnessChecker.check_randomness(oBitStream))
 				throw new eCAScramblerException("grid data is not random enough to be converted to operations")
 
-			oBitStream.restore_data()
+			//read operations from the bitstream
+			oBitStream.restore_data(true)
 			if (oBitStream.size() !== poGrid.rows * poGrid.cols)
 				throw new eCAScramblerException("bitstream length does not match grid size")
 
 			var aOps = this._read_ops(oBitStream)
+			cDebug.write("imported " + aOps.length + " operations from grid data")
+
+			//notify subscribers
+			cCAScramblerEvent.fire_event(
+				this.basename,
+				cCAScramblerEvent.notify.imported_ops,
+				aOps
+			)
+
 		} catch (e) {
 			if (e instanceof eCAScramblerException) {
 				cDebug.write("Error processing grid: " + e.message)
@@ -301,6 +311,7 @@ class cScramblerOpReader extends cEventSubscriber{
 	//******************************************************************
 	/**
 	 * @param {jsbitstream} poBitStream
+	 * @returns {Array}
 	 */
 	_read_ops(poBitStream){
 		var aOps = []
@@ -352,6 +363,5 @@ class cScramblerOpReader extends cEventSubscriber{
 		}
 
 		return aOps
-
 	}
 }
