@@ -338,15 +338,6 @@ class cCAScrambler extends cEventSubscriber{
 				this._stage = cCAScramblerStages.INITIAL_RUNS
 				this._step()
 				break
-
-			case cCAScramblerStages.SCRAMBLING:
-				throw new eCAScramblerException("scrambling not implemented")
-
-			case cCAScramblerStages.NOT_RUNNING:
-				break
-
-			default:
-				throw new eCAScramblerException("unexpected stage " + this._stage + " for notify consumed")
 		}
 	}
 
@@ -369,15 +360,6 @@ class cCAScrambler extends cEventSubscriber{
 						cCAScramblerTypes.STEP_DELAY_MS
 					)
 				break
-
-			case cCAScramblerStages.SCRAMBLING:
-				throw new eCAScramblerException("scrambling not implemented")
-
-			case cCAScramblerStages.NOT_RUNNING:
-				break
-
-			default:
-				throw new eCAScramblerException("unexpected stage " + this._stage + " for grid all consumers done")
 		}
 
 	}

@@ -17,21 +17,22 @@ You the consumer of this code are solely and entirely responsible for importing 
 //############################################################################
 class cCAScramblerEvent extends cBaseEvent{
 	static actions = {
-		status: "SEST",
-		set_input: "SESI",
-		reset: "SER",
-		draw_scrambler_grid: "SEDG",
-		error: "SERR"
+		status: "AST",
+		set_input: "ASI",
+		reset: "AR",
+		draw_scrambler_grid: "ADSG",
+		error: "AERR"
 	}
 	static notify = {
-		consumed: "SENC",
-		imported_ops: "SEIO",
-		scrambling_complete: "SESC",
-		operation_complete: "SEOC"
+		consumed: "NC",
+		imported_ops: "NIO",
+		scrambling_complete: "NSC",
+		operation_complete: "NOCOM",
+		operation_consumed: "NOCON"
 	}
 
 	static control_actions = {
-		scramble: "SEA"
+		scramble: "CS"
 	}
 }
 

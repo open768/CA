@@ -3,20 +3,20 @@
 //* **************************************************************************
 class cCAActionEvent extends cBaseEvent {
 	static actions = {
-		ready: 'AEAR',
-		grid_init: 'AEAGI',
-		control: 'AEAC',
-		force_grid_redraw: 'AEAFGR',
+		ready: 'AR',
+		grid_init: 'AGI',
+		control: 'AC',
+		force_grid_redraw: 'AFGR',
 	}
 
 	static notify = {
-		import_grid: 'AENIG',
+		import_grid: 'AING',
 	}
 
 	static control_actions = {
-		play: "AECAP",
-		stop: "AECAS1",
-		step: "AECAS2",
+		play: "CAP",
+		stop: "CAS1",
+		step: "CAS2",
 	}
 }
 
@@ -24,9 +24,9 @@ class cCAActionEvent extends cBaseEvent {
 
 class cCARuleEvent extends cBaseEvent {
 	static actions = {
-		update_rule: 'REU',
-		set_rule: 'RESR',
-		status: 'REST',
+		update_rule: 'AU',
+		set_rule: 'ASR',
+		status: 'AST',
 	}
 }
 
@@ -34,30 +34,30 @@ class cCARuleEvent extends cBaseEvent {
 
 class cCAGridEvent extends cBaseEvent {
 	static actions = {
-		init_grid: 'GEI',
-		set_cell: 'GES',
-		get_grid: 'GEGG'
+		init_grid: 'AI',
+		set_cell: 'ASC',
+		get_grid: 'AGG'
 	}
 
 	static notify = {
-		clear: 'GENC',
-		done: 'GEND',
-		changedCellsConsumed: 'GENCC',
-		allConsumersDone: 'GENCD',
-		nochange: 'GENNC',
-		repeatPattern: 'GENRP',
-		grid: 'GEGD'
+		clear: 'NC',
+		done: 'ND',
+		changedCellsConsumed: 'NCCC',
+		allConsumersDone: 'NACD',
+		nochange: 'NNC',
+		repeatPattern: 'NRP',
+		grid: 'NGD'
 	}
 
 	static done = {
-		cells_consumed: 'GEDDCC'
+		cells_consumed: 'DCC'
 	}
 }
 
 class cCACanvasEvent extends cBaseEvent {
 	static actions = {
-		grid_status: 'CEG',
-		set_grid: 'CESG',
-		import: 'CEI',
+		grid_status: 'AG',
+		set_grid: 'ASG',
+		import: 'AI',
 	}
 }
