@@ -26,6 +26,8 @@ class cCAScramblerEvent extends cBaseEvent{
 	static notify = {
 		consumed: "SENC",
 		imported_ops: "SEIO",
+		scrambling_complete: "SESC",
+		operation_complete: "SEOC"
 	}
 
 	static control_actions = {
@@ -99,6 +101,13 @@ class cOpDefs extends cStaticClass{
 	static MAX_OP_ID = -1
 	static OP_ID_BITS = -1
 
+	static ROW_VALUE = 0
+	static COL_VALUE = 1
+	static ROW_LEFT_VALUE = 0
+	static ROW_RIGHT_VALUE = 1
+	static COL_UP_VALUE = 0
+	static COL_DOWN_VALUE = 1
+
 	//*********************************************************************
 	static init(){
 		this.IDS = new Map([
@@ -165,5 +174,21 @@ cOpDefs.init()
 
 class cTransformOp {
 	opcode = null		/** @type {number} */
-	params = null		/** @type {Map<number, number>} */
+	params = new Map()		/** @type {Map<number, number>} */
+
+	constructor(piOpcode){
+		this.opcode = piOpcode
+	}
+}
+
+class cChangedCell {
+	row = null
+	col = null
+	value = null
+
+	constructor(piRow, piCol, piValue){
+		this.row = piRow
+		this.col = piCol
+		this.value = piValue
+	}
 }

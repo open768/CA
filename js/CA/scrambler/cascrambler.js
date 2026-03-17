@@ -231,6 +231,7 @@ class cCAScrambler extends cEventSubscriber{
 		)
 		this.initial_runs = 0
 		this.initial_runs_completed = 0
+		this._stage = cCAScramblerStages.NOT_RUNNING
 
 		cCAScramblerEvent.fire_event(
 			this.base_name,
@@ -320,9 +321,14 @@ class cCAScrambler extends cEventSubscriber{
 		if (this._stage !== cCAScramblerStages.IMPORTING_OPS)
 			throw new eCAScramblerException("incorrect stage for importing ops")
 
+		cDebug.write("starting to run operations to scramble the data")
 		this._stage = cCAScramblerStages.SCRAMBLING
-
-		cDebug.error("scrambling - not implemented")
+		var oRunner = new cScramblerOpRunner(
+			this.base_name,
+			this._data,
+		)
+		oRunner.run_ops( paOps )
+		//events will be fired by the runner as it executes the operations to indicate progress and when the scrambling is complete
 	}
 
 	//********************************************************************

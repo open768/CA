@@ -229,9 +229,8 @@ class cScramblerOpReader extends cEventSubscriber{
 				iop_code = iop_code % cOpDefs.MAX_OP_ID //wrap around if invalid opcode
 
 			//create the object
-			var oTransform_op = new cTransformOp()
+			var oTransform_op = new cTransformOp(iop_code)
 			{
-				oTransform_op.opcode = iop_code
 				var aParamDefs = cOpDefs.DEFS.get(iop_code)
 				//check that there is anough bits left to read the params
 				var iBitsRequired = aParamDefs.reduce(
@@ -245,7 +244,6 @@ class cScramblerOpReader extends cEventSubscriber{
 					break //not enough bits left
 
 				//populate params and values
-				var oParams = new Map()
 				for (var iParam of aParamDefs){
 					// get param definition
 					var oParam = cOpDefs.PARAMS.get(iParam)
@@ -257,11 +255,10 @@ class cScramblerOpReader extends cEventSubscriber{
 					)
 
 					//update map
-					oParams.set(
+					oTransform_op.params.set(
 						iParam,
 						iValue
 					)
-					oTransform_op.params = oParams
 				}
 
 				aOps.push(oTransform_op)
