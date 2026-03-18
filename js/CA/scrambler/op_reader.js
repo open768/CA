@@ -44,9 +44,12 @@ class cBitStreamHelper {
 			throw new eOpReaderBitsExhausted("not enough bits available")
 
 		var iValue = this.bitstream.readUBits(piBitLength)
+		iValue = cCommon.get_wraparound_value(
+			iValue,
+			piMaxValue,
+			0
+		)
 
-		if (iValue > piMaxValue)
-			iValue = iValue % (piMaxValue + 1) //wrap around if value exceeds max
 		return iValue
 	}
 }

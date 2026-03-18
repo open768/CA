@@ -60,53 +60,78 @@ class cScramblerOpRunner extends cEventSubscriber{
 		this._changed_cells = []
 		/** @type {cTransformOp} */ var oOp = this._operations.pop()
 
+		var aChanged_cells /**@type {Array<cChangedCell>} */
 		//perform the operation and build list of changed cells
 		switch (oOp.opcode) {
 			case cOpConsts.LINE_OP:
-				this._op_line(oOp)
+				aChanged_cells = this._op_line(oOp)
 				break
 
 			case cOpConsts.TRANSLATE_OP:
-				this._op_translate(oOp)
+				aChanged_cells = this._op_translate(oOp)
 				break
 
 			case cOpConsts.SQUARE_OP:
-				this._op_square(oOp)
+				aChanged_cells = this._op_square(oOp)
 				break
 
 			case cOpConsts.TRANSLATE_CELL_OP:
-				this._op_translate_cell(oOp)
+				aChanged_cells = this._op_translate_cell(oOp)
 				break
 
 			case cOpConsts.UNZIP_OP:
 				// Handle UNZIP_OP
-				this._op_unzip(oOp)
+				aChanged_cells = this._op_unzip(oOp)
 				break
 
 			case cOpConsts.REFLECTION_OP:
 				// Handle REFLECTION_OP
-				this._op_reflection(oOp)
+				aChanged_cells = this._op_reflection(oOp)
 				break
 
 			case cOpConsts.TRANSPOSE_OP:
 				// Handle TRANSPOSE_OP
-				this._op_transpose(oOp)
+				aChanged_cells = this._op_transpose(oOp)
 				break
 
 			case cOpConsts.SKEW_OP:
 				// Handle SKEW_OP
-				this._op_skew(oOp)
+				aChanged_cells = this._op_skew(oOp)
 				break
 
 			default:
 				throw new eCAScramblerException("unknown operation code: " + oOp.opcode)
 		}
 
-		//notify consumers of the completed operation, passing the changed cells
+		//----apply the changed cells
+		if (!aChanged_cells){
+			cDebug.write("skipping error")
+			/*
+			cCAScramblerEvent.fire_event(
+				this._base_name,
+				cCAScramblerEvent.actions.error,
+				"no changed cells - scrambling stopped"
+			)
+			throw new eCAScramblerException("no changed cells found")
+			*/
+			this._run_next_op()
+			return
+		}
+
+		var oData = this._data /** @type {cCAScramblerData} */
+		aChanged_cells.forEach(
+			poCell=>oData.set(
+				poCell.row,
+				poCell.col,
+				poCell.value
+			)
+		)
+
+		//----notify consumers of the completed operation, passing the changed cells
 		cCAScramblerEvent.fire_event(
 			this._base_name,
 			cCAScramblerEvent.notify.operation_complete,
-			this._changed_cells
+			aChanged_cells
 		)
 		//the next operation will be triggered by the consumer firing a notify_consumed_operation event
 	}
@@ -118,8 +143,18 @@ class cScramblerOpRunner extends cEventSubscriber{
 		var iRowOrCol, iIndex, iDirection, iDistance
 		iRowOrCol = poOp.params.get(cOpConsts.ROWCOL_PARAM		)
 		iIndex = poOp.params.get(cOpConsts.INDEX_PARAM		)
+		iIndex = cCommon.get_wraparound_value(
+			iIndex,
+			this._data.rows -1,
+			0
+		)
 		iDirection = poOp.params.get(cOpConsts.DIRECTION_PARAM	)
 		iDistance = poOp.params.get(cOpConsts.DISTANCE_PARAM	)
+		iDistance = cCommon.get_wraparound_value(
+			iDistance,
+			this._data.rows-1,
+			0
+		)
 
 		return [iRowOrCol, iIndex, iDirection, iDistance]
 	}
@@ -164,6 +199,8 @@ class cScramblerOpRunner extends cEventSubscriber{
 				irow,
 				icol
 			)
+			if (ivalue == null)
+				cDebug.error("found a null value")
 
 			// create a changed cell target
 			irow_target = cCommon.get_wraparound_value(
@@ -207,6 +244,7 @@ class cScramblerOpRunner extends cEventSubscriber{
 	/** ******************************************************************
 	 * @param {cTransformOp} poOp
 	 */
+	/* eslint-disable no-unused-vars*/
 	_op_translate(poOp){
 		cDebug.write("translate op not implemented yet")
 	}

@@ -108,6 +108,7 @@ class cOpDefs extends cStaticClass{
 	static DEFS = null
 	static MAX_OP_ID = -1
 	static OP_ID_BITS = -1
+	static MAX_INDEX = 199
 
 	//*********************************************************************
 	static init(){
@@ -127,26 +128,26 @@ class cOpDefs extends cStaticClass{
 		this.OP_ID_BITS = cCommon.intBitSize(this.MAX_OP_ID)
 
 		//---------------------------------------------------------------------
-		var i200bits = cCommon.intBitSize(200)
+		var iIndexbits = cCommon.intBitSize(this.MAX_INDEX)
 
 		this.PARAMS = new Map([
 			[cOpConsts.ROWCOL_PARAM, {
 				name: "row or col", max: 1, bits: 1
 			}],
 			[cOpConsts.INDEX_PARAM, {
-				name: "index", max: 200, bits: i200bits
+				name: "index", max: this.MAX_INDEX, bits: iIndexbits
 			}],
 			[cOpConsts.ROW_PARAM, {
-				name: "row", max: 200, bits: i200bits
+				name: "row", max: this.MAX_INDEX, bits: iIndexbits
 			}],
 			[cOpConsts.COL_PARAM, {
-				name: "col", max: 200, bits: i200bits
+				name: "col", max: this.MAX_INDEX, bits: iIndexbits
 			}],
 			[cOpConsts.DIRECTION_PARAM, {
 				name: "direction", max: 1, bits: 1
 			}],
 			[cOpConsts.DISTANCE_PARAM, {
-				name: "distance", max: 200, bits: i200bits
+				name: "distance", max: this.MAX_INDEX, bits: iIndexbits
 			}]
 		])
 
