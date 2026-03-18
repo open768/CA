@@ -93,21 +93,21 @@ class cOpConsts extends cStaticClass{
 	static DIRECTION_PARAM = 4
 	static DISTANCE_PARAM = 5
 
-}
-
-class cOpDefs extends cStaticClass{
-	static IDS = null
-	static PARAMS = null
-	static DEFS = null
-	static MAX_OP_ID = -1
-	static OP_ID_BITS = -1
-
 	static ROW_VALUE = 0
 	static COL_VALUE = 1
 	static ROW_LEFT_VALUE = 0
 	static ROW_RIGHT_VALUE = 1
 	static COL_UP_VALUE = 0
 	static COL_DOWN_VALUE = 1
+}
+
+// #############################################################################################
+class cOpDefs extends cStaticClass{
+	static IDS = null
+	static PARAMS = null
+	static DEFS = null
+	static MAX_OP_ID = -1
+	static OP_ID_BITS = -1
 
 	//*********************************************************************
 	static init(){
@@ -173,6 +173,7 @@ class cOpDefs extends cStaticClass{
 }
 cOpDefs.init()
 
+// #############################################################################################
 class cTransformOp {
 	opcode = null		/** @type {number} */
 	params = new Map()		/** @type {Map<number, number>} */
@@ -182,6 +183,7 @@ class cTransformOp {
 	}
 }
 
+// #############################################################################################
 class cChangedCell {
 	row = null
 	col = null

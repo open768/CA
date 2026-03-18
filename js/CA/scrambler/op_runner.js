@@ -63,39 +63,39 @@ class cScramblerOpRunner extends cEventSubscriber{
 		//perform the operation and build list of changed cells
 		switch (oOp.opcode) {
 			case cOpConsts.LINE_OP:
-				this._do_op_line(oOp)
+				this._op_line(oOp)
 				break
 
 			case cOpConsts.TRANSLATE_OP:
-				this._do_op_translate(oOp)
+				this._op_translate(oOp)
 				break
 
 			case cOpConsts.SQUARE_OP:
-				this._do_op_square(oOp)
+				this._op_square(oOp)
 				break
 
 			case cOpConsts.TRANSLATE_CELL_OP:
-				this._do_op_translate_cell(oOp)
+				this._op_translate_cell(oOp)
 				break
 
 			case cOpConsts.UNZIP_OP:
 				// Handle UNZIP_OP
-				this._do_op_unzip(oOp)
+				this._op_unzip(oOp)
 				break
 
 			case cOpConsts.REFLECTION_OP:
 				// Handle REFLECTION_OP
-				this._do_op_reflection(oOp)
+				this._op_reflection(oOp)
 				break
 
 			case cOpConsts.TRANSPOSE_OP:
 				// Handle TRANSPOSE_OP
-				this._do_op_transpose(oOp)
+				this._op_transpose(oOp)
 				break
 
 			case cOpConsts.SKEW_OP:
 				// Handle SKEW_OP
-				this._do_op_skew(oOp)
+				this._op_skew(oOp)
 				break
 
 			default:
@@ -111,45 +111,146 @@ class cScramblerOpRunner extends cEventSubscriber{
 		//the next operation will be triggered by the consumer firing a notify_consumed_operation event
 	}
 
-	//** ******************************************************************
-	//** ******************************************************************
-	_do_op_line(poOp){
+	/** ******************************************************************
+	 * @param {cTransformOp} poOp
+	 */
+	_get_standard_op_params(poOp){
+		var iRowOrCol, iIndex, iDirection, iDistance
+		iRowOrCol = poOp.params.get(cOpConsts.ROWCOL_PARAM		)
+		iIndex = poOp.params.get(cOpConsts.INDEX_PARAM		)
+		iDirection = poOp.params.get(cOpConsts.DIRECTION_PARAM	)
+		iDistance = poOp.params.get(cOpConsts.DISTANCE_PARAM	)
+
+		return [iRowOrCol, iIndex, iDirection, iDistance]
+	}
+
+	//********************************************************************
+	//* OPerations
+	//********************************************************************
+
+	/** ******************************************************************
+	 * @param {cTransformOp} poOp
+	 * @returns {Array<cChangedCell>}
+	 */
+	_op_line(poOp){
+		var [iRowOrCol, iIndex, iDirection, iDistance] = this._get_standard_op_params(poOp)
+		var irow, icol, icount, icol_inc, irow_inc, irow_delta, icol_delta, irow_target, icol_target
+		var aChanged_cells = []
+
+		//set up the params for the loop based on whether this is a row or column operation and the direction
+		if (iRowOrCol == cOpConsts.ROW_VALUE){
+			icount = this._data.cols
+			irow_inc = 0
+			icol = 0
+			irow = iIndex
+			icol_inc = 1
+			irow_delta = 0
+			icol_delta = (iDirection == cOpConsts.ROW_LEFT_VALUE?-iDistance:iDistance)
+		}else{
+			icount = this._data.rows
+			icol = iIndex
+			irow = 0
+			icol_inc = 0
+			irow_inc = 1
+			irow_delta = (iDirection == cOpConsts.COL_UP_VALUE?-iDistance:iDistance)
+			icol_delta = 0
+		}
+
+		//run the loop to get the changed cells - they will be applied to the data by the caller
+		var ivalue
+		while (icount--){
+			//---- get the value from the current
+			ivalue = this._data.get(
+				irow,
+				icol
+			)
+
+			// create a changed cell target
+			irow_target = cCommon.get_wraparound_value(
+				irow + irow_delta,
+				this._data.rows -1,
+				0
+			)
+			icol_target = cCommon.get_wraparound_value(
+				icol + icol_delta,
+				this._data.cols -1,
+				0
+			)
+
+			aChanged_cells.push(new cChangedCell(
+				irow_target,
+				icol_target,
+				ivalue
+			))
+
+			//---- next row_col
+			if (irow_inc)
+				irow = cCommon.get_wraparound_value(
+					irow+ irow_inc,
+					this._data.rows-1,
+					0
+				)
+
+			if (icol_inc)
+				icol = cCommon.get_wraparound_value(
+					icol+ icol_inc,
+					this._data.cols-1,
+					0
+				)
+
+		}
+
+		return aChanged_cells
 
 	}
-	//** ******************************************************************
-	//** ******************************************************************
-	_do_op_translate(poOp){
 
+	/** ******************************************************************
+	 * @param {cTransformOp} poOp
+	 */
+	_op_translate(poOp){
+		cDebug.write("translate op not implemented yet")
 	}
-	//** ******************************************************************
-	//** ******************************************************************
-	_do_op_square(poOp){
 
+	/** ******************************************************************
+	 * @param {cTransformOp} poOp
+	 */
+	_op_square(poOp){
+		cDebug.write("square op not implemented yet")
 	}
-	//** ******************************************************************
-	//** ******************************************************************
-	_do_op_translate_cell(poOp){
 
+	/** ******************************************************************
+	 * @param {cTransformOp} poOp
+	 */
+	_op_translate_cell(poOp){
+		cDebug.write("translate cell op not implemented yet")
 	}
-	//** ******************************************************************
-	//** ******************************************************************
-	_do_op_unzip(poOp){
 
+	/** ******************************************************************
+	 * @param {cTransformOp} poOp
+	 */
+	_op_unzip(poOp){
+		cDebug.write("translate op not implemented yet")
 	}
-	//** ******************************************************************
-	//** ******************************************************************
-	_do_op_reflection(poOp){
 
+	/** ******************************************************************
+	 * @param {cTransformOp} poOp
+	 */
+	_op_reflection(poOp){
+		cDebug.write("translate op not implemented yet")
 	}
-	//** ******************************************************************
-	//** ******************************************************************
-	_do_op_transpose(poOp){
 
+	/** ******************************************************************
+	 * @param {cTransformOp} poOp
+	 */
+	_op_transpose(poOp){
+		cDebug.write("translate op not implemented yet")
 	}
-	//** ******************************************************************
-	//** ******************************************************************
-	_do_op_skew(poOp){
 
+	/** ******************************************************************
+	 * @param {cTransformOp} poOp
+	 */
+	_op_skew(poOp){
+		cDebug.write("translate op not implemented yet")
 	}
 
 }
