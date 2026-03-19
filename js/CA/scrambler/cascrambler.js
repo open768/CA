@@ -43,7 +43,7 @@ class cCAScramblerData extends cSparseArray{
 	 *
 	 * @param {string} psChar
 	 */
-	add_char_to_data(psChar) {
+	add_char(psChar) {
 		if (psChar.length !== 1)
 			throw new eCAScramblerException("only single characters can be added")
 		//get the binary representation of the character
@@ -73,6 +73,21 @@ class cCAScramblerData extends cSparseArray{
 					throw new eCAScramblerException("overflow - too much data for scrambler size")
 			}
 		}
+	}
+
+	/**
+	 *
+	 * @param {string} psData
+	 */
+	add_string(psText){
+		if ( typeof psText !== "string")
+			throw new eCAScramblerException("only strings supported")
+
+		for (var i = 0; i < psText.length; i++){
+			var sChar = psText.charAt(i)
+			this.add_char(sChar)
+		}
+
 	}
 }
 
@@ -235,7 +250,7 @@ class cCAScrambler extends cEventSubscriber{
 
 		cCAScramblerEvent.fire_event(
 			this.base_name,
-			cCAScramblerEvent.actions.reset
+			cCAScramblerEvent.notify.reset
 		)
 	}
 
@@ -415,14 +430,10 @@ class cCAScrambler extends cEventSubscriber{
 
 		this._reset()
 
-		//convert text into binary format and populate the grid
+		//binary format and populate the grid
 		this.plaintext = psText
 		var sText = cCAScrambler.PREFIX + psText + cCAScrambler.SUFFIX
-		//for each character in the text, add to the data
-		for (var i = 0; i < sText.length; i++) {
-			var sChar = sText.charAt(i)
-			this._data.add_char_to_data(sChar)
-		}
+		this._data.add_string(sText)
 
 		//tell consumers the grid has been updated and they should redraw
 		cCAScramblerEvent.fire_event(
