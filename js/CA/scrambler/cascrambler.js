@@ -89,6 +89,23 @@ class cCAScramblerData extends cSparseArray{
 		}
 
 	}
+
+	/**
+	 *
+	 * @param {Array<cChangedCell>} paList
+	 */
+	set_multiple( paList){
+		if (!Array.isArray(paList))
+			throw new eCAScramblerException("expecting an array")
+
+		paList.forEach(
+			poCell=>this.set(
+				poCell.row,
+				poCell.col,
+				poCell.value
+			)
+		)
+	}
 }
 
 //####################################################################################################

@@ -103,9 +103,9 @@ class cScramblerOpRunner extends cEventSubscriber{
 				throw new eCAScramblerException("unknown operation code: " + oOp.opcode)
 		}
 
-		//----apply the changed cells
+		//----check changed cells
 		if (!aChanged_cells){
-			cDebug.write("skipping error")
+			cDebug.write("DEBUG: skipping nochanged cells")
 			/*
 			cCAScramblerEvent.fire_event(
 				this._base_name,
@@ -118,14 +118,8 @@ class cScramblerOpRunner extends cEventSubscriber{
 			return
 		}
 
-		var oData = this._data /** @type {cCAScramblerData} */
-		aChanged_cells.forEach(
-			poCell=>oData.set(
-				poCell.row,
-				poCell.col,
-				poCell.value
-			)
-		)
+		//----apply the changed cells
+		this._data.set_multiple(aChanged_cells)
 
 		//----notify consumers of the completed operation, passing the changed cells
 		cCAScramblerEvent.fire_event(
