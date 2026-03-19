@@ -15,6 +15,12 @@ You the consumer of this code are solely and entirely responsible for importing 
 //############################################################################
 //# scrambler types and constants
 //############################################################################
+class cCAScramblerCanvasEvent extends cBaseEvent{
+	static notify = {
+		consumed_changes: "NCC",
+	}
+}
+
 class cCAScramblerEvent extends cBaseEvent{
 	static actions = {
 		status: "AST",

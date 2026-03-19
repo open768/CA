@@ -2,6 +2,10 @@
 class cCAScrambleCanvas extends cJQueryWidgetClass {
 	_canvas = null /** @type {Jquery} */
 	_scrambler = null /** @type {cCAScrambler} */
+	ACTIVE_COLOUR = "black"
+	INACTIVE_COLOUR = "white"
+	HILITE_COLOUR = "red"
+	HILITE_DELAY = 500
 
 	/*
 	 * this widget is responsible for drawing the contents of the underlying scrambler onto a canvas
@@ -34,7 +38,7 @@ class cCAScrambleCanvas extends cJQueryWidgetClass {
 		)
 		cCAScramblerEvent.subscribe(
 			poOptions.base_name,
-			[cCAScramblerEvent.notify.reset, cCAScramblerEvent.actions.draw_scrambler_grid],
+			[cCAScramblerEvent.notify.reset, cCAScramblerEvent.actions.draw_scrambler_grid, cCAScramblerEvent.notify.operation_complete],
 			poEvent=>this.onScramblerEvent(poEvent)
 		)
 
@@ -65,6 +69,14 @@ class cCAScrambleCanvas extends cJQueryWidgetClass {
 			case cCAScramblerEvent.actions.draw_scrambler_grid:
 				this._clear_canvas()
 				this._draw_canvas( )
+				break
+
+			case cCAScramblerEvent.notify.operation_complete:
+				this._draw_changes(
+					poEvent.data,
+					true
+				)
+				break
 		}
 	}
 
@@ -128,13 +140,20 @@ class cCAScrambleCanvas extends cJQueryWidgetClass {
 	}
 
 	//********************************************************************
-	_draw_cell(piValue, piRow, piCol){
+	/**
+	 *
+	 * @param {number} piValue
+	 * @param {number} piRow
+	 * @param {number} piCol
+	 * @param {boolean} pbHighlight
+	 */
+	_draw_cell(piValue, piRow, piCol, pbHighlight = false){
 		var oOptions = this.options
 		var iy = (piRow -1)* oOptions.cell_size
 		var ix = (piCol -1)* oOptions.cell_size
 
 		// ------------------draw
-		var sFill = piValue ? '#000' : '#fff'
+		var sFill = piValue ? this.ACTIVE_COLOUR : this.INACTIVE_COLOUR
 		this._canvas.drawRect({
 			fillStyle: sFill,
 			x: ix,
@@ -143,7 +162,51 @@ class cCAScrambleCanvas extends cJQueryWidgetClass {
 			height: oOptions.cell_size,
 			strokeStyle: 'transparent',
 		})
+
+		if (pbHighlight)
+			this._canvas.drawRect({
+				strokeStyle: this.HILITE_COLOUR,
+				strokeWidth: 2,
+				x: ix,
+				y: iy,
+				width: oOptions.cell_size,
+				height: oOptions.cell_size,
+			})
+
 	}
+
+	/**
+	 *
+	 * @param {Array<cChangedCell>} paCells
+	 * @param {boolean} pbHighlight
+	 */
+	_draw_changes(paCells, pbHighlight ){
+		//for each of the cells that changed, redraw the cell
+		paCells.forEach(oCell =>
+			this._draw_cell(
+				oCell.value,
+				oCell.row,
+				oCell.col,
+				true
+			))
+
+		//then after a delay redraw the cells without the highlight
+		if (pbHighlight)
+			setTimeout(
+				()=>this._draw_changes(
+					paCells,
+					false
+				),
+				this.HILITE_DELAY
+			)
+		else
+			//fire the consumed event to indicate that the changes have been drawn
+			cCAScramblerEvent.fire_event(
+				this.options.base_name,
+				cCAScramblerCanvasEvent.notify.consumed_changes
+			)
+	}
+
 }
 
 //#############################################################################
