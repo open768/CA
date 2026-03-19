@@ -22,20 +22,19 @@ class cCAScramblerData extends cSparseArray{
 	fill_with_random_bits(){
 		var oIndex = this.index
 
-		if (oIndex.row <= this.rows && oIndex.col < this.cols)
-			while (oIndex.row < this.rows) {
-				while (oIndex.col < this.cols) {
-					this.set(
-						oIndex.row,
-						oIndex.col,
-						Math.random() < 0.5 ? 1 : 0
-					)
-					oIndex.col++
-				}
-
-				oIndex.col = 0
-				oIndex.row++
+		while (oIndex.row < this.rows) {
+			while (oIndex.col < this.cols) {
+				this.set(
+					oIndex.row,
+					oIndex.col,
+					Math.random() < 0.5 ? 1 : 0
+				)
+				oIndex.col++
 			}
+
+			oIndex.col = 0
+			oIndex.row++
+		}
 
 	}
 	//********************************************************************
@@ -77,7 +76,8 @@ class cCAScramblerData extends cSparseArray{
 
 	/**
 	 *
-	 * @param {string} psData
+	 * @param {string} psText
+	 * @returns {void}
 	 */
 	add_string(psText){
 		if ( typeof psText !== "string")
@@ -244,6 +244,8 @@ class cCAScrambler extends cEventSubscriber{
 			this._rows,
 			this._cols
 		)
+		this._data.starts_at_zero = true
+
 		this.initial_runs = 0
 		this.initial_runs_completed = 0
 		this._stage = cCAScramblerStages.NOT_RUNNING
