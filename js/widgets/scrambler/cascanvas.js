@@ -34,7 +34,7 @@ class cCAScrambleCanvas extends cJQueryWidgetClass {
 		)
 		cCAScramblerEvent.subscribe(
 			poOptions.base_name,
-			[cCAScramblerEvent.actions.reset, cCAScramblerEvent.actions.draw_scrambler_grid],
+			[cCAScramblerEvent.notify.reset, cCAScramblerEvent.actions.draw_scrambler_grid],
 			poEvent=>this.onScramblerEvent(poEvent)
 		)
 

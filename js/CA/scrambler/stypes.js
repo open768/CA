@@ -99,6 +99,8 @@ class cOpConsts extends cStaticClass{
 	static ROW_RIGHT_VALUE = 1
 	static COL_UP_VALUE = 0
 	static COL_DOWN_VALUE = 1
+
+	static MIN_INDEX_VALUE = 1
 }
 
 // #############################################################################################
@@ -106,9 +108,10 @@ class cOpDefs extends cStaticClass{
 	static IDS = null
 	static PARAMS = null
 	static DEFS = null
-	static MAX_OP_ID = -1
-	static OP_ID_BITS = -1
-	static MAX_INDEX = 199
+	static MAX_OP_ID = cOpConsts.SKEW_OP
+	static MIN_OP_ID = cOpConsts.LINE_OP
+	static OP_ID_BITS = cCommon.intBitSize(cOpConsts.SKEW_OP)
+	static MAX_INDEX = 200
 
 	//*********************************************************************
 	static init(){
@@ -124,30 +127,26 @@ class cOpDefs extends cStaticClass{
 		])
 
 		//---------------------------------------------------------------------
-		this.MAX_OP_ID = cOpConsts.SKEW_OP
-		this.OP_ID_BITS = cCommon.intBitSize(cOpConsts.SKEW_OP)
-
-		//---------------------------------------------------------------------
 		var iIndexbits = cCommon.intBitSize(this.MAX_INDEX)
 
 		this.PARAMS = new Map([
 			[cOpConsts.ROWCOL_PARAM, {
-				name: "row or col", max: 1, bits: 1
+				name: "row or col", min: 0, max: 1, bits: 1
 			}],
 			[cOpConsts.INDEX_PARAM, {
-				name: "index", max: this.MAX_INDEX, bits: iIndexbits
+				name: "index", min: cOpConsts.MIN_INDEX_VALUE, max: this.MAX_INDEX, bits: iIndexbits
 			}],
 			[cOpConsts.ROW_PARAM, {
-				name: "row", max: this.MAX_INDEX, bits: iIndexbits
+				name: "row", min: cOpConsts.MIN_INDEX_VALUE, max: this.MAX_INDEX, bits: iIndexbits
 			}],
 			[cOpConsts.COL_PARAM, {
-				name: "col", max: this.MAX_INDEX, bits: iIndexbits
+				name: "col", min: cOpConsts.MIN_INDEX_VALUE, max: this.MAX_INDEX, bits: iIndexbits
 			}],
 			[cOpConsts.DIRECTION_PARAM, {
-				name: "direction", max: 1, bits: 1
+				name: "direction", min: 0, max: 1, bits: 1
 			}],
 			[cOpConsts.DISTANCE_PARAM, {
-				name: "distance", max: this.MAX_INDEX, bits: iIndexbits
+				name: "distance", min: cOpConsts.MIN_INDEX_VALUE, max: this.MAX_INDEX, bits: iIndexbits
 			}]
 		])
 

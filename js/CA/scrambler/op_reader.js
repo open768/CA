@@ -39,7 +39,7 @@ class cBitStreamHelper {
 	 * @throws {eScramblerOpReaderException} if unsupported bit length requested
 	 * @returns {number}
 	 */
-	read_number(piBitLength, piMaxValue){
+	read_number(piBitLength, piMaxValue, piMinValue){
 		if (this.bitstream.size() < piBitLength)
 			throw new eOpReaderBitsExhausted("not enough bits available")
 
@@ -47,7 +47,7 @@ class cBitStreamHelper {
 		iValue = cCommon.get_wraparound_value(
 			iValue,
 			piMaxValue,
-			0
+			piMinValue
 		)
 
 		return iValue
@@ -126,7 +126,7 @@ class cScramblerOpReader{
 	 */
 	constructor(psBaseName, poGrid){
 
-		if (!(this._grid instanceof cCAGrid))
+		if (!(poGrid instanceof cCAGrid))
 			throw new eCAScramblerException("grid is not cCAGrid")
 
 		this.basename = psBaseName
@@ -200,11 +200,10 @@ class cScramblerOpReader{
 		var oBit_helper = new cBitStreamHelper(poBitStream)
 		while (poBitStream.size() > cOpDefs.OP_ID_BITS){
 			//read the opcode
-			var iop_code = oBit_helper.read_number(cOpDefs.OP_ID_BITS)
-			iop_code = cCommon.get_wraparound_value(
-				iop_code,
+			var iop_code = oBit_helper.read_number(
+				cOpDefs.OP_ID_BITS,
 				cOpDefs.MAX_OP_ID,
-				1
+				cOpDefs.MIN_OP_ID
 			)
 
 			//create the object
@@ -230,7 +229,8 @@ class cScramblerOpReader{
 					//read param value
 					var iValue = oBit_helper.read_number(
 						oParam.bits,
-						oParam.max
+						oParam.max,
+						oParam.min
 					)
 
 					//update map

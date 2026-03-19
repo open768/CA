@@ -176,7 +176,7 @@ class cScramblerOpRunner extends cEventSubscriber{
 		if (iRowOrCol == cOpConsts.ROW_VALUE){
 			icount = this._data.cols
 			irow_inc = 0
-			icol = 0
+			icol = cOpConsts.MIN_INDEX_VALUE
 			irow = iIndex
 			icol_inc = 1
 			irow_delta = 0
@@ -184,7 +184,7 @@ class cScramblerOpRunner extends cEventSubscriber{
 		}else{
 			icount = this._data.rows
 			icol = iIndex
-			irow = 0
+			irow = cOpConsts.MIN_INDEX_VALUE
 			icol_inc = 0
 			irow_inc = 1
 			irow_delta = (iDirection == cOpConsts.COL_UP_VALUE?-iDistance:iDistance)
@@ -202,16 +202,16 @@ class cScramblerOpRunner extends cEventSubscriber{
 			if (ivalue == null)
 				cDebug.error("found a null value")
 
-			// create a changed cell target
+			// create a changed cell
 			irow_target = cCommon.get_wraparound_value(
 				irow + irow_delta,
-				this._data.rows -1,
-				0
+				this._data.rows,
+				cOpConsts.MIN_INDEX_VALUE
 			)
 			icol_target = cCommon.get_wraparound_value(
 				icol + icol_delta,
-				this._data.cols -1,
-				0
+				this._data.cols,
+				cOpConsts.MIN_INDEX_VALUE
 			)
 
 			aChanged_cells.push(new cChangedCell(
@@ -224,15 +224,15 @@ class cScramblerOpRunner extends cEventSubscriber{
 			if (irow_inc)
 				irow = cCommon.get_wraparound_value(
 					irow+ irow_inc,
-					this._data.rows-1,
-					0
+					this._data.rows,
+					cOpConsts.MIN_INDEX_VALUE
 				)
 
 			if (icol_inc)
 				icol = cCommon.get_wraparound_value(
 					icol+ icol_inc,
-					this._data.cols-1,
-					0
+					this._data.cols,
+					cOpConsts.MIN_INDEX_VALUE
 				)
 
 		}
