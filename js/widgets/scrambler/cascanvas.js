@@ -5,7 +5,7 @@ class cCAScrambleCanvas extends cJQueryWidgetClass {
 	ACTIVE_COLOUR = "black"
 	INACTIVE_COLOUR = "white"
 	HILITE_COLOUR = "red"
-	HILITE_DELAY = 500
+	HILITE_DELAY_MS = 100
 
 	/*
 	 * this widget is responsible for drawing the contents of the underlying scrambler onto a canvas
@@ -197,7 +197,7 @@ class cCAScrambleCanvas extends cJQueryWidgetClass {
 					paCells,
 					false
 				),
-				this.HILITE_DELAY
+				this.HILITE_DELAY_MS
 			)
 		else
 			//fire the consumed event to indicate that the changes have been drawn
