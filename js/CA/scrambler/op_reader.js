@@ -114,68 +114,41 @@ class cRandomnessChecker extends cStaticClass{
 //############################################################
 //#
 //############################################################
-class cScramblerOpReader extends cEventSubscriber{
-	basename = null
-	_ops = null
+class cScramblerOpReader{
+	basename = null /** @type {string} */
+	_ops = null /** @type {Array<cTransformOp>} */
+	_grid = null /** @type {cCAGrid} */
 
 	/**
 	 *
 	 * @param {string} psBaseName
+	 * @param {cCAGrid} poGrid
 	 */
-	constructor(psBaseName){
-		super()
+	constructor(psBaseName, poGrid){
+
+		if (!(this._grid instanceof cCAGrid))
+			throw new eCAScramblerException("grid is not cCAGrid")
+
 		this.basename = psBaseName
-		cCAGridEvent.subscribe(
-			this.basename,
-			[cCAGridEvent.notify.grid],
-			poEvent =>this.onGridEvent(poEvent)
-		)
-
-	}
-
-	//******************************************************************
-	//* public methods
-	//******************************************************************
-	async import_grid(){
-		//fire the event to get the data from the grid
-		cCAGridEvent.fire_event(
-			this.basename,
-			cCAGridEvent.actions.get_grid
-		)
-	}
-
-	//******************************************************************
-	//* Events
-	//******************************************************************
-	async onGridEvent(poEvent){
-		if (!this.active)
-			return
-
-		switch (poEvent.action){
-			case cCAGridEvent.notify.grid:
-				cDebug.write("got grid data, now convert to operations")
-				var oGrid = poEvent.data /** @type {cCAGrid} */
-				this._process_grid(oGrid)
-
-		}
+		this._grid = poGrid
 	}
 
 	/** *****************************************************************
 	 * for jsbitstream see: https://github.com/KonradKiss/JSBitStream
 	 *
-	 * @param {cCAGrid} poGrid
 	 */
-	_process_grid(poGrid){
+	import_grid(){
 		try{
 		//check class is correct
-			if (!(poGrid instanceof cCAGrid))
+			if (!(this._grid instanceof cCAGrid))
 				throw new eCAScramblerException("grid data is not cCAGrid")
+			var oGrid = this._grid
 
 			//convert the grid to binary
-			/** @type {jsbitstream} */ var oBitStream = cCAGridBitStreamExporter.get_grid_bitstream(poGrid)
+			/** @type {jsbitstream} */ var oBitStream = cCAGridBitStreamExporter.get_grid_bitstream(oGrid)
 
 			//the bitstream should have the same length as the grid (1 bit per cell)
-			if (oBitStream.size() !== poGrid.rows * poGrid.cols)
+			if (oBitStream.size() !== oGrid.rows * oGrid.cols)
 				throw new eCAScramblerException("bitstream length does not match grid size")
 
 			//check randomness
@@ -185,7 +158,7 @@ class cScramblerOpReader extends cEventSubscriber{
 
 			//read operations from the bitstream
 			oBitStream.restore_data(true)
-			if (oBitStream.size() !== poGrid.rows * poGrid.cols)
+			if (oBitStream.size() !== oGrid.rows * oGrid.cols)
 				throw new eCAScramblerException("bitstream length does not match grid size")
 
 			var aOps = this._read_ops(oBitStream)

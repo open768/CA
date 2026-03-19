@@ -16,7 +16,7 @@ You the consumer of this code are solely and entirely responsible for importing 
 //####################################################################################################
 class cCAScramblerData extends cSparseArray{
 	index = {
-		row: 0, col: 0
+		row: 0, col: 0		//starts at zero (why?)
 	}
 
 	fill_with_random_bits(){
@@ -321,7 +321,10 @@ class cCAScrambler extends cEventSubscriber{
 			throw new eCAScramblerException("incorrect stage for scrambling")
 
 		//read the ca grid and convert into a set of operations to perform on the data  to scramble it
-		var oReader = new cScramblerOpReader(this.base_name)
+		var oReader = new cScramblerOpReader(
+			this.base_name,
+			this.grid
+		)
 		oReader.import_grid()
 
 		//next stage of scrambling will be triggered by the reader firing a notify_imported event
