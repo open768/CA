@@ -16,14 +16,14 @@ You the consumer of this code are solely and entirely responsible for importing 
 //####################################################################################################
 class cCAScramblerData extends cSparseArray{
 	index = {
-		row: 0, col: 0		//starts at zero (why?)
+		row: 1, col: 1
 	}
 
 	fill_with_random_bits(){
 		var oIndex = this.index
 
-		while (oIndex.row < this.rows) {
-			while (oIndex.col < this.cols) {
+		while (oIndex.row <= this.rows) {
+			while (oIndex.col <= this.cols) {
 				this.set(
 					oIndex.row,
 					oIndex.col,
@@ -32,7 +32,7 @@ class cCAScramblerData extends cSparseArray{
 				oIndex.col++
 			}
 
-			oIndex.col = 0
+			oIndex.col = 1
 			oIndex.row++
 		}
 
@@ -54,9 +54,12 @@ class cCAScramblerData extends cSparseArray{
 			cCAScrambler.BITS_PER_CHAR,
 			"0"
 		)
-		for (var i = 0; i < sBinary.length; i++) {
-			var cBit = sBinary.charAt(i)
-			var iValue = (cBit === "1" ? 1 : 0)
+		//iterate every bit in the string
+		for (let sCh of sBinary){
+			if (this.index.row > this.rows && this.index.col > this.cols)
+				throw new eCAScramblerException("overflow - too much data for scrambler size")
+
+			var iValue = (sCh === "1" ? 1 : 0)
 
 			this.set(
 				this.index.row,
@@ -64,12 +67,9 @@ class cCAScramblerData extends cSparseArray{
 				iValue
 			)
 
-			if (this.index.col >= this.cols) {
-				this.index.col = 0
+			if (this.index.col > this.cols) {
+				this.index.col = 1
 				this.index.row++
-
-				if (this.index.row >= this.rows && this.index.col > 0)
-					throw new eCAScramblerException("overflow - too much data for scrambler size")
 			}
 		}
 	}
@@ -244,7 +244,7 @@ class cCAScrambler extends cEventSubscriber{
 			this._rows,
 			this._cols
 		)
-		this._data.starts_at_zero = true
+		this._data.starts_at_zero = false
 
 		this.initial_runs = 0
 		this.initial_runs_completed = 0
@@ -260,8 +260,8 @@ class cCAScrambler extends cEventSubscriber{
 	// public methods
 	//********************************************************************
 	/**
-	 * @param {number} piRow - starts at 0
-	 * @param {number} piCol - starts at 0
+	 * @param {number} piRow - starts at 1
+	 * @param {number} piCol - starts at 1
 	 * @returns {number}
 	 */
 	get(piRow, piCol) {
@@ -356,7 +356,7 @@ class cCAScrambler extends cEventSubscriber{
 		switch (this._stage) {
 			case cCAScramblerStages.FILL_INPUT:
 				this._stage = cCAScramblerStages.INITIAL_RUNS
-				this._step()
+				this._step_grid()
 				break
 		}
 	}
@@ -376,7 +376,7 @@ class cCAScrambler extends cEventSubscriber{
 				} else
 				//step the grid again
 					setTimeout(
-						() => this._step(),
+						() => this._step_grid(),
 						cCAScramblerTypes.STEP_DELAY_MS
 					)
 				break
@@ -396,7 +396,7 @@ class cCAScrambler extends cEventSubscriber{
 	}
 
 	//********************************************************************
-	_step() {
+	_step_grid() {
 		//step the CA grid
 		if (this.grid == null)
 			throw new eCAScramblerException("no grid set")
@@ -443,7 +443,8 @@ class cCAScrambler extends cEventSubscriber{
 		//tell consumers the grid has been updated and they should redraw
 		cCAScramblerEvent.fire_event(
 			this.base_name,
-			cCAScramblerEvent.actions.draw_scrambler_grid
+			cCAScramblerEvent.actions.draw_scrambler_grid,
+			this
 		)
 	}
 
@@ -458,7 +459,8 @@ class cCAScrambler extends cEventSubscriber{
 
 		cCAScramblerEvent.fire_event(
 			this.base_name,
-			cCAScramblerEvent.actions.draw_scrambler_grid
+			cCAScramblerEvent.actions.draw_scrambler_grid,
+			this
 		)
 		//next stage of scrambling will be triggered by the subscriber firing a notify_consumed event
 	}

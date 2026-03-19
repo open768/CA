@@ -201,8 +201,11 @@ class cScramblerOpReader{
 		while (poBitStream.size() > cOpDefs.OP_ID_BITS){
 			//read the opcode
 			var iop_code = oBit_helper.read_number(cOpDefs.OP_ID_BITS)
-			if (iop_code > cOpDefs.MAX_OP_ID)
-				iop_code = iop_code % cOpDefs.MAX_OP_ID //wrap around if invalid opcode
+			iop_code = cCommon.get_wraparound_value(
+				iop_code,
+				cOpDefs.MAX_OP_ID,
+				1
+			)
 
 			//create the object
 			var oTransform_op = new cTransformOp(iop_code)

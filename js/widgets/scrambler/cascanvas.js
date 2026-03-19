@@ -108,8 +108,8 @@ class cCAScrambleCanvas extends cJQueryWidgetClass {
 			throw new eCAScramblerException("scrambler not initialized" )
 
 		var oOptions = this.options
-		for (var ir = 0; ir < oOptions.rows; ir++)
-			for (var ic = 0; ic < oOptions.cols; ic++) {
+		for (var ir = 1; ir <= oOptions.rows; ir++)
+			for (var ic = 1; ic <= oOptions.cols; ic++) {
 				var iValue = this._scrambler.get(
 					ir,
 					ic
@@ -130,8 +130,8 @@ class cCAScrambleCanvas extends cJQueryWidgetClass {
 	//********************************************************************
 	_draw_cell(piValue, piRow, piCol){
 		var oOptions = this.options
-		var iy = piRow * oOptions.cell_size
-		var ix = piCol * oOptions.cell_size
+		var iy = (piRow -1)* oOptions.cell_size
+		var ix = (piCol -1)* oOptions.cell_size
 
 		// ------------------draw
 		var sFill = piValue ? '#000' : '#fff'
