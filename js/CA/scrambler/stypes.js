@@ -25,10 +25,10 @@ class cCAScramblerEvent extends cBaseEvent{
 	static actions = {
 		status: "AST",
 		set_input: "ASI",
-		draw_scrambler_grid: "ADSG",
 		error: "AERR"
 	}
 	static notify = {
+		draw_scrambler: "ADSG",
 		consumed: "NC",
 		imported_ops: "NIO",
 		scrambling_complete: "NSC",
@@ -55,13 +55,12 @@ class cCAScramblerTypes extends cStaticClass{
 
 class cCAScramblerStages extends cStaticClass{
 	static NOT_RUNNING = "SSNR"
-	static INIT = "SSI"
 	static FILL_INPUT = "SSFI"
-	static VALIDATE_GRID = "SSVG"
 	static INITIAL_RUNS = "SSIR"
+	static XOR = "SSXO"
+	static STEP_AGAIN = "SSSA"
 	static IMPORTING_OPS = "SSIO"
-	static
-		SCRAMBLING = "SSS"
+	static SCRAMBLING = "SSS"
 }
 
 //############################################################################

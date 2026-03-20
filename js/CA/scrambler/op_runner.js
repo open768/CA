@@ -11,6 +11,50 @@ You the consumer of this code are solely and entirely responsible for importing 
 
 **************************************************************************/
 
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+class cScramblerXOROp{
+	_data = null /** @type {cCAScramblerData} */
+	_grid = null /** @type {cCAGrid} */
+
+	/**
+	 *
+	 * @param {cCAScramblerData} poData
+	 * @param {cCAGrid} poGrid
+	 */
+	constructor(poData, poGrid){
+		this._data = poData
+		this._grid = poGrid
+
+		if (poData.rows != poGrid.rows || poData.cols != poGrid.cols)
+			throw new eCAScramblerException("data and grid size mismatch")
+	}
+
+	do_xor(){
+		//for each row and col, update ther data value with the xor of the data value and the grid value
+		var irow, icol, iData_value, iGrid_value, iXor_value
+		for ( irow = 1; irow <= this._data.rows; irow++)
+			for ( icol = 1; icol <= this._data.cols; icol++){
+				iData_value = this._data.get(
+					irow,
+					icol
+				)
+				iGrid_value = this._grid.get(
+					irow,
+					icol
+				)
+				iXor_value = iData_value ^ iGrid_value
+				this._data.set(
+					irow,
+					icol,
+					iXor_value
+				)
+			}
+	}
+}
+
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 class cScramblerOpRunner extends cEventSubscriber{
 	_base_name = null
 	_data = null /** @type {cCAScramblerData} */

@@ -326,14 +326,15 @@ class cCAScrambler extends cEventSubscriber{
 
 		//---------------
 		//add random junk to the end of the scrambler text until the grid is full
+		this._stage = cCAScramblerStages.FILL_INPUT
 		this._fillup_data()
 		//then wait for the consumer to respond before going to the next stage
 	}
 
 	//********************************************************************
-	//* scramble methods
+	//* import grid
 	//********************************************************************
-	_import_grid() {
+	_import_ops_from_grid() {
 		if (this._stage !== cCAScramblerStages.IMPORTING_OPS)
 			throw new eCAScramblerException("incorrect stage for scrambling")
 
@@ -369,11 +370,39 @@ class cCAScrambler extends cEventSubscriber{
 	}
 
 	//********************************************************************
+	//* xor
+	//********************************************************************
+	_xor_grid() {
+		if (this._stage !== cCAScramblerStages.XOR)
+			throw new eCAScramblerException("incorrect stage for XOR")
+		//perform XOr
+		var oXor_runner = new cScramblerXOROp(
+			this._data ,
+			this.grid
+		)
+		oXor_runner.do_xor()
+
+		//inform concumers to redraw the grid with the new scrambled data
+		cCAScramblerEvent.fire_event(
+			this.base_name,
+			cCAScramblerEvent.notify.draw_scrambler,
+			this
+		)
+	}
+
+	//********************************************************************
+	//* scrambler ops
+	//********************************************************************
 	_on_notify_scrambler_consumed() {
 		switch (this._stage) {
 			case cCAScramblerStages.FILL_INPUT:
 				this._stage = cCAScramblerStages.INITIAL_RUNS
-				this._step_grid()
+				this._step_grid_initial()
+				break
+
+			case cCAScramblerStages.XOR:
+				this._stage = cCAScramblerStages.STEP_AGAIN
+				this._step_grid_again()
 				break
 		}
 	}
@@ -386,17 +415,21 @@ class cCAScrambler extends cEventSubscriber{
 			case cCAScramblerStages.INITIAL_RUNS:
 				this._initial_runs_completed++
 				if (this._initial_runs_completed >= this.initial_runs) {
-				//start scrambling
-					cDebug.write("initial runs completed - starting import")
-					this._stage = cCAScramblerStages.IMPORTING_OPS
-					this._import_grid()
+					//start scrambling
+					cDebug.write("initial runs completed - starting xor")
+					this._stage = cCAScramblerStages.XOR
+					this._xor_grid()
 				} else
-				//step the grid again
+					//step the grid again
 					setTimeout(
-						() => this._step_grid(),
+						() => this._step_grid_initial(),
 						cCAScramblerTypes.STEP_DELAY_MS
 					)
 				break
+
+			case cCAScramblerStages.STEP_AGAIN:
+				this._stage = cCAScramblerStages.IMPORTING_OPS
+				this._import_ops_from_grid()
 		}
 
 	}
@@ -413,7 +446,23 @@ class cCAScrambler extends cEventSubscriber{
 	}
 
 	//********************************************************************
-	_step_grid() {
+	_step_grid_again() {
+		if (this._stage !== cCAScramblerStages.STEP_AGAIN)
+			throw new eCAScramblerException("unexpected stage " + this._stage + " for step grid again")
+
+		if (this.grid == null)
+			throw new eCAScramblerException("no grid set")
+
+		cDebug.write("stepping grid again")
+		cCAActionEvent.fire_event(
+			this.base_name,
+			cCAActionEvent.actions.control,
+			cCAActionEvent.control_actions.step
+		)
+	}
+
+	//********************************************************************
+	_step_grid_initial() {
 		//step the CA grid
 		if (this.grid == null)
 			throw new eCAScramblerException("no grid set")
@@ -429,11 +478,10 @@ class cCAScrambler extends cEventSubscriber{
 				cCAActionEvent.actions.control,
 				cCAActionEvent.control_actions.step
 			)
-		}else {
-			this._stage = cCAScramblerStages.IMPORTING_OPS
-			this._import_grid()
 		}
-		// the grid done event will caLL this function
+		//no else needed, will not get here
+
+		// the grid done event will trigger the next step of the scrambling process
 	}
 
 	//********************************************************************
@@ -460,7 +508,7 @@ class cCAScrambler extends cEventSubscriber{
 		//tell consumers the grid has been updated and they should redraw
 		cCAScramblerEvent.fire_event(
 			this.base_name,
-			cCAScramblerEvent.actions.draw_scrambler_grid,
+			cCAScramblerEvent.notify.draw_scrambler,
 			this
 		)
 	}
@@ -468,15 +516,14 @@ class cCAScrambler extends cEventSubscriber{
 	//********************************************************************
 	_fillup_data() {
 
-		if (this._stage !== cCAScramblerStages.NOT_RUNNING)
-			throw new eCAScramblerException("incorrect stage fo filling input")
-		this._stage = cCAScramblerStages.FILL_INPUT
+		if (this._stage !== cCAScramblerStages.FILL_INPUT)
+			throw new eCAScramblerException("incorrect stage for filling input")
 
 		this._data.fill_with_random_bits()
 
 		cCAScramblerEvent.fire_event(
 			this.base_name,
-			cCAScramblerEvent.actions.draw_scrambler_grid,
+			cCAScramblerEvent.notify.draw_scrambler,
 			this
 		)
 		//next stage of scrambling will be triggered by the subscriber firing a notify_consumed event
