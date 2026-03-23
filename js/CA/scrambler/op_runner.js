@@ -11,7 +11,6 @@ You the consumer of this code are solely and entirely responsible for importing 
 
 **************************************************************************/
 
-
 //#######################################################################################
 //# cScramblerOp
 //#######################################################################################
@@ -58,7 +57,10 @@ class cScramblerOp {
 	 * @returns {Array<cChangedCell>}
 	 */
 	run( ){
-		cCAScramblerUtils.throw_error(this.basename, "run method must be overridden for this operation")
+		cCAScramblerUtils.throw_error(
+			this.basename,
+			"run method must be overridden for this operation"
+		)
 	}
 }
 
@@ -72,11 +74,18 @@ class cScramblerXOROp extends cScramblerOp{
 	 * @param {cCAGrid} poGrid
 	 */
 	constructor(psBaseName, poData, poGrid){
-		super(psBaseName,poData,null)
+		super(
+			psBaseName,
+			poData,
+			null
+		)
 		this._grid = poGrid
 
 		if (poData.rows != poGrid.rows || poData.cols != poGrid.cols)
-			cCAScramblerUtils.throw_error(this.basename, "data and grid size mismatch")
+			cCAScramblerUtils.throw_error(
+				this.basename,
+				"data and grid size mismatch"
+			)
 	}
 
 	do_xor(){
@@ -137,7 +146,10 @@ class cScramblerLineOp extends cScramblerOp {
 				icol
 			)
 			if (ivalue == null)
-				cCAScramblerUtils.throw_error(this.basename, "found a null value")
+				cCAScramblerUtils.throw_error(
+					this.basename,
+					"found a null value"
+				)
 
 			// create a changed cell
 			irow_target = cCommon.get_wraparound_value(
@@ -189,17 +201,25 @@ class cScramblerTranslateOp extends cScramblerOp {
 //#######################################################################################
 //#######################################################################################
 class cScramblerOpMappings extends cStaticClass{
-	static mappings = new Map() /** @type {Map<number, cScramblerOp>} */
+	static mappings = new Map() /** @type {Map<number, typeof cScramblerOp>} */
 
 	static init(){
-		this.mappings.set (
-			[
-				[cOpConsts.LINE_OP,
-					cScramblerLineOp],
-				[cOpConsts.TRANSLATE_OP,
-					cScramblerTranslateOp]
-			]
-		)
+		this.mappings = new Map ([
+			[cOpConsts.LINE_OP, cScramblerLineOp],
+			[cOpConsts.TRANSLATE_OP, cScramblerTranslateOp]
+		])
+	}
+
+	/**
+	 *
+	 * @param {number} piOpcode
+	 * @returns {typeof cScramblerOp}
+	 */
+	static get(piOpcode){
+		var oRunner = this.mappings.get(piOpcode)
+		if (oRunner == null)
+			cDebug.write("DEBUG: unknown operation for opcode " + piOpcode)
+		return oRunner
 	}
 }
 
@@ -263,18 +283,35 @@ class cScramblerOpRunner extends cEventSubscriber{
 		this._changed_cells = []
 		/** @type {cTransformOp} */ var oOp = this._operations.pop()
 
-		//get the runner
-		var oRunner = cScramblerOpMappings.mappings.get(oOp.opcode)	/** @type {cScramblerOp} */
-		if (oRunner == null){
+		//get the runner class
+		var oRunnerClass = cScramblerOpMappings.get(oOp.opcode)	/** @type {typeof cScramblerOp} */
+		if (oRunnerClass == null){
 			cDebug.write("DEBUG: skipping unknown operation " + oOp.opcode)
 			//cCAScramblerUtils.throw_error(this._base_name, "unknown operation code: " + oOp.opcode)
 			this._run_next_op()
 			return
 		}
 
+		// instantiate the operation
+		var oRunner = new oRunnerClass(
+			this._base_name,
+			this._data,
+			oOp.params
+		)
+
+		if (!(oRunner instanceof cScramblerOp) )
+			cCAScramblerUtils.throw_error(
+				this._base_name,
+				"invalid operation for " + oRunner
+			)
+
 		//perform the runner
 		var aChanged_cells /**@type {Array<cChangedCell>} */
-		aChanged_cells = oRunner.run()
+		try{
+			aChanged_cells = oRunner.run()
+		} catch (e){
+			cDebug.write( e.message)
+		}
 
 		//----check changed cells
 		if (!aChanged_cells){
