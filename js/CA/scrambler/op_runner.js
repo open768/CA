@@ -11,46 +11,6 @@ You the consumer of this code are solely and entirely responsible for importing 
 
 **************************************************************************/
 
-//#######################################################################################
-class cScramblerXOROp{
-	_data = null /** @type {cCAScramblerData} */
-	_grid = null /** @type {cCAGrid} */
-
-	/**
-	 *
-	 * @param {cCAScramblerData} poData
-	 * @param {cCAGrid} poGrid
-	 */
-	constructor(poData, poGrid){
-		this._data = poData
-		this._grid = poGrid
-
-		if (poData.rows != poGrid.rows || poData.cols != poGrid.cols)
-			throw new eCAScramblerException("data and grid size mismatch")
-	}
-
-	do_xor(){
-		//for each row and col, update ther data value with the xor of the data value and the grid value
-		var irow, icol, iData_value, iGrid_value, iXor_value
-		for ( irow = 1; irow <= this._data.rows; irow++)
-			for ( icol = 1; icol <= this._data.cols; icol++){
-				iData_value = this._data.get(
-					irow,
-					icol
-				)
-				iGrid_value = this._grid.getCellValue(
-					irow,
-					icol
-				)
-				iXor_value = iData_value ^ iGrid_value
-				this._data.set(
-					irow,
-					icol,
-					iXor_value
-				)
-			}
-	}
-}
 
 //#######################################################################################
 //# cScramblerOp
@@ -58,14 +18,16 @@ class cScramblerXOROp{
 class cScramblerOp {
 	data = null /** @type {cCAScramblerData} */
 	params = null /** @type {Map} */
+	basename = null /** @type {string} */
 	/**
 	 *
 	 * @param {cCAScramblerData} poData
 	 * @param {Map} poParams
 	 */
-	constructor (poData, poParams){
+	constructor (psBaseName, poData, poParams){
 		this.data = poData
 		this.params = poParams
+		this.basename = psBaseName
 	}
 
 	_get_standard_op_params(){
@@ -96,7 +58,47 @@ class cScramblerOp {
 	 * @returns {Array<cChangedCell>}
 	 */
 	run( ){
-		throw new eCAScramblerException("run method must be overridden for this operation")
+		cCAScramblerUtils.throw_error(this.basename, "run method must be overridden for this operation")
+	}
+}
+
+class cScramblerXOROp extends cScramblerOp{
+	_grid = null /** @type {cCAGrid} */
+
+	/**
+	 *
+	 * @param {string} psBaseName
+	 * @param {cCAScramblerData} poData
+	 * @param {cCAGrid} poGrid
+	 */
+	constructor(psBaseName, poData, poGrid){
+		super(psBaseName,poData,null)
+		this._grid = poGrid
+
+		if (poData.rows != poGrid.rows || poData.cols != poGrid.cols)
+			cCAScramblerUtils.throw_error(this.basename, "data and grid size mismatch")
+	}
+
+	do_xor(){
+		//for each row and col, update ther data value with the xor of the data value and the grid value
+		var irow, icol, iData_value, iGrid_value, iXor_value
+		for ( irow = 1; irow <= this.data.rows; irow++)
+			for ( icol = 1; icol <= this.data.cols; icol++){
+				iData_value = this.data.get(
+					irow,
+					icol
+				)
+				iGrid_value = this._grid.getCellValue(
+					irow,
+					icol
+				)
+				iXor_value = iData_value ^ iGrid_value
+				this.data.set(
+					irow,
+					icol,
+					iXor_value
+				)
+			}
 	}
 }
 
@@ -135,7 +137,7 @@ class cScramblerLineOp extends cScramblerOp {
 				icol
 			)
 			if (ivalue == null)
-				cDebug.error("found a null value")
+				cCAScramblerUtils.throw_error(this.basename, "found a null value")
 
 			// create a changed cell
 			irow_target = cCommon.get_wraparound_value(

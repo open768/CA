@@ -381,6 +381,7 @@ class cCAScrambler extends cEventSubscriber{
 		//perform XOr
 
 		var oXor_runner = new cScramblerXOROp(
+			this.base_name,
 			this._data ,
 			this.grid
 		)
