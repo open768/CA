@@ -38,7 +38,7 @@ class cScramblerXOROp{
 					irow,
 					icol
 				)
-				iGrid_value = this._grid.get(
+				iGrid_value = this._grid.getCellValue(
 					irow,
 					icol
 				)
@@ -225,11 +225,21 @@ class cScramblerOpRunner extends cEventSubscriber{
 	 * @param {Array<cTransformOp>} paOps
 	 */
 	async run_ops(paOps){
-		if (!paOps)
-			this.throw_error("operations must be provided")
+		if (!paOps){
+			cCAScramblerUtils.throw_error(
+				this._base_name,
+				"operations must be provided"
+			)
+			return
+		}
 
-		if (!Array.isArray(paOps))
-			this.throw_error("operations must be an array")
+		if (!Array.isArray(paOps)){
+			cCAScramblerUtils.throw_error(
+				this._base_name,
+				"operations must be an array"
+			)
+			return
+		}
 
 		this._operations = paOps
 		this._run_next_op()
@@ -255,7 +265,7 @@ class cScramblerOpRunner extends cEventSubscriber{
 		var oRunner = cScramblerOpMappings.mappings.get(oOp.opcode)	/** @type {cScramblerOp} */
 		if (oRunner == null){
 			cDebug.write("DEBUG: skipping unknown operation " + oOp.opcode)
-			//this.throw_error("unknown operation code: " + oOp.opcode)
+			//cCAScramblerUtils.throw_error(this._base_name, "unknown operation code: " + oOp.opcode)
 			this._run_next_op()
 			return
 		}
@@ -267,7 +277,7 @@ class cScramblerOpRunner extends cEventSubscriber{
 		//----check changed cells
 		if (!aChanged_cells){
 			cDebug.write("DEBUG: skipping nochanged cells")
-			//this.throw_error("no changed cells found")
+			//cCAScramblerUtils.throw_error(this._base_name, "no changed cells found")
 			this._run_next_op()
 			return
 		}
@@ -282,15 +292,6 @@ class cScramblerOpRunner extends cEventSubscriber{
 			aChanged_cells
 		)
 		//the next operation will be triggered by the consumer firing a notify_operation_consumed event
-	}
-
-	throw_error(psMessage){
-		cCAScramblerEvent.fire_event(
-			this._base_name,
-			cCAScramblerEvent.actions.error,
-			psMessage
-		)
-		throw new eCAScramblerException(psMessage)
 	}
 
 }

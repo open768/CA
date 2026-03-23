@@ -294,7 +294,10 @@ class cCAScrambler extends cEventSubscriber{
 	_onActionScramble(poData) {
 		try {
 			if (!poData || !poData.inital_runs)
-				throw new eCAScramblerException("initial runs must be provided")
+				cCAScramblerUtils.throw_error(
+					this.base_name,
+					"initial runs must be provided"
+				)
 
 			this.initial_runs = poData.inital_runs
 			this._begin_scramble_process()

@@ -290,6 +290,14 @@ class cCAGrid extends cEventSubscriber {
 
 		return oCell
 	}
+	getCellValue(piRow, piCol) {
+		var oCell = this.getCell(
+			piRow,
+			piCol,
+			false
+		)
+		return oCell ? oCell.value : null
+	}
 
 	//* ***************************************************************
 	//* ***************************************************************

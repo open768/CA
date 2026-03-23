@@ -42,6 +42,23 @@ class cCAScramblerEvent extends cBaseEvent{
 	}
 }
 
+class cCAScramblerUtils extends cStaticClass{
+	/**
+	 *
+	 * @param {string} psBaseName
+	 * @param {string} psMessage
+	 * @throws {eCAScramblerException}
+	 */
+	static throw_error(psBaseName,psMessage){
+		cCAScramblerEvent.fire_event(
+			psBaseName,
+			cCAScramblerEvent.actions.error,
+			psMessage
+		)
+		throw new eCAScramblerException(psMessage)
+	}
+}
+
 class eCAScramblerException extends Error {
 }
 
