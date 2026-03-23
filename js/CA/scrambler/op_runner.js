@@ -11,8 +11,7 @@ You the consumer of this code are solely and entirely responsible for importing 
 
 **************************************************************************/
 
-//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+//#######################################################################################
 class cScramblerXOROp{
 	_data = null /** @type {cCAScramblerData} */
 	_grid = null /** @type {cCAGrid} */
@@ -53,8 +52,156 @@ class cScramblerXOROp{
 	}
 }
 
-//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+//#######################################################################################
+//# cScramblerOp
+//#######################################################################################
+class cScramblerOp {
+	data = null /** @type {cCAScramblerData} */
+	params = null /** @type {Map} */
+	/**
+	 *
+	 * @param {cCAScramblerData} poData
+	 * @param {Map} poParams
+	 */
+	constructor (poData, poParams){
+		this.data = poData
+		this.params = poParams
+	}
+
+	_get_standard_op_params(){
+		var iRowOrCol, iIndex, iDirection, iDistance
+		var oParams = this.params
+
+		iRowOrCol = oParams.get(cOpConsts.ROWCOL_PARAM		)
+		iIndex = oParams.get(cOpConsts.INDEX_PARAM		)
+		iIndex = cCommon.get_wraparound_value(
+			iIndex,
+			this.data.rows -1,
+			0
+		)
+		iDirection = oParams.get(cOpConsts.DIRECTION_PARAM	)
+		iDistance = oParams.get(cOpConsts.DISTANCE_PARAM	)
+		iDistance = cCommon.get_wraparound_value(
+			iDistance,
+			this.data.rows-1,
+			0
+		)
+
+		return [iRowOrCol, iIndex, iDirection, iDistance]
+	}
+
+	/**
+	 * this is an abstract method
+	 * @abstract
+	 * @returns {Array<cChangedCell>}
+	 */
+	run( ){
+		throw new eCAScramblerException("run method must be overridden for this operation")
+	}
+}
+
+//#######################################################################################
+class cScramblerLineOp extends cScramblerOp {
+	run(){
+		var [iRowOrCol, iIndex, iDirection, iDistance] = this._get_standard_op_params()
+		var irow, icol, icount, icol_inc, irow_inc, irow_delta, icol_delta, irow_target, icol_target
+		var aChanged_cells = []
+
+		//set up the params for the loop based on whether this is a row or column operation and the direction
+		if (iRowOrCol == cOpConsts.ROW_VALUE){
+			icount = this.data.cols
+			irow_inc = 0
+			icol = cOpConsts.MIN_INDEX_VALUE
+			irow = iIndex
+			icol_inc = 1
+			irow_delta = 0
+			icol_delta = (iDirection == cOpConsts.ROW_LEFT_VALUE?-iDistance:iDistance)
+		}else{
+			icount = this.data.rows
+			icol = iIndex
+			irow = cOpConsts.MIN_INDEX_VALUE
+			icol_inc = 0
+			irow_inc = 1
+			irow_delta = (iDirection == cOpConsts.COL_UP_VALUE?-iDistance:iDistance)
+			icol_delta = 0
+		}
+
+		//run the loop to get the changed cells - they will be applied to the data by the caller
+		var ivalue
+		while (icount--){
+			//---- get the value from the current
+			ivalue = this.data.get(
+				irow,
+				icol
+			)
+			if (ivalue == null)
+				cDebug.error("found a null value")
+
+			// create a changed cell
+			irow_target = cCommon.get_wraparound_value(
+				irow + irow_delta,
+				this.data.rows,
+				cOpConsts.MIN_INDEX_VALUE
+			)
+			icol_target = cCommon.get_wraparound_value(
+				icol + icol_delta,
+				this.data.cols,
+				cOpConsts.MIN_INDEX_VALUE
+			)
+
+			aChanged_cells.push(new cChangedCell(
+				irow_target,
+				icol_target,
+				ivalue
+			))
+
+			//---- next row_col
+			if (irow_inc)
+				irow = cCommon.get_wraparound_value(
+					irow+ irow_inc,
+					this.data.rows,
+					cOpConsts.MIN_INDEX_VALUE
+				)
+
+			if (icol_inc)
+				icol = cCommon.get_wraparound_value(
+					icol+ icol_inc,
+					this.data.cols,
+					cOpConsts.MIN_INDEX_VALUE
+				)
+
+		}
+
+		return aChanged_cells
+	}
+
+}
+
+//#######################################################################################
+class cScramblerTranslateOp extends cScramblerOp {
+	run(){
+		return []
+	}
+}
+
+//#######################################################################################
+//#######################################################################################
+class cScramblerOpMappings extends cStaticClass{
+	static mappings = new Map() /** @type {Map<number, cScramblerOp>} */
+
+	static init(){
+		this.mappings.set (
+			[
+				[cOpConsts.LINE_OP,
+					cScramblerLineOp],
+				[cOpConsts.TRANSLATE_OP,
+					cScramblerTranslateOp]
+			]
+		)
+	}
+}
+
+//#######################################################################################
 class cScramblerOpRunner extends cEventSubscriber{
 	_base_name = null
 	_data = null /** @type {cCAScramblerData} */
@@ -79,16 +226,16 @@ class cScramblerOpRunner extends cEventSubscriber{
 	 */
 	async run_ops(paOps){
 		if (!paOps)
-			throw new eCAScramblerException("operations must be provided")
+			this.throw_error("operations must be provided")
 
 		if (!Array.isArray(paOps))
-			throw new eCAScramblerException("operations must be an array")
+			this.throw_error("operations must be an array")
 
 		this._operations = paOps
 		this._run_next_op()
 	}
 
-	//** ******************************************************************
+	//********************************************************************
 	async _run_next_op(){
 		//------- check if finished
 		if (this._operations.length == 0){
@@ -104,60 +251,23 @@ class cScramblerOpRunner extends cEventSubscriber{
 		this._changed_cells = []
 		/** @type {cTransformOp} */ var oOp = this._operations.pop()
 
-		var aChanged_cells /**@type {Array<cChangedCell>} */
-		//perform the operation and build list of changed cells
-		switch (oOp.opcode) {
-			case cOpConsts.LINE_OP:
-				aChanged_cells = this._op_line(oOp)
-				break
-
-			case cOpConsts.TRANSLATE_OP:
-				aChanged_cells = this._op_translate(oOp)
-				break
-
-			case cOpConsts.SQUARE_OP:
-				aChanged_cells = this._op_square(oOp)
-				break
-
-			case cOpConsts.TRANSLATE_CELL_OP:
-				aChanged_cells = this._op_translate_cell(oOp)
-				break
-
-			case cOpConsts.UNZIP_OP:
-				// Handle UNZIP_OP
-				aChanged_cells = this._op_unzip(oOp)
-				break
-
-			case cOpConsts.REFLECTION_OP:
-				// Handle REFLECTION_OP
-				aChanged_cells = this._op_reflection(oOp)
-				break
-
-			case cOpConsts.TRANSPOSE_OP:
-				// Handle TRANSPOSE_OP
-				aChanged_cells = this._op_transpose(oOp)
-				break
-
-			case cOpConsts.SKEW_OP:
-				// Handle SKEW_OP
-				aChanged_cells = this._op_skew(oOp)
-				break
-
-			default:
-				throw new eCAScramblerException("unknown operation code: " + oOp.opcode)
+		//get the runner
+		var oRunner = cScramblerOpMappings.mappings.get(oOp.opcode)	/** @type {cScramblerOp} */
+		if (oRunner == null){
+			cDebug.write("DEBUG: skipping unknown operation " + oOp.opcode)
+			//this.throw_error("unknown operation code: " + oOp.opcode)
+			this._run_next_op()
+			return
 		}
+
+		//perform the runner
+		var aChanged_cells /**@type {Array<cChangedCell>} */
+		aChanged_cells = oRunner.run()
 
 		//----check changed cells
 		if (!aChanged_cells){
 			cDebug.write("DEBUG: skipping nochanged cells")
-			/*
-			cCAScramblerEvent.fire_event(
-				this._base_name,
-				cCAScramblerEvent.actions.error,
-				"no changed cells - scrambling stopped"
-			)
-			throw new eCAScramblerException("no changed cells found")
-			*/
+			//this.throw_error("no changed cells found")
 			this._run_next_op()
 			return
 		}
@@ -174,159 +284,15 @@ class cScramblerOpRunner extends cEventSubscriber{
 		//the next operation will be triggered by the consumer firing a notify_operation_consumed event
 	}
 
-	/** ******************************************************************
-	 * @param {cTransformOp} poOp
-	 */
-	_get_standard_op_params(poOp){
-		var iRowOrCol, iIndex, iDirection, iDistance
-		iRowOrCol = poOp.params.get(cOpConsts.ROWCOL_PARAM		)
-		iIndex = poOp.params.get(cOpConsts.INDEX_PARAM		)
-		iIndex = cCommon.get_wraparound_value(
-			iIndex,
-			this._data.rows -1,
-			0
+	throw_error(psMessage){
+		cCAScramblerEvent.fire_event(
+			this._base_name,
+			cCAScramblerEvent.actions.error,
+			psMessage
 		)
-		iDirection = poOp.params.get(cOpConsts.DIRECTION_PARAM	)
-		iDistance = poOp.params.get(cOpConsts.DISTANCE_PARAM	)
-		iDistance = cCommon.get_wraparound_value(
-			iDistance,
-			this._data.rows-1,
-			0
-		)
-
-		return [iRowOrCol, iIndex, iDirection, iDistance]
-	}
-
-	//********************************************************************
-	//* OPerations
-	//********************************************************************
-
-	/** ******************************************************************
-	 * @param {cTransformOp} poOp
-	 * @returns {Array<cChangedCell>}
-	 */
-	_op_line(poOp){
-		var [iRowOrCol, iIndex, iDirection, iDistance] = this._get_standard_op_params(poOp)
-		var irow, icol, icount, icol_inc, irow_inc, irow_delta, icol_delta, irow_target, icol_target
-		var aChanged_cells = []
-
-		//set up the params for the loop based on whether this is a row or column operation and the direction
-		if (iRowOrCol == cOpConsts.ROW_VALUE){
-			icount = this._data.cols
-			irow_inc = 0
-			icol = cOpConsts.MIN_INDEX_VALUE
-			irow = iIndex
-			icol_inc = 1
-			irow_delta = 0
-			icol_delta = (iDirection == cOpConsts.ROW_LEFT_VALUE?-iDistance:iDistance)
-		}else{
-			icount = this._data.rows
-			icol = iIndex
-			irow = cOpConsts.MIN_INDEX_VALUE
-			icol_inc = 0
-			irow_inc = 1
-			irow_delta = (iDirection == cOpConsts.COL_UP_VALUE?-iDistance:iDistance)
-			icol_delta = 0
-		}
-
-		//run the loop to get the changed cells - they will be applied to the data by the caller
-		var ivalue
-		while (icount--){
-			//---- get the value from the current
-			ivalue = this._data.get(
-				irow,
-				icol
-			)
-			if (ivalue == null)
-				cDebug.error("found a null value")
-
-			// create a changed cell
-			irow_target = cCommon.get_wraparound_value(
-				irow + irow_delta,
-				this._data.rows,
-				cOpConsts.MIN_INDEX_VALUE
-			)
-			icol_target = cCommon.get_wraparound_value(
-				icol + icol_delta,
-				this._data.cols,
-				cOpConsts.MIN_INDEX_VALUE
-			)
-
-			aChanged_cells.push(new cChangedCell(
-				irow_target,
-				icol_target,
-				ivalue
-			))
-
-			//---- next row_col
-			if (irow_inc)
-				irow = cCommon.get_wraparound_value(
-					irow+ irow_inc,
-					this._data.rows,
-					cOpConsts.MIN_INDEX_VALUE
-				)
-
-			if (icol_inc)
-				icol = cCommon.get_wraparound_value(
-					icol+ icol_inc,
-					this._data.cols,
-					cOpConsts.MIN_INDEX_VALUE
-				)
-
-		}
-
-		return aChanged_cells
-
-	}
-
-	/** ******************************************************************
-	 * @param {cTransformOp} poOp
-	 */
-	/* eslint-disable no-unused-vars*/
-	_op_translate(poOp){
-		cDebug.write("translate op not implemented yet")
-	}
-
-	/** ******************************************************************
-	 * @param {cTransformOp} poOp
-	 */
-	_op_square(poOp){
-		cDebug.write("square op not implemented yet")
-	}
-
-	/** ******************************************************************
-	 * @param {cTransformOp} poOp
-	 */
-	_op_translate_cell(poOp){
-		cDebug.write("translate cell op not implemented yet")
-	}
-
-	/** ******************************************************************
-	 * @param {cTransformOp} poOp
-	 */
-	_op_unzip(poOp){
-		cDebug.write("translate op not implemented yet")
-	}
-
-	/** ******************************************************************
-	 * @param {cTransformOp} poOp
-	 */
-	_op_reflection(poOp){
-		cDebug.write("translate op not implemented yet")
-	}
-
-	/** ******************************************************************
-	 * @param {cTransformOp} poOp
-	 */
-	_op_transpose(poOp){
-		cDebug.write("translate op not implemented yet")
-	}
-
-	/** ******************************************************************
-	 * @param {cTransformOp} poOp
-	 */
-	_op_skew(poOp){
-		cDebug.write("translate op not implemented yet")
+		throw new eCAScramblerException(psMessage)
 	}
 
 }
+
+cScramblerOpMappings.init()
