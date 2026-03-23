@@ -171,7 +171,7 @@ class cScramblerOpRunner extends cEventSubscriber{
 			cCAScramblerEvent.notify.operation_complete,
 			aChanged_cells
 		)
-		//the next operation will be triggered by the consumer firing a notify_consumed_operation event
+		//the next operation will be triggered by the consumer firing a notify_operation_consumed event
 	}
 
 	/** ******************************************************************
