@@ -211,15 +211,20 @@ class cScramblerOpMappings extends cStaticClass{
 	}
 
 	/**
+	 * returns the class exmemplar for the given opcode - this can then be instantiated by the caller
 	 *
 	 * @param {number} piOpcode
-	 * @returns {typeof cScramblerOp}
+	 * @returns {function}
 	 */
-	static get(piOpcode){
-		var oRunner = this.mappings.get(piOpcode)
-		if (oRunner == null)
+	static get(piOpcode) {
+		var oExemplar = this.mappings.get(piOpcode)
+
+		if (oExemplar == null)
 			cDebug.write("DEBUG: unknown operation for opcode " + piOpcode)
-		return oRunner
+		else
+			cDebug.write("DEBUG: found operation for opcode " + piOpcode + " : " + oExemplar.name)
+
+		return oExemplar
 	}
 }
 
@@ -284,8 +289,8 @@ class cScramblerOpRunner extends cEventSubscriber{
 		/** @type {cTransformOp} */ var oOp = this._operations.pop()
 
 		//get the runner class
-		var oRunnerClass = cScramblerOpMappings.get(oOp.opcode)	/** @type {typeof cScramblerOp} */
-		if (oRunnerClass == null){
+		var oExemplar = cScramblerOpMappings.get(oOp.opcode)	/** @type {typeof cScramblerOp} */
+		if (oExemplar == null){
 			cDebug.write("DEBUG: skipping unknown operation " + oOp.opcode)
 			//cCAScramblerUtils.throw_error(this._base_name, "unknown operation code: " + oOp.opcode)
 			this._run_next_op()
@@ -293,7 +298,7 @@ class cScramblerOpRunner extends cEventSubscriber{
 		}
 
 		// instantiate the operation
-		var oRunner = new oRunnerClass(
+		var oRunner = new oExemplar(
 			this._base_name,
 			this._data,
 			oOp.params
