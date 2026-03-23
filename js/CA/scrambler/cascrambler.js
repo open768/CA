@@ -379,13 +379,15 @@ class cCAScrambler extends cEventSubscriber{
 		if (this._stage !== cCAScramblerStages.XOR)
 			throw new eCAScramblerException("incorrect stage for XOR")
 		//perform XOr
+
 		var oXor_runner = new cScramblerXOROp(
 			this._data ,
 			this.grid
 		)
 		oXor_runner.do_xor()
+		cDebug.write("xor complete")
 
-		//inform concumers to redraw the grid with the new scrambled data
+		//inform consumers to redraw the grid with the new scrambled data
 		cCAScramblerEvent.fire_event(
 			this.base_name,
 			cCAScramblerEvent.notify.draw_scrambler,
@@ -417,17 +419,19 @@ class cCAScrambler extends cEventSubscriber{
 		switch (this._stage) {
 			case cCAScramblerStages.INITIAL_RUNS:
 				this._initial_runs_completed++
-				if (this._initial_runs_completed >= this.initial_runs) {
-					//start scrambling
-					cDebug.write("initial runs completed - starting xor")
-					this._stage = cCAScramblerStages.XOR
-					this._xor_grid()
-				} else
+				if (this._initial_runs_completed < this.initial_runs){
 					//step the grid again
 					setTimeout(
 						() => this._step_grid_initial(),
 						cCAScramblerTypes.STEP_DELAY_MS
 					)
+					return
+				}
+
+				//start scrambling
+				cDebug.write("initial runs completed - starting xor")
+				this._stage = cCAScramblerStages.XOR
+				this._xor_grid()
 				break
 
 			case cCAScramblerStages.STEP_AGAIN:

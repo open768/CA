@@ -290,6 +290,7 @@ class cCAGrid extends cEventSubscriber {
 
 		return oCell
 	}
+
 	getCellValue(piRow, piCol) {
 		var oCell = this.getCell(
 			piRow,
@@ -332,6 +333,9 @@ class cCAGrid extends cEventSubscriber {
 				break
 
 			case cCAActionEvent.control_actions.step:
+				if (this.running)
+					throw new eCAException('CA is allready running')
+				this.runData.clear_cell_counters()
 				this._step()
 				break
 
@@ -342,6 +346,7 @@ class cCAGrid extends cEventSubscriber {
 		cDebug.leave()
 	}
 
+	//* ***************************************************************`
 	_on_force_grid_redraw() {
 		cDebug.enter()
 
@@ -371,7 +376,6 @@ class cCAGrid extends cEventSubscriber {
 			throw new eCAException('changed cells must be consumed before stepping')
 
 		// reset counters
-		this.runData.clear_cell_counters()
 
 		cDebug.extra_debug('stepping')
 
@@ -502,23 +506,26 @@ class cCAGrid extends cEventSubscriber {
 		)
 
 		if (iSubscriber_count > 1){
+			cDebug.write('ℹ️ grid: notified consumed response from ' + sConsumer)
+
 			if (this._consumed_responses > iSubscriber_count){
-				cDebug.warn("🤔more consumed responses than subscribers: " + this._consumed_responses + " of " + iSubscriber_count)
-				cDebug.error("❌ ignoring extra responses from " + sConsumer)
+				cDebug.error("🤔more consumed responses than subscribers: " + this._consumed_responses + " of " + iSubscriber_count)
 				return
 			}
 
 			if (this._consumed_responses < iSubscriber_count)
 				return
+
+			cDebug.write('✅ grid: changed cells consumed by all consumers')
 		}
+
+		this.runData.clear_cell_counters() // clean out the changed cells
 
 		cCAGridEvent.fire_event(
 			this.name,
 			cCAGridEvent.notify.allConsumersDone,
 			cCAGridEvent.done.cells_consumed
 		)
-
-		this.runData.clear_cell_counters() // clean out the changed cells
 
 		if (this.running ) {
 			cDebug.write('running again')
