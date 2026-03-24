@@ -209,7 +209,12 @@ class cScramblerOpReader{
 			//create the object
 			var oTransform_op = new cTransformOp(iop_code)
 			{
-				var aParamDefs = cOpDefs.DEFS.get(iop_code)
+				var aParamDefs = cOpDefs.OP_DEFS.get(iop_code)
+				if (aParamDefs == null)
+					cCAScramblerUtils.throw_error(
+						this.basename,
+						"unknown operation code: " + iop_code
+					)
 				//check that there is anough bits left to read the params
 				var iBitsRequired = aParamDefs.reduce(
 					(piSum, piParam) => {

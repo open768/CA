@@ -89,27 +89,18 @@ class cCAScramblerStages extends cStaticClass{
 /**
  * The operations that can be applied to the grid. These are the building blocks of the scrambler,
  * TODO:they are simple (to show the concept) and could be replaced by more complex operations in the future.
- *
- * and are used to generate the scrambling sequence.
- *  Line – cells move along a line
- * Translate - a row or a column
- * 	Square - cells move along a predefined square
- * 	Translate cell - move a cell to another location
- * 	unzip row/col – alternating cells are moved in different directions
- * 	reflection – a block of cells flipped across an axis
- * 	transpose – swap a row with a column
- * 	skew – shift all rows or columns according to their index
- * 	TODO: block – apply the transforms to a defined block within the grid
  */
+
 class cOpConsts extends cStaticClass{
-	static LINE_OP = 0
-	static TRANSLATE_OP = 1
-	static SQUARE_OP = 2
-	static TRANSLATE_CELL_OP = 3
-	static UNZIP_OP = 4
-	static REFLECTION_OP = 5
-	static TRANSPOSE_OP = 6
-	static SKEW_OP = 7
+	static LINE_OP = 0		//cells move along a line
+	static SWAP_OP = 1		//move a cell to another location
+	static SQUARE_OP = 2	//cells move along a predefined square
+	static TRANSLATE_OP = 3	//translate a row or a column
+	static UNZIP_OP = 4	//alternating cells are moved in different directions
+	static REFLECTION_OP = 5	//a block of cells flipped across an axis
+	static TRANSPOSE_OP = 6	//swap a row with a column
+	static SKEW_OP = 7	//shift all rows or columns according to their index
+	// * 	TODO: block – apply the transforms to a defined block within the grid
 
 	static ROWCOL_PARAM = 0
 	static INDEX_PARAM = 1
@@ -117,6 +108,8 @@ class cOpConsts extends cStaticClass{
 	static COL_PARAM = 3
 	static DIRECTION_PARAM = 4
 	static DISTANCE_PARAM = 5
+	static ROW2_PARAM = 6
+	static COL2_PARAM = 7
 
 	static ROW_VALUE = 0
 	static COL_VALUE = 1
@@ -132,7 +125,7 @@ class cOpConsts extends cStaticClass{
 class cOpDefs extends cStaticClass{
 	static IDS = null
 	static PARAMS = null
-	static DEFS = null
+	static OP_DEFS = null	/** @type {Map<number, Array} */
 	static MAX_OP_ID = cOpConsts.SKEW_OP
 	static MIN_OP_ID = cOpConsts.LINE_OP
 	static OP_ID_BITS = cCommon.intBitSize(cOpConsts.SKEW_OP)
@@ -141,9 +134,9 @@ class cOpDefs extends cStaticClass{
 	static init(){
 		this.IDS = new Map([
 			[cOpConsts.LINE_OP,"line"],
-			[cOpConsts.TRANSLATE_OP,"translate"],
+			[cOpConsts.SWAP_OP,"swap"],
 			[cOpConsts.SQUARE_OP,"square"],
-			[cOpConsts.TRANSLATE_CELL_OP,"translate_cell"],
+			[cOpConsts.TRANSLATE_OP,"translate"],
 			[cOpConsts.UNZIP_OP,"unzip"],
 			[cOpConsts.REFLECTION_OP,"reflection"],
 			[cOpConsts.TRANSPOSE_OP,"transpose"],
@@ -166,6 +159,12 @@ class cOpDefs extends cStaticClass{
 			[cOpConsts.COL_PARAM, {
 				name: "col", min: cOpConsts.MIN_INDEX_VALUE, max: cCAScramblerTypes.MAX_SCRAMBLER_INDEX, bits: iIndexbits
 			}],
+			[cOpConsts.ROW2_PARAM, {
+				name: "row2", min: cOpConsts.MIN_INDEX_VALUE, max: cCAScramblerTypes.MAX_SCRAMBLER_INDEX, bits: iIndexbits
+			}],
+			[cOpConsts.COL2_PARAM, {
+				name: "col2", min: cOpConsts.MIN_INDEX_VALUE, max: cCAScramblerTypes.MAX_SCRAMBLER_INDEX, bits: iIndexbits
+			}],
 			[cOpConsts.DIRECTION_PARAM, {
 				name: "direction", min: 0, max: 1, bits: 1
 			}],
@@ -183,15 +182,15 @@ class cOpDefs extends cStaticClass{
 		]
 
 		//---------------------------------------------------------------------
-		this.DEFS = new Map([
+		this.OP_DEFS = new Map([
 			[cOpConsts.LINE_OP, aStandardParams],
-			[cOpConsts.TRANSLATE_OP, aStandardParams],
-			[cOpConsts.REFLECTION_OP, aStandardParams],
+			[cOpConsts.SWAP_OP, [cOpConsts.ROW_PARAM, cOpConsts.COL_PARAM, cOpConsts.ROW2_PARAM, cOpConsts.COL2_PARAM]],
 			[cOpConsts.SQUARE_OP, aStandardParams],
+			[cOpConsts.TRANSLATE_OP, aStandardParams],
 			[cOpConsts.UNZIP_OP, aStandardParams],
+			[cOpConsts.REFLECTION_OP, aStandardParams],
 			[cOpConsts.TRANSPOSE_OP, [cOpConsts.INDEX_PARAM, cOpConsts.DISTANCE_PARAM]],
 			[cOpConsts.SKEW_OP, [cOpConsts.ROWCOL_PARAM, cOpConsts.INDEX_PARAM, cOpConsts.DIRECTION_PARAM, cOpConsts.DISTANCE_PARAM]],
-			[cOpConsts.TRANSLATE_CELL_OP, [cOpConsts.ROW_PARAM, cOpConsts.COL_PARAM, cOpConsts.ROW_PARAM, cOpConsts.COL_PARAM]]
 		])
 	}
 }

@@ -141,8 +141,41 @@ cScramblerOpMappings.add_mapping(
 )
 
 //#######################################################################################
-class cScramblerTranslateOp extends cScramblerOp {
+class cScramblerSwapOp extends cScramblerOp {
 	run(){
-		return []
+		var iRow1,iCol1, iRow2, iCol2
+		var oParams = this.params
+		iRow1 = oParams.get(cOpConsts.ROW_PARAM)
+		iCol1 = oParams.get(cOpConsts.COL_PARAM)
+		iRow2 = oParams.get(cOpConsts.ROW2_PARAM)
+		iCol2 = oParams.get(cOpConsts.COL2_PARAM)
+
+		var ivalue1 = this.data.get(
+			iRow1,
+			iCol1
+		)
+		var ivalue2 = this.data.get(
+			iRow2,
+			iCol2
+		)
+		var oCell1 = new cChangedCell(
+			iRow1,
+			iCol1,
+			ivalue2
+		)
+		var oCell2 = new cChangedCell(
+			iRow2,
+			iCol2,
+			ivalue1
+		)
+
+		var aChangedCells = [oCell1, oCell2]
+		return aChangedCells
 	}
 }
+cScramblerOpMappings.add_mapping(
+	cOpConsts.SWAP_OP,
+	cScramblerSwapOp
+)
+
+//#######################################################################################

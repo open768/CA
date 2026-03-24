@@ -145,7 +145,7 @@ class cScramblerCellTracker{
 
 		if (iPct < cCAScramblerTypes.MIN_CHANGED_COVERAGE){
 			var sPct = iPct.toFixed(1)
-			cDebug.warn("coverage of changed cells is too low: " + sPct + " - min is " + cCAScramblerTypes.MIN_CHANGED_COVERAGE)
+			cDebug.write("coverage of changed cells is too low: " + sPct + " - min is " + cCAScramblerTypes.MIN_CHANGED_COVERAGE)
 			cCAScramblerUtils.throw_error(
 				this.basename,
 				"coverage of changed cells is too low: " + sPct
