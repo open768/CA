@@ -208,28 +208,22 @@ class cScramblerOpRunner extends cEventSubscriber{
 	 * @param {Array<cTransformOp>} paOps
 	 */
 	async run_ops(paOps){
+		/* eslint-disable @stylistic/function-call-argument-newline */
+
 		if (!paOps){
-			cCAScramblerUtils.throw_error(
-				this._base_name,
-				"operations must be provided"
-			)
+			cCAScramblerUtils.throw_error(this._base_name,"operations must be provided")
 			return
 		}
 
 		if (!Array.isArray(paOps)){
-			cCAScramblerUtils.throw_error(
-				this._base_name,
-				"operations must be an array"
-			)
+			cCAScramblerUtils.throw_error(this._base_name,"operations must be an array")
 			return
 		}
 
 		this._operations = paOps
-		this._tracker = new cScramblerCellTracker(
-			this._base_name,
-			this._data.rows,
-			this._data.cols
-		)
+		this._tracker = new cScramblerCellTracker(this._base_name,this._data.rows,this._data.cols)
+
+		/* eslint-enable @stylistic/function-call-argument-newline */
 		this._run_next_op()
 	}
 

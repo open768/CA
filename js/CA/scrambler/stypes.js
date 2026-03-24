@@ -110,6 +110,7 @@ class cOpConsts extends cStaticClass{
 	static DISTANCE_PARAM = 5
 	static ROW2_PARAM = 6
 	static COL2_PARAM = 7
+	static SIZE_PARAM = 8
 
 	static ROW_VALUE = 0
 	static COL_VALUE = 1
@@ -165,6 +166,9 @@ class cOpDefs extends cStaticClass{
 			[cOpConsts.COL2_PARAM, {
 				name: "col2", min: cOpConsts.MIN_INDEX_VALUE, max: cCAScramblerTypes.MAX_SCRAMBLER_INDEX, bits: iIndexbits
 			}],
+			[cOpConsts.SIZE_PARAM, {
+				name: "size", min: cOpConsts.MIN_INDEX_VALUE, max: cCAScramblerTypes.MAX_SCRAMBLER_INDEX, bits: iIndexbits
+			}],
 			[cOpConsts.DIRECTION_PARAM, {
 				name: "direction", min: 0, max: 1, bits: 1
 			}],
@@ -185,7 +189,7 @@ class cOpDefs extends cStaticClass{
 		this.OP_DEFS = new Map([
 			[cOpConsts.LINE_OP, aStandardParams],
 			[cOpConsts.SWAP_OP, [cOpConsts.ROW_PARAM, cOpConsts.COL_PARAM, cOpConsts.ROW2_PARAM, cOpConsts.COL2_PARAM]],
-			[cOpConsts.SQUARE_OP, aStandardParams],
+			[cOpConsts.SQUARE_OP, [cOpConsts.ROW_PARAM, cOpConsts.COL_PARAM, cOpConsts.DISTANCE_PARAM, cOpConsts.SIZE_PARAM]],
 			[cOpConsts.TRANSLATE_OP, aStandardParams],
 			[cOpConsts.UNZIP_OP, aStandardParams],
 			[cOpConsts.REFLECTION_OP, aStandardParams],

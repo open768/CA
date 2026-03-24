@@ -145,3 +145,41 @@ cScramblerOpMappings.add_mapping(
 )
 
 //#######################################################################################
+//#######################################################################################
+class cScramblerSquare extends cScramblerOp {
+	run(){
+		var aChangedCells = []
+		var iRow, iCol, iDistance, iSquare_size, iMax_size
+		/* eslint-disable @stylistic/function-call-argument-newline */
+
+		//get the parameters
+		iRow = this._get_param_value(cOpConsts.ROW_PARAM, cOpConsts.MIN_INDEX_VALUE, this.data.rows)
+		iCol = this._get_param_value(cOpConsts.COL_PARAM, cOpConsts.MIN_INDEX_VALUE, this.data.cols)
+		iDistance = this._get_param_value(cOpConsts.DISTANCE_PARAM, cOpConsts.MIN_INDEX_VALUE, this.data.rows)
+		iMax_size = Math.min(this.data.rows, this.data.cols)
+		iSquare_size = this._get_param_value(cOpConsts.SIZE_PARAM, cOpConsts.MIN_INDEX_VALUE, iMax_size) 
+
+		//create an array representing the cell coordinates in the square, this will be used to shift the values around the square
+		var aSquare_coords = []
+		var iX = iCol, iY = iRow, iMax_col = iCol + iSquare_size -1
+		for (var i=1; i<iSquare_size; i++){
+			var iNewX = cCommon.get_wraparound_value(iX++, iCol, iMax_col),
+			aSquare_coords.push( new cCoordinate(iY, iNewX))
+		}
+
+		var iMax_row = iRow + iSquare_size -1
+		for (var i=1; i<iSquare_size; i++){
+			var iNewY = cCommon.get_wraparound_value(iY++, iRow, iMax_col),
+			aSquare_coords.push( new cCoordinate(iNewY, iX))
+		}
+
+		//shift the square coordinates by the distance in the required direction
+
+		/* eslint-enable @stylistic/function-call-argument-newline */
+		return aChangedCells
+	}
+}
+cScramblerOpMappings.add_mapping(
+	cOpConsts.SQUARE_OP,
+	cScramblerSquare
+)
