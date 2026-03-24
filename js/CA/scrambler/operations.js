@@ -38,20 +38,14 @@ class cScramblerXOROp extends cScramblerOp{
 		var irow, icol, iData_value, iGrid_value, iXor_value
 		for ( irow = 1; irow <= this.data.rows; irow++)
 			for ( icol = 1; icol <= this.data.cols; icol++){
-				iData_value = this.data.get(
-					irow,
-					icol
-				)
-				iGrid_value = this._grid.getCellValue(
-					irow,
-					icol
-				)
+				/* eslint-disable @stylistic/function-call-argument-newline */
+
+				iData_value = this.data.get(irow,icol)
+				iGrid_value = this._grid.getCellValue(irow,icol)
 				iXor_value = iData_value ^ iGrid_value
-				this.data.set(
-					irow,
-					icol,
-					iXor_value
-				)
+				this.data.set(irow,icol,iXor_value)
+
+				/* eslint-enable @stylistic/function-call-argument-newline */
 			}
 	}
 }
@@ -83,52 +77,31 @@ class cScramblerLineOp extends cScramblerOp {
 		}
 
 		//run the loop to get the changed cells - they will be applied to the data by the caller
+
 		var ivalue
+
 		while (icount--){
+			/* eslint-disable @stylistic/function-call-argument-newline */
+
 			//---- get the value from the current
-			ivalue = this.data.get(
-				irow,
-				icol
-			)
+			ivalue = this.data.get(irow,icol)
 			if (ivalue == null)
-				cCAScramblerUtils.throw_error(
-					this.basename,
-					"found a null value"
-				)
+				cCAScramblerUtils.throw_error(this.basename,"found a null value")
 
 			// create a changed cell
-			irow_target = cCommon.get_wraparound_value(
-				irow + irow_delta,
-				cOpConsts.MIN_INDEX_VALUE,
-				this.data.rows
-			)
-			icol_target = cCommon.get_wraparound_value(
-				icol + icol_delta,
-				cOpConsts.MIN_INDEX_VALUE,
-				this.data.cols
-			)
+			irow_target = cCommon.get_wraparound_value(irow + irow_delta,cOpConsts.MIN_INDEX_VALUE,this.data.rows)
+			icol_target = cCommon.get_wraparound_value(icol + icol_delta,cOpConsts.MIN_INDEX_VALUE,this.data.cols)
 
-			aChanged_cells.push(new cChangedCell(
-				irow_target,
-				icol_target,
-				ivalue
-			))
+			aChanged_cells.push(new cChangedCell(irow_target,icol_target,ivalue))
 
 			//---- next row_col
 			if (irow_inc)
-				irow = cCommon.get_wraparound_value(
-					irow+ irow_inc,
-					cOpConsts.MIN_INDEX_VALUE,
-					this.data.rows
-				)
+				irow = cCommon.get_wraparound_value(irow+ irow_inc,cOpConsts.MIN_INDEX_VALUE,this.data.rows)
 
 			if (icol_inc)
-				icol = cCommon.get_wraparound_value(
-					icol+ icol_inc,
-					cOpConsts.MIN_INDEX_VALUE,
-					this.data.cols
-				)
+				icol = cCommon.get_wraparound_value(icol+ icol_inc,cOpConsts.MIN_INDEX_VALUE,this.data.cols)
 
+			/* eslint-enable @stylistic/function-call-argument-newline */
 		}
 
 		return aChanged_cells
@@ -144,30 +117,23 @@ cScramblerOpMappings.add_mapping(
 class cScramblerSwapOp extends cScramblerOp {
 	run(){
 		var iRow1,iCol1, iRow2, iCol2
-		var oParams = this.params
-		iRow1 = oParams.get(cOpConsts.ROW_PARAM)
-		iCol1 = oParams.get(cOpConsts.COL_PARAM)
-		iRow2 = oParams.get(cOpConsts.ROW2_PARAM)
-		iCol2 = oParams.get(cOpConsts.COL2_PARAM)
 
-		var ivalue1 = this.data.get(
-			iRow1,
-			iCol1
-		)
-		var ivalue2 = this.data.get(
-			iRow2,
-			iCol2
-		)
-		var oCell1 = new cChangedCell(
-			iRow1,
-			iCol1,
-			ivalue2
-		)
-		var oCell2 = new cChangedCell(
-			iRow2,
-			iCol2,
-			ivalue1
-		)
+		/* eslint-disable @stylistic/function-call-argument-newline */
+		iRow1 = this._get_param_value(cOpConsts.ROW_PARAM, cOpConsts.MIN_INDEX_VALUE, this.data.rows)
+		iCol1 = this._get_param_value(cOpConsts.COL_PARAM, cOpConsts.MIN_INDEX_VALUE, this.data.cols)
+		iRow2 = this._get_param_value(cOpConsts.ROW2_PARAM, cOpConsts.MIN_INDEX_VALUE, this.data.rows)
+		iCol2 = this._get_param_value(cOpConsts.COL2_PARAM, cOpConsts.MIN_INDEX_VALUE, this.data.cols)
+
+		var iValue1 = this.data.get(iRow1,iCol1)
+		if (iValue1 == null)
+			cCAScramblerUtils.throw_error(this.basename,"found a null value")
+		var iValue2 = this.data.get(iRow2,iCol2)
+		if (iValue2 == null)
+			cCAScramblerUtils.throw_error(this.basename,"found a null value")
+
+		var oCell1 = new cChangedCell(iRow1,iCol1,iValue2)
+		var oCell2 = new cChangedCell(iRow2,iCol2,iValue1)
+		/* eslint-enable @stylistic/function-call-argument-newline */
 
 		var aChangedCells = [oCell1, oCell2]
 		return aChangedCells

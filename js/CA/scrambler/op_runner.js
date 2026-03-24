@@ -55,6 +55,16 @@ class cScramblerOp {
 		return [iRowOrCol, iIndex, iDirection, iDistance]
 	}
 
+	_get_param_value(piParamID, piMin, piMax){
+		var iValue = this.params.get(piParamID)
+		iValue = cCommon.get_wraparound_value(
+			iValue,
+			piMin,
+			piMax
+		)
+		return iValue
+	}
+
 	/**
 	 * this is an abstract method
 	 * @abstract
