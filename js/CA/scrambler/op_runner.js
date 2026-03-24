@@ -71,13 +71,13 @@ class cScramblerOp {
 //#######################################################################################
 //#######################################################################################
 class cScramblerOpMappings extends cStaticClass{
-	static mappings = new Map() /** @type {Map<number, typeof cScramblerOp>} */
+	static _mappings = new Map() /** @type {Map<number, typeof cScramblerOp>} */
 
-	static init(){
-		this.mappings = new Map ([
-			[cOpConsts.LINE_OP, cScramblerLineOp],
-			[cOpConsts.TRANSLATE_OP, cScramblerTranslateOp]
-		])
+	static add_mapping(piOpcode, poExemplar){
+		this._mappings.set(
+			piOpcode,
+			poExemplar
+		)
 	}
 
 	/**
@@ -87,8 +87,10 @@ class cScramblerOpMappings extends cStaticClass{
 	 * @returns {function}
 	 */
 	static get(piOpcode) {
-		var oExemplar = this.mappings.get(piOpcode)
+		if (this._mappings.size == 0)
+			throw "cScramblerOpMappings not initialised"
 
+		var oExemplar = this._mappings.get(piOpcode)
 		if (oExemplar == null)
 			cDebug.write("DEBUG: unknown operation for opcode " + piOpcode)
 		else
@@ -99,12 +101,50 @@ class cScramblerOpMappings extends cStaticClass{
 }
 
 //#######################################################################################
+class cScramblerCellTracker{
+	_changed_cells = new Map() /** @type {Map<number, number>} */
+	rows = null
+	cols = null
+	basename = null
+
+	/**
+	 *
+	 * @param {string} psBasename
+	 * @param {number} piRows
+	 * @param {number} piCols
+	 */
+	constructor(psBasename, piRows, piCols){
+		this.basename = psBasename
+		this.rows = piRows
+		this.cols = piCols
+	}
+
+	/**
+	 *
+	 * @param {cChangedCell} poChangedCell
+	 */
+	add_cell(poChangedCell){
+		var map_index = poChangedCell.row + poChangedCell.col * cOpDefs.MAX_INDEX
+		this._changed_cells.set(
+			map_index,
+			1
+		)
+	}
+
+	/**
+	 * @param {Array<cChangedCell>} paChangedCells
+	 * */
+	add_cells(paChangedCells){
+		paChangedCells.forEach( oCell => this.add_cell(oCell))
+	}
+}
+
+//#######################################################################################
 class cScramblerOpRunner extends cEventSubscriber{
 	_base_name = null
 	_data = null /** @type {cCAScramblerData} */
 	_operations = null
-	_changed_cells = []
-
+	_tracker = null /** @type {cScramblerCellTracker} */
 	/**
 	 *
 	 * @param {string} psBaseName
@@ -160,6 +200,11 @@ class cScramblerOpRunner extends cEventSubscriber{
 		}
 
 		this._operations = paOps
+		this._tracker = new cScramblerCellTracker(
+			this._base_name,
+			this._data.rows,
+			this._data.cols
+		)
 		this._run_next_op()
 	}
 
@@ -178,7 +223,6 @@ class cScramblerOpRunner extends cEventSubscriber{
 		}
 
 		//get the next operation to perform
-		this._changed_cells = []
 		/** @type {cTransformOp} */ var oOp = this._operations.pop()
 
 		//get the runner class
@@ -221,6 +265,7 @@ class cScramblerOpRunner extends cEventSubscriber{
 		}
 
 		//----apply the changed cells
+		this._tracker.add_cells(aChanged_cells)
 		this._data.set_multiple(aChanged_cells)
 
 		//----notify consumers of the completed operation, passing the changed cells
@@ -233,5 +278,3 @@ class cScramblerOpRunner extends cEventSubscriber{
 	}
 
 }
-
-cScramblerOpMappings.init()

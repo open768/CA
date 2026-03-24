@@ -4,8 +4,6 @@
 This work is licensed under Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-nd/4.0/
 
-there are no cryptographic concepts demonstrated in this code.
-
 For licenses that allow for commercial use please contact cluck@chickenkatsu.co.uk
 
 USE AT YOUR OWN RISK - NO GUARANTEES OF ANY FORM ARE EITHER EXPRESSED OR IMPLIED
@@ -137,6 +135,10 @@ class cScramblerLineOp extends cScramblerOp {
 	}
 
 }
+cScramblerOpMappings.add_mapping(
+	cOpConsts.LINE_OP,
+	cScramblerLineOp
+)
 
 //#######################################################################################
 class cScramblerTranslateOp extends cScramblerOp {
