@@ -68,6 +68,9 @@ class cCAScramblerTypes extends cStaticClass{
 		initialRuns: 1
 	}
 	static STEP_DELAY_MS = 50
+	static MAX_SCRAMBLER_INDEX = 200
+	static MIN_CHANGED_COVERAGE = 99 //percentage of cells that should be changed by the scrambling process to be considered effective
+	static MAX_RANDOMNESS_DEVIATION = 0.2	//the maximum deviation (in percentage) that is acceptable for the scrambling process to start
 }
 
 class cCAScramblerStages extends cStaticClass{
@@ -133,7 +136,6 @@ class cOpDefs extends cStaticClass{
 	static MAX_OP_ID = cOpConsts.SKEW_OP
 	static MIN_OP_ID = cOpConsts.LINE_OP
 	static OP_ID_BITS = cCommon.intBitSize(cOpConsts.SKEW_OP)
-	static MAX_INDEX = 200
 
 	//*********************************************************************
 	static init(){
@@ -149,26 +151,26 @@ class cOpDefs extends cStaticClass{
 		])
 
 		//---------------------------------------------------------------------
-		var iIndexbits = cCommon.intBitSize(this.MAX_INDEX)
+		var iIndexbits = cCommon.intBitSize(cCAScramblerTypes.MAX_SCRAMBLER_INDEX)
 
 		this.PARAMS = new Map([
 			[cOpConsts.ROWCOL_PARAM, {
 				name: "row or col", min: 0, max: 1, bits: 1
 			}],
 			[cOpConsts.INDEX_PARAM, {
-				name: "index", min: cOpConsts.MIN_INDEX_VALUE, max: this.MAX_INDEX, bits: iIndexbits
+				name: "index", min: cOpConsts.MIN_INDEX_VALUE, max: cCAScramblerTypes.MAX_SCRAMBLER_INDEX, bits: iIndexbits
 			}],
 			[cOpConsts.ROW_PARAM, {
-				name: "row", min: cOpConsts.MIN_INDEX_VALUE, max: this.MAX_INDEX, bits: iIndexbits
+				name: "row", min: cOpConsts.MIN_INDEX_VALUE, max: cCAScramblerTypes.MAX_SCRAMBLER_INDEX, bits: iIndexbits
 			}],
 			[cOpConsts.COL_PARAM, {
-				name: "col", min: cOpConsts.MIN_INDEX_VALUE, max: this.MAX_INDEX, bits: iIndexbits
+				name: "col", min: cOpConsts.MIN_INDEX_VALUE, max: cCAScramblerTypes.MAX_SCRAMBLER_INDEX, bits: iIndexbits
 			}],
 			[cOpConsts.DIRECTION_PARAM, {
 				name: "direction", min: 0, max: 1, bits: 1
 			}],
 			[cOpConsts.DISTANCE_PARAM, {
-				name: "distance", min: cOpConsts.MIN_INDEX_VALUE, max: this.MAX_INDEX, bits: iIndexbits
+				name: "distance", min: cOpConsts.MIN_INDEX_VALUE, max: cCAScramblerTypes.MAX_SCRAMBLER_INDEX, bits: iIndexbits
 			}]
 		])
 

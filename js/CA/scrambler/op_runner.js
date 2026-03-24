@@ -124,7 +124,8 @@ class cScramblerCellTracker{
 	 * @param {cChangedCell} poChangedCell
 	 */
 	add_cell(poChangedCell){
-		var map_index = poChangedCell.row + poChangedCell.col * cOpDefs.MAX_INDEX
+		var map_index = poChangedCell.row + poChangedCell.col * cCAScramblerTypes.MAX_SCRAMBLER_INDEX
+
 		this._changed_cells.set(
 			map_index,
 			1
@@ -136,6 +137,20 @@ class cScramblerCellTracker{
 	 * */
 	add_cells(paChangedCells){
 		paChangedCells.forEach( oCell => this.add_cell(oCell))
+	}
+
+	//*******************************************************************************
+	check_coverage(){
+		var iPct = (this._changed_cells.size / this.rows * this.cols) * 100
+
+		if (iPct < cCAScramblerTypes.MIN_CHANGED_COVERAGE){
+			var sPct = iPct.toFixed(1)
+			cDebug.warn("coverage of changed cells is too low: " + sPct + " - min is " + cCAScramblerTypes.MIN_CHANGED_COVERAGE)
+			cCAScramblerUtils.throw_error(
+				this.basename,
+				"coverage of changed cells is too low: " + sPct
+			)
+		}
 	}
 }
 
@@ -214,7 +229,10 @@ class cScramblerOpRunner extends cEventSubscriber{
 	async _run_next_op(){
 		//------- check if finished
 		if (this._operations.length == 0){
-			cDebug.write("all operations completed")
+			cDebug.write("all operations completed checking coverage")
+			this._tracker.check_coverage()
+
+			cDebug.write("all good, scrambling complete")
 			cCAScramblerEvent.fire_event(
 				this._base_name,
 				cCAScramblerEvent.notify.scrambling_complete,

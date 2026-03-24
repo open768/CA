@@ -59,7 +59,6 @@ class cBitStreamHelper {
 //#
 //############################################################
 class cRandomnessChecker extends cStaticClass{
-	static MAX_DEVIATION = 0.2 // allow 20% deviation from expected
 	/**
 	 *reads u4 numbers and checks distribution
 	 * @param {jsbitstream} poBitStream
@@ -101,12 +100,12 @@ class cRandomnessChecker extends cStaticClass{
 		var iStdDev = Math.sqrt(iAvgVariance)
 		var iCoeffOfVariation = iStdDev / iMean
 
-		if (iCoeffOfVariation > this.MAX_DEVIATION) {
-			cDebug.write("Not random enough: " + iCoeffOfVariation.toFixed(3) + " > threshold "	+ this.MAX_DEVIATION)
+		if (iCoeffOfVariation > cCAScramblerTypes.MAX_RANDOMNESS_DEVIATION) {
+			cDebug.write("Not random enough: " + iCoeffOfVariation.toFixed(3) + " > threshold "	+ cCAScramblerTypes.MAX_RANDOMNESS_DEVIATION)
 			return false
 		}
 
-		cDebug.write("Randomness check passed: " + iCoeffOfVariation.toFixed(3) + " <= threshold "	+ this.MAX_DEVIATION)
+		cDebug.write("Randomness check passed: " + iCoeffOfVariation.toFixed(3) + " <= threshold "	+ cCAScramblerTypes.MAX_RANDOMNESS_DEVIATION)
 		return true
 	}
 
