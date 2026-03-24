@@ -245,9 +245,30 @@ class cScramblerOpRunner extends cEventSubscriber{
 		this._base_name = psBaseName
 		this._data = poData
 		this._operations = null
+		cCAScramblerEvent.subscribe(
+			psBaseName,
+			[cCAScramblerEvent.notify.changes_consumed],
+			poEvent=>this.onScramblerEvent(poEvent)
+		)
+
 	}
 
-	/** ******************************************************************
+	//** ******************************************************************
+	//* Events
+	//** ******************************************************************
+	async onScramblerEvent( poEvent ){
+		switch (poEvent.action) {
+			case cCAScramblerEvent.notify.changes_consumed:
+				cDebug.write("operation consumed event received, running next operation")
+				this._run_next_op()
+				break
+		}
+	}
+
+	//** ******************************************************************
+	//* Operations
+	//** ******************************************************************
+	/**
 	 *
 	 * @param {Array<cTransformOp>} paOps
 	 */
@@ -272,6 +293,8 @@ class cScramblerOpRunner extends cEventSubscriber{
 		this._run_next_op()
 	}
 
+	//********************************************************************
+	// privates
 	//********************************************************************
 	async _run_next_op(){
 		//------- check if finished
@@ -298,6 +321,7 @@ class cScramblerOpRunner extends cEventSubscriber{
 		}
 
 		// instantiate the operation
+		//@ts-expect-error
 		var oRunner = new oExemplar(
 			this._base_name,
 			this._data,
@@ -335,7 +359,7 @@ class cScramblerOpRunner extends cEventSubscriber{
 			cCAScramblerEvent.notify.operation_complete,
 			aChanged_cells
 		)
-		//the next operation will be triggered by the consumer firing a notify_operation_consumed event
+		//the next operation will be triggered by the consumer firing a changes_consumed event
 	}
 
 }

@@ -32,8 +32,8 @@ class cCAScramblerEvent extends cBaseEvent{
 		consumed: "NC",
 		imported_ops: "NIO",
 		scrambling_complete: "NSC",
-		operation_complete: "NOCOM",
-		operation_consumed: "NOCON",
+		operation_complete: "NOC",
+		changes_consumed: "NCC",
 		reset: "NR",
 	}
 

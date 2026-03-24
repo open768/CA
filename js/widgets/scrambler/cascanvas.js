@@ -180,14 +180,14 @@ class cCAScrambleCanvas extends cJQueryWidgetClass {
 	 * @param {Array<cChangedCell>} paCells
 	 * @param {boolean} pbHighlight
 	 */
-	_draw_changes(paCells, pbHighlight ){
+	_draw_changes(paCells, pbHighlight=false){
 		//for each of the cells that changed, redraw the cell
 		paCells.forEach(oCell =>
 			this._draw_cell(
 				oCell.value,
 				oCell.row,
 				oCell.col,
-				true
+				pbHighlight
 			))
 
 		//then after a delay redraw the cells without the highlight
@@ -203,7 +203,7 @@ class cCAScrambleCanvas extends cJQueryWidgetClass {
 			//fire the consumed event to indicate that the changes have been drawn
 			cCAScramblerEvent.fire_event(
 				this.options.base_name,
-				cCAScramblerCanvasEvent.notify.consumed_changes
+				cCAScramblerEvent.notify.changes_consumed
 			)
 	}
 
