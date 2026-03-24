@@ -46,8 +46,8 @@ class cBitStreamHelper {
 		var iValue = this.bitstream.readUBits(piBitLength)
 		iValue = cCommon.get_wraparound_value(
 			iValue,
-			piMaxValue,
-			piMinValue
+			piMinValue,
+			piMaxValue
 		)
 
 		return iValue

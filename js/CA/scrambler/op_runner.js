@@ -37,15 +37,15 @@ class cScramblerOp {
 		iIndex = oParams.get(cOpConsts.INDEX_PARAM		)
 		iIndex = cCommon.get_wraparound_value(
 			iIndex,
-			this.data.rows -1,
-			0
+			cOpConsts.MIN_INDEX_VALUE,
+			this.data.rows
 		)
 		iDirection = oParams.get(cOpConsts.DIRECTION_PARAM	)
 		iDistance = oParams.get(cOpConsts.DISTANCE_PARAM	)
 		iDistance = cCommon.get_wraparound_value(
 			iDistance,
-			this.data.rows-1,
-			0
+			cOpConsts.MIN_INDEX_VALUE,
+			this.data.rows
 		)
 
 		return [iRowOrCol, iIndex, iDirection, iDistance]
@@ -154,13 +154,13 @@ class cScramblerLineOp extends cScramblerOp {
 			// create a changed cell
 			irow_target = cCommon.get_wraparound_value(
 				irow + irow_delta,
-				this.data.rows,
-				cOpConsts.MIN_INDEX_VALUE
+				cOpConsts.MIN_INDEX_VALUE,
+				this.data.rows
 			)
 			icol_target = cCommon.get_wraparound_value(
 				icol + icol_delta,
-				this.data.cols,
-				cOpConsts.MIN_INDEX_VALUE
+				cOpConsts.MIN_INDEX_VALUE,
+				this.data.cols
 			)
 
 			aChanged_cells.push(new cChangedCell(
@@ -173,15 +173,15 @@ class cScramblerLineOp extends cScramblerOp {
 			if (irow_inc)
 				irow = cCommon.get_wraparound_value(
 					irow+ irow_inc,
-					this.data.rows,
-					cOpConsts.MIN_INDEX_VALUE
+					cOpConsts.MIN_INDEX_VALUE,
+					this.data.rows
 				)
 
 			if (icol_inc)
 				icol = cCommon.get_wraparound_value(
 					icol+ icol_inc,
-					this.data.cols,
-					cOpConsts.MIN_INDEX_VALUE
+					cOpConsts.MIN_INDEX_VALUE,
+					this.data.cols
 				)
 
 		}
@@ -319,7 +319,7 @@ class cScramblerOpRunner extends cEventSubscriber{
 		}
 
 		//----check changed cells
-		if (!aChanged_cells){
+		if (!aChanged_cells == null || aChanged_cells.length == 0){
 			cDebug.write("DEBUG: skipping nochanged cells")
 			//cCAScramblerUtils.throw_error(this._base_name, "no changed cells found")
 			this._run_next_op()
