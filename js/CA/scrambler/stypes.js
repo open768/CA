@@ -71,6 +71,7 @@ class cCAScramblerTypes extends cStaticClass{
 	static MAX_SCRAMBLER_INDEX = 200
 	static MIN_CHANGED_COVERAGE = 99 //percentage of cells that should be changed by the scrambling process to be considered effective
 	static MAX_RANDOMNESS_DEVIATION = 0.2	//the maximum deviation (in percentage) that is acceptable for the scrambling process to start
+	static MIN_SQUARE_SIDE = 3
 }
 
 class cCAScramblerStages extends cStaticClass{
@@ -214,9 +215,23 @@ class cTransformOp {
 class cCellIndex{
 	row = null
 	col = null
-	constructor(piRow, piCol){
+	constructor(piRow = null, piCol = null){
 		this.row = piRow
 		this.col = piCol
+	}
+	//add a method to add another cellIndex so that it can be used in + operations
+	/**
+	 *
+	 * @param {cCellIndex} poOther
+	 * @returns {cCellIndex}
+	 */
+	add(poOther){
+		if (!(poOther instanceof cCellIndex))
+			throw "other must be an instance of cCellIndex"
+
+		this.row += poOther.row,
+		this.col += poOther.col
+		return this
 	}
 }
 

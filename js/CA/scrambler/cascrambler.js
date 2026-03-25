@@ -380,7 +380,7 @@ class cCAScrambler extends cEventSubscriber{
 			throw new eCAScramblerException("incorrect stage for XOR")
 		//perform XOr
 
-		var oXor_runner = new cScramblerXOROp(
+		var oXor_runner = new cDataXorOp(
 			this.base_name,
 			this._data ,
 			this.grid

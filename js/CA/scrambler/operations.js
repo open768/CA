@@ -9,7 +9,7 @@ For licenses that allow for commercial use please contact cluck@chickenkatsu.co.
 USE AT YOUR OWN RISK - NO GUARANTEES OF ANY FORM ARE EITHER EXPRESSED OR IMPLIED
 **************************************************************************/
 
-class cScramblerXOROp extends cScramblerOp{
+class cDataXorOp extends cDataOp{
 	_grid = null /** @type {cCAGrid} */
 
 	/**
@@ -51,7 +51,7 @@ class cScramblerXOROp extends cScramblerOp{
 }
 
 //#######################################################################################
-class cScramblerLineOp extends cScramblerOp {
+class cDataLineOp extends cDataOp {
 	run(){
 		var [iRowOrCol, iIndex, iDirection, iDistance] = this._get_standard_op_params()
 		var irow, icol, icount, icol_inc, irow_inc, irow_delta, icol_delta, irow_target, icol_target
@@ -86,7 +86,7 @@ class cScramblerLineOp extends cScramblerOp {
 			// create a changed cell
 			irow_target = cCommon.get_wraparound_value(irow + irow_delta,cOpConsts.MIN_INDEX_VALUE,this.data.rows)
 			icol_target = cCommon.get_wraparound_value(icol + icol_delta,cOpConsts.MIN_INDEX_VALUE,this.data.cols)
-	
+
 			var oTransform = new cCellTransform( new cCellIndex(irow, icol), new cCellIndex(irow_target, icol_target))
 			aTransforms.push(oTransform)
 
@@ -106,11 +106,11 @@ class cScramblerLineOp extends cScramblerOp {
 }
 cScramblerOpMappings.add_mapping(
 	cOpConsts.LINE_OP,
-	cScramblerLineOp
+	cDataLineOp
 )
 
 //#######################################################################################
-class cScramblerSwapOp extends cScramblerOp {
+class cDataSwapOp extends cDataOp {
 	run(){
 		var iRow1,iCol1, iRow2, iCol2
 		var aTransforms = []	/** @type {Array<cCellTransform>} */
@@ -133,45 +133,70 @@ class cScramblerSwapOp extends cScramblerOp {
 }
 cScramblerOpMappings.add_mapping(
 	cOpConsts.SWAP_OP,
-	cScramblerSwapOp
+	cDataSwapOp
 )
 
 //#######################################################################################
 //#######################################################################################
-class cScramblerSquare extends cScramblerOp {
+/**
+ * this operation rotates the cells on the perimeter of a square - the square can be any size and the cells do not have to be contiguous.
+ * The mapping is not regular - as the cells are interleaved from the source data into the square
+ * */
+class cDataSquareOp extends cDataOp {
 	run(){
-		var aChangedCells = []
-		var iRow, iCol, iDistance, iSquare_size, iMax_size
 		/* eslint-disable @stylistic/function-call-argument-newline */
 
-		//get the parameters
-		iRow = this._get_param_value(cOpConsts.ROW_PARAM, cOpConsts.MIN_INDEX_VALUE, this.data.rows)
-		iCol = this._get_param_value(cOpConsts.COL_PARAM, cOpConsts.MIN_INDEX_VALUE, this.data.cols)
-		iDistance = this._get_param_value(cOpConsts.DISTANCE_PARAM, cOpConsts.MIN_INDEX_VALUE, this.data.rows)
-		iMax_size = Math.min(this.data.rows, this.data.cols)
-		iSquare_size = this._get_param_value(cOpConsts.SIZE_PARAM, cOpConsts.MIN_INDEX_VALUE, iMax_size) 
+		//-----------------------------get the parameters
+		{
+			//get the square offset
 
-		//create an array representing the cell coordinates in the square, this will be used to shift the values around the square
-		var aSquare_coords = []
-		var iX = iCol, iY = iRow, iMax_col = iCol + iSquare_size -1
-		for (var i=1; i<iSquare_size; i++){
-			var iNewX = cCommon.get_wraparound_value(iX++, iCol, iMax_col),
-			aSquare_coords.push( new cCoordinate(iY, iNewX))
+			var oOffset = new cCellIndex()
+			{
+				oOffset.row = this._get_param_value(cOpConsts.ROW_PARAM, cOpConsts.MIN_INDEX_VALUE, this.data.rows)
+				oOffset.col = this._get_param_value(cOpConsts.COL_PARAM, cOpConsts.MIN_INDEX_VALUE, this.data.cols)
+			}
+
+			//get the square size
+			var iMax_size = Math.min(this.data.rows, this.data.cols)
+			var iSide_size = this._get_param_value(cOpConsts.SIZE_PARAM, cCAScramblerTypes.MIN_SQUARE_SIDE, iMax_size)
+
+			//get the distance to move the cells in the square
+			var iDistance = this._get_param_value(cOpConsts.DISTANCE_PARAM, cOpConsts.MIN_INDEX_VALUE, iSide_size*3)
 		}
 
-		var iMax_row = iRow + iSquare_size -1
-		for (var i=1; i<iSquare_size; i++){
-			var iNewY = cCommon.get_wraparound_value(iY++, iRow, iMax_col),
-			aSquare_coords.push( new cCoordinate(iNewY, iX))
+		//-------build the array of cells that  make up the square - it doesnt matter if the cells are contiguous
+		{
+			var aSqCells = [] /** @type {Array<cCellIndex>} */
+			var oTop, oLeft, oBottom, oRight
+			oBottom = this._bounded_cell_index(oOffset.row , oOffset.col)
+			oRight = this._bounded_cell_index(oOffset.row , oOffset.col + iSide_size-1)
+			oTop = this._bounded_cell_index(oOffset.row + iSide_size-1, oOffset.col + iSide_size-1)
+			oLeft = this._bounded_cell_index(oOffset.row + iSide_size-1, oOffset.col )
+
+			for (var iInc = 0; iInc < iSide_size - 1; iInc++){
+				//create cell indexes for all 4 sides of the square -
+				var oBottomNew = this._bounded_cell_index(oBottom.row , oBottom.col + iInc )
+				var oRightNew = this._bounded_cell_index(oRight.row + iInc, oRight.col )
+				var oTopNew = this._bounded_cell_index(oTop.row , oTop.col - iInc)
+				var oLeftNew = this._bounded_cell_index(oLeft.row - iInc, oLeft.col )
+
+				aSqCells.push (oBottomNew, oRightNew, oTopNew, oLeftNew	)
+			}
 		}
 
-		//shift the square coordinates by the distance in the required direction
+		//-------create the transforms
+		var aTransforms = []
+		for (var iSrcIndex = 0; iSrcIndex < aSqCells.length; iSrcIndex++){
+			var iTargetIndex = cCommon.get_wraparound_value(iSrcIndex + iDistance, 0, aSqCells.length-1)
+			var oTransform = new cCellTransform(aSqCells[iSrcIndex], aSqCells[iTargetIndex])
+			aTransforms.push(oTransform)
+		}
 
 		/* eslint-enable @stylistic/function-call-argument-newline */
-		return aChangedCells
+		return aTransforms
 	}
 }
 cScramblerOpMappings.add_mapping(
 	cOpConsts.SQUARE_OP,
-	cScramblerSquare
+	cDataSquareOp
 )

@@ -16,9 +16,9 @@ USE AT YOUR OWN RISK - NO GUARANTEES OF ANY FORM ARE EITHER EXPRESSED OR IMPLIED
 **************************************************************************/
 
 //#######################################################################################
-//# cScramblerOp
+//# cDataOp
 //#######################################################################################
-class cScramblerOp {
+class cDataOp {
 	data = null /** @type {cCAScramblerData} */
 	params = null /** @type {Map} */
 	basename = null /** @type {string} */
@@ -66,6 +66,27 @@ class cScramblerOp {
 	}
 
 	/**
+	 *
+	 * @param {number} piRow
+	 * @param {number} piCol
+	 * @returns {cCellIndex}
+	 */
+	_bounded_cell_index(piRow, piCol){
+		var oIndex = new cCellIndex()
+		oIndex.row = cCommon.get_wraparound_value(
+			piRow,
+			cOpConsts.MIN_INDEX_VALUE,
+			this.data.rows
+		)
+		oIndex.col = cCommon.get_wraparound_value(
+			piCol,
+			cOpConsts.MIN_INDEX_VALUE,
+			this.data.cols
+		)
+		return oIndex
+	}
+
+	/**
 	 * this is an abstract method
 	 * @abstract
 	 * @returns {Array<cCellTransform>}
@@ -81,7 +102,7 @@ class cScramblerOp {
 //#######################################################################################
 //#######################################################################################
 class cScramblerOpMappings extends cStaticClass{
-	static _mappings = new Map() /** @type {Map<number, typeof cScramblerOp>} */
+	static _mappings = new Map() /** @type {Map<number, typeof cDataOp>} */
 
 	static add_mapping(piOpcode, poExemplar){
 		this._mappings.set(
@@ -248,7 +269,7 @@ class cScramblerOpRunner extends cEventSubscriber{
 		/** @type {cTransformOp} */ var oOp = this._operations.pop()
 
 		//-----get the runner exemplar for the operation
-		var oExemplar = cScramblerOpMappings.get(oOp.opcode)	/** @type {typeof cScramblerOp} */
+		var oExemplar = cScramblerOpMappings.get(oOp.opcode)	/** @type {typeof cDataOp} */
 		if (oExemplar == null){
 			cDebug.write("⚒️ DEBUG: for POC skipping unknown operation " + oOp.opcode)
 			//cCAScramblerUtils.throw_error(this._base_name, "unknown operation code: " + oOp.opcode)
@@ -261,7 +282,7 @@ class cScramblerOpRunner extends cEventSubscriber{
 		{
 			//@ts-expect-error
 			var oRunner = new oExemplar(this._base_name,this._data,oOp.params)
-			if (!(oRunner instanceof cScramblerOp) )
+			if (!(oRunner instanceof cDataOp) )
 				cCAScramblerUtils.throw_error(this._base_name,"invalid operation for " + oRunner)
 
 			//perform the runner
