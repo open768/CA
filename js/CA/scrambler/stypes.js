@@ -211,6 +211,30 @@ class cTransformOp {
 }
 
 // #############################################################################################
+class cCellIndex{
+	row = null
+	col = null
+	constructor(piRow, piCol){
+		this.row = piRow
+		this.col = piCol
+	}
+}
+
+class cCellTransform {
+	source = null		/** @type {cCellIndex} */
+	target = null		/** @type {cCellIndex} */
+
+	constructor(poSource, poTarget){
+		if (!(poSource instanceof cCellIndex))
+			throw new Error("source must be an instance of cCellIndex")
+		if (!(poTarget instanceof cCellIndex))
+			throw new Error("target must be an instance of cCellIndex")
+
+		this.source = poSource
+		this.target = poTarget
+	}
+}
+
 class cChangedCell {
 	row = null
 	col = null

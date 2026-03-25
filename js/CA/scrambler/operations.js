@@ -55,7 +55,7 @@ class cScramblerLineOp extends cScramblerOp {
 	run(){
 		var [iRowOrCol, iIndex, iDirection, iDistance] = this._get_standard_op_params()
 		var irow, icol, icount, icol_inc, irow_inc, irow_delta, icol_delta, irow_target, icol_target
-		var aChanged_cells = []
+		var aTransforms = []	/** @type {Array<cCellTransform>} */
 
 		//set up the params for the loop based on whether this is a row or column operation and the direction
 		if (iRowOrCol == cOpConsts.ROW_VALUE){
@@ -83,16 +83,12 @@ class cScramblerLineOp extends cScramblerOp {
 		while (icount--){
 			/* eslint-disable @stylistic/function-call-argument-newline */
 
-			//---- get the value from the current
-			ivalue = this.data.get(irow,icol)
-			if (ivalue == null)
-				cCAScramblerUtils.throw_error(this.basename,"found a null value")
-
 			// create a changed cell
 			irow_target = cCommon.get_wraparound_value(irow + irow_delta,cOpConsts.MIN_INDEX_VALUE,this.data.rows)
 			icol_target = cCommon.get_wraparound_value(icol + icol_delta,cOpConsts.MIN_INDEX_VALUE,this.data.cols)
-
-			aChanged_cells.push(new cChangedCell(irow_target,icol_target,ivalue))
+	
+			var oTransform = new cCellTransform( new cCellIndex(irow, icol), new cCellIndex(irow_target, icol_target))
+			aTransforms.push(oTransform)
 
 			//---- next row_col
 			if (irow_inc)
@@ -104,7 +100,7 @@ class cScramblerLineOp extends cScramblerOp {
 			/* eslint-enable @stylistic/function-call-argument-newline */
 		}
 
-		return aChanged_cells
+		return aTransforms
 	}
 
 }
@@ -117,6 +113,7 @@ cScramblerOpMappings.add_mapping(
 class cScramblerSwapOp extends cScramblerOp {
 	run(){
 		var iRow1,iCol1, iRow2, iCol2
+		var aTransforms = []	/** @type {Array<cCellTransform>} */
 
 		/* eslint-disable @stylistic/function-call-argument-newline */
 		iRow1 = this._get_param_value(cOpConsts.ROW_PARAM, cOpConsts.MIN_INDEX_VALUE, this.data.rows)
@@ -124,19 +121,14 @@ class cScramblerSwapOp extends cScramblerOp {
 		iRow2 = this._get_param_value(cOpConsts.ROW2_PARAM, cOpConsts.MIN_INDEX_VALUE, this.data.rows)
 		iCol2 = this._get_param_value(cOpConsts.COL2_PARAM, cOpConsts.MIN_INDEX_VALUE, this.data.cols)
 
-		var iValue1 = this.data.get(iRow1,iCol1)
-		if (iValue1 == null)
-			cCAScramblerUtils.throw_error(this.basename,"found a null value")
-		var iValue2 = this.data.get(iRow2,iCol2)
-		if (iValue2 == null)
-			cCAScramblerUtils.throw_error(this.basename,"found a null value")
+		var oTransform = new cCellTransform( new cCellIndex(iRow1,iCol1), new cCellIndex(iRow2,iCol2))
+		aTransforms.push(oTransform)
+		oTransform = new cCellTransform( new cCellIndex(iRow2,iCol2), new cCellIndex(iRow1,iCol1))
+		aTransforms.push(oTransform)
 
-		var oCell1 = new cChangedCell(iRow1,iCol1,iValue2)
-		var oCell2 = new cChangedCell(iRow2,iCol2,iValue1)
 		/* eslint-enable @stylistic/function-call-argument-newline */
 
-		var aChangedCells = [oCell1, oCell2]
-		return aChangedCells
+		return aTransforms
 	}
 }
 cScramblerOpMappings.add_mapping(

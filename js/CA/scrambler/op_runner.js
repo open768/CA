@@ -68,7 +68,7 @@ class cScramblerOp {
 	/**
 	 * this is an abstract method
 	 * @abstract
-	 * @returns {Array<cChangedCell>}
+	 * @returns {Array<cCellTransform>}
 	 */
 	run( ){
 		cCAScramblerUtils.throw_error(
@@ -244,51 +244,54 @@ class cScramblerOpRunner extends cEventSubscriber{
 			return
 		}
 
-		//get the next operation to perform
+		//-----get the next operation to perform
 		/** @type {cTransformOp} */ var oOp = this._operations.pop()
 
-		//get the runner class
+		//-----get the runner exemplar for the operation
 		var oExemplar = cScramblerOpMappings.get(oOp.opcode)	/** @type {typeof cScramblerOp} */
 		if (oExemplar == null){
-			cDebug.write("DEBUG: skipping unknown operation " + oOp.opcode)
+			cDebug.write("⚒️ DEBUG: for POC skipping unknown operation " + oOp.opcode)
 			//cCAScramblerUtils.throw_error(this._base_name, "unknown operation code: " + oOp.opcode)
 			this._run_next_op()
 			return
 		}
 
 		// instantiate the operation
-		//@ts-expect-error
-		var oRunner = new oExemplar(
-			this._base_name,
-			this._data,
-			oOp.params
-		)
+		/* eslint-disable @stylistic/function-call-argument-newline */
+		{
+			//@ts-expect-error
+			var oRunner = new oExemplar(this._base_name,this._data,oOp.params)
+			if (!(oRunner instanceof cScramblerOp) )
+				cCAScramblerUtils.throw_error(this._base_name,"invalid operation for " + oRunner)
 
-		if (!(oRunner instanceof cScramblerOp) )
-			cCAScramblerUtils.throw_error(
-				this._base_name,
-				"invalid operation for " + oRunner
-			)
+			//perform the runner
+			var aTransforms /**@type {Array<cCellTransform>} */
+			try{
+				aTransforms = oRunner.run()
+			} catch (e){
+				cCAScramblerUtils.throw_error(this._base_name,e.message)
+			}
 
-		//perform the runner
-		var aChanged_cells /**@type {Array<cChangedCell>} */
-		try{
-			aChanged_cells = oRunner.run()
-		} catch (e){
-			cDebug.write( e.message)
+			// get the changed cells from the transforms and apply them to the data
+			if (aTransforms == null || aTransforms.length == 0)
+				cCAScramblerUtils.throw_error(this._base_name,"no changed cells found")
+
+			var aChanged_cells = [] /** @type {Array<cChangedCell>} */
+			for (var oTransform of aTransforms){
+			//get all the values from the source
+				var iValue = this._data.get(oTransform.source.row,oTransform.source.col)
+				if (iValue == null)
+					cCAScramblerUtils.throw_error(this._base_name,"found a null value")
+
+				var oChanged_cell = new cChangedCell(oTransform.target.row,oTransform.target.col,iValue)
+				aChanged_cells.push(oChanged_cell)
+			}
+
+			//----apply the changed cells
+			this._data.set_multiple(aChanged_cells)
+			this._tracker.add_cells(aChanged_cells)
 		}
-
-		//----check changed cells
-		if (!aChanged_cells == null || aChanged_cells.length == 0){
-			cDebug.write("DEBUG: skipping nochanged cells")
-			//cCAScramblerUtils.throw_error(this._base_name, "no changed cells found")
-			this._run_next_op()
-			return
-		}
-
-		//----apply the changed cells
-		this._tracker.add_cells(aChanged_cells)
-		this._data.set_multiple(aChanged_cells)
+		/* eslint-enable @stylistic/function-call-argument-newline */
 
 		//----notify consumers of the completed operation, passing the changed cells
 		cCAScramblerEvent.fire_event(
