@@ -35,15 +35,15 @@ class cDataXorOp extends cDataOp{
 
 	do_xor(){
 		//for each row and col, update ther data value with the xor of the data value and the grid value
-		var irow, icol, iData_value, iGrid_value, iXor_value
-		for ( irow = 1; irow <= this.data.rows; irow++)
-			for ( icol = 1; icol <= this.data.cols; icol++){
+		var iRow, iCol, iData_value, iGrid_value, iXor_value
+		for ( iRow = 1; iRow <= this.data.rows; iRow++)
+			for ( iCol = 1; iCol <= this.data.cols; iCol++){
 				/* eslint-disable @stylistic/function-call-argument-newline */
 
-				iData_value = this.data.get(irow,icol)
-				iGrid_value = this._grid.getCellValue(irow,icol)
+				iData_value = this.data.get(iRow,iCol)
+				iGrid_value = this._grid.getCellValue(iRow,iCol)
 				iXor_value = iData_value ^ iGrid_value
-				this.data.set(irow,icol,iXor_value)
+				this.data.set(iRow,iCol,iXor_value)
 
 				/* eslint-enable @stylistic/function-call-argument-newline */
 			}
@@ -52,53 +52,84 @@ class cDataXorOp extends cDataOp{
 
 //#######################################################################################
 class cDataLineOp extends cDataOp {
-	run(){
+	//************************************************************************************
+	_get_row_transforms(){
 		var [iRowOrCol, iIndex, iDirection, iDistance] = this._get_standard_op_params()
-		var irow, icol, icount, icol_inc, irow_inc, irow_delta, icol_delta, irow_target, icol_target
+		var icount, icol_target
 		var aTransforms = []	/** @type {Array<cCellTransform>} */
 
+		var oInc = new cCellIndex()
+		var oDelta = new cCellIndex()
+		var oCell = new cCellIndex()
+
 		//set up the params for the loop based on whether this is a row or column operation and the direction
-		if (iRowOrCol == cOpConsts.ROW_VALUE){
-			icount = this.data.cols
-			irow_inc = 0
-			icol = cOpConsts.MIN_INDEX_VALUE
-			irow = iIndex
-			icol_inc = 1
-			irow_delta = 0
-			icol_delta = (iDirection == cOpConsts.ROW_LEFT_VALUE?-iDistance:iDistance)
-		}else{
-			icount = this.data.rows
-			icol = iIndex
-			irow = cOpConsts.MIN_INDEX_VALUE
-			icol_inc = 0
-			irow_inc = 1
-			irow_delta = (iDirection == cOpConsts.COL_UP_VALUE?-iDistance:iDistance)
-			icol_delta = 0
-		}
+		icount = this.data.cols
+		oInc.row = 0
+		oInc.col = 1
+		oCell.col = cOpConsts.MIN_INDEX_VALUE
+		oCell.row = iIndex
+		oDelta.row = 0
+		oDelta.col = (iDirection == cOpConsts.ROW_LEFT_VALUE?-iDistance:iDistance)
 
 		//run the loop to get the changed cells - they will be applied to the data by the caller
 
-		var ivalue
+		while (icount--){
+			/* eslint-disable @stylistic/function-call-argument-newline */
+			icol_target = cCommon.get_wraparound_value(oCell.col + oDelta.col,cOpConsts.MIN_INDEX_VALUE,this.data.cols)
+			var oTransform = new cCellTransform( new cCellIndex(oCell.row, oCell.col), new cCellIndex(oCell.row, icol_target))
+			aTransforms.push(oTransform)
+			oCell.col = cCommon.get_wraparound_value(oCell.col+ oInc.col,cOpConsts.MIN_INDEX_VALUE,this.data.cols)
+			/* eslint-enable @stylistic/function-call-argument-newline */
+		}
+
+		return aTransforms
+	}
+
+	//************************************************************************************
+	_get_col_transforms(){
+		var [iRowOrCol, iIndex, iDirection, iDistance] = this._get_standard_op_params()
+		var icount, irow_target
+		var aTransforms = []	/** @type {Array<cCellTransform>} */
+
+		var oInc = new cCellIndex()
+		var oDelta = new cCellIndex()
+		var oCell = new cCellIndex()
+
+		//set up the params for the loop based on whether this is a row or column operation and the direction
+		icount = this.data.rows
+		oCell.col = iIndex
+		oCell.row = cOpConsts.MIN_INDEX_VALUE
+		oInc.col = 0
+		oInc.row = 1
+		oDelta.row = (iDirection == cOpConsts.COL_UP_VALUE?-iDistance:iDistance)
+		oDelta.col = 0
+
+		//run the loop to get the changed cells - they will be applied to the data by the caller
 
 		while (icount--){
 			/* eslint-disable @stylistic/function-call-argument-newline */
 
-			// create a changed cell
-			irow_target = cCommon.get_wraparound_value(irow + irow_delta,cOpConsts.MIN_INDEX_VALUE,this.data.rows)
-			icol_target = cCommon.get_wraparound_value(icol + icol_delta,cOpConsts.MIN_INDEX_VALUE,this.data.cols)
-
-			var oTransform = new cCellTransform( new cCellIndex(irow, icol), new cCellIndex(irow_target, icol_target))
+			irow_target = cCommon.get_wraparound_value(oCell.row + oDelta.row,cOpConsts.MIN_INDEX_VALUE,this.data.rows)
+			var oTransform = new cCellTransform( new cCellIndex(oCell.row, oCell.col), new cCellIndex(irow_target, oCell.col))
 			aTransforms.push(oTransform)
-
-			//---- next row_col
-			if (irow_inc)
-				irow = cCommon.get_wraparound_value(irow+ irow_inc,cOpConsts.MIN_INDEX_VALUE,this.data.rows)
-
-			if (icol_inc)
-				icol = cCommon.get_wraparound_value(icol+ icol_inc,cOpConsts.MIN_INDEX_VALUE,this.data.cols)
+			oCell.row = cCommon.get_wraparound_value(oCell.row+ oInc.row,cOpConsts.MIN_INDEX_VALUE,this.data.rows)
 
 			/* eslint-enable @stylistic/function-call-argument-newline */
 		}
+
+		return aTransforms
+	}
+
+	//************************************************************************************
+	run(){
+		var iRowOrCol = this.params.get(cOpConsts.ROWCOL_PARAM		)
+
+		//set up the params for the loop based on whether this is a row or column operation and the direction
+		var aTransforms = null	/** @type {Array<cCellTransform>} */
+		if (iRowOrCol == cOpConsts.ROW_VALUE)
+			aTransforms = this._get_row_transforms()
+		else
+			aTransforms = this._get_col_transforms()
 
 		return aTransforms
 	}
