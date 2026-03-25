@@ -76,88 +76,91 @@ class cScrambleWidget extends cJQueryWidgetClass {
 	_render_grids(){
 		var oElement = this.element
 		var oOptions = this.options
+
+		/* eslint-disable @stylistic/function-call-argument-newline */
 		//------------------------------------------grids
-		var oGridDiv = $(
-			'<div>',
-			{
-				class: 'w3-card w3-margin'
-			}
-		)
+		var oGridDiv = $('<div>',{
+			class: 'w3-card w3-margin'
+		})
 		{
-			var oHeader = $(
-				'<header>',
-				{
-					class: 'w3-container w3-blue'
-				}
-			)
+			var oHeader = $('<header>',{
+				class: 'w3-container w3-blue'
+			})
 			{
 				oHeader.append($('<h3>').text('Grids'))
 				oGridDiv.append(oHeader)
 			}
 
-			var oGridContainer = $(
-				'<div>',
-				{
-					class: 'w3-container'
-				}
-			)
+			//------------------------------table
+			var oTableContainer = $('<div>',{
+				class: 'w3-container'
+			})
 			{
-				// the left grid shows the scrambled data,
-				var oLeftCell = $(
-					'<div>',
-					{
-						class: 'w3-cell w3-cell-top w3-container'
-					}
-				)
+				var oTable = $("<table>",{
+					class: 'w3-table-all'
+				})
 				{
-					oLeftCell.text("This is where the scrambling happens")
-					oLeftCell.cascramblecanvas(
-						{
-							base_name: oOptions.base_name,
-							cols: oOptions.cols,
-							rows: oOptions.rows,
-							cell_size: SCRAMBLE_CONSTS.CELL_SIZE
-						}
-					)
-					oGridContainer.append(oLeftCell)
-				}
-
-				oGridDiv.append(oGridContainer)
-
-				//the right grid shows the cellular automata from where the scrambling rules are read
-				var oRightCell = $(
-					'<div>',
+					//--------------- row
+					var oRow = $("<tr>")
 					{
-						class: 'w3-cell w3-cell-top w3-container'
-					}
-				)
-				{
-					var oCanvasSpan = $(
-						'<SPAN>',
+						//--------------scrambler
+						var oCell = $("<td>")
 						{
-							title: 'cellular automata grid - this is where the instructions are read from'
-						}
-					)
-					{
-						oCanvasSpan.cacanvas(
+							var oScramblerDiv = $('<div>',{
+								class: 'w3-cell',
+								title:	"this is the view of the scrambler"
+							})
 							{
-								base_name: oOptions.base_name,
-								rows: oOptions.rows,
-								cols: oOptions.cols,
-								cell_size: SCRAMBLE_CONSTS.CELL_SIZE
+								oScramblerDiv.cascramblecanvas({
+									base_name: oOptions.base_name,
+									cols: oOptions.cols,
+									rows: oOptions.rows,
+									cell_size: SCRAMBLE_CONSTS.CELL_SIZE
+								})
+								oCell.append(oScramblerDiv)
 							}
-						)
-						oRightCell.append(oCanvasSpan)
+
+							oRow.append(oCell)
+						}
+
+						//--------------cellular automata
+						oCell = $("<td>")
+						{
+							var oAutomata = $('<div>',{
+								class: 'w3-cell',
+								title: "this is the view of the cellular automata from where the scrambling instructions are read"
+							})
+							{
+								oAutomata.cacanvas({
+									base_name: oOptions.base_name,
+									rows: oOptions.rows,
+									cols: oOptions.cols,
+									cell_size: SCRAMBLE_CONSTS.CELL_SIZE
+								})
+
+								oCell.append(oAutomata)
+							}
+
+							oRow.append(oCell)
+						}
+
+						oTable.append(oRow)
 					}
 
-					oGridContainer.append(oRightCell)
+					oTable.append("<tr><th>Data View</th><th>Cellular automata</th></tr>")	//spacer row
+
+					oTableContainer.append(oTable)
+
+					//the right grid shows the cellular automata from where the scrambling rules are read
+
 				}
 
-				oGridDiv.append(oGridContainer)
+				oGridDiv.append(oTableContainer)
 			}
 
 			oElement.append(oGridDiv)
 		}
+		/* eslint-enable @stylistic/function-call-argument-newline */
 	}
 
 	//*************************************************************************

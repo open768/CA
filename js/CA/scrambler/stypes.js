@@ -25,7 +25,8 @@ class cCAScramblerEvent extends cBaseEvent{
 	static actions = {
 		status: "AST",
 		set_input: "ASI",
-		error: "AERR"
+		error: "AERR",
+		get_scrambled_data: "AGS"
 	}
 	static notify = {
 		draw_scrambler: "ADSG",
@@ -35,6 +36,7 @@ class cCAScramblerEvent extends cBaseEvent{
 		operation_complete: "NOC",
 		changes_consumed: "NCC",
 		reset: "NR",
+		scrambled_data: "NSD"
 	}
 
 	static control_actions = {
