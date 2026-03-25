@@ -9,7 +9,10 @@ For licenses that allow for commercial use please contact cluck@chickenkatsu.co.
 USE AT YOUR OWN RISK - NO GUARANTEES OF ANY FORM ARE EITHER EXPRESSED OR IMPLIED
 **************************************************************************/
 
-class cDataXorOp extends cDataOp{
+/**
+ * while cTransformop is a subclass of cIndexTransformOp, it doesnt implement  run() as it uses the data in a different way
+ */
+class cTransformXorOp extends cIndexTransformOp{
 	_grid = null /** @type {cCAGrid} */
 
 	/**
@@ -51,36 +54,27 @@ class cDataXorOp extends cDataOp{
 }
 
 //#######################################################################################
-class cDataLineOp extends cDataOp {
+class cDataLineOp extends cIndexTransformOp {
 	//************************************************************************************
 	_get_row_transforms(){
 		var [iRowOrCol, iIndex, iDirection, iDistance] = this._get_standard_op_params()
 		var icount, icol_target
-		var aTransforms = []	/** @type {Array<cCellTransform>} */
 
-		var oInc = new cCellIndex()
-		var oDelta = new cCellIndex()
-		var oCell = new cCellIndex()
-
-		//set up the params for the loop based on whether this is a row or column operation and the direction
+		/* eslint-disable @stylistic/function-call-argument-newline */
+		var oInc = new cCellIndex( 0,1 )
+		var oCell = new cCellIndex( iIndex, cOpConsts.MIN_INDEX_VALUE )
+		var oDelta = new cCellIndex( 0,(iDirection == cOpConsts.ROW_LEFT_VALUE?-iDistance:iDistance)	)
 		icount = this.data.cols
-		oInc.row = 0
-		oInc.col = 1
-		oCell.col = cOpConsts.MIN_INDEX_VALUE
-		oCell.row = iIndex
-		oDelta.row = 0
-		oDelta.col = (iDirection == cOpConsts.ROW_LEFT_VALUE?-iDistance:iDistance)
 
 		//run the loop to get the changed cells - they will be applied to the data by the caller
-
+		var aTransforms = []	/** @type {Array<cCellTransform>} */
 		while (icount--){
-			/* eslint-disable @stylistic/function-call-argument-newline */
 			icol_target = cCommon.get_wraparound_value(oCell.col + oDelta.col,cOpConsts.MIN_INDEX_VALUE,this.data.cols)
 			var oTransform = new cCellTransform( new cCellIndex(oCell.row, oCell.col), new cCellIndex(oCell.row, icol_target))
 			aTransforms.push(oTransform)
 			oCell.col = cCommon.get_wraparound_value(oCell.col+ oInc.col,cOpConsts.MIN_INDEX_VALUE,this.data.cols)
-			/* eslint-enable @stylistic/function-call-argument-newline */
 		}
+		/* eslint-enable @stylistic/function-call-argument-newline */
 
 		return aTransforms
 	}
@@ -89,33 +83,24 @@ class cDataLineOp extends cDataOp {
 	_get_col_transforms(){
 		var [iRowOrCol, iIndex, iDirection, iDistance] = this._get_standard_op_params()
 		var icount, irow_target
-		var aTransforms = []	/** @type {Array<cCellTransform>} */
 
-		var oInc = new cCellIndex()
-		var oDelta = new cCellIndex()
-		var oCell = new cCellIndex()
-
-		//set up the params for the loop based on whether this is a row or column operation and the direction
+		/* eslint-disable @stylistic/function-call-argument-newline */
+		var oInc = new cCellIndex(1,0)
+		var oDelta = new cCellIndex((iDirection == cOpConsts.COL_UP_VALUE?-iDistance:iDistance), 0)
+		var oCell = new cCellIndex(cOpConsts.MIN_INDEX_VALUE,iIndex)
 		icount = this.data.rows
-		oCell.col = iIndex
-		oCell.row = cOpConsts.MIN_INDEX_VALUE
-		oInc.col = 0
-		oInc.row = 1
-		oDelta.row = (iDirection == cOpConsts.COL_UP_VALUE?-iDistance:iDistance)
-		oDelta.col = 0
 
 		//run the loop to get the changed cells - they will be applied to the data by the caller
-
+		var aTransforms = []	/** @type {Array<cCellTransform>} */
 		while (icount--){
-			/* eslint-disable @stylistic/function-call-argument-newline */
 
 			irow_target = cCommon.get_wraparound_value(oCell.row + oDelta.row,cOpConsts.MIN_INDEX_VALUE,this.data.rows)
 			var oTransform = new cCellTransform( new cCellIndex(oCell.row, oCell.col), new cCellIndex(irow_target, oCell.col))
 			aTransforms.push(oTransform)
 			oCell.row = cCommon.get_wraparound_value(oCell.row+ oInc.row,cOpConsts.MIN_INDEX_VALUE,this.data.rows)
 
-			/* eslint-enable @stylistic/function-call-argument-newline */
 		}
+		/* eslint-enable @stylistic/function-call-argument-newline */
 
 		return aTransforms
 	}
@@ -141,7 +126,7 @@ cScramblerOpMappings.add_mapping(
 )
 
 //#######################################################################################
-class cDataSwapOp extends cDataOp {
+class cDataSwapOp extends cIndexTransformOp {
 	run(){
 		var iRow1,iCol1, iRow2, iCol2
 		var aTransforms = []	/** @type {Array<cCellTransform>} */
@@ -173,7 +158,7 @@ cScramblerOpMappings.add_mapping(
  * this operation rotates the cells on the perimeter of a square - the square can be any size and the cells do not have to be contiguous.
  * The mapping is not regular - as the cells are interleaved from the source data into the square
  * */
-class cDataSquareOp extends cDataOp {
+class cDataSquareOp extends cIndexTransformOp {
 	run(){
 		/* eslint-disable @stylistic/function-call-argument-newline */
 
