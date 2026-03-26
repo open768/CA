@@ -57,7 +57,12 @@ class cScrambleWidget extends cJQueryWidgetClass {
 		)
 		cCAScramblerEvent.subscribe(
 			sName,
-			[cCAScramblerEvent.actions.error, cCAScramblerEvent.notify.scrambling_complete],
+			[
+				cCAScramblerEvent.actions.error,
+				cCAScramblerEvent.notify.scrambling_complete,
+				cCAScramblerEvent.notify.operation_complete,
+				cCAScramblerEvent.notify.scrambled_data
+			],
 			poEvent => this.onScramblerEvent(poEvent)
 		)
 
@@ -509,6 +514,24 @@ class cScrambleWidget extends cJQueryWidgetClass {
 
 			case cCAScramblerEvent.notify.scrambling_complete:
 				alert("scrambling complete")
+				//continues to next case
+
+			case cCAScramblerEvent.notify.operation_complete:
+				cCAScramblerEvent.fire_event(
+					this.options.base_name,
+					cCAScramblerEvent.actions.get_scrambled_data
+				)
+				break
+
+			case cCAScramblerEvent.notify.scrambled_data:
+				var oElement = this.element
+				var oOutput = cJquery.get_child(
+					oElement,
+					SCRAMBLE_CONTROL_IDS.output_text_ID
+				)
+				oOutput.val(poEvent.data)
+				break
+
 		}
 	}
 

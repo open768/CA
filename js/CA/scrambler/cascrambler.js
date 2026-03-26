@@ -113,6 +113,47 @@ class cCAScramblerData extends cSparseArray{
 			}
 		)
 	}
+
+	/**
+	 * @returns {jsbitstream}
+	 */
+	to_bitstream(){
+		var oBitStream = new jsbitstream()
+		for (var irow = 1; irow <= this.rows; irow++)
+			for (var icol = 1; icol <= this.cols; icol++){
+				var iValue = this.get(
+					irow,
+					icol
+				)
+				oBitStream.writeFlag( iValue === 1? true : false)
+			}
+
+		return oBitStream
+	}
+
+	//********************************************************************
+	/**
+	 * @returns {string}
+	 */
+	to_base64(){
+		var oBitStream = this.to_bitstream() /** @type {jsbitstream} */
+		var oHelper = new cBitStreamHelper(oBitStream)
+
+		var sBase64 = ""
+		while (oBitStream.size() >= cConverterEncodings.BASE64_BITS){
+			var iByte = oHelper.read_number(cConverterEncodings.BASE64_BITS)
+			var ch = cConverterEncodings.BASE64.charAt(iByte)
+			sBase64 += ch
+		}
+
+		if (oBitStream.size() > 0){
+			var iByte = oHelper.read_number(oBitStream.size())
+			var ch = cConverterEncodings.BASE64.charAt(iByte)
+			sBase64 += ch
+		}
+
+		return sBase64
+	}
 }
 
 //####################################################################################################
@@ -129,7 +170,7 @@ class cCAScrambler extends cEventSubscriber{
 	/** @type {cCAGrid} */ grid = null
 
 	//-----------internal variables
-	_data = null	/** @type {cCAScramblerData} */
+	/** @type {cCAScramblerData} */ _data = null
 	_initial_runs_completed = 0
 	_rows = 0
 	_cols = 0
@@ -146,7 +187,7 @@ class cCAScrambler extends cEventSubscriber{
 		this._reset()
 		cCAScramblerEvent.subscribe(
 			this.base_name,
-			[cCAScramblerEvent.actions.set_input, cCAScramblerEvent.notify.consumed, cCAScramblerEvent.notify.imported_ops],
+			[cCAScramblerEvent.actions.set_input, cCAScramblerEvent.notify.consumed, cCAScramblerEvent.notify.imported_ops, cCAScramblerEvent.actions.get_scrambled_data],
 			poEvent => this.onScramblerEvent(poEvent)
 		)
 		cCARuleEvent.subscribe(
@@ -212,6 +253,9 @@ class cCAScrambler extends cEventSubscriber{
 			case cCAScramblerEvent.notify.imported_ops:
 				this._on_notify_imported_ops( poEvent.data )
 				break
+
+			case cCAScramblerEvent.actions.get_scrambled_data:
+				this._on_action_get_scrambled_data()
 		}
 	}
 	//********************************************************************
@@ -497,6 +541,24 @@ class cCAScrambler extends cEventSubscriber{
 		//no else needed, will not get here
 
 		// the grid done event will trigger the next step of the scrambling process
+	}
+
+	//********************************************************************
+	//* scrambler data
+	//********************************************************************
+	_on_action_get_scrambled_data(){
+		if (this._data == null)
+			cCAScramblerUtils.throw_error(
+				this.base_name,
+				"no data available"
+			)
+
+		var sBase64 = this._data.to_base64()
+		cCAScramblerEvent.fire_event(
+			this.base_name,
+			cCAScramblerEvent.notify.scrambled_data,
+			sBase64
+		)
 	}
 
 	//********************************************************************
