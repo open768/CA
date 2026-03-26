@@ -283,7 +283,7 @@ class cScramblerOpRunner extends cEventSubscriber{
 			oOp
 		)
 
-		this._data.set_multiple(aChanged_cells)		//apply the changes to the data
+		this._data.apply(aChanged_cells)		//apply the changes to the data
 		this._tracker.add_cells(aChanged_cells)		//update tracker
 
 		//----notify consumers of the completed operation, passing the changed cells

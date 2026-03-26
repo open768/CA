@@ -94,16 +94,23 @@ class cCAScramblerData extends cSparseArray{
 	 *
 	 * @param {Array<cChangedCell>} paList
 	 */
-	set_multiple( paList){
+	apply( paList){
 		if (!Array.isArray(paList))
 			throw new eCAScramblerException("expecting an array")
 
+		var iIndex = 0
 		paList.forEach(
-			poCell=>this.set(
-				poCell.row,
-				poCell.col,
-				poCell.value
-			)
+			poCell=>{
+				if (poCell instanceof cChangedCell)
+					this.set(
+						poCell.row,
+						poCell.col,
+						poCell.value
+					)
+				else
+					cDebug.warn("ignoring item at index " + iIndex + ", not a cChangedCell object")
+				iIndex++
+			}
 		)
 	}
 }
