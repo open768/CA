@@ -155,7 +155,7 @@ class cScramblerCellTracker{
 	 * @param {cChangedCell} poChangedCell
 	 */
 	add_cell(poChangedCell){
-		var map_index = poChangedCell.row + poChangedCell.col * cCAScramblerTypes.MAX_SCRAMBLER_INDEX
+		var map_index = cCAScramblerUtils.get_unique_cell_id(poChangedCell)
 
 		this._changed_cells.set(
 			map_index,
@@ -278,19 +278,19 @@ class cScramblerOpRunner extends cEventSubscriber{
 		}
 
 		// instantiate the operation
-		var aChanged_cells = this._get_op_transforms(
+		var aChangedCells = this._get_changed_cells(
 			oExemplar,
 			oOp
 		)
-
-		this._data.apply(aChanged_cells)		//apply the changes to the data
-		this._tracker.add_cells(aChanged_cells)		//update tracker
+		this._check_reversibility(aChangedCells)	//sanity check that the operation is reversible
+		this._data.apply(aChangedCells)		//apply the changes to the data
+		this._tracker.add_cells(aChangedCells)		//update tracker
 
 		//----notify consumers of the completed operation, passing the changed cells
 		cCAScramblerEvent.fire_event(
 			this._base_name,
 			cCAScramblerEvent.notify.operation_complete,
-			aChanged_cells
+			aChangedCells
 		)
 		//the next operation will be triggered by the consumer firing a changes_consumed event
 	}
@@ -301,7 +301,7 @@ class cScramblerOpRunner extends cEventSubscriber{
 	 * @param {cTransformOp} poOp
 	 * @returns {Array<cChangedCell>}
 	 */
-	_get_op_transforms(poExemplar, poOp){
+	_get_changed_cells(poExemplar, poOp){
 		/* eslint-disable @stylistic/function-call-argument-newline */
 		var oRunner = new poExemplar(this._base_name,this._data,poOp.params)
 		if (!(oRunner instanceof cIndexTransformOp) )
@@ -331,6 +331,52 @@ class cScramblerOpRunner extends cEventSubscriber{
 		}
 
 		return aChanged_cells
+		/* eslint-enable @stylistic/function-call-argument-newline */
+	}
+
+	/**
+	 *
+	 * @param {Array<cChangedCell>} aChangedCells
+	 */
+	_check_reversibility(aChangedCells){
+		/* eslint-disable @stylistic/function-call-argument-newline */
+
+		//check that all source cells and target cells are unique
+		var aSourceMap = new Map()
+		for (var oTransform of aCellTransforms){
+			var source_index = cCAScramblerUtils.get_unique_cell_id(oTransform.source)
+			if (aSourceMap.has(source_index))
+				cCAScramblerUtils.throw_error(this._base_name,"operation is not reversible - source cell is duplicated")
+			aSourceMap.set(source_index,oTransform)
+		}
+
+		var aTargetMap = new Map()
+		for (var oTransform of aCellTransforms){
+			var target_index = cCAScramblerUtils.get_unique_cell_id(oTransform.target)
+			if (aTargetMap.has(target_index))
+				cCAScramblerUtils.throw_error(this._base_name,"operation is not reversible - target cell is duplicated")
+			aTargetMap.set(target_index,oTransform)
+		}
+
+		//------ensure that all sources are targets and all targets are sources
+		for (var source_index of aSourceMap.keys())
+			if (!aTargetMap.has(source_index)){
+				cDebug.warn("source cell is not in targetmap - fixing")
+				var oSource_transform = aSourceMap.get(source_index)	/** @type {cCellTransform} */
+				var oReverseTransform = new cCellTransform(oSource_transform.target	,oSource_transform.source)
+				aCellTransforms.push(oReverseTransform)
+				aTargetMap.set(source_index,oReverseTransform)
+			}
+
+		for (var target_index of aTargetMap.keys())
+			if (!aSourceMap.has(target_index)){
+				cDebug.warn("target cell is not in sourcemap - fixing")
+				var oTarget_transform = aTargetMap.get(target_index)	/** @type {cCellTransform} */
+				var oReverseTransform = new cCellTransform(oTarget_transform.target	,oTarget_transform.source)
+				aCellTransforms.push(oReverseTransform)
+				aSourceMap.set(target_index,oReverseTransform)
+			}
+
 		/* eslint-enable @stylistic/function-call-argument-newline */
 	}
 }

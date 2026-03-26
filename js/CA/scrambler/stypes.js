@@ -59,6 +59,14 @@ class cCAScramblerUtils extends cStaticClass{
 		)
 		throw new eCAScramblerException(psMessage)
 	}
+
+	/**
+	 *
+	 * @param {cChangedCell} poCell
+	 */
+	static get_unique_cell_id(poCell){
+		return poCell.row + poCell.col * cCAScramblerTypes.MAX_SCRAMBLER_INDEX
+	}
 }
 
 class eCAScramblerException extends Error {
