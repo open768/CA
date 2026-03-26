@@ -282,7 +282,6 @@ class cScramblerOpRunner extends cEventSubscriber{
 			oExemplar,
 			oOp
 		)
-		this._check_reversibility(aChangedCells)	//sanity check that the operation is reversible
 		this._data.apply(aChangedCells)		//apply the changes to the data
 		this._tracker.add_cells(aChangedCells)		//update tracker
 
@@ -315,6 +314,8 @@ class cScramblerOpRunner extends cEventSubscriber{
 			cCAScramblerUtils.throw_error(this._base_name,e.message)
 		}
 
+		this._check_reversibility(aOpTransforms)	//sanity check that the operation is reversible
+
 		// get the changed cells from the transforms and apply them to the data
 		if (aOpTransforms == null || aOpTransforms.length == 0)
 			cCAScramblerUtils.throw_error(this._base_name,"no changed cells found")
@@ -336,14 +337,14 @@ class cScramblerOpRunner extends cEventSubscriber{
 
 	/**
 	 *
-	 * @param {Array<cChangedCell>} aChangedCells
+	 * @param {Array<cCellTransform>} aOpTransforms
 	 */
-	_check_reversibility(aChangedCells){
+	_check_reversibility(aOpTransforms){
 		/* eslint-disable @stylistic/function-call-argument-newline */
 
 		//check that all source cells and target cells are unique
 		var aSourceMap = new Map()
-		for (var oTransform of aCellTransforms){
+		for (var oTransform of aOpTransforms){
 			var source_index = cCAScramblerUtils.get_unique_cell_id(oTransform.source)
 			if (aSourceMap.has(source_index))
 				cCAScramblerUtils.throw_error(this._base_name,"operation is not reversible - source cell is duplicated")
@@ -351,7 +352,7 @@ class cScramblerOpRunner extends cEventSubscriber{
 		}
 
 		var aTargetMap = new Map()
-		for (var oTransform of aCellTransforms){
+		for (var oTransform of aOpTransforms){
 			var target_index = cCAScramblerUtils.get_unique_cell_id(oTransform.target)
 			if (aTargetMap.has(target_index))
 				cCAScramblerUtils.throw_error(this._base_name,"operation is not reversible - target cell is duplicated")
@@ -364,7 +365,7 @@ class cScramblerOpRunner extends cEventSubscriber{
 				cDebug.warn("source cell is not in targetmap - fixing")
 				var oSource_transform = aSourceMap.get(source_index)	/** @type {cCellTransform} */
 				var oReverseTransform = new cCellTransform(oSource_transform.target	,oSource_transform.source)
-				aCellTransforms.push(oReverseTransform)
+				aOpTransforms.push(oReverseTransform)
 				aTargetMap.set(source_index,oReverseTransform)
 			}
 
@@ -373,7 +374,7 @@ class cScramblerOpRunner extends cEventSubscriber{
 				cDebug.warn("target cell is not in sourcemap - fixing")
 				var oTarget_transform = aTargetMap.get(target_index)	/** @type {cCellTransform} */
 				var oReverseTransform = new cCellTransform(oTarget_transform.target	,oTarget_transform.source)
-				aCellTransforms.push(oReverseTransform)
+				aOpTransforms.push(oReverseTransform)
 				aSourceMap.set(target_index,oReverseTransform)
 			}
 
