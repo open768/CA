@@ -215,7 +215,7 @@ class cScramblerOpRunner extends cEventSubscriber{
 	async onScramblerEvent( poEvent ){
 		switch (poEvent.action) {
 			case cCAScramblerEvent.notify.changes_consumed:
-				cDebug.write("operation consumed event received, running next operation")
+				//cDebug.write("operation consumed event received, running next operation")
 				this._run_next_op()
 				break
 		}
@@ -271,7 +271,7 @@ class cScramblerOpRunner extends cEventSubscriber{
 		//-----get the runner exemplar for the operation
 		var oExemplar = cScramblerOpMappings.get(oOp.opcode)	/** @type {typeof cIndexTransformOp} */
 		if (oExemplar == null){
-			cDebug.write("⚒️ DEBUG: for POC skipping unknown operation " + oOp.opcode)
+			//cDebug.write("⚒️ DEBUG: for POC skipping unknown operation " + oOp.opcode)
 			//cCAScramblerUtils.throw_error(this._base_name, "unknown operation code: " + oOp.opcode)
 			this._run_next_op()
 			return
