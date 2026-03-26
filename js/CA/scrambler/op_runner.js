@@ -360,6 +360,7 @@ class cScramblerOpRunner extends cEventSubscriber{
 		}
 
 		//------ensure that all sources are targets and all targets are sources
+		var iCountFixes = 0
 		for (var source_index of aSourceMap.keys())
 			if (!aTargetMap.has(source_index)){
 				cDebug.warn("source cell is not in targetmap - fixing")
@@ -367,6 +368,7 @@ class cScramblerOpRunner extends cEventSubscriber{
 				var oReverseTransform = new cCellTransform(oSource_transform.target	,oSource_transform.source)
 				aOpTransforms.push(oReverseTransform)
 				aTargetMap.set(source_index,oReverseTransform)
+				iCountFixes++
 			}
 
 		for (var target_index of aTargetMap.keys())
@@ -376,7 +378,11 @@ class cScramblerOpRunner extends cEventSubscriber{
 				var oReverseTransform = new cCellTransform(oTarget_transform.target	,oTarget_transform.source)
 				aOpTransforms.push(oReverseTransform)
 				aSourceMap.set(target_index,oReverseTransform)
+				iCountFixes++
 			}
+
+		if (iCountFixes == 0)
+			cDebug.write("operation is reversible with no fixes")
 
 		/* eslint-enable @stylistic/function-call-argument-newline */
 	}
