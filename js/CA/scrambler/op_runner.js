@@ -115,7 +115,7 @@ class cScramblerOpMappings extends cStaticClass{
 	 * returns the class exmemplar for the given opcode - this can then be instantiated by the caller
 	 *
 	 * @param {number} piOpcode
-	 * @returns {function}
+	 * @returns {typeof cIndexTransformOp}
 	 */
 	static get(piOpcode) {
 		if (this._mappings.size == 0)
@@ -278,41 +278,13 @@ class cScramblerOpRunner extends cEventSubscriber{
 		}
 
 		// instantiate the operation
-		/* eslint-disable @stylistic/function-call-argument-newline */
-		{
-			//@ts-expect-error
-			var oRunner = new oExemplar(this._base_name,this._data,oOp.params)
-			if (!(oRunner instanceof cIndexTransformOp) )
-				cCAScramblerUtils.throw_error(this._base_name,"invalid operation for " + oRunner)
+		var aChanged_cells = this._get_op_transforms(
+			oExemplar,
+			oOp
+		)
 
-			//perform the runner
-			var aTransforms /**@type {Array<cCellTransform>} */
-			try{
-				aTransforms = oRunner.run()
-			} catch (e){
-				cCAScramblerUtils.throw_error(this._base_name,e.message)
-			}
-
-			// get the changed cells from the transforms and apply them to the data
-			if (aTransforms == null || aTransforms.length == 0)
-				cCAScramblerUtils.throw_error(this._base_name,"no changed cells found")
-
-			var aChanged_cells = [] /** @type {Array<cChangedCell>} */
-			for (var oTransform of aTransforms){
-			//get all the values from the source
-				var iValue = this._data.get(oTransform.source.row,oTransform.source.col)
-				if (iValue == null)
-					cCAScramblerUtils.throw_error(this._base_name,"found a null value")
-
-				var oChanged_cell = new cChangedCell(oTransform.target.row,oTransform.target.col,iValue)
-				aChanged_cells.push(oChanged_cell)
-			}
-
-			//----apply the changed cells
-			this._data.set_multiple(aChanged_cells)
-			this._tracker.add_cells(aChanged_cells)
-		}
-		/* eslint-enable @stylistic/function-call-argument-newline */
+		this._data.set_multiple(aChanged_cells)		//apply the changes to the data
+		this._tracker.add_cells(aChanged_cells)		//update tracker
 
 		//----notify consumers of the completed operation, passing the changed cells
 		cCAScramblerEvent.fire_event(
@@ -323,4 +295,42 @@ class cScramblerOpRunner extends cEventSubscriber{
 		//the next operation will be triggered by the consumer firing a changes_consumed event
 	}
 
+	/**
+	 *
+	 * @param {typeof cIndexTransformOp} poExemplar
+	 * @param {cTransformOp} poOp
+	 * @returns {Array<cChangedCell>}
+	 */
+	_get_op_transforms(poExemplar, poOp){
+		/* eslint-disable @stylistic/function-call-argument-newline */
+		var oRunner = new poExemplar(this._base_name,this._data,poOp.params)
+		if (!(oRunner instanceof cIndexTransformOp) )
+			cCAScramblerUtils.throw_error(this._base_name,"invalid operation for " + oRunner)
+
+		//perform the runner
+		var aOpTransforms /**@type {Array<cCellTransform>} */
+		try{
+			aOpTransforms = oRunner.run()
+		} catch (e){
+			cCAScramblerUtils.throw_error(this._base_name,e.message)
+		}
+
+		// get the changed cells from the transforms and apply them to the data
+		if (aOpTransforms == null || aOpTransforms.length == 0)
+			cCAScramblerUtils.throw_error(this._base_name,"no changed cells found")
+
+		var aChanged_cells = [] /** @type {Array<cChangedCell>} */
+		for (var oTransform of aOpTransforms){
+			//get all the values from the source
+			var iValue = this._data.get(oTransform.source.row,oTransform.source.col)
+			if (iValue == null)
+				cCAScramblerUtils.throw_error(this._base_name,"found a null value")
+
+			var oChanged_cell = new cChangedCell(oTransform.target.row,oTransform.target.col,iValue)
+			aChanged_cells.push(oChanged_cell)
+		}
+
+		return aChanged_cells
+		/* eslint-enable @stylistic/function-call-argument-newline */
+	}
 }
