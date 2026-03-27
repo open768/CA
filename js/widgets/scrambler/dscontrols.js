@@ -16,7 +16,7 @@ USE AT YOUR OWN RISK - NO GUARANTEES OF ANY FORM ARE EITHER EXPRESSED OR IMPLIED
 **************************************************************************/
 const DESCRAMBLE_CONTROL_IDS = {
 	input_crypt_ID: 'a',
-	input_text_status_ID: 'b',
+	input_crypt_status_ID: 'b',
 	input_steps_ID: 'b',
 	output_text_ID: 'c',
 	rule_text_id: 'd',
@@ -52,7 +52,7 @@ class cDescrambleWidget extends cJQueryWidgetClass {
 	//*************************************************************************
 	render(){
 		this._render_importer()
-		this._render_inputs()
+		this._render_crypt()
 		this._render_rule()
 		this._render_grids()
 		this._render_outputs()
@@ -209,7 +209,7 @@ class cDescrambleWidget extends cJQueryWidgetClass {
 
 			var sID = cJquery.child_ID(
 				oElement,
-				SCRAMBLE_CONTROL_IDS.rule_text_id
+				DESCRAMBLE_CONTROL_IDS.rule_text_id
 			)
 			var oRuleText = $(
 				'<textarea>',
@@ -277,7 +277,7 @@ class cDescrambleWidget extends cJQueryWidgetClass {
 
 			var sID = cJquery.child_ID(
 				oElement,
-				SCRAMBLE_CONTROL_IDS.output_text_ID
+				DESCRAMBLE_CONTROL_IDS.output_text_ID
 			)
 			var oOutputText = $(
 				'<textarea>',
@@ -295,7 +295,7 @@ class cDescrambleWidget extends cJQueryWidgetClass {
 	}
 
 	//*************************************************************************
-	_render_inputs(){
+	_render_crypt(){
 		var oElement = this.element
 
 		var oInputDiv = $(
@@ -313,7 +313,7 @@ class cDescrambleWidget extends cJQueryWidgetClass {
 				}
 			)
 			{
-				oHeader.append($('<h3>').text('Scrambler Input'))
+				oHeader.append($('<h3>').text('Scrambled base64'))
 				oInputDiv.append(oHeader)
 			}
 
@@ -325,31 +325,30 @@ class cDescrambleWidget extends cJQueryWidgetClass {
 			)
 			var sID = cJquery.child_ID(
 				oElement,
-				SCRAMBLE_CONTROL_IDS.input_text_ID
+				DESCRAMBLE_CONTROL_IDS.input_crypt_ID
 			)
-			var oInputText = $(
+			var oCryptText = $(
 				'<textarea>',
 				{
 					id: sID,
-					placeholder: 'Enter text to be scrambled here, it must contain at most ' + iMaxLen + ' characters',
+					placeholder: 'Enter scrambled text here',
 					rows: 10,
 					style: "width: 100%;"
 				}
 			)
 			{
-				oInputText.val("the text to be scrambled goes here")
 				//when a key is pressed check how may keys are still available and change the border colour of the input accordingly
-				oInputText.on(
+				oCryptText.on(
 					'blur input',
-					() => this._onInputChange()
+					() => this._onCryptChange()
 				)
-				oInputDiv.append(oInputText)
+				oInputDiv.append(oCryptText)
 			}
 
 			//--------------------status
 			var sID = cJquery.child_ID(
 				oElement,
-				SCRAMBLE_CONTROL_IDS.input_text_status_ID
+				DESCRAMBLE_CONTROL_IDS.input_crypt_status_ID
 			)
 			var oStatusDiv = $(
 				"<div>",
@@ -358,7 +357,7 @@ class cDescrambleWidget extends cJQueryWidgetClass {
 				}
 			)
 			{
-				oStatusDiv.html("<i>...please enter some text to scramble</i>")
+				oStatusDiv.html("<i>...please enter some scrambled text</i>")
 				oInputDiv.append(oStatusDiv)
 			}
 
@@ -384,7 +383,7 @@ class cDescrambleWidget extends cJQueryWidgetClass {
 
 				sID = cJquery.child_ID(
 					oElement,
-					SCRAMBLE_CONTROL_IDS.input_steps_ID
+					DESCRAMBLE_CONTROL_IDS.input_steps_ID
 				)
 				var oStepsInput = $(
 					'<input>',
@@ -420,13 +419,13 @@ class cDescrambleWidget extends cJQueryWidgetClass {
 			{
 				sID = cJquery.child_ID(
 					oElement,
-					SCRAMBLE_CONTROL_IDS.btn_scramble_ID
+					DESCRAMBLE_CONTROL_IDS.btn_scramble_ID
 				)
 				var oButton = $(
 					'<button>',
 					{
 						id: sID,
-						text: 'Scramble',
+						text: 'DeScramble',
 						disabled: true,
 					}
 				)
@@ -452,7 +451,7 @@ class cDescrambleWidget extends cJQueryWidgetClass {
 		var oElement = this.element
 		var oInput = cJquery.get_child(
 			oElement,
-			SCRAMBLE_CONTROL_IDS.input_steps_ID
+			DESCRAMBLE_CONTROL_IDS.input_steps_ID
 		)
 
 		var sValue = oInput.val() /** @type {string} */
@@ -481,7 +480,7 @@ class cDescrambleWidget extends cJQueryWidgetClass {
 		var oElement = this.element
 		var oInput = cJquery.get_child(
 			oElement,
-			SCRAMBLE_CONTROL_IDS.input_text_ID
+			DESCRAMBLE_CONTROL_IDS.input_crypt_ID
 		)
 		var sValue = oInput.val()
 		if (sValue.length == 0) {
@@ -498,7 +497,7 @@ class cDescrambleWidget extends cJQueryWidgetClass {
 		//disable button to prevent multiple clicks
 		var oButton = cJquery.get_child(
 			oElement,
-			SCRAMBLE_CONTROL_IDS.btn_scramble_ID
+			DESCRAMBLE_CONTROL_IDS.btn_scramble_ID
 		)
 		cJquery.disable_element(oButton)
 
@@ -540,7 +539,7 @@ class cDescrambleWidget extends cJQueryWidgetClass {
 				var oElement = this.element
 				var oOutput = cJquery.get_child(
 					oElement,
-					SCRAMBLE_CONTROL_IDS.output_text_ID
+					DESCRAMBLE_CONTROL_IDS.output_text_ID
 				)
 				oOutput.val(poEvent.data)
 				break
@@ -562,7 +561,7 @@ class cDescrambleWidget extends cJQueryWidgetClass {
 				this._update_rule_text(oRule)
 
 				//enable button
-				this._onInputChange()
+				this._onCryptChange()
 				break
 		}
 	}
@@ -574,15 +573,15 @@ class cDescrambleWidget extends cJQueryWidgetClass {
 
 		var oStatus = cJquery.get_child(
 			oElement,
-			SCRAMBLE_CONTROL_IDS.input_text_status_ID
+			DESCRAMBLE_CONTROL_IDS.input_crypt_status_ID
 		)
 		var oButton = cJquery.get_child(
 			oElement,
-			SCRAMBLE_CONTROL_IDS.btn_scramble_ID
+			DESCRAMBLE_CONTROL_IDS.btn_scramble_ID
 		)
 		var oInput = cJquery.get_child(
 			oElement,
-			SCRAMBLE_CONTROL_IDS.input_text_ID
+			DESCRAMBLE_CONTROL_IDS.input_crypt_ID
 		)
 
 		if (bInvalid){
@@ -603,7 +602,7 @@ class cDescrambleWidget extends cJQueryWidgetClass {
 	}
 
 	//*************************************************************************
-	_onInputChange (){
+	_onCryptChange (){
 		var oElement = this.element
 
 		//a rule must be set
@@ -615,7 +614,7 @@ class cDescrambleWidget extends cJQueryWidgetClass {
 		//get the input text
 		var oInput = cJquery.get_child(
 			oElement,
-			SCRAMBLE_CONTROL_IDS.input_text_ID
+			DESCRAMBLE_CONTROL_IDS.input_crypt_ID
 		)
 
 		//check if text is there
@@ -625,7 +624,13 @@ class cDescrambleWidget extends cJQueryWidgetClass {
 			return
 		}
 
-		// check if text has valid length
+		// check if text is valid base64
+		if (!cConverterEncodings.isBase64(sText)){
+			this._invalid_input("crypt text is not valid base64")
+			return
+		}
+
+		// check if crypt text is the correct length
 		var iMax = cCAScrambler.max_chars(
 			this.options.rows,
 			this.options.cols
@@ -657,7 +662,7 @@ class cDescrambleWidget extends cJQueryWidgetClass {
 		)
 		var oTextArea = cJquery.get_child(
 			oElement,
-			SCRAMBLE_CONTROL_IDS.rule_text_id
+			DESCRAMBLE_CONTROL_IDS.rule_text_id
 		)
 		oTextArea.val(s64)
 		this._rule_is_set = true
@@ -666,7 +671,7 @@ class cDescrambleWidget extends cJQueryWidgetClass {
 
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 $.widget(
-	'ck.cascontrols',
+	'ck.cadscontrols',
 	{
 		options: {				//default options can be overriden when the widget is created
 			cols: 100,
@@ -676,7 +681,7 @@ $.widget(
 		},
 
 		_create: function () {
-			var oWidget = new cScrambleWidget(
+			var oWidget = new cDescrambleWidget(
 				this.options,
 				this.element
 			)

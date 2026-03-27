@@ -78,6 +78,10 @@ class cCAScramblerTypes extends cStaticClass{
 	static MIN_CHANGED_COVERAGE = 99 //percentage of cells that should be changed by the scrambling process to be considered effective
 	static MAX_RANDOMNESS_DEVIATION = 0.2	//the maximum deviation (in percentage) that is acceptable for the scrambling process to start
 	static MIN_SQUARE_SIDE = 3
+
+	static PREFIX = "#CAv1#["
+	static SUFFIX = "]#END#"
+	static BITS_PER_CHAR = 8
 }
 
 class cCAScramblerStages extends cStaticClass{

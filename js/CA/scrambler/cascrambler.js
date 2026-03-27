@@ -51,10 +51,10 @@ class cCAScramblerData extends cSparseArray{
 		//get the binary representation of the character
 		var iAscii = psChar.charCodeAt(0)
 		var sBinary = cConverter.intToBinstr(iAscii)
-		if (sBinary.length > cCAScrambler.BITS_PER_CHAR)
+		if (sBinary.length > cCAScramblerTypes.BITS_PER_CHAR)
 			throw new eCAScramblerException("character too long for the number of bits allocated per character")
 		sBinary = sBinary.padStart(
-			cCAScrambler.BITS_PER_CHAR,
+			cCAScramblerTypes.BITS_PER_CHAR,
 			"0"
 		)
 		//iterate every bit in the string
@@ -163,9 +163,6 @@ class cCAScramblerData extends cSparseArray{
 //#
 //####################################################################################################
 class cCAScrambler extends cEventSubscriber{
-	static PREFIX = "#CAv1#["
-	static SUFFIX = "]#END#"
-	static BITS_PER_CHAR = 8
 
 	/** @type number  */ inital_runs = 0
 	/** @type string  */ plaintext = null
@@ -222,7 +219,7 @@ class cCAScrambler extends cEventSubscriber{
 		if (rows === undefined || cols === undefined)
 			throw new eCAScramblerException("rows and cols are required")
 
-		return Math.floor(rows * cols / cCAScrambler.BITS_PER_CHAR) - this.PREFIX.length - this.SUFFIX.length
+		return Math.floor(rows * cols / cCAScramblerTypes.BITS_PER_CHAR) - cCAScramblerTypes.PREFIX.length - cCAScramblerTypes.SUFFIX.length
 	}
 
 	//********************************************************************
@@ -582,7 +579,7 @@ class cCAScrambler extends cEventSubscriber{
 
 		//binary format and populate the grid
 		this.plaintext = psText
-		var sText = cCAScrambler.PREFIX + psText + cCAScrambler.SUFFIX
+		var sText = cCAScramblerTypes.PREFIX + psText + cCAScramblerTypes.SUFFIX
 		this._data.add_string(sText)
 
 		//tell consumers the grid has been updated and they should redraw
@@ -610,3 +607,7 @@ class cCAScrambler extends cEventSubscriber{
 	}
 
 }
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+//%
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+class cCADeScrambler extends cEventSubscriber{}
