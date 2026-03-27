@@ -1,6 +1,6 @@
 'use strict'
 /**************************************************************************
-Copyright (C) Chicken Katsu 2013-2024
+Copyright (C) Chicken Katsu 2013-2026
 This code is protected by copyright under the terms of the
 Creative Commons Attribution 4.0 International License
 https://creativecommons.org/licenses/by/4.0/legalcode
@@ -16,21 +16,12 @@ For licenses that allow for commercial use please contact cluck@chickenkatsu.co.
  * @class cCAGridExported
  */
 class cCAGridExported {
-	/**
-	 *
-	 * @type {number}
-	 */
 	version = 1
-	/**
-	 *
-	 * @type {{ rows: number; cols: number; data: any; }}
-	 */
 	grid = {
 		rows: 0,
 		cols: 0,
 		data: null,
 	}
-
 	/** @type {cCARule}	 */ rule = null
 
 	/**
@@ -57,6 +48,109 @@ class cCAGridExported {
 }
 
 //* ************************************************************************
+class cCAGridBase64Exporter {
+	static get_grid_base64(poGrid) {
+		if (!cCommon.obj_is(
+			poGrid,
+			'cCAGrid'
+		))
+			throw new eCAException('param 1 is not cCAGrid')
+
+		var oRule = poGrid.get_rule()
+		if (oRule.stateRules.length > 1)
+			throw new eCAException('rules can only have 1 state')
+
+		var sBin = cCAGridBinaryExporter.get_grid_binary(poGrid)
+		var s64 = cSimpleBase64.toBase64(sBin)
+		return s64
+	}
+}
+
+//* ************************************************************************
+/**
+ * exports a cCAGrid as a bitstream
+ * see: https://github.com/KonradKiss/JSBitStream
+ * see: https://cdn.jsdelivr.net/npm/jsbitstream/jsbitstream.js
+ *
+ * @param {cCAGrid} poGrid
+ * @returns {jsbitstream}
+ */
+class cCAGridBitStreamExporter {
+	/**
+	 *
+	 * @param {*} poGrid
+	 * @returns {jsbitstream}
+	 */
+	static get_grid_bitstream(poGrid) {
+		if (!cCommon.obj_is(
+			poGrid,
+			'cCAGrid'
+		))
+			throw new eCAException('param 1 is not cCAGrid')
+
+		var oRule = poGrid.get_rule()
+		if (oRule.stateRules.length > 1)
+			throw new eCAException('rules can only have 1 state')
+
+		var oStream = new jsbitstream()
+
+		for (var iRow = 1; iRow <= poGrid.rows; iRow++)
+			for (var iCol = 1; iCol <= poGrid.cols; iCol++) {
+				var oCell = poGrid.getCell(
+					iRow,
+					iCol,
+					true
+				)
+				oStream.writeFlag(oCell.value === 0 ? false : true)
+			}
+
+		if (oStream.size() !== poGrid.rows * poGrid.cols)
+			throw new eCAException('bitstream length does not match grid size')
+
+		return oStream
+	}
+}
+
+//* ************************************************************************
+/**
+ * a simple exporter that creates a binary string of the grid data
+ * TODO: this is not efficient, but it is simple and works for now
+ * TODO: in future convert to a bit array
+ */
+class cCAGridBinaryExporter {
+	//* ************************************************************************
+	static get_grid_binary(poGrid){
+		if (!cCommon.obj_is(
+			poGrid,
+			'cCAGrid'
+		))
+			throw new eCAException('param 1 is not cCAGrid')
+
+		var oRule = poGrid.get_rule()
+		if (oRule.stateRules.length > 1)
+			throw new eCAException('rules can only have 1 state')
+
+		var sBin = ''
+
+		for (var iRow = 1; iRow <= poGrid.rows; iRow++)
+			for (var iCol = 1; iCol <= poGrid.cols; iCol++) {
+				var oCell = poGrid.getCell(
+					iRow,
+					iCol,
+					true
+				)
+				sBin = sBin + oCell.value
+			}
+
+		var iBinLength = poGrid.rows * poGrid.cols
+		if (sBin.length !== iBinLength)
+			throw new eCAException('wrong binary length')
+
+		return sBin
+	}
+}
+
+//* ************************************************************************
 /**
  * exports a cCAGrid as  JSON
  * @class cCAGridJSONExporter
@@ -71,26 +165,31 @@ class cCAGridJSONExporter {
 	 */
 	static export(poGrid) {
 		cDebug.enter()
-		if (!cCommon.obj_is(poGrid, 'cCAGrid'))
-			throw new CAException('param 1 is not cCAGrid')
+		if (!cCommon.obj_is(
+			poGrid,
+			'cCAGrid'
+		))
+			throw new eCAException('param 1 is not cCAGrid')
 
-		var oRule = poGrid.get_rule()
+		var oRule = poGrid.get_rule() /** @type {cCARule}*/
 
 		if (!oRule)
-			throw new CAException('no rule set!')
+			throw new eCAException('no rule set!')
 
-		var oObj = new cCAGridExported()
-		// get the rule from the grid
-		oObj.rule = cCARuleObjExporter.export(oRule)
+		var oExport = new cCAGridExported()
+		{
+			var oRuleExport = cCARuleObjExporter.export( oRule) /** @type {cCAExportedRule} */
+			//@ts-expect-error
+			oExport.rule = oRuleExport
 
-		// get the status of the cells from the grid
-		oObj.grid.rows = poGrid.rows
-		oObj.grid.cols = poGrid.cols
+			// get the status of the cells from the grid
+			oExport.grid.rows = poGrid.rows
+			oExport.grid.cols = poGrid.cols
+			oExport.grid.data = cCAGridBase64Exporter.get_grid_base64(poGrid)
+		}
 
-		// todo
-		oObj.grid.data = this.get_grid_base64(poGrid)
 		cDebug.leave()
-		return oObj
+		return oExport
 	}
 
 	//* ************************************************************************
@@ -100,30 +199,7 @@ class cCAGridJSONExporter {
 	 * @param {cCAGrid} poGrid
 	 * @returns {string}
 	 */
-	static get_grid_base64(poGrid) {
-		if (!cCommon.obj_is(poGrid, 'cCAGrid'))
-			throw new CAException('param 1 is not cCAGrid')
 
-		var oRule = poGrid.get_rule()
-		if (oRule.stateRules.length > 1)
-			throw new CAException('rules can only have 1 state')
-
-		var sBin = ''
-		/** @type {string}	 */ var s64 = null
-
-		for (var iRow = 1; iRow <= poGrid.rows; iRow++)
-			for (var iCol = 1; iCol <= poGrid.cols; iCol++) {
-				var oCell = poGrid.getCell(iRow, iCol, true)
-				sBin = sBin + oCell.value
-			}
-
-		var iBinLength = poGrid.rows * poGrid.cols
-		if (sBin.length !== iBinLength)
-			throw new CAException('wrong binary length')
-
-		s64 = cSimpleBase64.toBase64(sBin)
-		return s64
-	}
 }
 
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -144,26 +220,42 @@ class cCAGridJSONImporter {
 	 */
 	static populate(psName, poJson) {
 		if (!cCAGridExported.is_valid_obj(poJson))
-			throw new CAException('invalid object')
+			throw new eCAException('invalid object')
 
 		// -------------------------------------------------------------------
-		/** @type {cCAGrid}	 */ var oGrid = new cCAGrid(psName, poJson.grid.rows, poJson.grid.cols)
+		var oGrid = new cCAGrid(		/** @type {cCAGrid}	 */
+			psName,					// @ts-expect-error
+			poJson.grid.rows,		// @ts-expect-error
+			poJson.grid.cols
+		)
 
 		// -------------------------------------------------------------------
-		/** @type {cCARule}	 */ var oRule = cCARuleObjImporter.makeRule(poJson.rule)
-		oGrid.set_rule(oRule, false)
+		// 	@ts-expect-error
+		var oRule = cCARuleObjImporter.makeRule(poJson.rule) 		/** @type {cCARule}	 */
+		oGrid.set_rule(
+			oRule,
+			false
+		)
 
 		// -------------------------------------------------------------------
 		oGrid.create_cells()
 		var iBinLength = oGrid.rows * oGrid.cols
+		// @ts-expect-error
 		var s64 = poJson.grid.data
-		var sBin = cSimpleBase64.toBinary(s64, iBinLength) // convert base64 to binary - have to set expected bin length
+		var sBin = cSimpleBase64.toBinary(
+			s64,
+			iBinLength
+		) // convert base64 to binary - have to set expected bin length
 		var iIndex = 0
 
 		for (var iRow = 1; iRow <= oGrid.rows; iRow++)
 			for (var iCol = 1; iCol <= oGrid.cols; iCol++) {
 				var sBinDigit = sBin[iIndex]
-				oGrid.setCellValue(iRow, iCol, parseInt(sBinDigit))
+				oGrid.setCellValue(
+					iRow,
+					iCol,
+					parseInt(sBinDigit)
+				)
 				iIndex++
 			}
 

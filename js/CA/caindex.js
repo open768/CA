@@ -10,32 +10,41 @@ class cCAIndexOps {
 			case CA_DIRECTIONS.northwest:
 				iVal = 256
 				break
+
 			case CA_DIRECTIONS.north:
 				iVal = 128
 				break
+
 			case CA_DIRECTIONS.northeast:
 				iVal = 64
 				break
+
 			case CA_DIRECTIONS.west:
 				iVal = 32
 				break
+
 			case CA_DIRECTIONS.centre:
 				iVal = 16
 				break
+
 			case CA_DIRECTIONS.east:
 				iVal = 8
 				break
+
 			case CA_DIRECTIONS.southwest:
 				iVal = 4
 				break
+
 			case CA_DIRECTIONS.south:
 				iVal = 2
 				break
+
 			case CA_DIRECTIONS.southeast:
 				iVal = 1
 				break
+
 			default:
-				throw new CAException('unknown direction ' + piDirection)
+				throw new eCAException('unknown direction ' + piDirection)
 		}
 
 		var iAnd = piIndex & iVal // bitwise and
@@ -62,6 +71,7 @@ class cCAIndexOps {
 
 			iTmp = iTmp >>> 1 // keep right shifting the value until nothing is left
 		}
+
 		return iCount
 	}
 
@@ -74,11 +84,20 @@ class cCAIndexOps {
 	 */
 	static get_north_bits(piIndex) {
 		var iVal = 0
-		iVal |= this.get_value(piIndex, CA_DIRECTIONS.northwest)
+		iVal |= this.get_value(
+			piIndex,
+			CA_DIRECTIONS.northwest
+		)
 		iVal <<= 1
-		iVal |= this.get_value(piIndex, CA_DIRECTIONS.north)
+		iVal |= this.get_value(
+			piIndex,
+			CA_DIRECTIONS.north
+		)
 		iVal <<= 1
-		iVal |= this.get_value(piIndex, CA_DIRECTIONS.northeast)
+		iVal |= this.get_value(
+			piIndex,
+			CA_DIRECTIONS.northeast
+		)
 		return iVal
 	}
 
@@ -91,11 +110,20 @@ class cCAIndexOps {
 	 */
 	static get_centre_bits(piIndex) {
 		var iVal = 0
-		iVal |= this.get_value(piIndex, CA_DIRECTIONS.west)
+		iVal |= this.get_value(
+			piIndex,
+			CA_DIRECTIONS.west
+		)
 		iVal <<= 1
-		iVal |= this.get_value(piIndex, CA_DIRECTIONS.centre)
+		iVal |= this.get_value(
+			piIndex,
+			CA_DIRECTIONS.centre
+		)
 		iVal <<= 1
-		iVal |= this.get_value(piIndex, CA_DIRECTIONS.east)
+		iVal |= this.get_value(
+			piIndex,
+			CA_DIRECTIONS.east
+		)
 		return iVal
 	}
 
@@ -108,11 +136,20 @@ class cCAIndexOps {
 	 */
 	static get_south_bits(piIndex) {
 		var iVal = 0
-		iVal |= this.get_value(piIndex, CA_DIRECTIONS.southwest)
+		iVal |= this.get_value(
+			piIndex,
+			CA_DIRECTIONS.southwest
+		)
 		iVal <<= 1
-		iVal |= this.get_value(piIndex, CA_DIRECTIONS.south)
+		iVal |= this.get_value(
+			piIndex,
+			CA_DIRECTIONS.south
+		)
 		iVal <<= 1
-		iVal |= this.get_value(piIndex, CA_DIRECTIONS.southeast)
+		iVal |= this.get_value(
+			piIndex,
+			CA_DIRECTIONS.southeast
+		)
 		return iVal
 	}
 }

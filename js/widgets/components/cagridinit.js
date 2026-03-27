@@ -1,6 +1,6 @@
 'use strict'
 /**************************************************************************
-Copyright (C) Chicken Katsu 2013-2024
+Copyright (C) Chicken Katsu 2013-2026
 This code is protected by copyright under the terms of the
 Creative Commons Attribution 4.0 International License
 https://creativecommons.org/licenses/by/4.0/legalcode
@@ -11,23 +11,21 @@ For licenses that allow for commercial use please contact cluck@chickenkatsu.co.
 //###################################################################
 //#
 //###################################################################
-class cCAGridStateInit {
-	element = null
-	grid_name = null
+class cCAGridStateInit extends cJQueryWidgetClass {
+	base_name = null
 
 	//* **************************************************************
 	constructor(poOptions, poElement) {
-		this.element = poElement
-		this.grid_name = poOptions.grid_name
-
-		var oElement = this.element
+		super(
+			poOptions,
+			poElement
+		)
+		this.base_name = poOptions.base_name
 
 		// set basic stuff
-		oElement.uniqueId()
-		oElement.addClass('ui-widget')
+		poElement.addClass('ui-widget')
 
 		// put something in the widget
-		oElement.empty()
 		this._init()
 	}
 
@@ -38,7 +36,11 @@ class cCAGridStateInit {
 		var iSelected = parseInt($(poEvent.target).val()) // selected value in pulldown
 
 		// ---------tell subscribers to init
-		cCAActionEvent.fire_event(this.grid_name, cCAActionEvent.actions.grid_init, iSelected)
+		cCAActionEvent.fire_event(
+			this.base_name,
+			cCAActionEvent.actions.grid_init,
+			iSelected
+		)
 	}
 
 	//* **************************************************************
@@ -47,21 +49,45 @@ class cCAGridStateInit {
 	_init() {
 		var oElement = this.element
 
-		var oDiv = $('<DIV>', { class: 'ui-widget-header' })
+		var oDiv = $(
+			'<DIV>',
+			{
+				class: 'ui-widget-header'
+			}
+		)
 		oDiv.append('initialise')
 		oElement.append(oDiv)
 
-		oDiv = $('<DIV>', { class: 'ui-widget-content' })
-		var oSelect = $('<SELECT>', {
-			width: 200,
-			title: 'choose a pattern to initialise the grid with',
-		})
-		oSelect.append($('<option>', { selected: 1, disabled: 1, value: -1 }).append('Initialise'))
+		oDiv = $(
+			'<DIV>',
+			{
+				class: 'ui-widget-content'
+			}
+		)
+		var oSelect = $(
+			'<SELECT>',
+			{
+				width: 200,
+				title: 'choose a pattern to initialise the grid with',
+			}
+		)
+		oSelect.append($(
+			'<option>',
+			{
+				selected: 1, disabled: 1, value: -1
+			}
+		).append('Initialise'))
 		for (var sName in GRID_INIT_TYPES) {
 			var oItem = GRID_INIT_TYPES[sName]
-			var oOption = $('<option>', { value: oItem.id }).append(oItem.label)
+			var oOption = $(
+				'<option>',
+				{
+					value: oItem.id
+				}
+			).append(oItem.label)
 			oSelect.append(oOption)
 		}
+
 		oDiv.append(oSelect)
 		oSelect.selectmenu({
 			select: poEvent => this.onInitClick(poEvent),
@@ -73,16 +99,22 @@ class cCAGridStateInit {
 //###################################################################
 //#
 //###################################################################
-$.widget('ck.cagridinit', {
-	options: {
-		grid_name: null,
-	},
-	_create: function () {
+$.widget(
+	'ck.cagridinit',
+	{
+		options: {
+			base_name: null,
+		},
+		_create: function () {
 		// checks
-		var oOptions = this.options
-		if (!oOptions.grid_name)
-			$.error('grid name not provided')
+			var oOptions = this.options
+			if (!oOptions.base_name)
+				$.error('base name not provided')
 
-		new cCAGridStateInit(oOptions, this.element) // call class constructor
-	},
-})
+			new cCAGridStateInit(
+				oOptions,
+				this.element
+			) // call class constructor
+		},
+	}
+)

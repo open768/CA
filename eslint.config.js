@@ -3,10 +3,14 @@
 import { defineConfig } from "eslint/config"
 // @ts-ignore
 import stylistic from "@stylistic/eslint-plugin"
+// @ts-ignore
+import jsdoc from "eslint-plugin-jsdoc"
 
 export default defineConfig([
 	{
-		ignores: ["eslint.config.js"],
+		...stylistic.configs.recommended,
+		ignores: ["eslint.config.js", "node_modules/" ],
+
 		files: ["./**/*.js"],
 		languageOptions: {
 			ecmaVersion: "latest",
@@ -15,13 +19,13 @@ export default defineConfig([
 				$: "readonly",
 				bean: "readonly",
 				md5: "readonly",
-				google: "readonly",
+				google: "readonly"
 			},
 		},
 		plugins: {
 			"@stylistic": stylistic,
+			jsdoc,
 		},
-		...stylistic.configs.recommended,
 		rules: {
 			// 0) Flag unused declarations (functions/vars) and private class members
 			"no-unused-vars": ["warn", {
@@ -29,6 +33,17 @@ export default defineConfig([
 				"args": "after-used",
 			}],
 			"no-unused-private-class-members": "warn",
+
+			// Spacing: prevent extra/unnecessary spaces (auto-fixable where applicable)
+			"no-multi-spaces": "error",
+			"no-trailing-spaces": "error",
+			"@stylistic/key-spacing": ["error", { "beforeColon": false, "afterColon": true, "mode": "strict" }],
+
+			// Prevent redeclaring base-class fields like `element`
+			"no-restricted-syntax": ["warn", {
+				"selector": "ClassDeclaration[superClass.name='cJQueryWidgetClass'] PropertyDefinition[key.name='element']",
+				"message": "Do not redeclare `element` in subclasses of cJQueryWidgetClass; it is set by the base class.",
+			}],
 
 			// 1) No trailing semicolons (auto-fixable)
 			// Note: core `semi` is deprecated from ESLint 8.53 but still works in ESLint 9;
@@ -40,6 +55,23 @@ export default defineConfig([
 			// e.g., `if (x) doThing()` -> 
 			//       `if (x)\n  doThing()`
 			"nonblock-statement-body-position": ["error", "below"],// [3](https://eslint.org/docs/latest/rules/nonblock-statement-body-position)
+			// Require a blank line after control blocks (auto-fixable)
+			"padding-line-between-statements": ["error",
+				{ "blankLine": "always", "prev": "block-like", "next": "*" },
+				{ "blankLine": "always", "prev": "*", "next": ["case", "default"] },
+			],
+			"no-multiple-empty-lines": ["error", { "max": 1, "maxEOF": 0, "maxBOF": 0 }],
+			// Require a newline after `{` in object/import/export braces
+			"@stylistic/object-curly-newline": ["error", {
+				"ObjectExpression": "always",
+				"ObjectPattern": "always",
+				"ImportDeclaration": "always",
+				"ExportDeclaration": "always",
+			}],
+			// Put each function call argument on its own line (puts `{` on its own line for object literals)
+			"@stylistic/function-call-argument-newline": ["error", "always"],
+			// When multiple arguments, put `(` and first argument on a new line
+			"@stylistic/function-paren-newline": ["error", "multiline-arguments"],
 
 			// Strongly recommended along with the above so fixes are unambiguous
 			// Require braces for all control statements (auto-fixable)
@@ -48,6 +80,7 @@ export default defineConfig([
 			"@stylistic/brace-style": ["error", "1tbs", { "allowSingleLine": false }], // [5](https://eslint.style/rules/default/brace-style)
 			// Enforce consistent indentation (auto-fixable)
 			"@stylistic/indent": ["error", "tab", { "SwitchCase": 1 }], // [6](https://eslint.style/rules/default/indent)
+			"jsdoc/check-alignment": "error",
 		},
 	},
 ])

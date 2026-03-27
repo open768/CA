@@ -4,19 +4,25 @@ class cSecrets {
 	static add_googletag() {
 		var document = $('body')
 
-		$('<script/>', {
-			async: true,
-			src: 'https://www.googletagmanager.com/gtag/js?id=' + cSecrets.GOOGLEANALYTICS_ID,
-		}).appendTo(document)
+		$(
+			'<script/>',
+			{
+				async: true,
+				src: 'https://www.googletagmanager.com/gtag/js?id=' + cSecrets.GOOGLEANALYTICS_ID,
+			}
+		).appendTo(document)
 
-		$('<script/>', {
-			text:
+		$(
+			'<script/>',
+			{
+				text:
 				'window.dataLayer = window.dataLayer || [];'
 				+ 'function gtag(){ dataLayer.push(arguments); }'
 				+ 'gtag(\'js\', new Date());'
 				+ 'gtag(\'config\', \''
 				+ cSecrets.GOOGLEANALYTICS_ID
 				+ '\');',
-		}).appendTo(document)
+			}
+		).appendTo(document)
 	}
 }

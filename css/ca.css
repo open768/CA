@@ -1,42 +1,45 @@
-.CAControls{
-    outline: 1px solid #ddd;
-    padding: 5px;
-    background: #f0f0f0;
+.CAControls {
+	outline: 1px solid #ddd;
+	padding: 5px;
+	background: #f0f0f0;
 	display: inline-block;
-	width:220px;
+	width: 220px;
 }
-.CACanvas{
-    outline: 1px solid #ddd;
-    padding: 5px;
-    background: #f0f0f0;
+
+.CACanvas {
+	outline: 1px solid #ddd;
+	padding: 5px;
+	background: #f0f0f0;
 	display: inline-block;
 	vertical-align: top;
 	min-width: 500px;
 	min-height: 500px;
 }
 
-.rule{
+.rule {
 	width: 325px;
 	height: 100px;
-	font-family:courier;
+	font-family: courier;
 	font-size: 9px;
 }
-.json{
+
+.json {
 	width: 100%;
 	height: 200px;
-	font-family:courier;
+	font-family: courier;
 	font-size: 7px;
 }
-.rule_wide{
+
+.rule_wide {
 	width: 800px;
 }
 
-.caindex{
-    outline: 1px solid #ddd;
+.caindex {
+	outline: 1px solid #ddd;
 	display: inline-block;
-    margin: 4px;
+	margin: 4px;
 }
 
-.caindexon{
-    outline: 3px solid blue;
+.caindexon {
+	outline: 3px solid blue;
 }

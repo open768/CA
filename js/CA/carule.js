@@ -1,7 +1,7 @@
 'use strict'
 /* exported cCAStateRule, cCARule */
 /**************************************************************************
-Copyright (C) Chicken Katsu 2013-2024
+Copyright (C) Chicken Katsu 2013-2026
 This code is protected by copyright under the terms of the
 Creative Commons Attribution 4.0 International License
 https://creativecommons.org/licenses/by/4.0/legalcode
@@ -55,8 +55,13 @@ class cCARule {
 
 		for (var i = 1; i <= CACONSTS.MAX_INPUTS; i++) {
 			var iRnd = Math.floor(Math.random() * 1.99)
-			oRule.set_output(CA_STATES.default_state, i, iRnd)
+			oRule.set_output(
+				CA_STATES.default_state,
+				i,
+				iRnd
+			)
 		}
+
 		cDebug.leave()
 		return oRule
 	}
@@ -84,7 +89,7 @@ class cCARule {
 	 */
 	set_output(piState, piBitmap, piValue) {
 		if (piState < 1)
-			throw new CAException('invalid state')
+			throw new eCAException('invalid state')
 
 		if (piState > this.stateRules.length)
 			this.create_state(piState) // create a new state if the state is unknown
@@ -98,7 +103,7 @@ class cCARule {
 	 */
 	set_boredom(piBoredom) {
 		if (piBoredom != CACONSTS.NO_BOREDOM && piBoredom < 2)
-			throw new CAException('boredom must be at least 2')
+			throw new eCAException('boredom must be at least 2')
 
 		this.boredom_count = piBoredom
 	}
@@ -116,7 +121,7 @@ class cCARule {
 		// cells must have neighbours - 0 doesnt become 1
 
 		if (piState > this.stateRules.length)
-			throw new CAException('invalid state requested - too big')
+			throw new eCAException('invalid state requested - too big')
 
 		try {
 			var iOutput = this.stateRules[piState - 1].outputs[piBitmap] // TBD should be using a method
@@ -140,7 +145,7 @@ class cCARule {
 			return
 		// dont create existing states
 		if (!this.has_state_transitions && piState !== CA_STATES.default_state)
-			throw new CAException('state not possible without state transitions enabled')
+			throw new eCAException('state not possible without state transitions enabled')
 
 		var oStateRule = new cCAStateRule()
 		oStateRule.neighbour_type = this.neighbour_type
@@ -156,13 +161,13 @@ class cCARule {
 	 */
 	set_nextState(piInState, piPattern, piNextState) {
 		if (!this.has_state_transitions)
-			throw new CAException('no state transitions possible')
+			throw new eCAException('no state transitions possible')
 
 		if (piInState > this.stateRules.length)
-			throw new CAException('invalid input state ')
+			throw new eCAException('invalid input state ')
 
 		if (piNextState > this.stateRules.length)
-			throw new CAException('invalid next state ')
+			throw new eCAException('invalid next state ')
 
 		this.stateRules[piInState - 1].nextStates[piPattern] = piNextState // TBD should be using a method
 	}
@@ -179,10 +184,10 @@ class cCARule {
 			return piInState
 
 		if (!this.has_state_transitions)
-			throw new CAException('no state transitions possible')
+			throw new eCAException('no state transitions possible')
 
 		if (piInState > this.stateRules.length)
-			throw new CAException('invalid state requested')
+			throw new eCAException('invalid state requested')
 
 		var iOutState = this.stateRules[piInState - 1].nextStates[piPattern] // TBD should be using a method
 		return iOutState
@@ -195,37 +200,67 @@ class cCARule {
 	 * @return {boolean}
 	 */
 	_evaluate_simple_boredom(poCell, piBitmap) {
-		if (this.boredom_count == null ||this.boredom_count == CACONSTS.NO_BOREDOM)
+		if (this.boredom_count == null || this.boredom_count == CACONSTS.NO_BOREDOM)
 			return false
 
 		/** @type Map */ var cell_data = poCell.data
 
 		// check if boredom bitmap key is not there
 		if (!cell_data.has(CELL_DATA_KEYS.BOREDOM_BITMAP)) {
-			cell_data.set(CELL_DATA_KEYS.BOREDOM_BITMAP, piBitmap)
-			cell_data.set(CELL_DATA_KEYS.BOREDOM_BITMAP_COUNT, 1)
-			cell_data.set(CELL_DATA_KEYS.BORED_STATE, false)
+			cell_data.set(
+				CELL_DATA_KEYS.BOREDOM_BITMAP,
+				piBitmap
+			)
+			cell_data.set(
+				CELL_DATA_KEYS.BOREDOM_BITMAP_COUNT,
+				1
+			)
+			cell_data.set(
+				CELL_DATA_KEYS.BORED_STATE,
+				false
+			)
 			return false
 		}
 
 		// check if boredom bitmap is different bitmap
 		var previous_bitmap = cell_data.get(CELL_DATA_KEYS.BOREDOM_BITMAP)
 		if (previous_bitmap != piBitmap) {
-			cell_data.set(CELL_DATA_KEYS.BOREDOM_BITMAP, piBitmap)
-			cell_data.set(CELL_DATA_KEYS.BOREDOM_BITMAP_COUNT, 1)
-			cell_data.set(CELL_DATA_KEYS.BORED_STATE, false)
+			cell_data.set(
+				CELL_DATA_KEYS.BOREDOM_BITMAP,
+				piBitmap
+			)
+			cell_data.set(
+				CELL_DATA_KEYS.BOREDOM_BITMAP_COUNT,
+				1
+			)
+			cell_data.set(
+				CELL_DATA_KEYS.BORED_STATE,
+				false
+			)
 			return false
 		}
 
 		// bitmap is the same - increase count and check if bored
 		var count = cell_data.get(CELL_DATA_KEYS.BOREDOM_BITMAP_COUNT) + 1
 		if (count >= this.boredom_count) {
-			cell_data.set(CELL_DATA_KEYS.BOREDOM_BITMAP_COUNT, 0) // reset count
-			cell_data.set(CELL_DATA_KEYS.BORED_STATE, true)
+			cell_data.set(
+				CELL_DATA_KEYS.BOREDOM_BITMAP_COUNT,
+				0
+			) // reset count
+			cell_data.set(
+				CELL_DATA_KEYS.BORED_STATE,
+				true
+			)
 			return true
 		} else {
-			cell_data.set(CELL_DATA_KEYS.BOREDOM_BITMAP_COUNT, count)
-			cell_data.set(CELL_DATA_KEYS.BORED_STATE, false)
+			cell_data.set(
+				CELL_DATA_KEYS.BOREDOM_BITMAP_COUNT,
+				count
+			)
+			cell_data.set(
+				CELL_DATA_KEYS.BORED_STATE,
+				false
+			)
 			return false
 		}
 	}
@@ -237,20 +272,23 @@ class cCARule {
 	 */
 	evaluateCell(poCell) {
 		if (poCell == null)
-			throw new CAException('no cell provided')
+			throw new eCAException('no cell provided')
 
 		var oStatus = new cCAStatus()
 		// get the cell neighbour value
 		var iBitmap = poCell.getBitmap(this.neighbour_type)
 
-		if (iBitmap == 0) 
+		if (iBitmap == 0)
 			// cells that are completely isolated remain dead
 			poCell.evaluated.value = 0
 		else {
 			// check for cell boredom
 			/** @type Boolean */ var bBored = false
 			if (this.boredom_count !== CACONSTS.NO_BOREDOM)
-				bBored = this._evaluate_simple_boredom(poCell, iBitmap)
+				bBored = this._evaluate_simple_boredom(
+					poCell,
+					iBitmap
+				)
 
 			if (bBored) {
 				// flip the cell if bored
@@ -258,7 +296,10 @@ class cCARule {
 				// send an event to say the cell is bored - TBD
 				oStatus.bored = 1
 			} else
-				poCell.evaluated.value = this.get_rule_output(poCell.state, iBitmap)
+				poCell.evaluated.value = this.get_rule_output(
+					poCell.state,
+					iBitmap
+				)
 		}
 
 		// copy the state to the evaluated part (state transitions are not implemented yet)
@@ -279,7 +320,10 @@ class cCARule {
 			oStatus.changed = 1
 
 		// send a status event
-		cCARuleEvent.fire_event(cCARuleEvent.actions.status, oStatus)
+		cCARuleEvent.fire_event(
+			cCARuleEvent.actions.status,
+			oStatus
+		)
 
 		return bHasChanged
 	}

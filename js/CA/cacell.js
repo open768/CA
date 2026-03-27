@@ -1,6 +1,6 @@
 'use strict'
 /**************************************************************************
-Copyright (C) Chicken Katsu 2013-2024
+Copyright (C) Chicken Katsu 2013-2026
 This code is protected by copyright under the terms of the
 Creative Commons Attribution 4.0 International License
 https://creativecommons.org/licenses/by/4.0/legalcode
@@ -57,7 +57,7 @@ class cCACell {
 		// just calls the rules apply method. the benefit of doing it this way is
 		// that each cell could have a different rule.
 		if (this.rule == null)
-			throw new CAException('no rule defined')
+			throw new eCAException('no rule defined')
 
 		var bHasChanged = this.rule.evaluateCell(this)
 		return bHasChanged
@@ -147,8 +147,9 @@ class cCACell {
 			case CA_NEIGHBOURS.eightway:
 				iValue = this.get8Bitmap()
 				break
+
 			case CA_NEIGHBOURS.fourway:
-				// -------------------------------------------------------
+			// -------------------------------------------------------
 				iValue = oHash.get(CA_DIRECTIONS.northwest).value
 				iValue <<= 1
 				iValue |= oHash.get(CA_DIRECTIONS.north).value
@@ -163,8 +164,9 @@ class cCACell {
 				iValue <<= 1
 				iValue |= oHash.get(CA_DIRECTIONS.south).value
 				break
+
 			default:
-				throw new CAException('unknown neighbour type: ' + piNeighbourType)
+				throw new eCAException('unknown neighbour type: ' + piNeighbourType)
 		}
 
 		return iValue
@@ -178,8 +180,11 @@ class cCACell {
 	 */
 	setNeighbour(piDirection, poCell) {
 		if (poCell == null)
-			throw new CAException('no neighbour cell provided')
+			throw new eCAException('no neighbour cell provided')
 
-		this.neighbours.set(piDirection, poCell)
+		this.neighbours.set(
+			piDirection,
+			poCell
+		)
 	}
 }

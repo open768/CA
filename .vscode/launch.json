@@ -5,22 +5,29 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "type": "chrome",
-            "request": "launch",
             "name": "index debug",
-            "file": "index.html?debug",
-        },
-        {
             "type": "chrome",
             "request": "launch",
+            "file": "${workspaceFolder}/index.html?debug",
+        },
+        {
             "name": "index",
-            "file": "index.html",
-        },
-        {
             "type": "chrome",
             "request": "launch",
-            "name": "test boredom",
-            "file": "test/test-boredom.html"
+            "file": "${workspaceFolder}/index.html",
+        },
+        {
+            "name": "scrambler",
+            "type": "chrome",
+            "request": "launch",
+            "url": "${workspaceFolder}/scramble.html?debug",
+            "skipFiles": [
+                "**/*.min.js",
+                "**/ajax.googleapis.com/**",
+                "**/cdnjs.cloudflare.com/**",
+                "**/jquery*.js",
+                "**/bean*.js",
+            ]
         }
     ]
 }

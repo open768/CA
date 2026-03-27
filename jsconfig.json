@@ -6,6 +6,16 @@
 		"allowJs": true,
 		"baseUrl": "."
 	},
-	"include": ["**/*.js", "globals.d.ts", "../jsinc/**/*.js"],
-	"exclude": ["**/node_modules", "**/bower_components", "**/dist", "**/build", "**/test"]
+	"include": [
+		"**/*.js",
+		"globals.d.ts",
+		"../jsinc/**/*.js"
+	],
+	"exclude": [
+		"node_modules",
+		"**/bower_components",
+		"**/dist",
+		"**/build",
+		"**/test"
+	]
 }
