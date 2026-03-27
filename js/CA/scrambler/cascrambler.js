@@ -9,8 +9,11 @@ Any Cryptography concepts demonstrated in this code are covered by the UK Govt O
 and is not intended for any dual use as defined by the UK government license.
 You the consumer of this code are solely and entirely responsible for importing this code into your own country..
 
-**************************************************************************/
+For licenses that allow for commercial use please contact cluck@chickenkatsu.co.uk
 
+USE AT YOUR OWN RISK - NO GUARANTEES OF ANY FORM ARE EITHER EXPRESSED OR IMPLIED
+
+**************************************************************************/
 //####################################################################################################
 //#
 //####################################################################################################

@@ -14,15 +14,15 @@ For licenses that allow for commercial use please contact cluck@chickenkatsu.co.
 USE AT YOUR OWN RISK - NO GUARANTEES OF ANY FORM ARE EITHER EXPRESSED OR IMPLIED
 
 **************************************************************************/
-const SCRAMBLE_CONTROL_IDS = {
-	input_text_ID: 'a1',
-	input_text_status_ID: 'a2',
+const DESCRAMBLE_CONTROL_IDS = {
+	input_crypt_ID: 'a',
+	input_text_status_ID: 'b',
 	input_steps_ID: 'b',
 	output_text_ID: 'c',
 	rule_text_id: 'd',
-	btn_scramble_ID: 'e'
+	btn_descramble_ID: 'e'
 }
-const SCRAMBLE_CONSTS = {
+const DESCRAMBLE_CONSTS = {
 	CELL_SIZE: 5,
 	BAD_INPUT_COLOUR: 'red',
 	MIN_STEPS: 5,
@@ -31,7 +31,7 @@ const SCRAMBLE_CONSTS = {
 
 //#############################################################################
 //#############################################################################
-class cScrambleWidget extends cJQueryWidgetClass {
+class cDescrambleWidget extends cJQueryWidgetClass {
 
 	_initial_runs = 0
 	_rule_is_set = false

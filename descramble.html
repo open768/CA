@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<!--**************************************************************************
+	Cellular Automata Simulator © 2013-2026 by chickenkatsu.co.uk ( 
+	is licensed under Attribution-NonCommercial-ShareAlike 4.0 International. 
+	To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-sa/4.0/
+	contact: https://github.com/open768/
+
+	For licenses that allow for commercial use please contact cluck@chickenkatsu.co.uk
+
+	USE AT YOUR OWN RISK - NO GUARANTEES OF ANY FORM ARE EITHER EXPRESSED OR IMPLIED
+
+	Cryptography code demonstrated in this application is covered by the UK Govt 
+	Open General Export License for Cryptographic development 
+	(see https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/1101784/open-general-export-licence-cryptographic-development.pdf) 
+	and is not intended for dual use as defined by this license. 
+	You the consumer of this application are entirely responsible for importing 
+	this code into your own country. if you disagree please close this page.
+
+	**************************************************************************-->
+
+	<title>Cellular Automata DeScrambler</title>
+	
+	<!-- 3rd party libraries (w3c) -->
+	<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+	<link rel="icon" href="https://www.chickenkatsu.co.uk/images/chicken_icon.png" type="image/png">
+
+	<!-- 3rd party libraries (bean) -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/bean/1.0.15/bean.min.js"></script>
+
+	<!-- 3rd party libraries (jquery) -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+	<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jcanvas/23.0.0/umd/jcanvas.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/js-md5@0.8.3/build/md5.min.js"></script>
+	<script src="https://www.gstatic.com/charts/loader.js"></script>
+
+	<!-- stylesheets -->
+	<link rel="stylesheet" href="css/CA.css">
+	<link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+
+	<!-- jsinc functions -->
+	<script src="../jsinc/ck-inc/jquery/jquery.common.js"></script>
+	<script src="../jsinc/ck-inc/common.js"></script>
+	<script src="../jsinc/ck-inc/debug.js"></script>
+	<script src="../jsinc/ck-inc/event.js"></script>
+	<script src="../jsinc/ck-inc/converter.js"></script>
+	<script src="../jsinc/ck-inc/sparse.js"></script>
+	<script src="../jsinc/ck-inc/supress.js"></script>
+
+	<!-- cellular automata classes -->
+	<script src="js/CA/catypes.js"></script>
+	<script src="js/CA/caevent.js"></script>
+	<script src="js/CA/cacell.js"></script>
+	<script src="js/CA/carule.js"></script>
+	<script src="js/CA/caindex.js"></script>
+	<script src="js/CA/cagrid.js"></script>
+	<script src="js/CA/cagridinit.js"></script>
+	<script src="js/CA/cagridimporter.js"></script>
+	<script src="js/CA/caimporter.js"></script>
+
+	<!-- dependent libraries for scrambler-->
+	<script src="../jsinc/jsbitstream-class/jsbitstream.js"></script>
+
+	<!-- scramber classes -->
+	<script src="js/CA/scrambler/stypes.js"></script>
+	<script src="js/CA/scrambler/cascrambler.js"></script>
+	<script src="js/CA/scrambler/schecks.js"></script>
+	<script src="js/CA/scrambler/op_reader.js"></script>
+	<script src="js/CA/scrambler/op_runner.js"></script>
+	<script src="js/CA/scrambler/operations.js"></script>
+
+	<!-- scrambler widgets -->
+	<script src="js/widgets/scrambler/dscontrols.js"></script>
+	<script src="js/widgets/scrambler/cascanvas.js"></script>
+
+	<!-- widgets for page -->
+	<script src="js/secrets.js"></script>
+	<script src="js/widgets/components/cacanvas.js"></script>
+	<script src="js/widgets/components/cajson.js"></script>
+	<script src="js/widgets/components/caremotecontrol.js"></script>
+	<script src="js/widgets/components/castatus.js"></script>
+	<script src="js/widgets/components/cagridinit.js"></script>
+
+	<script language="javascript">
+		function onJqueryLoad() {
+			cSecrets.add_googletag()
+			$("#scrambler").cascontrols({ base_name: "cascramble" });
+		}
+		$(onJqueryLoad);
+	</script>
+</head>
+
+<body>
+	<!-- ****************************************************************************** -->
+	<div class="w3-card">
+		<header class="w3-container w3-blue">
+			<h3>Cellular Automata scrambler</h3>
+		</header>
+		<div class="w3-container">
+			<p>
+				This page is to test the scrambler function that uses a CA to read its instructions from.
+				please copy JSON from <a href="index.html" target="index">CA Explorer</a> into the clipboard before
+				proceeding
+			</p>
+		</div>
+	</div>
+
+	<!-- ****************************************************************************** -->
+	<DIV ID="scrambler" class="w3-container w3-margin">
+		scrambler will go here
+	</DIV>
+
+	<!-- ****************************************************************************** -->
+	<DIV class="w3-card-4 w3-sand">
+		<header class="w3-container w3-yellow">
+			<h3>Information</h3>
+		</header>
+		<div class="w3-container">
+			<p>
+			This work is licensed under Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International.
+			To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-nd/4.0/
+			</p>
+			<p>
+			Any Cryptography concepts demonstrated in this code are covered by the UK Govt Open General Export License for Cryptographic development
+			(see https://www.gov.uk/government/publications/open-general-export-licence-cryptographic-development)
+			and is not intended for any dual use as defined by the UK government license.
+			You the consumer of this code are solely and entirely responsible for importing this code into your own country..
+			</p>
+			<p>
+			For licenses that allow for commercial use please contact cluck@chickenkatsu.co.uk
+			</p>
+			<p>
+			USE AT YOUR OWN RISK - NO GUARANTEES OF ANY FORM ARE EITHER EXPRESSED OR IMPLIED			
+			</p>
+		</div>
+		<footer class="w3-container w3-white w3-border w3-border-blue">
+			<a href="https://www.chickenkatsu.co.uk" target="_blank"><img
+					src="https://www.chickenkatsu.co.uk/images/chicken_icon.png" border="0"> We are Chicken Katsu </a>
+		</footer>
+	</DIV>
+
+</body>
+
+</html>
