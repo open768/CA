@@ -5,15 +5,10 @@
   "description": "A cellular automata simulator",
   "main": "index.html",
   "devDependencies": {
+    "eslint": "^9.39.4",
     "globals": "^17.3.0"
   },
   "dependencies": {
-    "jsbitstream": "^1.0.0",
-    "standard": "^17.1.2"
-  },
-  "standard": {
-    "globals": [
-      "$"
-    ]
+    "jsbitstream": "^1.0.0"
   }
 }
