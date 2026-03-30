@@ -1,0 +1,65 @@
+{
+    "update.mode": "none",
+    "update.enableWindowsBackgroundUpdates": false,
+    "git.enableSmartCommit": true,
+    "git.confirmSync": false,
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": "explicit"
+    },
+    "git.blame.editorDecoration.disableHover": true,
+    "git.showProgress": false,
+    "diffEditor.ignoreTrimWhitespace": false,
+    "todo.languages": [
+        
+        {
+            "allowEmptyLines": true,
+            "annotations": [],
+            "languageIds": [
+                "javascript",
+                "typescript",
+                "c",
+                "cpp",
+                "objective-c",
+                "objective-cpp",
+                "csharp",
+                "java"
+            ],
+            "prefixes": [
+                "//",
+                "*"
+            ]
+        },
+        {
+            "allowEmptyLines": true,
+            "annotations": [],
+            "languageIds": [
+                "python",
+                "cython",
+                "cmake"
+            ],
+            "prefixes": [
+                "#"
+            ]
+        }
+    ],
+    "scm.repositories.selectionMode": "single",
+    //-------------------------------------------------------------------------------
+    // Javascript
+    "[javascript]": {
+        "editor.defaultFormatter": "standard.vscode-standard",
+        "editor.formatOnSave": true
+    },
+    // Prevents VS Code‘s default JS validation
+    "javascript.validate.enable": false,  
+    
+    "javascript.format.enable": true,
+    "standard.enableGlobally": true,
+    "standard.enable": true,
+    "standard.autoFixOnSave": true,   
+
+    // Files to validate with Standard
+    "standard.validate": [
+        "javascript",
+        "javascriptreact"
+    ]
+}

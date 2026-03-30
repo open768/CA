@@ -8,109 +8,104 @@ For licenses that allow for commercial use please contact cluck@chickenkatsu.co.
 // USE AT YOUR OWN RISK - NO GUARANTEES OF ANY FORM ARE EITHER EXPRESSED OR IMPLIED
 **************************************************************************/
 
-//###################################################################
-//#
-//###################################################################
+// ###################################################################
+// #
+// ###################################################################
 class cCAControlsR extends cJQueryWidgetClass {
-	grid = null
-	base_name = null
+  grid = null
+  base_name = null
 
-	//* **************************************************************
-	constructor(poOptions, poElement) {
-		super(
-			poOptions,
-			poElement
-		)
-		this.base_name = poOptions.base_name
+  //* **************************************************************
+  constructor (poOptions, poElement) {
+    super(
+      poOptions,
+      poElement
+    )
+    this.base_name = poOptions.base_name
 
-		var oElement = this.element
+    const oElement = this.element
 
-		// set basic stuff
-		oElement.addClass('ui-widget')
+    // set basic stuff
+    oElement.addClass('ui-widget')
 
-		// check dependencies
-		if (!oElement.cagridinit)
-			$.error('cainit is missing , chack includes')
+    // check dependencies
+    if (!oElement.cagridinit) { $.error('cainit is missing , chack includes') }
 
-		if (!oElement.castatus)
-			$.error('castatus is missing , chack includes')
+    if (!oElement.castatus) { $.error('castatus is missing , chack includes') }
 
-		if (!oElement.cachart)
-			$.error('caChart is missing , chack includes')
+    if (!oElement.cachart) { $.error('caChart is missing , chack includes') }
 
-		if (!oElement.caremotecontrols)
-			$.error('caremotecontrols is missing , chack includes')
+    if (!oElement.caremotecontrols) { $.error('caremotecontrols is missing , chack includes') }
 
-		// put something in the widget
-		this._init()
-	}
+    // put something in the widget
+    this._init()
+  }
 
-	//* **************************************************************
-	//* Privates
-	//* **************************************************************
-	_init() {
-		var oDiv
-		var oElement
+  //* **************************************************************
+  //* Privates
+  //* **************************************************************
+  _init () {
+    let oDiv
+    let oElement
 
-		oElement = this.element
+    oElement = this.element
 
-		// --status-------------------------------------------------
-		oDiv = $('<DIV>')
-		oDiv.castatus({
-			base_name: this.base_name
-		})
-		oElement.append(oDiv)
-		oElement.append('<P>')
+    // --status-------------------------------------------------
+    oDiv = $('<DIV>')
+    oDiv.castatus({
+      base_name: this.base_name
+    })
+    oElement.append(oDiv)
+    oElement.append('<P>')
 
-		// ---chart----------------------------------------------------------
-		oDiv = $('<DIV>')
-		oDiv.cachart({
-			base_name: this.base_name
-		})
-		oElement.append(oDiv)
-		oElement.append('<P>')
+    // ---chart----------------------------------------------------------
+    oDiv = $('<DIV>')
+    oDiv.cachart({
+      base_name: this.base_name
+    })
+    oElement.append(oDiv)
+    oElement.append('<P>')
 
-		// --initialise------------------------------------------------
-		oDiv = $('<DIV>')
-		oDiv.cagridinit({
-			base_name: this.base_name
-		})
-		oElement.append(oDiv)
-		oElement.append('<P>')
+    // --initialise------------------------------------------------
+    oDiv = $('<DIV>')
+    oDiv.cagridinit({
+      base_name: this.base_name
+    })
+    oElement.append(oDiv)
+    oElement.append('<P>')
 
-		// --controls------------------------------------------------
-		oDiv = $(
-			'<DIV>',
-			{
-				class: 'ui-widget-header'
-			}
-		)
-		oDiv.caremotecontrols({
-			base_name: this.base_name
-		})
-		oElement.append(oDiv)
-	}
+    // --controls------------------------------------------------
+    oDiv = $(
+      '<DIV>',
+      {
+        class: 'ui-widget-header'
+      }
+    )
+    oDiv.caremotecontrols({
+      base_name: this.base_name
+    })
+    oElement.append(oDiv)
+  }
 }
 
-//###################################################################
-//#
-//###################################################################
+// ###################################################################
+// #
+// ###################################################################
 $.widget(
-	'ck.cacontrolsr',
-	{
-		options: {
-			base_name: null,
-		},
-		_create: function () {
-		// checks
-			var oOptions = this.options
-			if (!oOptions.base_name)
-				$.error('base name not provided')
+  'ck.cacontrolsr',
+  {
+    options: {
+      base_name: null
+    },
+    _create: function () {
+      // checks
+      const oOptions = this.options
+      if (!oOptions.base_name) { $.error('base name not provided') }
 
-			new cCAControlsR(
-				oOptions,
-				this.element
-			) // call widgetclass
-		},
-	}
+      new cCAControlsR(
+        oOptions,
+        this.element
+      ) // call widgetclass
+    }
+  }
 )

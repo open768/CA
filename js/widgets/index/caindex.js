@@ -7,171 +7,168 @@ https://creativecommons.org/licenses/by/4.0/legalcode
 For licenses that allow for commercial use please contact cluck@chickenkatsu.co.uk
 // USE AT YOUR OWN RISK - NO GUARANTEES OF ANY FORM ARE EITHER EXPRESSED OR IMPLIED
 **************************************************************************/
-class cIndexWidget extends cJQueryWidgetClass{
+class cIndexWidget extends cJQueryWidgetClass {
+  constructor (poOptions, poElement) {
+    super(
+      poOptions,
+      poElement
+    )
 
-	constructor(poOptions, poElement){
-		super(
-			poOptions,
-			poElement
-		)
+    // check for classes
+    if (typeof cCARule !== 'function') { $.error('missing cCARule class') }
 
-		// check for classes
-		if (typeof cCARule !== 'function')
-			$.error('missing cCARule class')
+    if (!poOptions.name) { $.error('missing name') }
+  }
 
-		if (!poOptions.name)
-			$.error('missing name')
-	}
+  init () {
+    const oOptions = this.options
+    const oElement = this.element
 
-	init(){
-		var oOptions = this.options
-		var oElement = this.element
+    const sCaName = oOptions.name
 
-		var sCaName = oOptions.name
+    // set basic stuff
+    const oTopContainer = $('<div>') // this will contain 3 cells
+    {
+      // ----------------------------------------------------------------------------------
+      // left controls - rule configuration
+      var oCell = $(
+        '<div>',
+        {
+          class: 'w3-cell w3-cell-top w3-container'
+        }
+      )
+      {
+        const oLeftCtrlDiv = $(
+          '<DIV>',
+          {
+            width: 350, id: 'leftControl'
+          }
+        )
+        oLeftCtrlDiv.cacontrolsl({
+          base_name: sCaName
+        })
+        oCell.append(oLeftCtrlDiv)
+      }
 
-		// set basic stuff
-		var oTopContainer = $('<div>') //this will contain 3 cells
-		{
-		// ----------------------------------------------------------------------------------
-		// left controls - rule configuration
-			var oCell = $(
-				'<div>',
-				{
-					class: 'w3-cell w3-cell-top w3-container'
-				}
-			)
-			{
-				var oLeftCtrlDiv = $(
-					'<DIV>',
-					{
-						width: 350, id: 'leftControl'
-					}
-				)
-				oLeftCtrlDiv.cacontrolsl({
-					base_name: sCaName
-				})
-				oCell.append(oLeftCtrlDiv)
-			}
+      oTopContainer.append(oCell)
 
-			oTopContainer.append(oCell)
+      // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+      oCell = $(
+        '<div>',
+        {
+          class: 'w3-cell w3-cell-top w3-container'
+        }
+      )
+      {
+        const oCanvasDiv = $(
+          '<SPAN>',
+          {
+            title: 'this is where the magic happens'
+          }
+        )
+        oCanvasDiv.cacanvas({
+          cols: oOptions.cols,
+          rows: oOptions.rows,
+          cell_size: oOptions.cell_size,
+          base_name: sCaName
+        })
+        oCell.append(oCanvasDiv)
+      }
 
-			// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-			oCell = $(
-				'<div>',
-				{
-					class: 'w3-cell w3-cell-top w3-container'
-				}
-			)
-			{
-				var oCanvasDiv = $(
-					'<SPAN>',
-					{
-						title: 'this is where the magic happens'
-					}
-				)
-				oCanvasDiv.cacanvas({
-					cols: oOptions.cols,
-					rows: oOptions.rows,
-					cell_size: oOptions.cell_size,
-					base_name: sCaName,
-				})
-				oCell.append(oCanvasDiv)
-			}
+      oTopContainer.append(oCell)
 
-			oTopContainer.append(oCell)
+      // right panel - grid initialisation, status and run controls
+      oCell = $(
+        '<div>',
+        {
+          class: 'w3-cell w3-cell-top w3-container'
+        }
+      )
+      {
+        const oRightCtrlDiv = $(
+          '<DIV>',
+          {
+            width: 240, id: 'rightControl'
+          }
+        )
+        oRightCtrlDiv.cacontrolsr({
+          base_name: sCaName
+        })
+        oCell.append(oRightCtrlDiv)
+        oTopContainer.append(oCell)
+      }
 
-			// right panel - grid initialisation, status and run controls
-			oCell = $(
-				'<div>',
-				{
-					class: 'w3-cell w3-cell-top w3-container'
-				}
-			)
-			{
-				var oRightCtrlDiv = $(
-					'<DIV>',
-					{
-						width: 240, id: 'rightControl'
-					}
-				)
-				oRightCtrlDiv.cacontrolsr({
-					base_name: sCaName
-				})
-				oCell.append(oRightCtrlDiv)
-				oTopContainer.append(oCell)
-			}
+      oElement.append(oTopContainer)
+    }
 
-			oElement.append(oTopContainer)
-		}
+    // ----------------------------------------------------------------------------------
+    const oBottomContainer = $(
+      '<div>',
+      {
+        class: 'w3-cell-row'
+      }
+    )
+    {
+      // JSON panel
+      oCell = $(
+        '<div>',
+        {
+          class: 'w3-cell'
+        }
+      )
+      {
+        const oJsonDiv = $(
+          '<DIV>',
+          {
+            title: 'json will appear here'
+          }
+        )
+        oJsonDiv.cajson({
+          base_name: sCaName
+        })
+        oCell.append(oJsonDiv)
+      }
 
-		// ----------------------------------------------------------------------------------
-		var oBottomContainer = $(
-			'<div>',
-			{
-				class: 'w3-cell-row'
-			}
-		)
-		{
-		// JSON panel
-			oCell = $(
-				'<div>',
-				{
-					class: 'w3-cell'
-				}
-			)
-			{
-				var oJsonDiv = $(
-					'<DIV>',
-					{
-						title: 'json will appear here'
-					}
-				)
-				oJsonDiv.cajson({
-					base_name: sCaName
-				})
-				oCell.append(oJsonDiv)
-			}
+      oBottomContainer.append(oCell)
+    }
 
-			oBottomContainer.append(oCell)
-		}
+    oElement.append(oBottomContainer)
 
-		oElement.append(oBottomContainer)
+    // check clipboard
+    cBrowser.get_clipboard_permissions(true)
 
-		// check clipboard
-		cBrowser.get_clipboard_permissions(true)
-
-		// ---------------informs subscribers that UI is ready -------------------------------
-		cCAActionEvent.fire_event(
-			oOptions.name,
-			cCAActionEvent.actions.ready,
-			null
-		)
-	}
+    // ---------------informs subscribers that UI is ready -------------------------------
+    cCAActionEvent.fire_event(
+      oOptions.name,
+      cCAActionEvent.actions.ready,
+      null
+    )
+  }
 }
 
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 $.widget(
-	'ck.caindex',
-	{
-	//#################################################################
-	// # Definition
-	//#################################################################
-		options: {
-			cols: 100,
-			rows: 100,
-			cell_size: 5,
-			name: null,
-		},
+  'ck.caindex',
+  {
+    // #################################################################
+    // # Definition
+    // #################################################################
+    options: {
+      cols: 100,
+      rows: 100,
+      cell_size: 5,
+      name: null
+    },
 
-		//#################################################################
-		// # Constructor
-		// #################################################################`
-		_create: function () {
-			var oWidget = new cIndexWidget(
-				this.options,
-				this.element
-			)
-			oWidget.init()
-		}
-	}
+    // #################################################################
+    // # Constructor
+    // #################################################################`
+    _create: function () {
+      const oWidget = new cIndexWidget(
+        this.options,
+        this.element
+      )
+      oWidget.init()
+    }
+  }
 )
