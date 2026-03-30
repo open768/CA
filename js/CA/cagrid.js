@@ -499,7 +499,6 @@ class cCAGrid extends cEventSubscriber {
 		cDebug.enter()
 
 		this._consumed_responses++
-		const sConsumer = poEvent.data
 
 		const iSubscriber_count = cCAGridEvent.get_subscriber_count(
 			this.name,
@@ -507,6 +506,7 @@ class cCAGrid extends cEventSubscriber {
 		)
 
 		if (iSubscriber_count > 1) {
+			//	const sConsumer = poEvent.data
 			// cDebug.write('ℹ️ grid: notified consumed response from ' + sConsumer)
 
 			if (this._consumed_responses > iSubscriber_count) {
@@ -569,11 +569,10 @@ class cCAGrid extends cEventSubscriber {
 
 		this.runData.changed_cells.forEach(function (poCell) {
 			sBinary += poCell.value
-			if (poCell.value !== 0) {
+			if (poCell.value !== 0)
 				iCountOnes++
-			} else {
+			else
 				iCountZeros++
-			}
 		})
 
 		const sHash = md5(sBinary) + '_' + iCountOnes + ',' + iCountZeros

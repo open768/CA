@@ -66,9 +66,8 @@ class cCAIndexOps {
 		let iCount = 0
 
 		while (iTmp > 0) {
-			if ((iTmp & 1) == 1) {
+			if ((iTmp & 1) == 1)
 				iCount++
-			}
 
 			iTmp = iTmp >>> 1 // keep right shifting the value until nothing is left
 		}

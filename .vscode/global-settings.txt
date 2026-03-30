@@ -10,7 +10,6 @@
     "git.showProgress": false,
     "diffEditor.ignoreTrimWhitespace": false,
     "todo.languages": [
-        
         {
             "allowEmptyLines": true,
             "annotations": [],
@@ -45,21 +44,13 @@
     "scm.repositories.selectionMode": "single",
     //-------------------------------------------------------------------------------
     // Javascript
-    "[javascript]": {
-        "editor.defaultFormatter": "standard.vscode-standard",
-        "editor.formatOnSave": true
-    },
     // Prevents VS Code‘s default JS validation
-    "javascript.validate.enable": false,  
-    
+    "javascript.validate.enable": false,
     "javascript.format.enable": true,
-    "standard.enableGlobally": true,
-    "standard.enable": true,
-    "standard.autoFixOnSave": true,   
+    "[javascript]": {
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+    },
+    "eslint.format.enable": true,
 
-    // Files to validate with Standard
-    "standard.validate": [
-        "javascript",
-        "javascriptreact"
-    ]
 }
