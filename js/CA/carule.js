@@ -15,15 +15,15 @@ For licenses that allow for commercial use please contact cluck@chickenkatsu.co.
  * @class cCAStateRule
 
  */ class cCAStateRule {
-  /**
+	/**
 	 * Creates an instance of cCAStateRule.
 	 * @constructor
 	 */
-  constructor () {
-    this.neighbour_type = CA_NEIGHBOURS.eightway
-    this.outputs = new Array(CACONSTS.MAX_INPUTS)
-    this.nextStates = new Array(CACONSTS.MAX_INPUTS) // for future use
-  }
+	constructor () {
+		this.neighbour_type = CA_NEIGHBOURS.eightway
+		this.outputs = new Array(CACONSTS.MAX_INPUTS)
+		this.nextStates = new Array(CACONSTS.MAX_INPUTS) // for future use
+	}
 }
 
 // ###############################################################################
@@ -35,277 +35,298 @@ For licenses that allow for commercial use please contact cluck@chickenkatsu.co.
  */
 
 class cCARule {
-  /** @type number */ neighbour_type = CA_NEIGHBOURS.eightway
-  /** @type boolean */ has_state_transitions = false
-  /** @type Array */ stateRules = []
-  /** @type number */ boredom_count = CACONSTS.NO_BOREDOM // how many times a pattern is seen before a cell is bored
+	/** @type number */ neighbour_type = CA_NEIGHBOURS.eightway
+	/** @type boolean */ has_state_transitions = false
+	/** @type Array */ stateRules = []
+	/** @type number */ boredom_count = CACONSTS.NO_BOREDOM // how many times a pattern is seen before a cell is bored
 
-  NO_BOREDOM_BITMAP = -1
+	NO_BOREDOM_BITMAP = -1
 
-  //* **************************************************************
-  /**
+	//* **************************************************************
+	/**
 	 * @static
 	 * @returns {cCARule}
 	 */
-  static randomRule () {
-    cDebug.enter()
-    /** @type {cCARule}	 */ const oRule = new cCARule()
-    oRule.neighbour_type = CA_NEIGHBOURS.eightway
-    oRule.has_state_transitions = false
+	static randomRule () {
+		cDebug.enter()
+		/** @type {cCARule}	 */ const oRule = new cCARule()
+		oRule.neighbour_type = CA_NEIGHBOURS.eightway
+		oRule.has_state_transitions = false
 
-    for (let i = 1; i <= CACONSTS.MAX_INPUTS; i++) {
-      const iRnd = Math.floor(Math.random() * 1.99)
-      oRule.set_output(
-        CA_STATES.default_state,
-        i,
-        iRnd
-      )
-    }
+		for (let i = 1; i <= CACONSTS.MAX_INPUTS; i++) {
+			const iRnd = Math.floor(Math.random() * 1.99)
+			oRule.set_output(
+				CA_STATES.default_state,
+				i,
+				iRnd
+			)
+		}
 
-    cDebug.leave()
-    return oRule
-  }
+		cDebug.leave()
+		return oRule
+	}
 
-  //* **************************************************************
-  /**
+	//* **************************************************************
+	/**
 	 * @param {cCARule} poRule
 	 */
-  copy_to (poRule) {
-    cDebug.enter()
-    poRule.neighbour_type = this.neighbour_type
-    poRule.has_state_transitions = this.has_state_transitions
-    poRule.boredom_count = this.boredom_count
-    poRule.stateRules = cCommon.deep_copy(this.stateRules)
-  }
+	copy_to (poRule) {
+		cDebug.enter()
+		poRule.neighbour_type = this.neighbour_type
+		poRule.has_state_transitions = this.has_state_transitions
+		poRule.boredom_count = this.boredom_count
+		poRule.stateRules = cCommon.deep_copy(this.stateRules)
+	}
 
-  //* ****************************************************************
-  // rule State level functions
-  //* ****************************************************************
-  /**
+	//* ****************************************************************
+	// rule State level functions
+	//* ****************************************************************
+	/**
 	 * sets the output for a particular bitmap for a state
 	 \*	 * @param {number} piState
 	 * @param {number} piBitmap
 	 * @param {number} piValue
 	 */
-  set_output (piState, piBitmap, piValue) {
-    if (piState < 1) { throw new eCAException('invalid state') }
+	set_output (piState, piBitmap, piValue) {
+		if (piState < 1)
+			throw new eCAException('invalid state')
 
-    if (piState > this.stateRules.length) { this.create_state(piState) } // create a new state if the state is unknown
+		if (piState > this.stateRules.length)
+			this.create_state(piState) // create a new state if the state is unknown
 
-    this.stateRules[piState - 1].outputs[piBitmap] = piValue
-  }
+		this.stateRules[piState - 1].outputs[piBitmap] = piValue
+	}
 
-  //* ****************************************************************
-  /**
+	//* ****************************************************************
+	/**
 	 * @param {number} piBoredom
 	 */
-  set_boredom (piBoredom) {
-    if (piBoredom != CACONSTS.NO_BOREDOM && piBoredom < 2) { throw new eCAException('boredom must be at least 2') }
+	set_boredom (piBoredom) {
+		if (piBoredom != CACONSTS.NO_BOREDOM && piBoredom < 2)
+			throw new eCAException('boredom must be at least 2')
 
-    this.boredom_count = piBoredom
-  }
+		this.boredom_count = piBoredom
+	}
 
-  //* ****************************************************************
-  /**
+	//* ****************************************************************
+	/**
 	 * returns the output for a given bitmap for a state
 	 \*	 * @param {number} piState
 	 * @param {number} piBitmap
 	 * @returns {number}
 	 */
-  get_rule_output (piState, piBitmap) {
-    if (piBitmap == 0) { return 0 }
-    // cells must have neighbours - 0 doesnt become 1
+	get_rule_output (piState, piBitmap) {
+		if (piBitmap == 0)
+			return 0
+		// cells must have neighbours - 0 doesnt become 1
 
-    if (piState > this.stateRules.length) { throw new eCAException('invalid state requested - too big') }
+		if (piState > this.stateRules.length)
+			throw new eCAException('invalid state requested - too big')
 
-    try {
-      let iOutput = this.stateRules[piState - 1].outputs[piBitmap] // TBD should be using a method
-      if (iOutput == null) { iOutput = 0 }
+		try {
+			let iOutput = this.stateRules[piState - 1].outputs[piBitmap] // TBD should be using a method
+			if (iOutput == null)
+				iOutput = 0
 
-      return iOutput
-    } catch (e) {
-      cDebug.write_err('unable to get output for state ' + piState)
-      throw e
-    }
-  }
+			return iOutput
+		} catch (e) {
+			cDebug.write_err('unable to get output for state ' + piState)
+			throw e
+		}
+	}
 
-  //* ****************************************************************
-  /**
+	//* ****************************************************************
+	/**
 	 *
 	 * @param {number} piState
 	 */
-  create_state (piState) {
-    if (piState <= this.stateRules.length) { return }
-    // dont create existing states
-    if (!this.has_state_transitions && piState !== CA_STATES.default_state) { throw new eCAException('state not possible without state transitions enabled') }
+	create_state (piState) {
+		if (piState <= this.stateRules.length)
+			return
+		// dont create existing states
+		if (!this.has_state_transitions && piState !== CA_STATES.default_state)
+			throw new eCAException('state not possible without state transitions enabled')
 
-    const oStateRule = new cCAStateRule()
-    oStateRule.neighbour_type = this.neighbour_type
-    this.stateRules[piState - 1] = oStateRule
-  }
+		const oStateRule = new cCAStateRule()
+		oStateRule.neighbour_type = this.neighbour_type
+		this.stateRules[piState - 1] = oStateRule
+	}
 
-  //* ****************************************************************
-  /**
+	//* ****************************************************************
+	/**
 	 *
 	 * @param {*} piInState
 	 * @param {*} piPattern
 	 * @param {*} piNextState
 	 */
-  set_nextState (piInState, piPattern, piNextState) {
-    if (!this.has_state_transitions) { throw new eCAException('no state transitions possible') }
+	set_nextState (piInState, piPattern, piNextState) {
+		if (!this.has_state_transitions)
+			throw new eCAException('no state transitions possible')
 
-    if (piInState > this.stateRules.length) { throw new eCAException('invalid input state ') }
+		if (piInState > this.stateRules.length)
+			throw new eCAException('invalid input state ')
 
-    if (piNextState > this.stateRules.length) { throw new eCAException('invalid next state ') }
+		if (piNextState > this.stateRules.length)
+			throw new eCAException('invalid next state ')
 
-    this.stateRules[piInState - 1].nextStates[piPattern] = piNextState // TBD should be using a method
-  }
+		this.stateRules[piInState - 1].nextStates[piPattern] = piNextState // TBD should be using a method
+	}
 
-  //* ****************************************************************
-  /**
+	//* ****************************************************************
+	/**
 	 *
 	 * @param {*} piInState
 	 * @param {*} piPattern
 	 * @returns {*}
 	 */
-  get_nextState (piInState, piPattern) {
-    if (piPattern == 0) { return piInState }
+	get_nextState (piInState, piPattern) {
+		if (piPattern == 0)
+			return piInState
 
-    if (!this.has_state_transitions) { throw new eCAException('no state transitions possible') }
+		if (!this.has_state_transitions)
+			throw new eCAException('no state transitions possible')
 
-    if (piInState > this.stateRules.length) { throw new eCAException('invalid state requested') }
+		if (piInState > this.stateRules.length)
+			throw new eCAException('invalid state requested')
 
-    const iOutState = this.stateRules[piInState - 1].nextStates[piPattern] // TBD should be using a method
-    return iOutState
-  }
+		const iOutState = this.stateRules[piInState - 1].nextStates[piPattern] // TBD should be using a method
+		return iOutState
+	}
 
-  //* ****************************************************************
-  /**
+	//* ****************************************************************
+	/**
 	 * @param {cCACell} poCell
 	 * @param {number} piBitmap
 	 * @return {boolean}
 	 */
-  _evaluate_simple_boredom (poCell, piBitmap) {
-    if (this.boredom_count == null || this.boredom_count == CACONSTS.NO_BOREDOM) { return false }
+	_evaluate_simple_boredom (poCell, piBitmap) {
+		if (this.boredom_count == null || this.boredom_count == CACONSTS.NO_BOREDOM)
+			return false
 
-    /** @type Map */ const cell_data = poCell.data
+		/** @type Map */ const cell_data = poCell.data
 
-    // check if boredom bitmap key is not there
-    if (!cell_data.has(CELL_DATA_KEYS.BOREDOM_BITMAP)) {
-      cell_data.set(
-        CELL_DATA_KEYS.BOREDOM_BITMAP,
-        piBitmap
-      )
-      cell_data.set(
-        CELL_DATA_KEYS.BOREDOM_BITMAP_COUNT,
-        1
-      )
-      cell_data.set(
-        CELL_DATA_KEYS.BORED_STATE,
-        false
-      )
-      return false
-    }
+		// check if boredom bitmap key is not there
+		if (!cell_data.has(CELL_DATA_KEYS.BOREDOM_BITMAP)) {
+			cell_data.set(
+				CELL_DATA_KEYS.BOREDOM_BITMAP,
+				piBitmap
+			)
+			cell_data.set(
+				CELL_DATA_KEYS.BOREDOM_BITMAP_COUNT,
+				1
+			)
+			cell_data.set(
+				CELL_DATA_KEYS.BORED_STATE,
+				false
+			)
+			return false
+		}
 
-    // check if boredom bitmap is different bitmap
-    const previous_bitmap = cell_data.get(CELL_DATA_KEYS.BOREDOM_BITMAP)
-    if (previous_bitmap != piBitmap) {
-      cell_data.set(
-        CELL_DATA_KEYS.BOREDOM_BITMAP,
-        piBitmap
-      )
-      cell_data.set(
-        CELL_DATA_KEYS.BOREDOM_BITMAP_COUNT,
-        1
-      )
-      cell_data.set(
-        CELL_DATA_KEYS.BORED_STATE,
-        false
-      )
-      return false
-    }
+		// check if boredom bitmap is different bitmap
+		const previous_bitmap = cell_data.get(CELL_DATA_KEYS.BOREDOM_BITMAP)
+		if (previous_bitmap != piBitmap) {
+			cell_data.set(
+				CELL_DATA_KEYS.BOREDOM_BITMAP,
+				piBitmap
+			)
+			cell_data.set(
+				CELL_DATA_KEYS.BOREDOM_BITMAP_COUNT,
+				1
+			)
+			cell_data.set(
+				CELL_DATA_KEYS.BORED_STATE,
+				false
+			)
+			return false
+		}
 
-    // bitmap is the same - increase count and check if bored
-    const count = cell_data.get(CELL_DATA_KEYS.BOREDOM_BITMAP_COUNT) + 1
-    if (count >= this.boredom_count) {
-      cell_data.set(
-        CELL_DATA_KEYS.BOREDOM_BITMAP_COUNT,
-        0
-      ) // reset count
-      cell_data.set(
-        CELL_DATA_KEYS.BORED_STATE,
-        true
-      )
-      return true
-    } else {
-      cell_data.set(
-        CELL_DATA_KEYS.BOREDOM_BITMAP_COUNT,
-        count
-      )
-      cell_data.set(
-        CELL_DATA_KEYS.BORED_STATE,
-        false
-      )
-      return false
-    }
-  }
+		// bitmap is the same - increase count and check if bored
+		const count = cell_data.get(CELL_DATA_KEYS.BOREDOM_BITMAP_COUNT) + 1
+		if (count >= this.boredom_count) {
+			cell_data.set(
+				CELL_DATA_KEYS.BOREDOM_BITMAP_COUNT,
+				0
+			) // reset count
+			cell_data.set(
+				CELL_DATA_KEYS.BORED_STATE,
+				true
+			)
+			return true
+		} else {
+			cell_data.set(
+				CELL_DATA_KEYS.BOREDOM_BITMAP_COUNT,
+				count
+			)
+			cell_data.set(
+				CELL_DATA_KEYS.BORED_STATE,
+				false
+			)
+			return false
+		}
+	}
 
-  //* ****************************************************************
-  /**
+	//* ****************************************************************
+	/**
 	 * @param {cCACell} poCell
 	 * @returns {boolean}
 	 */
-  evaluateCell (poCell) {
-    if (poCell == null) { throw new eCAException('no cell provided') }
+	evaluateCell (poCell) {
+		if (poCell == null)
+			throw new eCAException('no cell provided')
 
-    const oStatus = new cCAStatus()
-    // get the cell neighbour value
-    const iBitmap = poCell.getBitmap(this.neighbour_type)
+		const oStatus = new cCAStatus()
+		// get the cell neighbour value
+		const iBitmap = poCell.getBitmap(this.neighbour_type)
 
-    if (iBitmap == 0)
-    // cells that are completely isolated remain dead
-    { poCell.evaluated.value = 0 } else {
-      // check for cell boredom
-      /** @type Boolean */ let bBored = false
-      if (this.boredom_count !== CACONSTS.NO_BOREDOM) {
-        bBored = this._evaluate_simple_boredom(
-          poCell,
-          iBitmap
-        )
-      }
+		if (iBitmap == 0)
+		// cells that are completely isolated remain dead
 
-      if (bBored) {
-        // flip the cell if bored
-        poCell.evaluated.value = (poCell.value == 1 ? 0 : 1)
-        // send an event to say the cell is bored - TBD
-        oStatus.bored = 1
-      } else {
-        poCell.evaluated.value = this.get_rule_output(
-          poCell.state,
-          iBitmap
-        )
-      }
-    }
+			poCell.evaluated.value = 0
+		else {
+			// check for cell boredom
+			/** @type Boolean */ let bBored = false
+			if (this.boredom_count !== CACONSTS.NO_BOREDOM)
+				bBored = this._evaluate_simple_boredom(
+					poCell,
+					iBitmap
+				)
 
-    // copy the state to the evaluated part (state transitions are not implemented yet)
-    poCell.evaluated.state = poCell.state
+			if (bBored) {
+				// flip the cell if bored
+				poCell.evaluated.value = (poCell.value == 1 ? 0 : 1)
+				// send an event to say the cell is bored - TBD
+				oStatus.bored = 1
+			} else
+				poCell.evaluated.value = this.get_rule_output(
+					poCell.state,
+					iBitmap
+				)
 
-    // mark cell as done
-    poCell.evaluated.done = true
-    poCell.evaluated.pattern = iBitmap // the pattern evaluated - used to optimise cell evaluation
+		}
 
-    // set the status values
-    if (poCell.evaluated.value == 0) { oStatus.inactive = 1 } else { oStatus.active = 1 }
+		// copy the state to the evaluated part (state transitions are not implemented yet)
+		poCell.evaluated.state = poCell.state
 
-    const bHasChanged = poCell.evaluated.value !== poCell.value
-    if (bHasChanged) { oStatus.changed = 1 }
+		// mark cell as done
+		poCell.evaluated.done = true
+		poCell.evaluated.pattern = iBitmap // the pattern evaluated - used to optimise cell evaluation
 
-    // send a status event
-    cCARuleEvent.fire_event(
-      cCARuleEvent.actions.status,
-      oStatus
-    )
+		// set the status values
+		if (poCell.evaluated.value == 0)
+			oStatus.inactive = 1
+		else
+			oStatus.active = 1
 
-    return bHasChanged
-  }
+		const bHasChanged = poCell.evaluated.value !== poCell.value
+		if (bHasChanged)
+			oStatus.changed = 1
+
+		// send a status event
+		cCARuleEvent.fire_event(
+			cCARuleEvent.actions.status,
+			oStatus
+		)
+
+		return bHasChanged
+	}
 }

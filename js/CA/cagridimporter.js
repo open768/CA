@@ -16,49 +16,55 @@ For licenses that allow for commercial use please contact cluck@chickenkatsu.co.
  * @class cCAGridExported
  */
 class cCAGridExported {
-  version = 1
-  grid = {
-    rows: 0,
-    cols: 0,
-    data: null
-  }
+	version = 1
+	grid = {
+		rows: 0,
+		cols: 0,
+		data: null
+	}
 
-  /** @type {cCARule}	 */ rule = null
+	/** @type {cCARule}	 */ rule = null
 
-  /**
+	/**
 	 *
 	 * @static
 	 * @param {*} poObj
 	 * @returns {boolean}
 	 */
-  static is_valid_obj (poObj) {
-    if (!poObj.version) { throw new Error('no version') }
+	static is_valid_obj (poObj) {
+		if (!poObj.version)
+			throw new Error('no version')
 
-    if (!poObj.grid) { throw new Error('no grid') }
+		if (!poObj.grid)
+			throw new Error('no grid')
 
-    if (!poObj.rule) { throw new Error('no Rule') }
+		if (!poObj.rule)
+			throw new Error('no Rule')
 
-    if (poObj.version !== 1) { throw new Error('incompatible version') }
+		if (poObj.version !== 1)
+			throw new Error('incompatible version')
 
-    return true
-  }
+		return true
+	}
 }
 
 //* ************************************************************************
 class cCAGridBase64Exporter {
-  static get_grid_base64 (poGrid) {
-    if (!cCommon.obj_is(
-      poGrid,
-      'cCAGrid'
-    )) { throw new eCAException('param 1 is not cCAGrid') }
+	static get_grid_base64 (poGrid) {
+		if (!cCommon.obj_is(
+			poGrid,
+			'cCAGrid'
+		))
+			throw new eCAException('param 1 is not cCAGrid')
 
-    const oRule = poGrid.get_rule()
-    if (oRule.stateRules.length > 1) { throw new eCAException('rules can only have 1 state') }
+		const oRule = poGrid.get_rule()
+		if (oRule.stateRules.length > 1)
+			throw new eCAException('rules can only have 1 state')
 
-    const sBin = cCAGridBinaryExporter.get_grid_binary(poGrid)
-    const s64 = cSimpleBase64.toBase64(sBin)
-    return s64
-  }
+		const sBin = cCAGridBinaryExporter.get_grid_binary(poGrid)
+		const s64 = cSimpleBase64.toBase64(sBin)
+		return s64
+	}
 }
 
 //* ************************************************************************
@@ -71,37 +77,39 @@ class cCAGridBase64Exporter {
  * @returns {jsbitstream}
  */
 class cCAGridBitStreamExporter {
-  /**
+	/**
 	 *
 	 * @param {*} poGrid
 	 * @returns {jsbitstream}
 	 */
-  static get_grid_bitstream (poGrid) {
-    if (!cCommon.obj_is(
-      poGrid,
-      'cCAGrid'
-    )) { throw new eCAException('param 1 is not cCAGrid') }
+	static get_grid_bitstream (poGrid) {
+		if (!cCommon.obj_is(
+			poGrid,
+			'cCAGrid'
+		))
+			throw new eCAException('param 1 is not cCAGrid')
 
-    const oRule = poGrid.get_rule()
-    if (oRule.stateRules.length > 1) { throw new eCAException('rules can only have 1 state') }
+		const oRule = poGrid.get_rule()
+		if (oRule.stateRules.length > 1)
+			throw new eCAException('rules can only have 1 state')
 
-    const oStream = new jsbitstream()
+		const oStream = new jsbitstream()
 
-    for (let iRow = 1; iRow <= poGrid.rows; iRow++) {
-      for (let iCol = 1; iCol <= poGrid.cols; iCol++) {
-        const oCell = poGrid.getCell(
-          iRow,
-          iCol,
-          true
-        )
-        oStream.writeFlag(oCell.value !== 0)
-      }
-    }
+		for (let iRow = 1; iRow <= poGrid.rows; iRow++)
+			for (let iCol = 1; iCol <= poGrid.cols; iCol++) {
+				const oCell = poGrid.getCell(
+					iRow,
+					iCol,
+					true
+				)
+				oStream.writeFlag(oCell.value !== 0)
+			}
 
-    if (oStream.size() !== poGrid.rows * poGrid.cols) { throw new eCAException('bitstream length does not match grid size') }
+		if (oStream.size() !== poGrid.rows * poGrid.cols)
+			throw new eCAException('bitstream length does not match grid size')
 
-    return oStream
-  }
+		return oStream
+	}
 }
 
 //* ************************************************************************
@@ -111,34 +119,36 @@ class cCAGridBitStreamExporter {
  * TODO: in future convert to a bit array
  */
 class cCAGridBinaryExporter {
-  //* ************************************************************************
-  static get_grid_binary (poGrid) {
-    if (!cCommon.obj_is(
-      poGrid,
-      'cCAGrid'
-    )) { throw new eCAException('param 1 is not cCAGrid') }
+	//* ************************************************************************
+	static get_grid_binary (poGrid) {
+		if (!cCommon.obj_is(
+			poGrid,
+			'cCAGrid'
+		))
+			throw new eCAException('param 1 is not cCAGrid')
 
-    const oRule = poGrid.get_rule()
-    if (oRule.stateRules.length > 1) { throw new eCAException('rules can only have 1 state') }
+		const oRule = poGrid.get_rule()
+		if (oRule.stateRules.length > 1)
+			throw new eCAException('rules can only have 1 state')
 
-    let sBin = ''
+		let sBin = ''
 
-    for (let iRow = 1; iRow <= poGrid.rows; iRow++) {
-      for (let iCol = 1; iCol <= poGrid.cols; iCol++) {
-        const oCell = poGrid.getCell(
-          iRow,
-          iCol,
-          true
-        )
-        sBin = sBin + oCell.value
-      }
-    }
+		for (let iRow = 1; iRow <= poGrid.rows; iRow++)
+			for (let iCol = 1; iCol <= poGrid.cols; iCol++) {
+				const oCell = poGrid.getCell(
+					iRow,
+					iCol,
+					true
+				)
+				sBin = sBin + oCell.value
+			}
 
-    const iBinLength = poGrid.rows * poGrid.cols
-    if (sBin.length !== iBinLength) { throw new eCAException('wrong binary length') }
+		const iBinLength = poGrid.rows * poGrid.cols
+		if (sBin.length !== iBinLength)
+			throw new eCAException('wrong binary length')
 
-    return sBin
-  }
+		return sBin
+	}
 }
 
 //* ************************************************************************
@@ -148,41 +158,43 @@ class cCAGridBinaryExporter {
  */
 
 class cCAGridJSONExporter {
-  /**
+	/**
 	 *
 	 * @static
 	 * @param {cCAGrid} poGrid
 	 * @returns {cCAGridExported}
 	 */
-  static export (poGrid) {
-    cDebug.enter()
-    if (!cCommon.obj_is(
-      poGrid,
-      'cCAGrid'
-    )) { throw new eCAException('param 1 is not cCAGrid') }
+	static export (poGrid) {
+		cDebug.enter()
+		if (!cCommon.obj_is(
+			poGrid,
+			'cCAGrid'
+		))
+			throw new eCAException('param 1 is not cCAGrid')
 
-    const oRule = poGrid.get_rule() /** @type {cCARule} */
+		const oRule = poGrid.get_rule() /** @type {cCARule} */
 
-    if (!oRule) { throw new eCAException('no rule set!') }
+		if (!oRule)
+			throw new eCAException('no rule set!')
 
-    const oExport = new cCAGridExported()
-    {
-      const oRuleExport = cCARuleObjExporter.export(oRule) /** @type {cCAExportedRule} */
-      // @ts-expect-error
-      oExport.rule = oRuleExport
+		const oExport = new cCAGridExported()
+		{
+			const oRuleExport = cCARuleObjExporter.export(oRule) /** @type {cCAExportedRule} */
+			// @ts-expect-error
+			oExport.rule = oRuleExport
 
-      // get the status of the cells from the grid
-      oExport.grid.rows = poGrid.rows
-      oExport.grid.cols = poGrid.cols
-      oExport.grid.data = cCAGridBase64Exporter.get_grid_base64(poGrid)
-    }
+			// get the status of the cells from the grid
+			oExport.grid.rows = poGrid.rows
+			oExport.grid.cols = poGrid.cols
+			oExport.grid.data = cCAGridBase64Exporter.get_grid_base64(poGrid)
+		}
 
-    cDebug.leave()
-    return oExport
-  }
+		cDebug.leave()
+		return oExport
+	}
 
-  //* ************************************************************************
-  /**
+	//* ************************************************************************
+	/**
 	 *
 	 * @static
 	 * @param {cCAGrid} poGrid
@@ -198,55 +210,55 @@ class cCAGridJSONExporter {
  */
 
 class cCAGridJSONImporter {
-  //* ********************************************
-  /**
+	//* ********************************************
+	/**
 	 *
 	 * @static
 	 * @param {string} psName
 	 * @param {JSON} poJson
 	 * @returns {cCAGrid}
 	 */
-  static populate (psName, poJson) {
-    if (!cCAGridExported.is_valid_obj(poJson)) { throw new eCAException('invalid object') }
+	static populate (psName, poJson) {
+		if (!cCAGridExported.is_valid_obj(poJson))
+			throw new eCAException('invalid object')
 
-    // -------------------------------------------------------------------
-    const oGrid = new cCAGrid(/** @type {cCAGrid}	 */
-      psName,					// @ts-expect-error
-      poJson.grid.rows,		// @ts-expect-error
-      poJson.grid.cols
-    )
+		// -------------------------------------------------------------------
+		const oGrid = new cCAGrid(/** @type {cCAGrid}	 */
+			psName,					// @ts-expect-error
+			poJson.grid.rows,		// @ts-expect-error
+			poJson.grid.cols
+		)
 
-    // -------------------------------------------------------------------
-    // 	@ts-expect-error
-    const oRule = cCARuleObjImporter.makeRule(poJson.rule) 		/** @type {cCARule}	 */
-    oGrid.set_rule(
-      oRule,
-      false
-    )
+		// -------------------------------------------------------------------
+		// 	@ts-expect-error
+		const oRule = cCARuleObjImporter.makeRule(poJson.rule) 		/** @type {cCARule}	 */
+		oGrid.set_rule(
+			oRule,
+			false
+		)
 
-    // -------------------------------------------------------------------
-    oGrid.create_cells()
-    const iBinLength = oGrid.rows * oGrid.cols
-    // @ts-expect-error
-    const s64 = poJson.grid.data
-    const sBin = cSimpleBase64.toBinary(
-      s64,
-      iBinLength
-    ) // convert base64 to binary - have to set expected bin length
-    let iIndex = 0
+		// -------------------------------------------------------------------
+		oGrid.create_cells()
+		const iBinLength = oGrid.rows * oGrid.cols
+		// @ts-expect-error
+		const s64 = poJson.grid.data
+		const sBin = cSimpleBase64.toBinary(
+			s64,
+			iBinLength
+		) // convert base64 to binary - have to set expected bin length
+		let iIndex = 0
 
-    for (let iRow = 1; iRow <= oGrid.rows; iRow++) {
-      for (let iCol = 1; iCol <= oGrid.cols; iCol++) {
-        const sBinDigit = sBin[iIndex]
-        oGrid.setCellValue(
-          iRow,
-          iCol,
-          parseInt(sBinDigit)
-        )
-        iIndex++
-      }
-    }
+		for (let iRow = 1; iRow <= oGrid.rows; iRow++)
+			for (let iCol = 1; iCol <= oGrid.cols; iCol++) {
+				const sBinDigit = sBin[iIndex]
+				oGrid.setCellValue(
+					iRow,
+					iCol,
+					parseInt(sBinDigit)
+				)
+				iIndex++
+			}
 
-    return oGrid
-  }
+		return oGrid
+	}
 }

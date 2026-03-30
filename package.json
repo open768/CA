@@ -9,6 +9,8 @@
     "globals": "^17.3.0"
   },
   "dependencies": {
+    "@stylistic/eslint-plugin": "^5.10.0",
+    "eslint-plugin-jsdoc": "^62.8.1",
     "jsbitstream": "^1.0.0"
   }
 }
