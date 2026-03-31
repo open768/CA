@@ -15,7 +15,7 @@ css/jquery/
 *.ldb
 
 #cryptography
-crypt/
+#crypt/
 
 #tmp documents
 ~*
