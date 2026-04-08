@@ -8,7 +8,7 @@ class cSecrets {
 			'<script/>',
 			{
 				async: true,
-				src: 'https://www.googletagmanager.com/gtag/js?id=' + cSecrets.GOOGLEANALYTICS_ID
+				src: `https://www.googletagmanager.com/gtag/js?id=${cSecrets.GOOGLEANALYTICS_ID}`
 			}
 		).appendTo(document)
 
@@ -19,9 +19,7 @@ class cSecrets {
 				'window.dataLayer = window.dataLayer || [];' +
 				'function gtag(){ dataLayer.push(arguments); }' +
 				'gtag(\'js\', new Date());' +
-				'gtag(\'config\', \'' +
-				cSecrets.GOOGLEANALYTICS_ID +
-				'\');'
+				`gtag('config', '${cSecrets.GOOGLEANALYTICS_ID}');`
 			}
 		).appendTo(document)
 	}
