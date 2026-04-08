@@ -10,7 +10,6 @@
 class cCAGridInitialiser {
 	static init (poGrid, piInitType) {
 		cDebug.enter()
-		// cDebug.write('init_type:' + piInitType)
 		// always blank first by creating new cells
 		poGrid.create_cells()
 
@@ -60,7 +59,7 @@ class cCAGridInitialiser {
 
 				// --------------------------------------------------------
 			default:
-				throw new eCAException('unknown init_type: ' + piInitType)
+				throw new eCAException(`unknown init_type: ${piInitType}`)
 		}
 
 		cDebug.leave()

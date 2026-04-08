@@ -59,9 +59,7 @@ class cCARuleBinaryImporter {
 		cDebug.enter()
 
 		if (psInput.length < CACONSTS.MAX_INPUTS)
-			throw new eCAException(
-				'incorrect length binary input:' + psInput.length + ' should be ' + CACONSTS.MAX_INPUTS
-			)
+			throw new eCAException(	`incorrect length binary input: ${psInput.length} should be ${CACONSTS.MAX_INPUTS}`)
 
 		if (psInput.length > CACONSTS.MAX_INPUTS)
 			psInput = psInput.slice(
@@ -115,7 +113,7 @@ class cCARuleRepeatBase64Importer {
 			iRemain
 		)
 		if (s64.length < CACONSTS.BASE64_LENGTH)
-			throw new eCAException('base64 not long enough, must be ' + CACONSTS.BASE64_LENGTH + 'chars')
+			throw new eCAException(`base64 not long enough, must be ${CACONSTS.BASE64_LENGTH} chars`)
 
 		const sBin = cSimpleBase64.toBinary(
 			s64,
@@ -184,7 +182,7 @@ class cCARuleBase64Importer {
 		cDebug.enter()
 
 		if (ps64.length < CACONSTS.BASE64_LENGTH)
-			throw new eCAException('base64 not long enough, must be ' + CACONSTS.BASE64_LENGTH + 'chars')
+			throw new eCAException(`base64 not long enough, must be ${CACONSTS.BASE64_LENGTH} chars`)
 
 		if (!cConverterEncodings.isBase64(ps64))
 			throw new eCAException('input must be base64  string')
@@ -494,13 +492,13 @@ class cCARuleLifeImporter extends cCARuleMaker {
 			sSurvive = aMatches[2]
 		}
 
-		cDebug.write(psInput + ' is a valid life notation BORN:' + sBorn + ' Survive:' + sSurvive)
+		cDebug.write(`${psInput} is a valid life notation BORN:${sBorn} Survive:${sSurvive}`)
 
 		// populate importer arrays
 		for (let iBorn = 0; iBorn < sBorn.length; iBorn++) {
 			const iBornPos = parseInt(sBorn.charAt(iBorn))
 			if (iBornPos < 1 || iBornPos > CA_NEIGHBOURS.maximum)
-				throw new eCAException(iBornPos + ' is not a valid born count')
+				throw new eCAException(`${iBornPos} is not a valid born count`)
 
 			aBorn[iBornPos] = 1
 		}
@@ -508,7 +506,7 @@ class cCARuleLifeImporter extends cCARuleMaker {
 		for (let iSurvive = 0; iSurvive < sSurvive.length; iSurvive++) {
 			const iSurvivePos = parseInt(sSurvive.charAt(iSurvive))
 			if (iSurvivePos < 0 || iSurvivePos > CA_NEIGHBOURS.maximum)
-				throw new eCAException(iSurvivePos + ' is not a valid survivor count')
+				throw new eCAException(`${iSurvivePos} is not a valid survivor count`)
 
 			aSurvive[iSurvivePos] = 1
 		}
@@ -621,7 +619,7 @@ class cCARuleModifier {
 			throw new eCAException('invalid neighbour count')
 
 		if (piOutState < 0 || piOutState > 1)
-			throw new eCAException('invalid output state :' + piOutState)
+			throw new eCAException(`invalid output state : ${piOutState}`)
 
 		for (let i = 1; i <= CACONSTS.MAX_INPUTS; i++) {
 			const iCentre = cCAIndexOps.get_value(

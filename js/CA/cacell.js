@@ -166,7 +166,7 @@ class cCACell {
 				break
 
 			default:
-				throw new eCAException('unknown neighbour type: ' + piNeighbourType)
+				throw new eCAException(`unknown neighbour type: ${piNeighbourType}`)
 		}
 
 		return iValue

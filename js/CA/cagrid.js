@@ -340,7 +340,7 @@ class cCAGrid extends cEventSubscriber {
 				break
 
 			default:
-				throw new eCAException('action not recognised: ' + piAction)
+				throw new eCAException(`action not recognised: ${piAction}`)
 		}
 
 		cDebug.leave()
@@ -507,10 +507,10 @@ class cCAGrid extends cEventSubscriber {
 
 		if (iSubscriber_count > 1) {
 			//	const sConsumer = poEvent.data
-			// cDebug.write('ℹ️ grid: notified consumed response from ' + sConsumer)
+			// cDebug.write(`ℹ️ grid: notified consumed response from ${sConsumer}`)
 
 			if (this._consumed_responses > iSubscriber_count) {
-				cDebug.error('🤔more consumed responses than subscribers: ' + this._consumed_responses + ' of ' + iSubscriber_count)
+				cDebug.error(`🤔more consumed responses than subscribers: ${this._consumed_responses} of ${iSubscriber_count}`)
 				return
 			}
 
@@ -575,7 +575,7 @@ class cCAGrid extends cEventSubscriber {
 				iCountZeros++
 		})
 
-		const sHash = md5(sBinary) + '_' + iCountOnes + ',' + iCountZeros
+		const sHash = `${md5(sBinary)}_${iCountOnes},${iCountZeros}`
 
 		return sHash
 	}

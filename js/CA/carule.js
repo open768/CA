@@ -130,7 +130,7 @@ class cCARule {
 
 			return iOutput
 		} catch (e) {
-			cDebug.write_err('unable to get output for state ' + piState)
+			cDebug.write_err(`unable to get output for state ${piState}`)
 			throw e
 		}
 	}

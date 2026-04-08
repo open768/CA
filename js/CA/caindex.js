@@ -44,7 +44,7 @@ class cCAIndexOps {
 				break
 
 			default:
-				throw new eCAException('unknown direction ' + piDirection)
+				throw new eCAException(`unknown direction ${piDirection}`)
 		}
 
 		const iAnd = piIndex & iVal // bitwise and

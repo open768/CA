@@ -327,7 +327,7 @@ class cCAControlsL extends cJQueryWidgetClass {
 			const oRule = cCARuleRepeatBase64Importer.makeRule(sInput)
 			this._update_rule_text(oRule)
 		} catch (e) {
-			alert('something went wrong:\n' + e.message)
+			alert(`something went wrong:\n${e.message}`)
 		}
 	}
 
@@ -400,7 +400,7 @@ class cCAControlsL extends cJQueryWidgetClass {
 					throw new eCAException('unknown rule type')
 			}
 		} catch (e) {
-			alert('something went wrong:\n' + e.message)
+			alert(`something went wrong:\n${e.message}`)
 			throw e
 		}
 	}
@@ -460,7 +460,7 @@ class cCAControlsL extends cJQueryWidgetClass {
 					break
 
 				default:
-					alert('unknown rule type: ' + oRuleJson.type)
+					alert(`unknown rule type: ${oRuleJson.type}`)
 					throw new eCAException('not implemented')
 			}
 		}

@@ -26,7 +26,7 @@ class cCAChartTypes {
 				)
 				.then(poEvent => this.is_charts_loaded = true)
 		} catch (e) {
-			cDebug.write('unable to load Google charts: ' + e.msg)
+			cDebug.write(`unable to load Google charts: ${e.msg}`)
 		}
 	}
 }
@@ -166,7 +166,7 @@ class cCAChart extends cJQueryWidgetClass {
 				}
 
 				this._create_data()
-				this.vis_data.addRow([this.runs, oData.changed, oData.active, 'Run: ' + this.runs])
+				this.vis_data.addRow([this.runs, oData.changed, oData.active, `Run: ${this.runs}`])
 				this.chart.draw(this.vis_data)
 
 				this.runs++

@@ -67,7 +67,7 @@ class cCAStatusWidget extends cJQueryWidgetClass {
 		const iHeapBytes = await cBrowser.getHeapMemoryUsed()
 		const sHeapValue = cCommon.bytesToSize(iHeapBytes)
 		oTarget.html(sHeapValue)
-		cDebug.write('heap: ' + sHeapValue)
+		cDebug.write(`heap: ${sHeapValue}`)
 
 		// next heap timer
 		if (this.stop_heap_timer) {

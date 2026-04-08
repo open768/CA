@@ -227,7 +227,7 @@ class cCAJson extends cJQueryWidgetClass {
 			oElement,
 			cCAJsonTypes.TEXTAREA_ID
 		)
-		const sJson = $('#' + sID).val()
+		const sJson = $(`#${sID}`).val()
 		if (sJson === '') {
 			alert('no JSON to import')
 			return
@@ -280,7 +280,7 @@ class cCAJson extends cJQueryWidgetClass {
 			oElement,
 			cCAJsonTypes.TEXTAREA_ID
 		)
-		$('#' + sID).val(sJson)
+		$(`#${sID}`).val(sJson)
 		cDebug.leave()
 	}
 }

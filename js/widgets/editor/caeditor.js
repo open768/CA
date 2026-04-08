@@ -422,11 +422,12 @@ class cCAEditorWidget extends cJQueryWidgetClass {
 	//* ****************************************************************
 	_set_status (psText) {
 		const oElement = this.element
-		const sID = cJquery.child_ID(
+		const oChild = cJquery.get_child(
 			oElement,
 			cCAWidgetTypes.IDs.STATUS
 		)
-		$('#' + sID).html(psText)
+
+		$(oChild).html(psText)
 	}
 
 	//* ************************************************************
@@ -436,12 +437,11 @@ class cCAEditorWidget extends cJQueryWidgetClass {
 		const oRule = this.rule
 
 		// clear out any cells present
-		const sID = cJquery.child_ID(
+		const oChild = cJquery.get_child(
 			oElement,
 			cCAWidgetTypes.IDs.CELL_CONTAINER
 		)
-		const oDiv = $('#' + sID)
-		oDiv.empty()
+		oChild.empty()
 
 		// add the cells
 		let iVal
@@ -480,11 +480,11 @@ class cCAEditorWidget extends cJQueryWidgetClass {
 	//* ************************************************************
 	_set_base64Rule (ps64) {
 		const oElement = this.element
-		const sID = cJquery.child_ID(
+		const oChild = cJquery.get_child(
 			oElement,
 			cCAWidgetTypes.IDs.RULE
 		)
-		$('#' + sID).val(ps64)
+		$(oChild).val(ps64)
 	}
 
 	//* ****************************************************************
@@ -511,17 +511,16 @@ class cCAEditorWidget extends cJQueryWidgetClass {
 	//* ************************************************************
 	onSetRuleClick () {
 		const oElement = this.element
-		const sID = cJquery.child_ID(
+
+		const oTextArea = cJquery.get_child(
 			oElement,
 			cCAWidgetTypes.IDs.RULE
 		)
-		const oTextArea = $('#' + sID)
-
 		try {
 			this.rule = cCARuleBase64Importer.makeRule(oTextArea.val())
 			this._add_edit_widgets()
 		} catch (e) {
-			alert('Whoops - something went wrong!\n\n' + e.message)
+			alert(`Whoops - something went wrong!\n\n${e.message}`)
 		}
 	}
 
@@ -541,18 +540,17 @@ class cCAEditorWidget extends cJQueryWidgetClass {
 			)
 			this._set_base64Rule(s64)
 		} catch (e) {
-			alert('Whoops - something went wrong!\n\n' + e.message)
+			alert(`Whoops - something went wrong!\n\n${e.message}`)
 		}
 	}
 
 	//* ************************************************************
 	onRuleInputKeyUp () {
 		const oElement = this.element
-		const sID = cJquery.child_ID(
+		const oTextArea = cJquery.get_child(
 			oElement,
 			cCAWidgetTypes.IDs.RULE
 		)
-		const oTextArea = $('#' + sID)
 		const sText = oTextArea.val()
 		const iDiff = CACONSTS.BASE64_LENGTH - sText.length
 
@@ -568,22 +566,22 @@ class cCAEditorWidget extends cJQueryWidgetClass {
 			oElement,
 			cCAWidgetTypes.IDs.RULE_IN_STATE
 		)
-		const iInEnum = parseInt($('#' + sInID).val())
+		const iInEnum = parseInt($(`#${sInID}`).val())
 		const sCountID = cJquery.child_ID(
 			oElement,
 			cCAWidgetTypes.IDs.NEIGHBOUR_COUNT
 		)
-		const iCount = parseInt($('#' + sCountID).val())
+		const iCount = parseInt($(`#${sCountID}`).val())
 		const sVerbID = cJquery.child_ID(
 			oElement,
 			cCAWidgetTypes.IDs.RULE_VERB
 		)
-		const iVerb = parseInt($('#' + sVerbID).val())
+		const iVerb = parseInt($(`#${sVerbID}`).val())
 		const sOutID = cJquery.child_ID(
 			oElement,
 			cCAWidgetTypes.IDs.RULE_OUT_STATE
 		)
-		const iValue = parseInt($('#' + sOutID).val())
+		const iValue = parseInt($(`#${sOutID}`).val())
 
 		cCARuleModifier.modify_neighbours(
 			oRule,
