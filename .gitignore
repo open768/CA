@@ -20,3 +20,4 @@ css/jquery/
 #tmp documents
 ~*
 *.bak
+*.tmp
