@@ -13,6 +13,10 @@ uses Jcanvas https://github.com/caleb531/jcanvas/ https://projects.calebevans.me
 
 **************************************************************************/
 
+/**
+ * @typedef {{row: number, col: number}} MousePos
+ */
+
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 class cCACanvas extends cJQueryWidgetClass {
@@ -20,8 +24,8 @@ class cCACanvas extends cJQueryWidgetClass {
 	// # Definition
 	// #################################################################
 	CELL_LOAD_DELAY = 50 // milliseconds - fudge factor to delay next grid cycle
-	grid = null		/** @type {cCAGrid} */
-	_canvas = null
+	/** @type {cCAGrid} */ grid = null
+	/** @type {jQuery<HTMLCanvasElement>} */ _canvas = null
 	cells_to_draw = 0
 	cells_drawn = 0
 	mouse = {
@@ -31,6 +35,7 @@ class cCACanvas extends cJQueryWidgetClass {
 		is_down: false
 	}
 
+	/** @type {MousePos} */
 	last_mouse_pos = {
 		row: -1,
 		col: -1
@@ -41,6 +46,10 @@ class cCACanvas extends cJQueryWidgetClass {
 	// #################################################################
 	// # Constructor
 	// #################################################################`
+	/**
+	 * @param {object} poOptions
+	 * @param {jQuery<HTMLElement>} poElement
+	 */
 	constructor (poOptions, poElement) {
 		super(
 			poOptions,
@@ -59,13 +68,17 @@ class cCACanvas extends cJQueryWidgetClass {
 		// subscribe to CAEvents (see #set_grid for subscribing to grid events)
 
 		cCAActionEvent.subscribe(
+			//@ts-expect-error
 			poOptions.base_name,
 			[cCAActionEvent.actions.ready, cCAActionEvent.notify.import_grid],
+			//@ts-expect-error
 			poEvent => this._onActionEvent(poEvent)
 		)
 		cCAGridEvent.subscribe(
+			//@ts-expect-error
 			poOptions.base_name,
 			[cCAGridEvent.notify.done, cCAGridEvent.notify.clear, cCAGridEvent.notify.nochange, cCAGridEvent.notify.repeatPattern],
+			//@ts-expect-error
 			poEvent => this._onGridEvent(poEvent)
 		)
 	}
@@ -73,6 +86,10 @@ class cCACanvas extends cJQueryWidgetClass {
 	// #################################################################
 	// # events
 	// #################################################################`
+	/**
+	 *
+	 * @param {cBaseEvent} poEvent
+	 */
 	async _onGridEvent (poEvent) {
 		const oOptions = this.options
 		switch (poEvent.action) {
@@ -85,7 +102,8 @@ class cCACanvas extends cJQueryWidgetClass {
 				break
 
 			case cCAGridEvent.notify.nochange:
-				var oData = poEvent.data
+				/** @type {object} */ var oData = poEvent.data
+				//@ts-expect-error
 				if (oData == null || !oData.from_canvas)
 					alert('no change detected in grid')
 				break
@@ -94,6 +112,7 @@ class cCACanvas extends cJQueryWidgetClass {
 				alert('repeat pattern seen')
 				cCAGridEvent.fire_event(
 					oOptions.base_name,
+					//@ts-expect-error
 					cCAGridEvent.actions.nochange,
 					{
 						from_canvas: true
@@ -104,8 +123,12 @@ class cCACanvas extends cJQueryWidgetClass {
 	}
 
 	//* ***************************************************************
+	/**
+	 *
+	 * @param {cBaseEvent} poEvent
+	 */
 	async _onActionEvent (poEvent) {
-		const oElement = this.element
+		/** @type {jQuery<HTMLElement>} */ var oElement = this.element
 		const oOptions = this.options
 
 		cDebug.enter()
@@ -190,6 +213,7 @@ class cCACanvas extends cJQueryWidgetClass {
 	}
 
 	//* ***************************************************************
+	/** @param {jQuery.MouseEventBase} poEvent */
 	_onMouseDown (poEvent) {
 		if (!this.grid)
 			return
@@ -202,6 +226,7 @@ class cCACanvas extends cJQueryWidgetClass {
 	}
 
 	//* ***************************************************************
+	/** @param {jQuery.MouseEventBase} poEvent */
 	_onMouseMove (poEvent) {
 		if (!this.options.interactive)
 			return
@@ -223,6 +248,11 @@ class cCACanvas extends cJQueryWidgetClass {
 	// #################################################################
 	// # privates
 	// #################################################################`
+	/**
+	 *
+	 * @param {jQuery.MouseEventBase} poEvent
+	 * @returns
+	 */
 	_set_one_cell (poEvent) {
 		if (this.grid.is_running())
 			return
@@ -246,6 +276,12 @@ class cCACanvas extends cJQueryWidgetClass {
 	}
 
 	//* ***************************************************************
+	/**
+	 *
+	 * @param {jQuery.MouseEventBase} poEvent
+	 * @param {boolean} pbChangedOnly
+	 * @returns {MousePos|null}
+	 */
 	_get_cell_rc_from_event (poEvent, pbChangedOnly) {
 		const oElement = this.element
 		const oOptions = this.options
@@ -303,12 +339,17 @@ class cCACanvas extends cJQueryWidgetClass {
 		cDebug.enter()
 
 		if (this._canvas)
+			// @ts-expect-error
 			this._canvas.clearCanvas()
 
 		cDebug.leave()
 	}
 
 	//* ***************************************************************
+	/**
+	 *
+	 * @param {cCAGrid} poGrid
+	 */
 	_set_grid (poGrid) {
 		if (this.grid !== null) {
 			this.grid.unsubscribe()
@@ -333,7 +374,7 @@ class cCACanvas extends cJQueryWidgetClass {
 
 		// create the html5 canvas to draw on
 		oElement.empty()
-		const oCanvas = $('<canvas>')
+		/** @type {jQuery<HTMLCanvasElement>} */ const oCanvas = $('<canvas>')
 		oCanvas.attr(
 			'width',
 			oOptions.cols * oOptions.cell_size
@@ -357,7 +398,7 @@ class cCACanvas extends cJQueryWidgetClass {
 	//* ***************************************************************
 	/**
 	 * draws the grid
-	 * @param {array} paChangedCells
+	 * @param {Array} paChangedCells
 	 */
 	_drawGrid (paChangedCells) {
 		cDebug.enter()
@@ -404,6 +445,10 @@ class cCACanvas extends cJQueryWidgetClass {
 	}
 
 	//* ***************************************************************
+	/**
+	 *
+	 * @param {cCACell} poCell
+	 */
 	_draw_cell (poCell) {
 		const oCanvas = this._canvas
 		const oOptions = this.options

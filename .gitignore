@@ -21,3 +21,4 @@ css/jquery/
 ~*
 *.bak
 *.tmp
+jsconfig.json.old
