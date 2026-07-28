@@ -21,6 +21,12 @@
             "type": "chrome",
             "request": "launch",
             "url": "${workspaceFolder}/crypt/scramble.html?debug"
+        },
+        {
+            "name": "crypt test",
+            "type": "chrome",
+            "request": "launch",
+            "url": "${workspaceFolder}/crypt/test.html?debug"
         }
     ]
 }
