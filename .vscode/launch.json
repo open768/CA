@@ -17,6 +17,12 @@
             "file": "${workspaceFolder}/index.html",
         },
         {
+            "name": "editor",
+            "type": "chrome",
+            "request": "launch",
+            "file": "${workspaceFolder}/editor.html",
+        },
+        {
             "name": "scrambler",
             "type": "chrome",
             "request": "launch",
