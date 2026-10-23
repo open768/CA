@@ -461,7 +461,7 @@ class cCAEditorWidget extends cJQueryWidgetClass {
 				value: iVal,
 				cell_size: oOptions.cell_size
 			})
-			oDiv.append(oSpan)
+			oChild.append(oSpan)
 		}
 	}
 
@@ -520,7 +520,8 @@ class cCAEditorWidget extends cJQueryWidgetClass {
 			this.rule = cCARuleBase64Importer.makeRule(oTextArea.val())
 			this._add_edit_widgets()
 		} catch (e) {
-			alert(`Whoops - something went wrong!\n\n${e.message}`)
+			console.error(e.stack || e)
+			alert(`Whoops - something went wrong setting the rule!\n\n${e.message}`)
 		}
 	}
 
@@ -540,7 +541,7 @@ class cCAEditorWidget extends cJQueryWidgetClass {
 			)
 			this._set_base64Rule(s64)
 		} catch (e) {
-			alert(`Whoops - something went wrong!\n\n${e.message}`)
+			alert(`Whoops - something went wrong clicking!\n\n${e.message}`)
 		}
 	}
 
