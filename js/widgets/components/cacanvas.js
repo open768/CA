@@ -283,25 +283,20 @@ class cCACanvas extends cJQueryWidgetClass {
 	 * @returns {MousePos|null}
 	 */
 	_get_cell_rc_from_event (poEvent, pbChangedOnly) {
-		const oElement = this.element
 		const oOptions = this.options
+		const oCanvas = this._canvas[0]
+		const oBounds = oCanvas.getBoundingClientRect()
+		if (oBounds.width <= 0 || oBounds.height <= 0)
+			return null
 
-		const X = poEvent.offsetX - cJquery.get_padding_width(oElement) + oOptions.cell_size
-		const Y = poEvent.offsetY - cJquery.get_padding_height(oElement) + oOptions.cell_size
-		let ir = Math.trunc(Y / oOptions.cell_size) + 1
-		let ic = Math.trunc(X / oOptions.cell_size) + 1
+		// Measure from the canvas itself, accounting for its displayed scale.
+		const X = (poEvent.clientX - oBounds.left) * oCanvas.width / oBounds.width
+		const Y = (poEvent.clientY - oBounds.top) * oCanvas.height / oBounds.height
+		if (X < 0 || Y < 0 || X >= oCanvas.width || Y >= oCanvas.height)
+			return null
 
-		if (ir < 1)
-			ir = 1
-
-		if (ir > oOptions.rows)
-			ir = oOptions.rows
-
-		if (ic < 1)
-			ic = 1
-
-		if (ic > oOptions.cols)
-			ir = oOptions.cols
+		const ir = Math.floor(Y / oOptions.cell_size) + 1
+		const ic = Math.floor(X / oOptions.cell_size) + 1
 
 		let oRC = null
 		if (ir != this.last_mouse_pos.row || ic != this.last_mouse_pos.col) {
@@ -463,6 +458,7 @@ class cCACanvas extends cJQueryWidgetClass {
 		// ------------------draw
 		const sFill = poCell.value == 0 ? '#fff' : '#000'
 		oCanvas.drawRect({
+			fromCenter: false,
 			fillStyle: sFill,
 			x: ix,
 			y: iy,
