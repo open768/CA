@@ -79,6 +79,25 @@ class cIndexWidget extends cJQueryWidgetClass {
 		})
 		oLeftCtrlDiv.cacontrolsl({ base_name: sCaName })
 		oSettingsBody.append(oLeftCtrlDiv)
+		const oGridSection = $(
+			'<section>',
+			{
+				class: 'mt-3',
+				'aria-label': 'Grid'
+			}
+		)
+		oGridSection.append($(
+			'<h3>',
+			{
+				class: 'h6 mb-2'
+			}
+		).text('Grid'))
+		const oGridInit = $('<div>')
+		oGridInit.cagridinit({
+			base_name: sCaName
+		})
+		oGridSection.append(oGridInit)
+		oSettingsBody.append(oGridSection)
 		oSettingsPanel.append(oSettingsHeader, oSettingsBody)
 		oSettings.append(oSettingsButton)
 
@@ -110,7 +129,7 @@ class cIndexWidget extends cJQueryWidgetClass {
 
 			oTopContainer.append(oCell)
 
-			// right panel - grid initialisation, status and run controls
+			// right panel - status, activity and run controls
 			oCell = $(
 				'<div>',
 				{

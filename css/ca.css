@@ -43,8 +43,39 @@
 	margin: 4px 0;
 }
 
+.CAChart[role="button"] {
+	cursor: pointer;
+}
+
+.CAChart[role="button"]:focus-visible {
+	outline: 2px solid var(--bs-primary);
+	outline-offset: 2px;
+}
+
 .CAChart .u-legend .u-series {
 	margin-right: 8px;
+}
+
+.CAChartPopover {
+	position: fixed;
+	z-index: 1080;
+	pointer-events: none;
+	padding: 8px 10px;
+	border: 1px solid var(--bs-border-color, #ddd);
+	border-radius: 6px;
+	background: var(--bs-body-bg, #fff);
+	color: var(--bs-body-color, #212529);
+	box-shadow: 0 2px 8px #0002;
+	font: 12px/1.5 sans-serif;
+	white-space: nowrap;
+}
+
+.CAChartPopover .changed {
+	color: #3366cc;
+}
+
+.CAChartPopover .active {
+	color: #dc3912;
 }
 
 .rule {

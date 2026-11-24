@@ -29,9 +29,6 @@ class cCAControlsR extends cJQueryWidgetClass {
 		oElement.addClass('d-flex flex-column gap-2')
 
 		// check dependencies
-		if (!oElement.cagridinit)
-			$.error('cainit is missing , chack includes')
-
 		if (!oElement.castatus)
 			$.error('castatus is missing , chack includes')
 
@@ -64,13 +61,6 @@ class cCAControlsR extends cJQueryWidgetClass {
 		// ---chart----------------------------------------------------------
 		oDiv = $('<DIV>')
 		oDiv.cachart({
-			base_name: this.base_name
-		})
-		oElement.append(oDiv)
-
-		// --initialise------------------------------------------------
-		oDiv = $('<DIV>')
-		oDiv.cagridinit({
 			base_name: this.base_name
 		})
 		oElement.append(oDiv)
