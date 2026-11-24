@@ -28,37 +28,55 @@ class cIndexWidget extends cJQueryWidgetClass {
 
 		const sCaName = oOptions.name
 
-		// set basic stuff
-		const oTopContainer = $('<div>') // this will contain 3 cells
+		// Settings slide over the page without changing the workspace layout.
+		const sSettingsID = cJquery.child_ID(oElement, 'settings')
+		const sSettingsHeadingID = cJquery.child_ID(oElement, 'settingsHeading')
+		const oSettings = $('<aside>', { class: 'flex-shrink-0', 'aria-label': 'Settings' })
+		const oSettingsButton = $('<button>', {
+			type: 'button',
+			class: 'btn btn-outline-secondary mb-2 d-inline-flex align-items-center justify-content-center',
+			title: 'Open settings',
+			'aria-label': 'Open settings',
+			'data-bs-toggle': 'offcanvas',
+			'data-bs-target': '#' + sSettingsID,
+			'aria-controls': sSettingsID
+		}).html('<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" focusable="false"><path d="M4 6h16M4 12h16M4 18h16"/></svg>')
+		const oSettingsPanel = $('<div>', {
+			id: sSettingsID,
+			class: 'offcanvas offcanvas-start',
+			tabindex: -1,
+			'aria-labelledby': sSettingsHeadingID
+		})
+		const oSettingsHeader = $('<div>', { class: 'offcanvas-header' })
+		oSettingsHeader.append($('<h2>', {
+			id: sSettingsHeadingID,
+			class: 'offcanvas-title h5'
+		}).text('Settings'))
+		oSettingsHeader.append($('<button>', {
+			type: 'button',
+			class: 'btn-close',
+			'data-bs-dismiss': 'offcanvas',
+			'aria-label': 'Close settings'
+		}))
+		const oSettingsBody = $('<div>', { class: 'offcanvas-body' })
+		const oLeftCtrlDiv = $('<div>', {
+			id: 'leftControl',
+			width: 350,
+			css: { maxWidth: '100%' }
+		})
+		oLeftCtrlDiv.cacontrolsl({ base_name: sCaName })
+		oSettingsBody.append(oLeftCtrlDiv)
+		oSettingsPanel.append(oSettingsHeader, oSettingsBody)
+		oSettings.append(oSettingsButton, oSettingsPanel)
+
+		// Analysis workspace: canvas and right controls.
+		const oTopContainer = $('<div>', { class: 'd-flex align-items-start gap-3' })
+		oTopContainer.append(oSettings)
 		{
-			// ----------------------------------------------------------------------------------
-			// left controls - rule configuration
 			var oCell = $(
 				'<div>',
 				{
-					class: 'w3-cell w3-cell-top w3-container'
-				}
-			)
-			{
-				const oLeftCtrlDiv = $(
-					'<DIV>',
-					{
-						width: 350, id: 'leftControl'
-					}
-				)
-				oLeftCtrlDiv.cacontrolsl({
-					base_name: sCaName
-				})
-				oCell.append(oLeftCtrlDiv)
-			}
-
-			oTopContainer.append(oCell)
-
-			// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-			oCell = $(
-				'<div>',
-				{
-					class: 'w3-cell w3-cell-top w3-container'
+					class: 'flex-shrink-0'
 				}
 			)
 			{
@@ -83,7 +101,7 @@ class cIndexWidget extends cJQueryWidgetClass {
 			oCell = $(
 				'<div>',
 				{
-					class: 'w3-cell w3-cell-top w3-container'
+					class: 'flex-shrink-0'
 				}
 			)
 			{
