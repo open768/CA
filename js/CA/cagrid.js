@@ -40,6 +40,7 @@ class cCAGrid extends cEventSubscriber {
 	/** @type {Array} */ history = []
 	/** @type {cCAStatus} */ counts = new cCAStatus()
 	/** @type {number} */ _consumed_responses = 0
+	/** @type {number} */ _generation = 0
 
 	static HISTORY_LEN = 40
 
@@ -378,6 +379,7 @@ class cCAGrid extends cEventSubscriber {
 		// reset counters
 
 		cDebug.extra_debug('stepping')
+		const iGeneration = ++this._generation
 
 		// apply rules
 		/** @type {boolean} */let bHasChanged
@@ -393,7 +395,10 @@ class cCAGrid extends cEventSubscriber {
 
 					oCell.rule = this.rule
 
-				bHasChanged = oCell.apply_rule()
+				bHasChanged = oCell.apply_rule(
+					iGeneration,
+					this.name
+				)
 
 				// check if the cell has changed
 				if (bHasChanged)

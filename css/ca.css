@@ -2,6 +2,12 @@
 	width: 220px;
 }
 
+.btn.ca-playback-control {
+	--bs-btn-disabled-color: var(--bs-secondary-color);
+	--bs-btn-disabled-bg: var(--bs-tertiary-bg);
+	--bs-btn-disabled-border-color: var(--bs-border-color);
+}
+
 .ca-settings-rail {
 	width: 2.75rem;
 	z-index: 1046;

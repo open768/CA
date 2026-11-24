@@ -14,6 +14,7 @@ class cCAEvaluatedCell {
 	 */
 	constructor () {
 		this.done = false
+		this.generation = null
 		this.state = 0
 		this.value = 1
 		this.pattern = -1
@@ -53,13 +54,21 @@ class cCACell {
 	}
 
 	//* ***************************************************************
-	apply_rule () {
+	/**
+	 * @param {number|null} [piGeneration=null]
+	 * @param {string|null} [psBaseId=null]
+	 */
+	apply_rule (piGeneration = null, psBaseId = null) {
 		// just calls the rules apply method. the benefit of doing it this way is
 		// that each cell could have a different rule.
 		if (this.rule == null)
 			throw new eCAException('no rule defined')
 
-		const bHasChanged = this.rule.evaluateCell(this)
+		const bHasChanged = this.rule.evaluateCell(
+			this,
+			piGeneration,
+			psBaseId
+		)
 		return bHasChanged
 	}
 
@@ -73,14 +82,16 @@ class cCACell {
 	//* ****************************************************************
 	/**
 	 * returns 8 way neighbourhood bitmap, uses bitmap operations to optimise number of operations
+	 * @param {number|null} [piGeneration=null]
 	 \*	 * @returns {*}
 	 */
-	get8Bitmap () {
+	get8Bitmap (piGeneration = null) {
 		let oNeigh, iValue, oNorth, oWest, iWPattern
 		oNeigh = this.neighbours
 
 		oNorth = oNeigh.get(CA_DIRECTIONS.north)
-		if (oNorth.evaluated.done) {
+		// Reuse patterns only when they were calculated in this generation.
+		if (piGeneration !== null && oNorth.evaluated.done && oNorth.evaluated.generation === piGeneration) {
 			// optimisated by looking at the North cell which has always allready been evaluated, reduces the number of ops from 8 to 4
 			iValue = oNorth.evaluated.pattern
 			iValue <<= 3 // remove cells not in neighbourhood of this cell (makes number 12 bit, and bits are not in the right place)
@@ -89,7 +100,7 @@ class cCACell {
 
 			// further optimise by 1 op by looking at the evaluated West cell
 			oWest = oNeigh.get(CA_DIRECTIONS.west)
-			if (oWest.evaluated.done) {
+			if (oWest.evaluated.done && oWest.evaluated.generation === piGeneration) {
 				iWPattern = oWest.evaluated.pattern
 				iWPattern &= 0b11 // only interested in last 2 bits from west cell
 				iValue <<= 2 // make space to copy pattern from west
@@ -137,15 +148,16 @@ class cCACell {
 	/**
 	 * returns neighbourhood bitmap
 	 \*	 * @param {*} piNeighbourType
+	 * @param {number|null} [piGeneration=null]
 	 * @returns {*}
 	 */
-	getBitmap (piNeighbourType) {
+	getBitmap (piNeighbourType, piGeneration = null) {
 		let oHash, iValue
 
 		oHash = this.neighbours
 		switch (piNeighbourType) {
 			case CA_NEIGHBOURS.eightway:
-				iValue = this.get8Bitmap()
+				iValue = this.get8Bitmap(piGeneration)
 				break
 
 			case CA_NEIGHBOURS.fourway:

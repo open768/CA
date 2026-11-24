@@ -268,15 +268,20 @@ class cCARule {
 	//* ****************************************************************
 	/**
 	 * @param {cCACell} poCell
+	 * @param {number|null} [piGeneration=null]
+	 * @param {string|null} [psBaseId=null]
 	 * @returns {boolean}
 	 */
-	evaluateCell (poCell) {
+	evaluateCell (poCell, piGeneration = null, psBaseId = null) {
 		if (poCell == null)
 			throw new eCAException('no cell provided')
 
 		const oStatus = new cCAStatus()
 		// get the cell neighbour value
-		const iBitmap = poCell.getBitmap(this.neighbour_type)
+		const iBitmap = poCell.getBitmap(
+			this.neighbour_type,
+			piGeneration
+		)
 
 		if (iBitmap == 0)
 		// cells that are completely isolated remain dead
@@ -309,6 +314,7 @@ class cCARule {
 
 		// mark cell as done
 		poCell.evaluated.done = true
+		poCell.evaluated.generation = piGeneration
 		poCell.evaluated.pattern = iBitmap // the pattern evaluated - used to optimise cell evaluation
 
 		// set the status values
@@ -321,11 +327,13 @@ class cCARule {
 		if (bHasChanged)
 			oStatus.changed = 1
 
-		// send a status event
-		cCARuleEvent.fire_event(
-			cCARuleEvent.actions.status,
-			oStatus
-		)
+		// Standalone evaluations have no grid channel to report to.
+		if (psBaseId !== null)
+			cCARuleEvent.fire_event(
+				psBaseId,
+				cCARuleEvent.actions.status,
+				oStatus
+			)
 
 		return bHasChanged
 	}

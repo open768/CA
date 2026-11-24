@@ -166,7 +166,7 @@ class cCARemoteControls extends cJQueryWidgetClass {
 				'<button>',
 				{
 					type: 'button',
-					class: 'btn btn-outline-primary',
+					class: 'btn btn-outline-primary ca-playback-control',
 					'aria-label': psTitle,
 					id: sID,
 					title: psTitle
