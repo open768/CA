@@ -37,14 +37,9 @@ class cCAControlsL extends cJQueryWidgetClass {
 		const oElement = this.element
 		this.base_name = poOptions.base_name
 
-		// check dependencies
-		if (!oElement.selectmenu)
-			$.error('selectmenu class is missing! check includes')
-
 		// set basic stuff
-		oElement.addClass('ui-widget')
+		oElement.addClass('card')
 		oElement.addClass('CAControls')
-		$(oElement).tooltip()
 
 		// put something in the widget
 		this._init()
@@ -70,7 +65,7 @@ class cCAControlsL extends cJQueryWidgetClass {
 		oHeader = $(
 			'<DIV>',
 			{
-				class: 'ui-widget-header'
+				class: 'card-header d-flex flex-wrap align-items-center gap-2'
 			}
 		)
 		{
@@ -83,7 +78,9 @@ class cCAControlsL extends cJQueryWidgetClass {
 			const oSpan = $(
 				'<SPAN>',
 				{
-					id: sID
+					id: sID,
+					class: 'small text-body-secondary',
+					'aria-live': 'polite'
 				}
 			).html(' ??') // STATUS div
 			oHeader.append(oSpan)
@@ -95,7 +92,7 @@ class cCAControlsL extends cJQueryWidgetClass {
 		oContent = $(
 			'<DIV>',
 			{
-				class: 'ui-widget-content'
+				class: 'card-body'
 			}
 		)
 		{
@@ -112,16 +109,36 @@ class cCAControlsL extends cJQueryWidgetClass {
 	_init_boredom (poContent) {
 		const oElement = this.element
 
-		poContent.append('<HR>Boredom')
+		// ---------------- section
+		const oSection = $(
+			'<DIV>',
+			{
+				class: 'border-top pt-3'
+			}
+		)
+		poContent.append(oSection)
+
+		// ---------------- label
 		const sID = cJquery.child_ID(
 			oElement,
 			LEFT_CTRL_IDS.boredom_ID
 		)
+		const oLabel = $(
+			'<LABEL>',
+			{
+				for: sID,
+				class: 'form-label'
+			}
+		)
+		oLabel.append('Boredom')
+		oSection.append(oLabel)
+
+		// ---------------- selector
 		const oSelect = $(
 			'<SELECT>',
 			{
 				id: sID,
-				width: 50,
+				class: 'form-select',
 				title: 'how many times will a cell see the same neighbourhood before it gets bored and flips',
 				disabled: true
 			}
@@ -154,42 +171,84 @@ class cCAControlsL extends cJQueryWidgetClass {
 				}
 			).append(i + ' times'))
 
-		poContent.append(oSelect)
-		oSelect.selectmenu({
-			select: poEvent => this._onSetRuleClick()
-		})
+		oSection.append(oSelect)
+		oSelect.on(
+			'change',
+			() => this._onSetRuleClick()
+		)
 	}
 
 	//* ****************************************************************************
 	_init_ruleentry (poContent) {
 		const oElement = this.element
-		poContent.append('<HR>')
+
+		// ---------------- section
+		const oSection = $(
+			'<DIV>',
+			{
+				class: 'border-top pt-3 mb-3'
+			}
+		)
+		poContent.append(oSection)
+
 		// ---------------- textbox
 		let sID = cJquery.child_ID(
 			oElement,
 			LEFT_CTRL_IDS.rule_text_ID
 		)
+		let oLabel = $(
+			'<LABEL>',
+			{
+				for: sID,
+				class: 'form-label'
+			}
+		)
+		oLabel.append('Rule')
+		oSection.append(oLabel)
+
 		const oBox = $(
 			'<TEXTAREA>',
 			{
 				ID: sID,
-				class: 'rule',
+				class: 'form-control font-monospace mb-2',
+				rows: 4,
 				title: 'enter the rule here'
 			}
 		)
-		oBox.keyup(() => this._onTextareaChange())
-		poContent.append(oBox)
+		oBox.on(
+			'input',
+			() => this._onTextareaChange()
+		)
+		oSection.append(oBox)
 
 		// -------------- controls
 		sID = cJquery.child_ID(
 			oElement,
 			LEFT_CTRL_IDS.rule_type_id
 		)
+		oLabel = $(
+			'<LABEL>',
+			{
+				for: sID,
+				class: 'form-label'
+			}
+		)
+		oLabel.append('Rule type')
+		oSection.append(oLabel)
+
+		const oControls = $(
+			'<DIV>',
+			{
+				class: 'input-group'
+			}
+		)
+		oSection.append(oControls)
+
 		const oSelect = $(
 			'<SELECT>',
 			{
 				id: sID,
-				width: 200,
+				class: 'form-select',
 				title: 'choose the rule type to enter in the box above'
 			}
 		)
@@ -217,78 +276,129 @@ class cCAControlsL extends cJQueryWidgetClass {
 				value: CARULE_TYPES.wolfram1d
 			}
 		).append('wolfram'))
-		poContent.append(oSelect)
-		oSelect.selectmenu()
+		oControls.append(oSelect)
 
 		const oButton = $(
 			'<button>',
 			{
+				type: 'button',
+				class: 'btn btn-primary',
 				title: 'use the rule entered in the box above'
 			}
-		).button({
-			icon: 'ui-icon-circle-arrow-e'
-		})
+		)
+		oButton.append('Apply')
 		oButton.click(() => this._onSetRuleClick())
-		poContent.append(oButton)
+		oControls.append(oButton)
 	}
 
 	//* ****************************************************************************
 	_init_repeater (poContent) {
 		const oElement = this.element
-		poContent.append('<HR>')
-		poContent.append('word repeater')
 
+		// ---------------- section
+		const oSection = $(
+			'<DIV>',
+			{
+				class: 'border-top pt-3 mb-3'
+			}
+		)
+		poContent.append(oSection)
+
+		// ---------------- label
 		const sID = cJquery.child_ID(
 			oElement,
 			LEFT_CTRL_IDS.repeater_ID
 		)
+		const oLabel = $(
+			'<LABEL>',
+			{
+				for: sID,
+				class: 'form-label'
+			}
+		)
+		oLabel.append('Word repeater')
+		oSection.append(oLabel)
+
+		// ---------------- input group
+		const oControls = $(
+			'<DIV>',
+			{
+				class: 'input-group'
+			}
+		)
+		oSection.append(oControls)
+
+		// ---------------- textbox
 		const oInput = $(
 			'<INPUT>',
 			{
 				type: 'text',
 				id: sID,
-				size: 12,
+				class: 'form-control',
 				title: 'put anything in this box - eg your name'
 			}
 		)
-		poContent.append(oInput)
+		oControls.append(oInput)
 
+		// ---------------- button
 		const oButton = $(
 			'<button>',
 			{
+				type: 'button',
+				class: 'btn btn-outline-primary',
 				title: 'creates a rule from the word in the box'
 			}
-		).button({
-			icon: 'ui-icon-circle-arrow-e'
-		})
+		)
+		oButton.append('Generate')
 		oButton.click(() => this._onSetRepeaterClick())
 
-		poContent.append(oButton)
+		oControls.append(oButton)
 	}
 
 	//* ****************************************************************************
 	_init_presets (poContent) {
 		const oElement = this.element
 
-		poContent.append('Rule Presets')
+		// ---------------- section
+		const oSection = $(
+			'<DIV>',
+			{
+				class: 'mb-3'
+			}
+		)
+		poContent.append(oSection)
+
+		// ---------------- label
 		const sID = cJquery.child_ID(
 			oElement,
 			LEFT_CTRL_IDS.preset_ID
 		)
+		const oLabel = $(
+			'<LABEL>',
+			{
+				for: sID,
+				class: 'form-label'
+			}
+		)
+		oLabel.append('Rule presets')
+		oSection.append(oLabel)
+
+		// ---------------- selector
 		const oSelect = $(
 			'<SELECT>',
 			{
 				id: sID,
-				width: 200,
+				class: 'form-select',
 				title: 'pick a preset rule'
 			}
 		)
 		this._populate_presets(oSelect)
-		poContent.append(oSelect)
+		oSection.append(oSelect)
 
-		oSelect.selectmenu({
-			select: poEvent => this._onPresetsClick(poEvent)
-		})
+		oSelect.on(
+			'change',
+			poEvent => this._onPresetsClick(poEvent)
+		)
 	}
 
 	// #################################################################
@@ -350,13 +460,13 @@ class cCAControlsL extends cJQueryWidgetClass {
 		}
 
 		// enable the boredom selector
-		const sBoredomID = cJquery.child_ID(
+		const oBoredomSelect = cJquery.get_child(
 			oElement,
 			LEFT_CTRL_IDS.boredom_ID
 		)
-		cJquery.enable_element(
-			sBoredomID,
-			true
+		oBoredomSelect.prop(
+			'disabled',
+			false
 		)
 
 		// parse the rule based on the type selected
@@ -455,7 +565,6 @@ class cCAControlsL extends cJQueryWidgetClass {
 				case CARULE_TYPES.life:
 					oTextArea.val(oRuleJson.rule)
 					oRulesSelect.val(CARULE_TYPES.life)
-					oRulesSelect.selectmenu('refresh')
 					this._onSetRuleClick()
 					break
 
@@ -503,7 +612,6 @@ class cCAControlsL extends cJQueryWidgetClass {
 			LEFT_CTRL_IDS.rule_type_id
 		)
 		oSelect.val(CARULE_TYPES.base64)
-		oSelect.selectmenu('refresh')
 		this._onSetRuleClick()
 	}
 
