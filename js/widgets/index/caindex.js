@@ -31,21 +31,34 @@ class cIndexWidget extends cJQueryWidgetClass {
 		// Settings slide over the page without changing the workspace layout.
 		const sSettingsID = cJquery.child_ID(oElement, 'settings')
 		const sSettingsHeadingID = cJquery.child_ID(oElement, 'settingsHeading')
-		const oSettings = $('<aside>', { class: 'flex-shrink-0', 'aria-label': 'Settings' })
+		const oSettings = $('<aside>', {
+			class: 'ca-settings-rail flex-shrink-0 align-self-stretch d-flex position-relative',
+			'aria-label': 'Settings'
+		})
 		const oSettingsButton = $('<button>', {
 			type: 'button',
-			class: 'btn btn-outline-secondary mb-2 d-inline-flex align-items-center justify-content-center',
+			class: 'ca-settings-toggle btn btn-outline-secondary d-flex align-items-start justify-content-center',
 			title: 'Open settings',
 			'aria-label': 'Open settings',
 			'data-bs-toggle': 'offcanvas',
 			'data-bs-target': '#' + sSettingsID,
+			'aria-expanded': 'false',
 			'aria-controls': sSettingsID
 		}).html('<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" focusable="false"><path d="M4 6h16M4 12h16M4 18h16"/></svg>')
 		const oSettingsPanel = $('<div>', {
 			id: sSettingsID,
-			class: 'offcanvas offcanvas-start',
+			class: 'offcanvas offcanvas-start ca-settings-panel',
 			tabindex: -1,
 			'aria-labelledby': sSettingsHeadingID
+		})
+		oSettingsPanel.on('show.bs.offcanvas hide.bs.offcanvas', poEvent => {
+			const bExpanded = poEvent.type === 'show'
+			const sLabel = bExpanded ? 'Close settings' : 'Open settings'
+			oSettingsButton.attr({
+				'aria-expanded': String(bExpanded),
+				'aria-label': sLabel,
+				title: sLabel
+			})
 		})
 		const oSettingsHeader = $('<div>', { class: 'offcanvas-header' })
 		oSettingsHeader.append($('<h2>', {
@@ -67,11 +80,11 @@ class cIndexWidget extends cJQueryWidgetClass {
 		oLeftCtrlDiv.cacontrolsl({ base_name: sCaName })
 		oSettingsBody.append(oLeftCtrlDiv)
 		oSettingsPanel.append(oSettingsHeader, oSettingsBody)
-		oSettings.append(oSettingsButton, oSettingsPanel)
+		oSettings.append(oSettingsButton)
 
 		// Analysis workspace: canvas and right controls.
-		const oTopContainer = $('<div>', { class: 'd-flex align-items-start gap-3' })
-		oTopContainer.append(oSettings)
+		const oTopContainer = $('<div>', { class: 'd-flex flex-wrap align-items-start gap-3 position-relative' })
+		oTopContainer.append(oSettings, oSettingsPanel)
 		{
 			var oCell = $(
 				'<div>',
@@ -125,7 +138,7 @@ class cIndexWidget extends cJQueryWidgetClass {
 		const oBottomContainer = $(
 			'<div>',
 			{
-				class: 'w3-cell-row'
+				class: 'mt-3'
 			}
 		)
 		{
@@ -133,7 +146,7 @@ class cIndexWidget extends cJQueryWidgetClass {
 			oCell = $(
 				'<div>',
 				{
-					class: 'w3-cell'
+					class: 'w-100'
 				}
 			)
 			{

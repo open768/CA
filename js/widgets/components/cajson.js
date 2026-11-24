@@ -37,13 +37,8 @@ class cCAJson extends cJQueryWidgetClass {
 		let oElement
 		oElement = this.element
 
-		// check dependencies
-		if (!oElement.tabs)
-			$.error('tabs class is missing! check includes')
-
-		// set basic stuff
-		oElement.addClass('ui-widget')
-		$(oElement).tooltip()
+		// Bootstrap card; native title attributes provide control hints.
+		oElement.addClass('card')
 
 		// put something in the widget
 		this._init()
@@ -61,144 +56,47 @@ class cCAJson extends cJQueryWidgetClass {
 	// # Initialise
 	// #################################################################`
 	_init () {
-		let oElement
-		let oHeaderDiv, oBodyDiv, sBodyID, sID, oButton
+		const oElement = this.element
+		const sBodyID = cJquery.child_ID(oElement, cCAJsonTypes.BODY_ID)
+		const oHeader = $('<div>', { class: 'card-header text-bg-primary p-0' })
+		const oToggle = $('<button>', {
+			type: 'button',
+			id: cJquery.child_ID(oElement, cCAJsonTypes.BTN_ID),
+			class: 'btn btn-primary w-100 text-start',
+			'aria-expanded': 'false',
+			'aria-controls': sBodyID
+		}).text('JSON +')
+		oToggle.on('click', () => this._showHide())
+		oHeader.append(oToggle)
 
-		cDebug.enter()
-		oElement = this.element
-		sBodyID = cJquery.child_ID(
-			oElement,
-			cCAJsonTypes.BODY_ID
-		)
-
-		// -----------header----------------------------------------
-		oHeaderDiv = $(
-			'<header>',
-			{
-				class: 'w3-container w3-blue'
-			}
-		)
-		{
-			oHeaderDiv.append('<font size="+2">Json</font> ')
-
-			const sButtonID = cJquery.child_ID(
-				oElement,
-				cCAJsonTypes.BTN_ID
-			)
-			oButton = $(
-				'<button>',
-				{
-					ID: sButtonID,
-					class: 'w3-button'
-				}
-			)
-			{
-				oButton.append('+')
-				oButton.on(
-					'click',
-					() => this._showHide()
-				)
-				oHeaderDiv.append(oButton)
-				// add the same click to the header
-				oHeaderDiv.on(
-					'click',
-					() => this._showHide()
-				)
-			}
+		const oBody = $('<div>', { id: sBodyID, class: 'card-body' })
+		oBody.append($('<textarea>', {
+			id: cJquery.child_ID(oElement, cCAJsonTypes.TEXTAREA_ID),
+			class: 'form-control font-monospace mb-2',
+			rows: 8,
+			title: 'JSON goes here',
+			'aria-label': 'Grid JSON'
+		}))
+		const oActions = $('<div>', { class: 'd-flex flex-wrap gap-2' })
+		if (this.create_button) {
+			const oCreate = $('<button>', { type: 'button', class: 'btn btn-outline-primary' }).text('Create')
+			oCreate.on('click', () => this._onClickExport())
+			oActions.append(oCreate)
 		}
 
-		oElement.append(oHeaderDiv)
-
-		// ----------------body-------------------------------------
-		oBodyDiv = $(
-			'<DIV>',
-			{
-				class: 'w3-container', ID: sBodyID
-			}
-		)
-		{
-			// ---------textbox
-			sID = cJquery.child_ID(
-				oElement,
-				cCAJsonTypes.TEXTAREA_ID
-			)
-			{
-				const oBox = $(
-					'<TEXTAREA>',
-					{
-						ID: sID,
-						class: 'json',
-						title: 'Json goes here'
-					}
-				)
-				oBodyDiv.append(oBox)
-			}
-
-			// ---------buttons
-			if (this.create_button) {
-				oButton = $(
-					'<button>',
-					{
-						class: 'w3-button'
-					}
-				)
-				{
-					oButton.append('Create')
-					oButton.on(
-						'click',
-						() => this._onClickExport()
-					)
-					oBodyDiv.append(oButton)
-				}
-			}
-
-			oButton = $(
-				'<button>',
-				{
-					class: 'w3-button w3-purple'
-				}
-			)
-			{
-				oButton.append('Import')
-				oButton.on(
-					'click',
-					() => this._onClickImport()
-				)
-				oBodyDiv.append(oButton)
-			}
-		}
-
-		oElement.append(oBodyDiv)
-		oBodyDiv.hide()
-
-		cDebug.leave()
+		const oImport = $('<button>', { type: 'button', class: 'btn btn-primary' }).text('Import')
+		oImport.on('click', () => this._onClickImport())
+		oActions.append(oImport)
+		oBody.append(oActions).hide()
+		oElement.append(oHeader, oBody)
 	}
 
-	// #################################################################
-	// # EVENTS
-	// #################################################################`
 	_showHide () {
-		const oElement = this.element
-		const oBody = cJquery.get_child(
-			oElement,
-			cCAJsonTypes.BODY_ID
-		)
-
-		const oButton = cJquery.get_child(
-			oElement,
-			cCAJsonTypes.BTN_ID
-		)
-
-		if (oButton.text() === '-') {
-			oBody.hide()
-			oButton.text('+')
-		} else {
-			oBody.show()
-			oButton.text('-')
-		}
-
-		// prevent the click from doing anything else
-		return false
+		const oBody = cJquery.get_child(this.element, cCAJsonTypes.BODY_ID)
+		const oButton = cJquery.get_child(this.element, cCAJsonTypes.BTN_ID)
+		const bExpanded = oButton.attr('aria-expanded') !== 'true'
+		oBody.toggle(bExpanded)
+		oButton.attr('aria-expanded', String(bExpanded)).text(bExpanded ? 'JSON −' : 'JSON +')
 	}
 
 	//* ****************************************************************

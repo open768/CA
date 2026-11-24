@@ -26,7 +26,7 @@ class cCAControlsR extends cJQueryWidgetClass {
 		const oElement = this.element
 
 		// set basic stuff
-		oElement.addClass('ui-widget')
+		oElement.addClass('d-flex flex-column gap-2')
 
 		// check dependencies
 		if (!oElement.cagridinit)
@@ -60,7 +60,6 @@ class cCAControlsR extends cJQueryWidgetClass {
 			base_name: this.base_name
 		})
 		oElement.append(oDiv)
-		oElement.append('<P>')
 
 		// ---chart----------------------------------------------------------
 		oDiv = $('<DIV>')
@@ -68,7 +67,6 @@ class cCAControlsR extends cJQueryWidgetClass {
 			base_name: this.base_name
 		})
 		oElement.append(oDiv)
-		oElement.append('<P>')
 
 		// --initialise------------------------------------------------
 		oDiv = $('<DIV>')
@@ -76,15 +74,9 @@ class cCAControlsR extends cJQueryWidgetClass {
 			base_name: this.base_name
 		})
 		oElement.append(oDiv)
-		oElement.append('<P>')
 
 		// --controls------------------------------------------------
-		oDiv = $(
-			'<DIV>',
-			{
-				class: 'ui-widget-header'
-			}
-		)
+		oDiv = $('<DIV>')
 		oDiv.caremotecontrols({
 			base_name: this.base_name
 		})

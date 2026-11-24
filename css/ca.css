@@ -1,9 +1,25 @@
 .CAControls {
-	outline: 1px solid #ddd;
-	padding: 5px;
-	background: #f0f0f0;
-	display: inline-block;
 	width: 220px;
+}
+
+.ca-settings-rail {
+	width: 2.75rem;
+	z-index: 1046;
+}
+
+.ca-settings-toggle {
+	width: 100%;
+	padding: 0.75rem 0.5rem;
+}
+
+.offcanvas.ca-settings-panel {
+	--bs-offcanvas-transition: transform 450ms cubic-bezier(0.4, 0, 0.2, 1);
+	position: absolute;
+	left: 3.75rem;
+	bottom: auto;
+	min-height: 100%;
+	max-width: calc(100% - 3.75rem);
+	box-shadow: var(--bs-box-shadow);
 }
 
 .CACanvas {

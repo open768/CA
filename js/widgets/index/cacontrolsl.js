@@ -65,7 +65,7 @@ class cCAControlsL extends cJQueryWidgetClass {
 		oHeader = $(
 			'<DIV>',
 			{
-				class: 'card-header d-flex flex-wrap align-items-center gap-2'
+				class: 'card-header py-1 px-2 d-flex flex-wrap align-items-center gap-2'
 			}
 		)
 		{
@@ -92,7 +92,7 @@ class cCAControlsL extends cJQueryWidgetClass {
 		oContent = $(
 			'<DIV>',
 			{
-				class: 'card-body'
+				class: 'card-body p-2'
 			}
 		)
 		{
@@ -113,7 +113,7 @@ class cCAControlsL extends cJQueryWidgetClass {
 		const oSection = $(
 			'<DIV>',
 			{
-				class: 'border-top pt-3'
+				class: 'border-top pt-2'
 			}
 		)
 		poContent.append(oSection)
@@ -186,7 +186,7 @@ class cCAControlsL extends cJQueryWidgetClass {
 		const oSection = $(
 			'<DIV>',
 			{
-				class: 'border-top pt-3 mb-3'
+				class: 'border-top pt-2 mb-2'
 			}
 		)
 		poContent.append(oSection)
@@ -299,7 +299,7 @@ class cCAControlsL extends cJQueryWidgetClass {
 		const oSection = $(
 			'<DIV>',
 			{
-				class: 'border-top pt-3 mb-3'
+				class: 'border-top pt-2 mb-2'
 			}
 		)
 		poContent.append(oSection)
@@ -363,7 +363,7 @@ class cCAControlsL extends cJQueryWidgetClass {
 		const oSection = $(
 			'<DIV>',
 			{
-				class: 'mb-3'
+				class: 'mb-2'
 			}
 		)
 		poContent.append(oSection)

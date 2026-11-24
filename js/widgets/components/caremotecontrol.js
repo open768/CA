@@ -32,7 +32,7 @@ class cCARemoteControls extends cJQueryWidgetClass {
 		const oElement = poElement
 
 		// set basic stuff
-		oElement.addClass('ui-widget')
+		oElement.addClass('card')
 
 		// subscribe to CAEvents
 		cCARuleEvent.subscribe(
@@ -157,7 +157,7 @@ class cCARemoteControls extends cJQueryWidgetClass {
 		const oElement = this.element
 		const oThis = this // needed for closure
 
-		function _add_button (psID, psiIcon, psTitle, piAction) {
+		function _add_button (psID, psIcon, psTitle, piAction) {
 			const sID = cJquery.child_ID(
 				oElement,
 				psID
@@ -165,15 +165,14 @@ class cCARemoteControls extends cJQueryWidgetClass {
 			const oButton = $(
 				'<button>',
 				{
-					width: '30px',
-					height: '30px',
+					type: 'button',
+					class: 'btn btn-outline-primary',
+					'aria-label': psTitle,
 					id: sID,
 					title: psTitle
 				}
 			)
-			oButton.button({
-				icon: psiIcon, showLabel: false
-			})
+			oButton.html('<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="' + psIcon + '"/></svg>')
 			cJquery.enable_element(
 				oButton,
 				false
@@ -183,35 +182,32 @@ class cCARemoteControls extends cJQueryWidgetClass {
 		}
 
 		// --widget header------------------------------------------------
-		cJquery.add_widget_header(
-			oElement,
-			'controls'
-		)
+		oElement.append($('<div>', { class: 'card-header py-1 px-2' }).text('Controls'))
 
 		// ---widget body
 		oDiv = $(
 			'<DIV>',
 			{
-				class: 'ui-widget-content'
+				class: 'card-body p-2 d-flex gap-2'
 			}
 		)
 
 		// --- stop button----------------------------------------
 		_add_button(
 			cCARemoteControls.buttonNames.stop,
-			'ui-icon-stop',
+			'M5 5h14v14H5z',
 			'stop',
 			cCAActionEvent.control_actions.stop
 		)
 		_add_button(
 			cCARemoteControls.buttonNames.play,
-			'ui-icon-circle-triangle-e',
+			'M7 4l14 8-14 8z',
 			'play',
 			cCAActionEvent.control_actions.play
 		)
 		_add_button(
 			cCARemoteControls.buttonNames.step,
-			'ui-icon-circle-arrow-e',
+			'M4 4l12 8-12 8z M17 4h3v16h-3z',
 			'step',
 			cCAActionEvent.control_actions.step
 		)

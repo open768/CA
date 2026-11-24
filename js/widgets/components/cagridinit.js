@@ -23,7 +23,7 @@ class cCAGridStateInit extends cJQueryWidgetClass {
 		this.base_name = poOptions.base_name
 
 		// set basic stuff
-		poElement.addClass('ui-widget')
+		poElement.addClass('card')
 
 		// put something in the widget
 		this._init()
@@ -52,7 +52,7 @@ class cCAGridStateInit extends cJQueryWidgetClass {
 		let oDiv = $(
 			'<DIV>',
 			{
-				class: 'ui-widget-header'
+				class: 'card-header py-1 px-2'
 			}
 		)
 		oDiv.append('initialise')
@@ -61,13 +61,14 @@ class cCAGridStateInit extends cJQueryWidgetClass {
 		oDiv = $(
 			'<DIV>',
 			{
-				class: 'ui-widget-content'
+				class: 'card-body p-2'
 			}
 		)
 		const oSelect = $(
 			'<SELECT>',
 			{
-				width: 200,
+				class: 'form-select',
+				'aria-label': 'Initial grid pattern',
 				title: 'choose a pattern to initialise the grid with'
 			}
 		)
@@ -89,9 +90,7 @@ class cCAGridStateInit extends cJQueryWidgetClass {
 		}
 
 		oDiv.append(oSelect)
-		oSelect.selectmenu({
-			select: poEvent => this.onInitClick(poEvent)
-		})
+		oSelect.on('change', poEvent => this.onInitClick(poEvent))
 		oElement.append(oDiv)
 	}
 }

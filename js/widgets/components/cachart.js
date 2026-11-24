@@ -56,18 +56,15 @@ class cCAChart extends cJQueryWidgetClass {
 		const oElement = this.element
 
 		// basic stuff
-		oElement.addClass('ui-widget')
+		oElement.addClass('card')
 		oElement.width(poOptions.width)
 
 		// put something in the widget
-		cJquery.add_widget_header(
-			oElement,
-			'Chart'
-		)
+		oElement.append($('<div>', { class: 'card-header py-1 px-2' }).text('Chart'))
 		const oDiv = $(
 			'<DIV>',
 			{
-				class: 'ui-widget-content',
+				class: 'p-0',
 				id: cJquery.child_ID(
 					oElement,
 					this.CHART_ID

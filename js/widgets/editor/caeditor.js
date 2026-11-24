@@ -45,7 +45,7 @@ $.widget(
 			const oElement = this.element
 
 			oElement.uniqueId()
-			oElement.addClass('ui-widget')
+			oElement.addClass('border rounded')
 			oElement.addClass('caindex')
 			oElement.click(() => this.onClick())
 
@@ -215,7 +215,7 @@ class cCAEditorWidget extends cJQueryWidgetClass {
 	_render () {
 		const oElement = this.element
 
-		oElement.addClass('ui-widget')
+		oElement.addClass('card')
 
 		let oDiv, sID
 
@@ -228,7 +228,7 @@ class cCAEditorWidget extends cJQueryWidgetClass {
 		oDiv = $(
 			'<DIV>',
 			{
-				class: 'ui-widget-header', id: sID
+				class: 'card-header', id: sID
 			}
 		)
 		oDiv.append('??')
@@ -239,7 +239,7 @@ class cCAEditorWidget extends cJQueryWidgetClass {
 		oDiv = $(
 			'<DIV>',
 			{
-				class: 'ui-widget-content'
+				class: 'card-body'
 			}
 		)
 		sID = cJquery.child_ID(
@@ -252,7 +252,7 @@ class cCAEditorWidget extends cJQueryWidgetClass {
 				ID: sID,
 				rows: 5,
 				cols: 80,
-				class: 'rule rule_wide',
+				class: 'form-control font-monospace mb-2',
 				title: 'enter the base64 rule here'
 			}
 		)
@@ -262,11 +262,11 @@ class cCAEditorWidget extends cJQueryWidgetClass {
 		let oButton = $(
 			'<button>',
 			{
+				type: 'button',
+				class: 'btn btn-primary',
 				title: 'use the rule entered in the box above'
 			}
-		).button({
-			icon: 'ui-icon-circle-arrow-e'
-		})
+		).text('Apply rule')
 		oButton.click(() => this.onSetRuleClick())
 		oDiv.append(oButton)
 		oElement.append(oDiv)
@@ -278,7 +278,7 @@ class cCAEditorWidget extends cJQueryWidgetClass {
 		oDiv = $(
 			'<DIV>',
 			{
-				class: 'ui-widget-header'
+				class: 'card-header'
 			}
 		)
 		oDiv.append('Rule Widgets')
@@ -287,7 +287,7 @@ class cCAEditorWidget extends cJQueryWidgetClass {
 		oDiv = $(
 			'<DIV>',
 			{
-				class: 'ui-widget-content'
+				class: 'card-body'
 			}
 		)
 		oDiv.append(
@@ -304,7 +304,7 @@ class cCAEditorWidget extends cJQueryWidgetClass {
 		oDiv = $(
 			'<DIV>',
 			{
-				class: 'ui-widget-content', id: sID
+				class: 'card-body', id: sID
 			}
 		)
 		oElement.append(oDiv)
@@ -315,7 +315,7 @@ class cCAEditorWidget extends cJQueryWidgetClass {
 		oDiv = $(
 			'<DIV>',
 			{
-				class: 'ui-widget-header'
+				class: 'card-header'
 			}
 		)
 		oDiv.append('Rule Controls')
@@ -324,7 +324,7 @@ class cCAEditorWidget extends cJQueryWidgetClass {
 		oDiv = $(
 			'<DIV>',
 			{
-				class: 'ui-widget-content'
+				class: 'card-body'
 			}
 		)
 		// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -336,6 +336,8 @@ class cCAEditorWidget extends cJQueryWidgetClass {
 		const oStateSelect = $(
 			'<Select>',
 			{
+				class: 'form-select d-inline-block w-auto my-1',
+				'aria-label': 'Input state',
 				id: sID
 			}
 		)
@@ -362,6 +364,8 @@ class cCAEditorWidget extends cJQueryWidgetClass {
 		const oVerbSelect = $(
 			'<Select>',
 			{
+				class: 'form-select d-inline-block w-auto my-1',
+				'aria-label': 'Neighbour condition',
 				id: sID
 			}
 		)
@@ -385,6 +389,8 @@ class cCAEditorWidget extends cJQueryWidgetClass {
 		const oCountSelect = $(
 			'<Select>',
 			{
+				class: 'form-select d-inline-block w-auto my-1',
+				'aria-label': 'Neighbour count',
 				id: sID
 			}
 		)
@@ -405,6 +411,8 @@ class cCAEditorWidget extends cJQueryWidgetClass {
 		const oOutSelect = $(
 			'<Select>',
 			{
+				class: 'form-select d-inline-block w-auto my-1',
+				'aria-label': 'Output state',
 				id: sID
 			}
 		)
@@ -413,7 +421,7 @@ class cCAEditorWidget extends cJQueryWidgetClass {
 		oDiv.append(oOutSelect)
 
 		// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-		oButton = $('<button>').append('Apply')
+		oButton = $('<button>', { type: 'button', class: 'btn btn-primary' }).append('Apply')
 		oDiv.append(oButton)
 		oButton.click(() => this.onNeighbourRuleClick())
 		oElement.append(oDiv)

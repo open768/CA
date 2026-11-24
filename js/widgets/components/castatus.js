@@ -33,7 +33,7 @@ class cCAStatusWidget extends cJQueryWidgetClass {
 		this.base_name = poOptions.base_name
 
 		// set basic stuff
-		poElement.addClass('ui-widget')
+		poElement.addClass('card')
 
 		// subscribe to CAEvents
 		cCACanvasEvent.subscribe(
@@ -146,7 +146,8 @@ class cCAStatusWidget extends cJQueryWidgetClass {
 		oCell = $(
 			'<td>',
 			{
-				align: 'right'
+				class: 'text-end text-nowrap pe-2',
+				css: { width: '1%' }
 			}
 		).append(psLabel)
 		oRow.append(oCell)
@@ -172,7 +173,7 @@ class cCAStatusWidget extends cJQueryWidgetClass {
 		oDiv = $(
 			'<DIV>',
 			{
-				class: 'ui-widget-header'
+				class: 'card-header py-1 px-2'
 			}
 		).append('Status')
 		oElement.append(oDiv)
@@ -180,32 +181,34 @@ class cCAStatusWidget extends cJQueryWidgetClass {
 		oDiv = $(
 			'<DIV>',
 			{
-				class: 'ui-widget-content'
+				class: 'card-body p-2'
 			}
 		)
 		oTable = $(
 			'<Table>',
 			{
-				cellpadding: 2
+				class: 'table table-sm table-borderless mb-0'
 			}
 		)
+		const oTableBody = $('<tbody>')
+		oTable.append(oTableBody)
 		this._add_row(
-			oTable,
+			oTableBody,
 			cCAStatusTypes.ACTIVE_ID,
 			'Active'
 		)
 		this._add_row(
-			oTable,
+			oTableBody,
 			cCAStatusTypes.CHANGED_ID,
 			'Changed'
 		)
 		this._add_row(
-			oTable,
+			oTableBody,
 			cCAStatusTypes.RUNS_ID,
 			'Runs'
 		)
 		this._add_row(
-			oTable,
+			oTableBody,
 			cCAStatusTypes.HEAP_ID,
 			'Heap'
 		)

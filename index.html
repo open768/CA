@@ -2,6 +2,8 @@
 <html>
 
 <head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>Cellular Automata Explorer</title>
 	<!--**************************************************************************
 	Cellular Automata Simulator © 2013-2026 by chickenkatsu.co.uk ( 
@@ -16,8 +18,7 @@
 	<!-- 3rd party libraries (bootstrap) -->
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.9/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-yEPZ7jP9S0QKiUQ0m3jjsO4ProIW7wvR9gXkI7JOGa2XVsw53Yke2bsdkBbjmmiX" crossorigin="anonymous">
 
-	<!-- 3rd party libraries (w3c) -->
-	<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+	<!-- Page icon -->
 	<link rel="icon" href="https://www.chickenkatsu.co.uk/images/chicken_icon.png" type="image/png">
 
 	<!-- 3rd party libraries (bean) -->
@@ -32,9 +33,7 @@
 	<script src="https://www.gstatic.com/charts/loader.js"></script>
 
 	<!-- stylesheets -->
-	<link rel="stylesheet" href="css/CA.css">
-	<link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
-
+	<link rel="stylesheet" href="css/ca.css">
 	<!-- jsinc functions -->
 	<script src="../jsinc/ck-inc/jquery/jquery.common.js"></script>
 	<script src="../jsinc/ck-inc/common.js"></script>
@@ -68,7 +67,7 @@
 	<script src="js/widgets/index/cacontrolsr.js"></script>
 </head>
 
-<body>
+<body class="p-3">
 	<script>
 		//cDebug.on(cDebugTypes.levels.extra)		//turn on debugging
 		function onJqueryLoad() {
@@ -78,20 +77,20 @@
 		$(onJqueryLoad);
 	</script>
 
-	<div class="w3-card">
-		<header class="w3-container w3-light-blue">
+	<div class="card">
+		<header class="card-header bg-info-subtle">
 			<h3>Cellular Automata Explorer</h3>
 		</header>
-		<div class="w3-container w3-padding-16">
+		<div class="card-body">
 			<div id="machine">Loading Machine</div>
 		</div>
 	</div>
 
-	<DIV id="infopanel" class="w3-card-4 w3-sand">
-		<header class="w3-container w3-yellow">
+	<DIV id="infopanel" class="card shadow-sm mt-3">
+		<header class="card-header bg-warning-subtle">
 			<h3>Information</h3>
 		</header>
-		<div class="w3-container">
+		<div class="card-body">
 			<ul>
 				<li>copy the rule into the clipboard and for the editor <a target=editor href="editor.html">Click
 						here</a></li>
@@ -102,7 +101,7 @@
 						href="http://psoup.math.wisc.edu/mcell/ca_rules.html">http://psoup.math.wisc.edu/mcell/ca_rules.html</a>
 			</ul>
 		</div>
-		<footer class="w3-container w3-white w3-border w3-border-blue">
+		<footer class="card-footer bg-body border-primary">
 			<a href="https://www.chickenkatsu.co.uk" target="_blank"><img
 					src="https://www.chickenkatsu.co.uk/images/chicken_icon.png" border="0"> We are Chicken Katsu </a>
 		</footer>
