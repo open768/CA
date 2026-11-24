@@ -38,6 +38,15 @@
 	min-height: 500px;
 }
 
+.CAChart .u-legend {
+	font-size: 11px;
+	margin: 4px 0;
+}
+
+.CAChart .u-legend .u-series {
+	margin-right: 8px;
+}
+
 .rule {
 	width: 325px;
 	height: 100px;

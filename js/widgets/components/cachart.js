@@ -7,30 +7,6 @@ https://creativecommons.org/licenses/by/4.0/legalcode
 For licenses that allow for commercial use please contact cluck@chickenkatsu.co.uk
 // USE AT YOUR OWN RISK - NO GUARANTEES OF ANY FORM ARE EITHER EXPRESSED OR IMPLIED
 **************************************************************************/
-/// load google charts
-
-class cCAChartTypes {
-	static is_charts_loaded = false
-
-	static {
-		if (!google.charts)
-			$.error('google.charts class is missing! check includes')
-
-		try {
-			google.charts
-				.load(
-					'current',
-					{
-						packages: ['corechart']
-					}
-				)
-				.then(poEvent => this.is_charts_loaded = true)
-		} catch (e) {
-			cDebug.write(`unable to load Google charts: ${e.msg}`)
-		}
-	}
-}
-
 // #################################################################
 // # Options
 // #################################################################
@@ -39,7 +15,8 @@ class cCAChart extends cJQueryWidgetClass {
 	vis_data = null
 	chart = null
 	base_name = null
-	CHART_ID = 'GC'
+	CHART_ID = 'UP'
+	/** @type {jQuery<HTMLElement>} */ _chart_element = null
 
 	constructor (poOptions, poElement) {
 		super(
@@ -49,6 +26,8 @@ class cCAChart extends cJQueryWidgetClass {
 		// checks
 		if (!poOptions.base_name)
 			$.error('base name not provided')
+		if (typeof uPlot === 'undefined')
+			$.error('uPlot library is missing! check includes')
 
 		// store the element
 		this.base_name = poOptions.base_name
@@ -56,11 +35,16 @@ class cCAChart extends cJQueryWidgetClass {
 		const oElement = this.element
 
 		// basic stuff
-		oElement.addClass('card')
+		oElement.addClass('card CAChart')
 		oElement.width(poOptions.width)
 
 		// put something in the widget
-		oElement.append($('<div>', { class: 'card-header py-1 px-2' }).text('Chart'))
+		oElement.append($(
+			'<div>',
+			{
+				class: 'card-header py-1 px-2'
+			}
+		).text('Chart'))
 		const oDiv = $(
 			'<DIV>',
 			{
@@ -72,8 +56,8 @@ class cCAChart extends cJQueryWidgetClass {
 			}
 		)
 		oDiv.width(poOptions.width)
-		oDiv.height(poOptions.height)
 		oElement.append(oDiv)
+		this._chart_element = oDiv
 		this._clear_chart()
 
 		// subscribe to CAEvents
@@ -100,45 +84,60 @@ class cCAChart extends cJQueryWidgetClass {
 
 	//* ****************************************************************
 	_create_data () {
-		const oElement = this.element
-
 		// check if the data has been previously created
 		if (this.vis_data)
 			return
 
-		if (!google.visualization)
-			$.error('google.visualization class is missing! check includes')
-
-		this._clear_chart()
-
-		// create the google data
-		const oData = new google.visualization.DataTable()
-		this.vis_data = oData
-		oData.addColumn(
-			'number',
-			'Run'
+		const oChartElement = this._chart_element
+		oChartElement.empty()
+		// uPlot expects aligned columns: generation, changed cells, active cells.
+		this.vis_data = [[], [], []]
+		this.chart = new uPlot(
+			{
+				width: this.options.width,
+				height: this.options.height,
+				scales: {
+					x: {
+						time: false
+					},
+					y: {
+						range: (poChart, piMin, piMax) => [0, Math.max(
+							1,
+							piMax
+						) * 1.1]
+					}
+				},
+				series: [
+					{
+						label: 'Run'
+					},
+					{
+						label: 'changed',
+						stroke: '#3366cc',
+						width: 1
+					},
+					{
+						label: 'active',
+						stroke: '#dc3912',
+						width: 1
+					}
+				],
+				axes: [
+					{
+						size: 24,
+						font: '10px sans-serif',
+						values: (poChart, paSplits) => paSplits.map(piValue => Number.isInteger(piValue) ? String(piValue) : '')
+					},
+					{
+						size: 42,
+						space: 25,
+						font: '10px sans-serif'
+					}
+				]
+			},
+			this.vis_data,
+			oChartElement[0]
 		)
-		oData.addColumn(
-			'number',
-			'changed'
-		)
-		oData.addColumn(
-			'number',
-			'active'
-		)
-		oData.addColumn({
-			type: 'string',
-			role: 'tooltip',
-			p: {
-				html: true
-			}
-		})
-
-		const oChartElement = cJquery.get_child(
-			oElement,
-			this.CHART_ID
-		)
-		this.chart = new google.visualization.LineChart(oChartElement[0])
 	}
 
 	//* ****************************************************************
@@ -150,12 +149,6 @@ class cCAChart extends cJQueryWidgetClass {
 			case cCACanvasEvent.actions.grid_status:
 				// add the data to the data structure and draw
 				cDebug.write('status action')
-				if (!cCAChartTypes.is_charts_loaded) {
-					cDebug.extra_debug('still waiting for google charts')
-					cDebug.leave()
-					return
-				}
-
 				var oData = poEvent.data
 				if (!oData) {
 					cDebug.extra_debug('no data')
@@ -163,8 +156,10 @@ class cCAChart extends cJQueryWidgetClass {
 				}
 
 				this._create_data()
-				this.vis_data.addRow([this.runs, oData.changed, oData.active, `Run: ${this.runs}`])
-				this.chart.draw(this.vis_data)
+				this.vis_data[0].push(this.runs)
+				this.vis_data[1].push(oData.changed)
+				this.vis_data[2].push(oData.active)
+				this.chart.setData(this.vis_data)
 
 				this.runs++
 				break
@@ -198,14 +193,10 @@ class cCAChart extends cJQueryWidgetClass {
 	}
 
 	_clear_chart () {
-		if (!this.chart)
-			return
+		if (this.chart)
+			this.chart.destroy()
 
-		const oElement = this.element
-		const oChartElement = cJquery.get_child(
-			oElement,
-			this.CHART_ID
-		)
+		const oChartElement = this._chart_element
 		this.vis_data = null
 		this.chart = null
 		this.runs = 0
